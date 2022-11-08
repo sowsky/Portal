@@ -16,7 +16,7 @@ enum class ResourceTypes
 	SoundBuffer,
 };
 
-class ResourceMgr
+class ResourceMgr : public Singleton<ResourceMgr>
 {
 private:
 	map<string, Texture*> texMap;
@@ -42,4 +42,6 @@ public:
 	SoundBuffer* GetSoundBuffer(string id);
 
 };
+
+#define RESOURCEMGR (ResourceMgr::GetInstance())
 

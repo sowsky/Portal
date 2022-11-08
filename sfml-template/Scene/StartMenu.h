@@ -22,5 +22,8 @@ private:
 	RectangleShape* startbox;
 	RectangleShape* mousePos;
 
+	Text start;
+	Text edit;
+
 };
 
