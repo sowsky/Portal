@@ -119,6 +119,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./SFML-2.5.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,6 +139,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="Manager\Animator.cpp" />
     <ClCompile Include="FrameWork\InputMgr.cpp" />
+    <ClCompile Include="Scene\PlayScene.cpp" />
     <ClCompile Include="Scene\MapList.cpp" />
     <ClCompile Include="Scene\EditScene.cpp" />
     <ClCompile Include="FrameWork\Framework.cpp" />
@@ -164,6 +167,7 @@
   <ItemGroup>
     <ClInclude Include="Manager\Animator.h" />
     <ClInclude Include="FrameWork\InputMgr.h" />
+    <ClInclude Include="Scene\PlayScene.h" />
     <ClInclude Include="Scene\MapList.h" />
     <ClInclude Include="Scene\EditScene.h" />
     <ClInclude Include="FrameWork\Const.h" />

@@ -57,6 +57,12 @@ void StartMenu::Enter()
 
 void StartMenu::Update(float dt)
 {
+
+	Utils::SetOrigin(*startbox, Origins::MC);
+	Utils::SetOrigin(*editbox, Origins::MC);
+	Utils::SetOrigin(edit, Origins::MC);
+	Utils::SetOrigin(start, Origins::MC);
+
 	mousePos->setPosition(InputMgr::GetMousePos());
 	cout << "this is start menu" << endl;
 
@@ -70,7 +76,6 @@ void StartMenu::Update(float dt)
 
 void StartMenu::Exit()
 {
-
 }
 
 void StartMenu::Draw(RenderWindow& window)

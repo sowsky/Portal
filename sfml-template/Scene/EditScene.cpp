@@ -42,7 +42,7 @@ void EditScene::Exit()
 {
 }
 
-void EditScene::draw(RenderWindow& window)
+void EditScene::Draw(RenderWindow& window)
 {
 
 }

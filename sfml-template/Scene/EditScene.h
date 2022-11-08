@@ -18,8 +18,8 @@ public:
 	virtual void Update(float dt);
 	virtual void Exit();
 
-	void draw(RenderWindow& window);
-	void update(float dt);
+	virtual void Draw(RenderWindow& window);
+	virtual void update(float dt);
 
 private:
 	RectangleShape* mousePos;
