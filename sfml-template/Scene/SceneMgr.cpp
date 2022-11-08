@@ -25,6 +25,11 @@ Scene* SceneMgr::GetScene(Scenes scene)
     return sceneMap[scene];
 }
 
+Scenes SceneMgr::GetCurrKey()
+{
+    return currScene;
+}
+
 void SceneMgr::ChangeScene(Scenes scene)
 {
     sceneMap[currScene]->Exit();

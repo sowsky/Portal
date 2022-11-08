@@ -28,8 +28,13 @@ void EditScene::Enter()
 void EditScene::Update(float dt)
 {
 	cout << "this is EditScene" << endl;
-	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
+	if (InputMgr::GetKeyDown(Keyboard::Escape)) 
+	{
 		SCENE_MGR->ChangeScene(Scenes::GAMESTART);
+	}
+	if (InputMgr::GetKeyDown(Keyboard::BackSpace))
+	{
+		exit(1);
 	}
 }
 
@@ -39,8 +44,10 @@ void EditScene::Exit()
 
 void EditScene::draw(RenderWindow& window)
 {
+
 }
 
 void EditScene::update(float dt)
 {
+
 }
