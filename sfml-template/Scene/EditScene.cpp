@@ -75,7 +75,10 @@ void EditScene::Draw(RenderWindow& window)
 	}
 }
 
+
 void EditScene::SetTool(int row, int col)
+
+void EditScene::Draw(RenderWindow& window)
 {
 	for (int i = 0; i < col; i++)
 	{

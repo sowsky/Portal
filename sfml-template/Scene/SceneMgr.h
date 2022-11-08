@@ -7,12 +7,13 @@
 
 using namespace sf;
 using namespace std;
+
 enum class Scenes
 {
-	MAPLIST,
 	GAMESTART,
 	MAPEDITER,
-
+	MAPLIST,
+	PLAY,
 };
 
 class SceneMgr : public Singleton<SceneMgr>
@@ -26,7 +27,7 @@ public:
 
 	Scene* GetCurrScene();
 	Scene* GetScene(Scenes scene);
-
+	void AddScene(string newscene);
 	Scenes GetCurrKey();
 
 	void ChangeScene(Scenes scene);

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include"Scene.h"
+#include <vector>
 
 class MapList :public Scene
 {
@@ -15,7 +16,13 @@ public:
 	virtual void Exit();
 	virtual void Draw(RenderWindow& window);
 
-private:
 
+
+private:
+	vector<Text*> stagelist;
+	RectangleShape* mousepos;
+	RectangleShape selectbox;
+	bool selected = false;
+	int y;
 };
 

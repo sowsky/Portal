@@ -48,10 +48,14 @@
     <ClCompile Include="Manager\Animator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+
     <ClCompile Include="Objects\Object.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Objects\SpriteObj.cpp">
+
+    <ClCompile Include="Scene\PlayScene.cpp">
+
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,10 +105,13 @@
     <ClInclude Include="Manager\Animator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Object.h">
+   <ClInclude Include="Objects\Object.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Objects\SpriteObj.h">
+
+    <ClInclude Include="Scene\PlayScene.h">
+
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
