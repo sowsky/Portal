@@ -15,7 +15,7 @@ public:
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);
 
-	void SetTexture(String id);
+	void SetResourceTexture(String id);
 	Sprite* GetSprite();
 protected:
 	Sprite sprite;

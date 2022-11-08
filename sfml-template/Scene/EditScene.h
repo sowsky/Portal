@@ -1,10 +1,10 @@
 #pragma once
-
 #include "SFML/Graphics.hpp"
 #include "Scene.h"
 #include "../FrameWork/Utils.h"
 #include <vector>
 
+class SpriteObj;
 class EditScene : public Scene
 {
 public:
@@ -15,15 +15,16 @@ public:
 	virtual void Release();		// ����
 
 	virtual void Enter();
-	virtual void Update(float dt);
 	virtual void Exit();
 
-	void draw(RenderWindow& window);
-	void update(float dt);
+	virtual void Update(float dt);
+	virtual void Draw(RenderWindow& window);
+	
+public:
+	void SetTool(int row, int col);
+	void SetToolPos();
 
 private:
-	RectangleShape* mousePos;
-	
-
+	vector<vector<list<SpriteObj*>>> toolArray;
 };
 

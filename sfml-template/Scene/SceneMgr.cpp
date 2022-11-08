@@ -4,7 +4,7 @@
 
 bool SceneMgr::Init()
 {
-    Scene* startMenu=new StartMenu();
+	Scene* startMenu = new StartMenu();
     sceneMap.insert({ Scenes::GAMESTART,startMenu });
     Scene* editScene = new EditScene();
     sceneMap.insert({ Scenes::MAPEDITER,editScene });

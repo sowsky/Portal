@@ -30,9 +30,9 @@ void SpriteObj::Draw(RenderWindow& window)
 	window.draw(sprite);
 }
 
-void SpriteObj::SetTexture(String id)
-{
-	//sprite.setTexture()
+void SpriteObj::SetResourceTexture(String id)
+{	
+	sprite.setTexture(*RESOURCEMGR->GetTexture(id));
 }
 
 Sprite* SpriteObj::GetSprite()

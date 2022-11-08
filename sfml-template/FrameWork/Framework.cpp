@@ -36,7 +36,7 @@ RenderWindow& Framework::GetWindow()
 bool Framework::Init(int width, int height)
 {
 	windowSize = { width, height };
-	window.create(VideoMode(windowSize.x, windowSize.y), "Game");
+	window.create(VideoMode( windowSize.x,windowSize.y ), "Game");
 	RESOURCEMGR->GetInstance()->LoadAll();
 	//  SOUND_MGR->Init();
 	SCENE_MGR->Init();
