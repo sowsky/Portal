@@ -3,6 +3,7 @@
 #include "../FrameWork/stdafx.h"
 #include "../Scene/SceneMgr.h"
 #include "../FrameWork/Framework.h"
+#include "../Manager/ResourceMgr.h"
 
 StartMenu::StartMenu()
 {
@@ -16,17 +17,14 @@ StartMenu::~StartMenu()
 
 void StartMenu::Init()
 {
-	font.loadFromFile("NanumGothic.otf");
-	start.setFont(font);
-	edit.setFont(font);
-
+	start.setFont(*RESOURCEMGR->GetFont("Fonts/NanumGothic.otf"));
+	edit.setFont(*RESOURCEMGR->GetFont("Fonts/NanumGothic.otf"));
 
 	mousePos = new RectangleShape();
 	Utils::SetOrigin(*mousePos, Origins::MC);
 	mousePos->setSize({ 100, 50 });
 	mousePos->setFillColor(Color::Blue);
 	mousePos->setPosition(InputMgr::GetMousePos());
-
 
 
 	startbox = new RectangleShape();

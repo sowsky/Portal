@@ -24,7 +24,6 @@ private:
 
 	Text start;
 	Text edit;
-	Font font;
 
 };
 

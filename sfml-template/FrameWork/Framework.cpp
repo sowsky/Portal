@@ -1,6 +1,7 @@
 #include "Framework.h"
 #include "InputMgr.h"
 #include "../Scene/SceneMgr.h"
+#include "../Manager/ResourceMgr.h"
 
 Framework::Framework()
 	: timeScale(1.f)
@@ -36,6 +37,7 @@ bool Framework::Init(int width, int height)
 {
 	windowSize = { width, height };
 	window.create(VideoMode(windowSize.x, windowSize.y), "Game");
+	RESOURCEMGR->GetInstance()->LoadAll();
 	//  SOUND_MGR->Init();
 	SCENE_MGR->Init();
 	InputMgr::Init();
