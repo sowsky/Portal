@@ -23,7 +23,6 @@ public:
 public:
 	void SetTool(int row, int col);
 	void SetToolPos();
-
 private:
 	vector<vector<list<SpriteObj*>>> toolArray;
 };
