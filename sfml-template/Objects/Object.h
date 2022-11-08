@@ -25,7 +25,7 @@ public:
 	virtual void Update(float dt) = 0;
 	virtual void Draw(RenderWindow& window) = 0;
 protected:
-	bool enabled;
+	bool active;
 	Vector2f position;
 };
 
