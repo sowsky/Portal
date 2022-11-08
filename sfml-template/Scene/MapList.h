@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include"Scene.h"
+#include <vector>
 
 class MapList :public Scene
 {
@@ -16,6 +17,6 @@ public:
 	virtual void Draw(RenderWindow& window);
 
 private:
-
+	
 };
 
