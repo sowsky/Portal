@@ -27,6 +27,8 @@ public:
 	Scene* GetCurrScene();
 	Scene* GetScene(Scenes scene);
 
+	Scenes GetCurrKey();
+
 	void ChangeScene(Scenes scene);
 
 	void Update(float dt);

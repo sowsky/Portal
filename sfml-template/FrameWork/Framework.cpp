@@ -63,7 +63,11 @@ bool Framework::Do()
 		}
 
 		//SOUND_MGR->Update();
-		window.clear();
+		if (SCENE_MGR->GetCurrKey() == Scenes::MAPEDITER)
+			window.clear(Color::White);
+		else
+			window.clear();
+		
 		SCENE_MGR->Update(dt);
 		SCENE_MGR->Draw(window);
 		window.display();

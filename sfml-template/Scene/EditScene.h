@@ -3,6 +3,7 @@
 #include "SFML/Graphics.hpp"
 #include "Scene.h"
 #include "../FrameWork/Utils.h"
+#include <vector>
 
 class EditScene : public Scene
 {
@@ -22,6 +23,7 @@ public:
 
 private:
 	RectangleShape* mousePos;
+	
 
 };
 
