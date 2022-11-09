@@ -16,8 +16,6 @@ public:
 	virtual void Exit();
 	virtual void Draw(RenderWindow& window);
 
-
-
 private:
 	vector<Text*> stagelist;
 	RectangleShape* mousepos;

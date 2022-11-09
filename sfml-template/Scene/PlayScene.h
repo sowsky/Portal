@@ -1,5 +1,8 @@
 ﻿#pragma once
 #include "Scene.h"
+#include "SFML/Graphics.hpp"
+#include <vector>
+#include "../FrameWork/Const.h"
 
 class PlayScene : public Scene
 {
@@ -8,7 +11,6 @@ public:
 	PlayScene(string path);
 	virtual ~PlayScene();
 
-private:
 	virtual void Init();	// ����
 	virtual void Release();		// ����
 
@@ -17,5 +19,25 @@ private:
 
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);
+
+	void MakeWall(bool vertical);
+	void MakeCube();
+	void MakePlayer();
+	void MakeButton();
+
+	void PlayerMove(float dt);
+	void GravityEffect(float dt);
+private:
+
+	//do all RectalgeShape change to Object class
+
+	RectangleShape* player;
+	vector<RectangleShape*> wall;
+	vector<RectangleShape*> button;
+	vector<RectangleShape*> cube;
+		
+	bool groundede = false;
+	int jump = 100;
+	Vector2f currgird = { 0,0 };
 };
 

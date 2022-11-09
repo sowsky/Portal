@@ -33,8 +33,10 @@ private:
 	static list<int> upList;
 
 	static Vector2f mousePos;
+
 	static Vector2f prevMousePos;
 	static Vector2f mousePosDisplacement;
+
 	static int mouseWheel;
 
 public:
@@ -55,6 +57,7 @@ public:
 	static bool GetMouseButtonUp(Mouse::Button key);
 
 	static int GetMouseWheelState();
+
 	static Vector2f GetMousePosDisplacement();
 
 };

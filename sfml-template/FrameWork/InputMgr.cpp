@@ -10,8 +10,10 @@ list<int> InputMgr::ingList;
 list<int> InputMgr::upList;
 
 Vector2f InputMgr::mousePos;
+
 Vector2f InputMgr::prevMousePos;
 Vector2f InputMgr::mousePosDisplacement;
+
 int InputMgr::mouseWheel;
 
 void InputMgr::Init()
@@ -187,9 +189,8 @@ int InputMgr::GetMouseWheelState()
 	return mouseWheel;
 }
 
+
 Vector2f InputMgr::GetMousePosDisplacement()
 {
 	return mousePosDisplacement;
 }
-
-

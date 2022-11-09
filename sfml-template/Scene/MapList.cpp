@@ -43,9 +43,10 @@ void MapList::Enter()
 	//////////////get path string///////////////////////////////////////////
 	string path = "Map";
 	for (const auto& entry : fs::directory_iterator(path)) {
-		std::string path_string{ entry.path().u8string() };
+		string path_string = fs::path(entry).filename().string();
 		Text* temp = new Text();
 		temp->setString(path_string);
+		
 		stagelist.push_back(temp);
 		stagelist.back()->setFillColor(Color::Blue);
 		stagelist.back()->setFont(*RESOURCEMGR->GetFont("Fonts/NanumGothic.otf"));
@@ -54,7 +55,7 @@ void MapList::Enter()
 	}
 
 	if (!stagelist.empty()) {
-		y = FRAMEWORK->GetWindowSize().y / stagelist.size()/2;
+		y = FRAMEWORK->GetWindowSize().y / stagelist.size() / 2;
 
 		for (int i = 0; i < stagelist.size(); i++) {
 			stagelist[i]->setPosition(FRAMEWORK->GetInstance()->GetWindowSize().x / 2, y);
@@ -85,8 +86,31 @@ void MapList::Update(float dt)
 			selectbox.setSize({ (float)v->getGlobalBounds().width,(float)40 });
 			if (InputMgr::GetMouseButtonDown(Mouse::Left)) {
 
-				SCENE_MGR->AddScene(v->getString());
+				
+				SCENE_MGR->AddScene("Map\\"+v->getString());
 				SCENE_MGR->ChangeScene(Scenes::PLAY);
+			}
+		}
+	}
+
+	if (stagelist.empty()) {
+		return;
+	}
+	///////////////////////wheel up ,down//////////////
+
+	if (stagelist.back()->getPosition().y >= FRAMEWORK->GetWindowSize().y||
+		stagelist.front()->getGlobalBounds().top<0) {
+		//wheel up
+		if (InputMgr::GetMouseWheelState() == 1&&
+			stagelist.front()->getPosition().y < 0) {
+			for (auto v : stagelist) {
+				v->setPosition(v->getPosition().x,v->getPosition().y+40 );
+			}
+		}   //wheel down
+		else if (InputMgr::GetMouseWheelState() == -1&&
+			stagelist.back()->getGlobalBounds().top+ stagelist.back()->getGlobalBounds().height > FRAMEWORK->GetWindowSize().y) {
+			for (auto v : stagelist) {
+				v->setPosition(v->getPosition().x, v->getPosition().y - 40);
 			}
 		}
 	}
