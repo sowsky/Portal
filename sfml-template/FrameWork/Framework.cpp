@@ -36,7 +36,8 @@ RenderWindow& Framework::GetWindow()
 bool Framework::Init(int width, int height)
 {
 	windowSize = { width, height };
-	window.create(VideoMode(windowSize.x, windowSize.y), "Game");
+
+	window.create(VideoMode(windowSize.x, windowSize.y), "Game", sf::Style::Close);
 	RESOURCEMGR->GetInstance()->LoadAll();
 	//  SOUND_MGR->Init();
 	SCENE_MGR->Init();
@@ -55,21 +56,29 @@ bool Framework::Do()
 		InputMgr::Update(dt);
 		sf::Event ev;
 
+		//window.setMouseCursorGrabbed(1);
 		while (window.pollEvent(ev))
 		{
 			if (ev.type == sf::Event::Closed)
 			{
 				window.close();
 			}
+			if (ev.type == sf::Event::Resized)
+			{
+				VideoMode(windowSize.y, windowSize.y);
+			}
+
 			InputMgr::ProcessInput(ev);
 		}
 
 		//SOUND_MGR->Update();
-		if (SCENE_MGR->GetCurrKey() == Scenes::MAPEDITER)
+		if (SCENE_MGR->GetCurrKey() == Scenes::MAPEDITER||SCENE_MGR->GetCurrKey()==Scenes::PLAY)
 			window.clear(Color::White);
 		else
 			window.clear();
+
 		
+
 		SCENE_MGR->Update(dt);
 		SCENE_MGR->Draw(window);
 		window.display();

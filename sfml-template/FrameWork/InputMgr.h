@@ -33,6 +33,7 @@ private:
 	static list<int> upList;
 
 	static Vector2f mousePos;
+	static int mouseWheel;
 
 public:
 	static void Init();
@@ -50,5 +51,7 @@ public:
 	static bool GetMouseButtonDown(Mouse::Button key);
 	static bool GetMouseButton(Mouse::Button key);
 	static bool GetMouseButtonUp(Mouse::Button key);
+
+	static int GetMouseWheelState();
 
 };

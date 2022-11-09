@@ -53,6 +53,7 @@ void StartMenu::Release()
 
 void StartMenu::Enter()
 {
+
 }
 
 void StartMenu::Update(float dt)
