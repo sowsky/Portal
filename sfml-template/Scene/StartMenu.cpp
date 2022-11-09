@@ -53,6 +53,7 @@ void StartMenu::Release()
 
 void StartMenu::Enter()
 {
+	Scene::SetWorldView();
 }
 
 void StartMenu::Update(float dt)

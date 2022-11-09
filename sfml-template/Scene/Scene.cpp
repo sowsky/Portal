@@ -26,6 +26,22 @@ void Scene::Draw(RenderWindow& window)
 
 }
 
+void Scene::SetWorldView()
+{
+	auto size = (Vector2f)FRAMEWORK->GetWindowSize();
+	worldView.setSize(size);
+	worldView.setCenter(size * 0.5f);
+	FRAMEWORK->GetWindow().setView(worldView);
+}
+
+void Scene::SetUiView()
+{
+	auto size = (Vector2f)FRAMEWORK->GetWindowSize();
+	uiView.setSize(size);
+	uiView.setCenter(size * 0.5f);
+	FRAMEWORK->GetWindow().setView(uiView);
+}
+
 Vector2f Scene::ScreenToWorldPos(Vector2i screenPos)
 {
 	RenderWindow& window = FRAMEWORK->GetWindow();

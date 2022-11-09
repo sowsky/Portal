@@ -27,6 +27,9 @@ public:
 
 	Texture* GetTexture(const string& id);
 
+	void SetWorldView();
+	void SetUiView();
+
 	View& GetWorldView() { return worldView;  }
 	View& GetUiView() { return uiView; }
 

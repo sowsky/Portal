@@ -10,6 +10,9 @@ list<int> InputMgr::ingList;
 list<int> InputMgr::upList;
 
 Vector2f InputMgr::mousePos;
+Vector2f InputMgr::prevMousePos;
+Vector2f InputMgr::mousePosDisplacement;
+int InputMgr::mouseWheel;
 
 void InputMgr::Init()
 {
@@ -47,6 +50,7 @@ void InputMgr::Update(float dt)
 {
 	downList.clear();
 	upList.clear();
+	mouseWheel = 0;
 
 	for (auto& it : axisInfoMap)
 	{
@@ -63,8 +67,11 @@ void InputMgr::Update(float dt)
 		if (abs(axis.value) < 1.f / 60)
 			axis.value = 0.f;
 	}
-
+		
 	mousePos = (Vector2f)Mouse::getPosition(FRAMEWORK->GetWindow());
+
+	mousePosDisplacement = prevMousePos - mousePos;
+	prevMousePos = mousePos;
 }
 
 void InputMgr::ProcessInput(Event& ev)
@@ -100,7 +107,10 @@ void InputMgr::ProcessInput(Event& ev)
 		ingList.remove(ev.key.code);
 		upList.push_back(ev.key.code);
 		break;
-	}
+	case Event::EventType::MouseWheelMoved:
+		mouseWheel = ev.mouseWheel.delta;		
+		break;
+	}	
 }
 
 bool InputMgr::GetKeyDown(Keyboard::Key key)
@@ -171,3 +181,15 @@ bool InputMgr::GetMouseButtonUp(Mouse::Button key)
 	int code = key + Keyboard::KeyCount;
 	return find(upList.begin(), upList.end(), code) != upList.end();
 }
+
+int InputMgr::GetMouseWheelState()
+{
+	return mouseWheel;
+}
+
+Vector2f InputMgr::GetMousePosDisplacement()
+{
+	return mousePosDisplacement;
+}
+
+

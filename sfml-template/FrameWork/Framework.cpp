@@ -41,7 +41,7 @@ bool Framework::Init(int width, int height)
 	//  SOUND_MGR->Init();
 	SCENE_MGR->Init();
 	InputMgr::Init();
-
+	
 	return true;
 }
 
@@ -73,7 +73,6 @@ bool Framework::Do()
 		SCENE_MGR->Update(dt);
 		SCENE_MGR->Draw(window);
 		window.display();
-	}
-
+	}	
 	return true;
 }
