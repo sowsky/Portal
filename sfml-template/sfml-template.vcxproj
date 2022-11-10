@@ -151,14 +151,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Objects\Button.cpp" />
+    <ClCompile Include="Objects\Cube.cpp" />
     <ClCompile Include="Manager\Animator.cpp" />
     <ClCompile Include="FrameWork\InputMgr.cpp" />
-
     <ClCompile Include="Objects\Object.cpp" />
     <ClCompile Include="Objects\SpriteObj.cpp" />
-
+    <ClCompile Include="Objects\Player.cpp" />
     <ClCompile Include="Scene\PlayScene.cpp" />
-
     <ClCompile Include="Scene\MapList.cpp" />
     <ClCompile Include="Scene\EditScene.cpp" />
     <ClCompile Include="FrameWork\Framework.cpp" />
@@ -168,14 +168,17 @@
     <ClCompile Include="Scene\SceneMgr.cpp" />
     <ClCompile Include="FrameWork\Utils.cpp" />
     <ClCompile Include="Scene\StartMenu.cpp" />
+    <ClCompile Include="Objects\SmallTile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Objects\Button.h" />
+    <ClInclude Include="Objects\Cube.h" />
     <ClInclude Include="Manager\Animator.h" />
     <ClInclude Include="FrameWork\InputMgr.h" />
-
     <ClInclude Include="Objects\Object.h" />
+    <ClInclude Include="FrameWork\ObjectHeaders.h" />
     <ClInclude Include="Objects\SpriteObj.h" />
-
+    <ClInclude Include="Objects\Player.h" />
     <ClInclude Include="Scene\PlayScene.h" />
     <ClInclude Include="Scene\MapList.h" />
     <ClInclude Include="Scene\EditScene.h" />
@@ -190,6 +193,7 @@
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneMgr.h" />
     <ClInclude Include="Scene\StartMenu.h" />
+    <ClInclude Include="Objects\SmallTile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

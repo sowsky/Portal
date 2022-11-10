@@ -1,118 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="소스 파일">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="리소스 파일">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="Manager\Animator.cpp" />
+    <ClCompile Include="FrameWork\InputMgr.cpp" />
+    <ClCompile Include="Objects\Object.cpp" />
+    <ClCompile Include="Objects\SpriteObj.cpp" />
+    <ClCompile Include="Scene\PlayScene.cpp" />
+    <ClCompile Include="Scene\MapList.cpp" />
+    <ClCompile Include="Scene\EditScene.cpp" />
+    <ClCompile Include="FrameWork\Framework.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Manager\ResourceMgr.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
+    <ClCompile Include="Scene\SceneMgr.cpp" />
+    <ClCompile Include="FrameWork\Utils.cpp" />
+    <ClCompile Include="Scene\StartMenu.cpp" />
+    <ClCompile Include="Objects\SmallTile.cpp" />
+    <ClCompile Include="Objects\Cube.cpp" />
+    <ClCompile Include="Objects\Button.cpp" />
+    <ClCompile Include="Objects\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="FrameWork\Utils.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="FrameWork\Framework.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Manager\ResourceMgr.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\SceneMgr.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Scene.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\StartMenu.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\EditScene.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="FrameWork\InputMgr.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\MapList.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Manager\Animator.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-
-    <ClCompile Include="Objects\Object.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\SpriteObj.cpp">
-
-    <ClCompile Include="Scene\PlayScene.cpp">
-
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="FrameWork\Utils.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="FrameWork\Framework.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Manager\ResourceMgr.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="3rd\rapidcsv.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="3rd\Singleton.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\SceneMgr.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\Scene.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="FrameWork\EnumClasses.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="FrameWork\Const.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="FrameWork\stdafx.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\StartMenu.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\EditScene.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="FrameWork\InputMgr.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\MapList.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Manager\Animator.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-   <ClInclude Include="Objects\Object.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\SpriteObj.h">
-
-    <ClInclude Include="Scene\PlayScene.h">
-
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
+    <ClInclude Include="Manager\Animator.h" />
+    <ClInclude Include="FrameWork\InputMgr.h" />
+    <ClInclude Include="Objects\Object.h" />
+    <ClInclude Include="Objects\SpriteObj.h" />
+    <ClInclude Include="Scene\PlayScene.h" />
+    <ClInclude Include="Scene\MapList.h" />
+    <ClInclude Include="Scene\EditScene.h" />
+    <ClInclude Include="FrameWork\Const.h" />
+    <ClInclude Include="FrameWork\EnumClasses.h" />
+    <ClInclude Include="FrameWork\Framework.h" />
+    <ClInclude Include="FrameWork\stdafx.h" />
+    <ClInclude Include="FrameWork\Utils.h" />
+    <ClInclude Include="Manager\ResourceMgr.h" />
+    <ClInclude Include="3rd\rapidcsv.h" />
+    <ClInclude Include="3rd\Singleton.h" />
+    <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="Scene\SceneMgr.h" />
+    <ClInclude Include="Scene\StartMenu.h" />
+    <ClInclude Include="Objects\SmallTile.h" />
+    <ClInclude Include="FrameWork\ObjectHeaders.h" />
+    <ClInclude Include="Objects\Cube.h" />
+    <ClInclude Include="Objects\Button.h" />
+    <ClInclude Include="Objects\Player.h" />
   </ItemGroup>
 </Project>

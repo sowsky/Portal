@@ -29,7 +29,14 @@ public:
 	void DrawOutLine(RenderWindow& window);
 
 	void InitUiTool();
+	void FillUiToolBox();
 	void SetUiToolPos(Vector2f pos);
+
+	void MouseSpriteBoxUpdate();
+
+	void Save();
+	void Load();
+
 private:	
 	int rowNum;
 	int colNum;
@@ -46,6 +53,8 @@ private:
 	Sprite uiOutLine;
 	RectangleShape uiBackGround;
 	Sprite uiMove;
+
+	SpriteObj* mouseBoxSprite;
 
 	bool isScenePlay;
 

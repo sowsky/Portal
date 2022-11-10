@@ -18,11 +18,18 @@ public:
 	void SetResourceTexture(String id);
 	void SetUiTexture(String id);
 	Sprite* GetSprite();
+
 	void SetScale(Vector2f scale);
+	void SetSize(Vector2f size);
+	void FitScale(float size);
+
+	virtual SpriteObj* NewThis();
+
+	FloatRect GetGlobalBounds();
 protected:
 	Sprite sprite;
 	float speed;
-	float vecity;
+	float velocity;
 	Vector2f direction;
 
 	char id;
