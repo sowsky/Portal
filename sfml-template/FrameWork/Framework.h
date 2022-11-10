@@ -14,10 +14,11 @@ protected:
 	Time deltaTime;
 	float timeScale;
 
-	b2Vec2 gravity;
 	b2World* world;
 	b2BodyDef groundBodyDef;
 
+	b2Block b1;
+	
 
 public:
 	Framework();
