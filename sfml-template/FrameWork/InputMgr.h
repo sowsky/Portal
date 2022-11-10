@@ -51,7 +51,8 @@ public:
 	static float GetAxis(Axis axis);
 	static float GetAxisRaw(Axis axis);
 
-	static const Vector2f& GetMousePos();
+	static const Vector2f& GetMousePos();	
+
 	static bool GetMouseButtonDown(Mouse::Button key);
 	static bool GetMouseButton(Mouse::Button key);
 	static bool GetMouseButtonUp(Mouse::Button key);

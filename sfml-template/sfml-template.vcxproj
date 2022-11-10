@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Objects\Goal.cpp" />
     <ClCompile Include="Objects\Button.cpp" />
     <ClCompile Include="Objects\Cube.cpp" />
     <ClCompile Include="Manager\Animator.cpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="Objects\SmallTile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Objects\Goal.h" />
     <ClInclude Include="Objects\Button.h" />
     <ClInclude Include="Objects\Cube.h" />
     <ClInclude Include="Manager\Animator.h" />

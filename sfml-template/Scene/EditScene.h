@@ -23,6 +23,7 @@ public:
 	
 public:
 	void InitMapTool();	
+	void ReleaseMapTool();
 	void SetMapToolPos();
 	void SetMapToolSize();
 	void FillMapTool();
@@ -32,6 +33,7 @@ public:
 	void DrawOutLine(RenderWindow& window);
 
 	void InitUiTool();	
+	void UpdateUiTool(float dt);
 
 	void FillUiToolBox();
 	void SetUiToolPos(Vector2f pos);
@@ -59,11 +61,14 @@ private:
 	Sprite uiMove;
 
 	SpriteObj* mouseBoxSprite;
+	SpriteObj* mapToolCheckBox;
+	SpriteObj* uiToolCheckBox;
 
 	bool isScenePlay;
 
 	int zoomCount;	
 
 	bool isUiMoving;
+	bool mouseOnUi;
 };
 
