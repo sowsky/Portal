@@ -8,7 +8,7 @@
 #include "../FrameWork/Framework.h"
 #include "../FrameWork/Utils.h"
 #include "../FrameWork/ObjectHeaders.h"
-
+#include <fstream>
 
 EditScene::EditScene()
 {
@@ -41,7 +41,7 @@ void EditScene::Init()
 	startPos.x = (winSize.x - rowNum * tileSize.x) * 0.5f;
 	startPos.y = (winSize.y - colNum * tileSize.y) * 0.5f + (colNum - 1) * tileSize.y;
 
-	InitTool();
+	InitMapTool();
 
 	zoomCount = 0;
 
@@ -103,16 +103,7 @@ void EditScene::Update(float dt)
 	if (!isScenePlay)
 		return;
 
-	for (int i = 0; i < colNum; i++)
-	{
-		for (int j = 0; j < rowNum; j++)
-		{
-			for (auto array : mapArray[i][j])
-			{
-				array->Update(dt);
-			}
-		}
-	}
+	UpdateMapTool(dt);
 
 	for (int i = 0; i < uiTool.size(); i++)
 	{
@@ -123,7 +114,7 @@ void EditScene::Update(float dt)
 		}
 	}
 
-	MouseSpriteBoxUpdate();
+	MouseSpriteBoxUpdate();	
 }
 
 void EditScene::Draw(RenderWindow& window)
@@ -169,7 +160,7 @@ void EditScene::Draw(RenderWindow& window)
 }
 
 
-void EditScene::InitTool()
+void EditScene::InitMapTool()
 {
 	for (int i = 0; i < mapArray.size(); i++)
 	{
@@ -190,10 +181,10 @@ void EditScene::InitTool()
 		}
 	}
 
-	SetToolPos();
+	SetMapToolPos();
 }
 
-void EditScene::SetToolPos()
+void EditScene::SetMapToolPos()
 {
 	if (mapArray.empty())
 		return;
@@ -224,7 +215,7 @@ void EditScene::SetToolPos()
 	bottomLine.setSize(topLine.getSize());
 }
 
-void EditScene::SetToolSize()
+void EditScene::SetMapToolSize()
 {
 	for (int i = 0; i < mapArray.size(); i++)
 	{
@@ -248,7 +239,49 @@ void EditScene::SetToolSize()
 		}
 	}
 
-	SetToolPos();
+	SetMapToolPos();
+}
+
+void EditScene::FillMapTool()
+{
+	Vector2f mousePos = InputMgr::GetMousePos();
+
+	for (int i = 0; i < colNum; i++)
+	{
+		for (int j = 0; j < rowNum; j++)
+		{
+			if (mapArray[i][j].back()->GetGlobalBounds().contains(mousePos) &&
+				mouseBoxSprite != nullptr &&
+				InputMgr::GetMouseButtonDown(Mouse::Left))
+			{
+				if (mapArray[i][j].size() > 1)
+				{
+					delete mapArray[i][j].front();
+					mapArray[i][j].pop_front();
+				}
+
+				mapArray[i][j].push_front(mouseBoxSprite->NewThis());
+				mapArray[i][j].front()->FitScale(TILE_SIZE);
+				mapArray[i][j].front()->SetPos(mapArray[i][j].back()->GetPos());
+			}
+		}
+	}
+}
+
+void EditScene::UpdateMapTool(float dt)
+{
+	FillMapTool();
+
+	for (int i = 0; i < colNum; i++)
+	{
+		for (int j = 0; j < rowNum; j++)
+		{
+			for (auto array : mapArray[i][j])
+			{
+				array->Update(dt);
+			}
+		}
+	}	
 }
 
 void EditScene::Input(float dt)
@@ -281,26 +314,26 @@ void EditScene::Input(float dt)
 	if (InputMgr::GetKeyDown(Keyboard::Numpad6))
 	{
 		rowNum++;
-		SetToolSize();
+		SetMapToolSize();
 	}
 	if (InputMgr::GetKeyDown(Keyboard::Numpad4))
 	{
 		if (rowNum <= 1)
 			return;
 		rowNum--;
-		SetToolSize();
+		SetMapToolSize();
 	}
 	if (InputMgr::GetKeyDown(Keyboard::Numpad8))
 	{
 		colNum++;
-		SetToolSize();
+		SetMapToolSize();
 	}
 	if (InputMgr::GetKeyDown(Keyboard::Numpad2))
 	{
 		if (colNum <= 1)
 			return;
 		colNum--;
-		SetToolSize();
+		SetMapToolSize();
 	}
 
 	if (InputMgr::GetMouseButton(Mouse::Middle))
@@ -323,6 +356,16 @@ void EditScene::Input(float dt)
 	if (InputMgr::GetMouseButtonUp(Mouse::Left))
 	{
 		isUiMoving = false;
+	}
+
+	if (InputMgr::GetKeyDown(Keyboard::F5))
+	{
+		Save();
+	}
+
+	if (InputMgr::GetKeyDown(Keyboard::F9))
+	{
+		Load();
 	}
 }
 
@@ -412,7 +455,8 @@ void EditScene::MouseSpriteBoxUpdate()
 		{
 			if (uiTool[i][j].first != nullptr &&
 				uiTool[i][j].second.getGlobalBounds().contains(mousePos) &&
-				InputMgr::GetMouseButtonDown(Mouse::Left))
+				InputMgr::GetMouseButtonDown(Mouse::Left)&&
+				!uiMove.getGlobalBounds().contains(InputMgr::GetMousePos()))
 			{
 				if (mouseBoxSprite != nullptr)
 					delete mouseBoxSprite;
@@ -432,32 +476,24 @@ void EditScene::MouseSpriteBoxUpdate()
 
 	if (mouseBoxSprite != nullptr)
 		mouseBoxSprite->SetPos(mousePos);
-
-	for (int i = 0; i < colNum; i++)
-	{
-		for (int j = 0; j < rowNum; j++)
-		{
-			if (mapArray[i][j].back()->GetGlobalBounds().contains(mousePos) &&
-				mouseBoxSprite != nullptr &&
-				InputMgr::GetMouseButtonDown(Mouse::Left))
-			{
-				if (mapArray[i][j].size() > 1)
-				{
-					delete mapArray[i][j].front();
-					mapArray[i][j].pop_front();
-				}
-
-				mapArray[i][j].push_front(mouseBoxSprite->NewThis());
-				mapArray[i][j].front()->FitScale(TILE_SIZE);
-				mapArray[i][j].front()->SetPos(mapArray[i][j].back()->GetPos());
-			}
-		}
-	}
 }
 
 void EditScene::Save()
 {
-
+	cout << "파일 저장\n";	
+	ofstream txt("Map/temp.txt");
+	
+	for (int i = colNum - 1; i >= 0 ; i--)
+	{
+		for (int j = 0; j < rowNum; j++)
+		{
+			if (mapArray[i][j].size() == 1)
+				txt << '0';
+			else
+				txt << mapArray[i][j].front()->GetId();
+		}
+		txt << '\n';
+	}
 }
 
 void EditScene::Load()

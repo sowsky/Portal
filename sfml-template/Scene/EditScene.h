@@ -22,13 +22,17 @@ public:
 	virtual void Draw(RenderWindow& window);
 	
 public:
-	void InitTool();	
-	void SetToolPos();
-	void SetToolSize();
+	void InitMapTool();	
+	void SetMapToolPos();
+	void SetMapToolSize();
+	void FillMapTool();
+	void UpdateMapTool(float dt);
+
 	void Input(float dt);
 	void DrawOutLine(RenderWindow& window);
 
-	void InitUiTool();
+	void InitUiTool();	
+
 	void FillUiToolBox();
 	void SetUiToolPos(Vector2f pos);
 

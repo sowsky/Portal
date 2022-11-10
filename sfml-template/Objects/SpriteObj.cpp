@@ -73,6 +73,11 @@ void SpriteObj::FitScale(float size)
 	sprite.setScale(sprite.getScale() / scaleRatio);
 }
 
+char SpriteObj::GetId()
+{
+	return id;
+}
+
 SpriteObj* SpriteObj::NewThis()
 {
 	return new SpriteObj;
