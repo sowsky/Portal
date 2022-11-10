@@ -9,8 +9,8 @@ void PlayScene::Update(float dt)
 {
 
 	PlayerMove(dt);
-	//GravityEffect(dt);
-	worldView.setCenter(player->getPosition());
+	GravityEffect(dt);
+	worldView.setCenter(player->GetPos());
 
 	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
 		SCENE_MGR->ChangeScene(Scenes::GAMESTART);
@@ -22,62 +22,60 @@ void PlayScene::Draw(RenderWindow& window)
 	window.setView(worldView);
 
 	if (player != nullptr)
-		window.draw(*player);
+		player->Draw(window);
 
 	for (auto v : wall) {
-		window.draw(*v);
+		v->Draw(window);
 	}
 
 	for (auto v : button) {
-		window.draw(*v);
+		v->Draw(window);
 	}
 
 	for (auto v : cube) {
-		window.draw(*v);
+		v->Draw(window);
 	}
 }
 
 void PlayScene::MakeWall(bool vertical)
 {
-	RectangleShape* temp = new RectangleShape();
+	SmallTile* temp = new SmallTile();
 
 	if (!vertical) {
 		wall.push_back(temp);
-		wall.back()->setPosition(currgird);
+		wall.back()->SetPos(currgird);
 
-		wall.back()->setSize({ GRIDSIZE ,GRIDSIZE});
+		wall.back()->SetSize({ GRIDSIZE ,GRIDSIZE});
 	}
 	else if (vertical) {
 
 	}
 	currgird.x += GRIDSIZE;
-	wall.back()->setFillColor(Color::Black);
 
 }
 
 void PlayScene::MakeCube()
 {
-	RectangleShape* temp = new RectangleShape();
+	Cube* temp = new Cube();
 
 	cube.push_back(temp);
-	cube.back()->setPosition(currgird);
+	cube.back()->SetPos(currgird);
 
-	cube.back()->setSize({ GRIDSIZE / 4,GRIDSIZE / 4 });
+	cube.back()->SetSize({ GRIDSIZE ,GRIDSIZE });
 	currgird.x += GRIDSIZE;
-	cube.back()->setFillColor(Color::Green);
 
 }
 
 void PlayScene::MakePlayer()
 {
-	player = new RectangleShape();
+	player = new Player();
 
 
-	player->setPosition(currgird);
+	player->SetPos(currgird);
 
-	player->setSize({ 20,50 });
+	player->SetSize({ 20,50 });
+	player->SetOrigin(Origins::MC);
 	currgird.x += GRIDSIZE;
-	player->setFillColor(Color::Blue);
 }
 
 void PlayScene::MakeButton()
@@ -87,17 +85,17 @@ void PlayScene::MakeButton()
 void PlayScene::PlayerMove(float dt)
 {
 	if (InputMgr::GetKey(Keyboard::A)) {
-		player->setPosition(player->getPosition().x - 100 * dt
-			, player->getPosition().y);
+		player->SetPos({ player->GetPos().x - 100 * dt
+			, player->GetPos().y });
 	}
 	else if (InputMgr::GetKey(Keyboard::D)) {
-		player->setPosition(player->getPosition().x + 100 * dt
-			, player->getPosition().y);
+		player->SetPos({ player->GetPos().x + 100 * dt
+			, player->GetPos().y });
 	}
 	if (InputMgr::GetKeyDown(Keyboard::Space) && groundede) {
 		jump = -100;
 		groundede = false;
-		player->setPosition(player->getPosition().x, player->getPosition().y - 10);
+		player->SetPos({ player->GetPos().x, player->GetPos().y - 10 });
 
 	}
 
@@ -106,19 +104,19 @@ void PlayScene::PlayerMove(float dt)
 void PlayScene::GravityEffect(float dt)
 {
 	for (auto v : wall) {
-		if (v->getGlobalBounds().intersects(player->getGlobalBounds())) {
+		if (v->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 			groundede = true;
 		}
 		for (auto w : cube) {
-			if (!v->getGlobalBounds().intersects(w->getGlobalBounds())) {
-				w->setPosition(w->getPosition().x, w->getPosition().y + dt * 10);
+			if (!v->GetGlobalBounds().intersects(w->GetGlobalBounds())) {
+				w->SetPos({ w->GetPos().x, w->GetPos().y + dt * 10 });
 			}
 		}
 	}
 	if (groundede)
-		player->setPosition(player->getPosition().x, player->getPosition().y);
+		player->SetPos({ player->GetPos().x, player->GetPos().y });
 	else
-		player->setPosition(player->getPosition().x, player->getPosition().y + dt * jump);
+		player->SetPos({ player->GetPos().x, player->GetPos().y + dt * jump });
 	jump += 1000 * dt;
 	if (jump >= 100) {
 		jump = 100;

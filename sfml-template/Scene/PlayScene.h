@@ -3,6 +3,7 @@
 #include "SFML/Graphics.hpp"
 #include <vector>
 #include "../FrameWork/Const.h"
+#include "../FrameWork/ObjectHeaders.h"
 
 class PlayScene : public Scene
 {
@@ -31,10 +32,10 @@ private:
 
 	//do all RectalgeShape change to Object class
 
-	RectangleShape* player;
-	vector<RectangleShape*> wall;
-	vector<RectangleShape*> button;
-	vector<RectangleShape*> cube;
+	Player* player;
+	vector<SmallTile*> wall;
+	vector<Button*> button;
+	vector<Cube*> cube;
 		
 	bool groundede = false;
 	int jump = 100;
