@@ -7,7 +7,6 @@
 
 void PlayScene::Update(float dt)
 {
-
 	PlayerMove(dt);
 	GravityEffect(dt);
 	worldView.setCenter(player->GetPos());
@@ -35,20 +34,24 @@ void PlayScene::Draw(RenderWindow& window)
 	for (auto v : cube) {
 		v->Draw(window);
 	}
+
+	for (auto v : checkcurrgrid) {
+		window.draw(*v);
+	}
 }
 
 void PlayScene::MakeWall()
 {
 	SmallTile* temp = new SmallTile();
 
-
 	wall.push_back(temp);
-	wall.back()->SetPos(currgird);
+	wall.back()->SetOrigin(Origins::MC);
+	wall.back()->SetPos(currgrid);
 
 	wall.back()->SetSize({ GRIDSIZE ,GRIDSIZE });
 
 
-	currgird.x += GRIDSIZE;
+	currgrid.x += GRIDSIZE;
 
 }
 
@@ -56,11 +59,13 @@ void PlayScene::MakeCube()
 {
 	Cube* temp = new Cube();
 
-	cube.push_back(temp);
-	cube.back()->SetPos(currgird);
 
-	cube.back()->SetSize({ GRIDSIZE ,GRIDSIZE });
-	currgird.x += GRIDSIZE;
+	cube.push_back(temp);
+	cube.back()->SetOrigin(Origins::BC);
+	cube.back()->SetPos({ currgrid.x,currgrid.y+GRIDSIZE/2 });
+
+	cube.back()->SetSize({ GRIDSIZE/1.5 ,GRIDSIZE/1.5 });
+	currgrid.x += GRIDSIZE;
 
 }
 
@@ -68,28 +73,45 @@ void PlayScene::MakePlayer()
 {
 	player = new Player();
 
-
-	player->SetPos(currgird);
-
 	player->SetSize({ 20,50 });
-	player->SetOrigin(Origins::MC);
-	currgird.x += GRIDSIZE;
+	player->SetOrigin(Origins::BC);
+	player->SetPos({ currgrid.x,currgrid.y+GRIDSIZE/2 });
+
+	currgrid.x += GRIDSIZE;
 }
 
 void PlayScene::MakeButton(int dir)
 {
-	//Button* temp = new Button();
+	Button* temp = new Button();
 
-	//button.push_back(temp);
+	button.push_back(temp);
+	button.back()->SetOrigin(Origins::BC);
 
-	////top of gird
-	//if (dir == 0) {
-	//	button.back()->SetRotation(dir);
-	//	button.back()->SetPos();
+	button.back()->SetPos(currgrid);
+	button.back()->SetRotation(dir);
+	//button.back()->FitScale(TILE_SIZE);
+	
+	if (dir == 0) {			//top of gird
+		button.back()->SetPos({ currgrid.x,currgrid.y - GRIDSIZE / 2 });
+		button.back()->SetSize({ GRIDSIZE,GRIDSIZE/4 });
 
-	//}
-	//button.back()->SetSize({ GRIDSIZE ,GRIDSIZE });
-	//currgird.x += GRIDSIZE;
+	}
+	else if (dir == 1) {	//right of gird
+		button.back()->SetPos({ currgrid.x + GRIDSIZE / 2,currgrid.y });
+		button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
+
+	}
+	else if (dir == 2) {	//bottom of gird
+		button.back()->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });
+		button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
+
+	}
+	else if (dir == 3) {	//left of gird
+		button.back()->SetPos({ currgrid.x - GRIDSIZE / 2,currgrid.y });
+		button.back()->SetSize({ GRIDSIZE ,GRIDSIZE / 4 });
+
+	}
+	currgrid.x += GRIDSIZE;
 }
 
 void PlayScene::PlayerMove(float dt)
@@ -144,11 +166,18 @@ PlayScene::PlayScene(string path)
 	while (getline(fin, str)) {
 		//verifying each character
 		for (int i = 0; i < str.size() + 1; i++) {
+			checkcurrgrid.push_back( new RectangleShape());
+			Utils::SetOrigin(*checkcurrgrid.back(), Origins::MC);
+			checkcurrgrid.back()->setSize({ 10,10 });
+			checkcurrgrid.back()->setFillColor(Color::Black);
+			checkcurrgrid.back()->setPosition(currgrid);
 
+			///////////get button side///////
 			int type;
 			if (str[i] == 'b' || str[i] == 'B') {
 				type = (int)str[i + 1] - 48;
 			}
+			/////////////////////////////
 
 			switch (str[i]) {
 			case '1':
@@ -169,10 +198,11 @@ PlayScene::PlayScene(string path)
 				i++;
 				break;
 			default:
-				currgird.x += GRIDSIZE;
+				currgrid.x += GRIDSIZE;
 			}
+
 		}
-		currgird = { 0,currgird.y + GRIDSIZE };
+		currgrid = { GRIDSIZE/2,currgrid.y + GRIDSIZE };
 
 	}
 
@@ -207,6 +237,11 @@ void PlayScene::Release()
 		delete v;
 	}
 	cube.clear();
+
+	for (auto v : checkcurrgrid) {
+		delete v;
+	}
+	checkcurrgrid.clear();
 }
 
 void PlayScene::Enter()

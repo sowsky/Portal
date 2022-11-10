@@ -39,6 +39,8 @@ private:
 		
 	bool groundede = false;
 	int jump = 100;
-	Vector2f currgird = { 0,0 };
+	Vector2f currgrid = { GRIDSIZE/2,GRIDSIZE/2 };
+
+	vector<RectangleShape*> checkcurrgrid;
 };
 
