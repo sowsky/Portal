@@ -37,19 +37,17 @@ void PlayScene::Draw(RenderWindow& window)
 	}
 }
 
-void PlayScene::MakeWall(bool vertical)
+void PlayScene::MakeWall()
 {
 	SmallTile* temp = new SmallTile();
 
-	if (!vertical) {
-		wall.push_back(temp);
-		wall.back()->SetPos(currgird);
 
-		wall.back()->SetSize({ GRIDSIZE ,GRIDSIZE});
-	}
-	else if (vertical) {
+	wall.push_back(temp);
+	wall.back()->SetPos(currgird);
 
-	}
+	wall.back()->SetSize({ GRIDSIZE ,GRIDSIZE });
+
+
 	currgird.x += GRIDSIZE;
 
 }
@@ -78,8 +76,20 @@ void PlayScene::MakePlayer()
 	currgird.x += GRIDSIZE;
 }
 
-void PlayScene::MakeButton()
+void PlayScene::MakeButton(int dir)
 {
+	//Button* temp = new Button();
+
+	//button.push_back(temp);
+
+	////top of gird
+	//if (dir == 0) {
+	//	button.back()->SetRotation(dir);
+	//	button.back()->SetPos();
+
+	//}
+	//button.back()->SetSize({ GRIDSIZE ,GRIDSIZE });
+	//currgird.x += GRIDSIZE;
 }
 
 void PlayScene::PlayerMove(float dt)
@@ -134,12 +144,16 @@ PlayScene::PlayScene(string path)
 	while (getline(fin, str)) {
 		//verifying each character
 		for (int i = 0; i < str.size() + 1; i++) {
+
+			int type;
+			if (str[i] == 'b' || str[i] == 'B') {
+				type = (int)str[i + 1] - 48;
+			}
+
 			switch (str[i]) {
 			case '1':
-				MakeWall(false);
+				MakeWall();
 				break;
-			case '2':
-				MakeWall(true);
 			case 'p':
 			case 'P':
 				MakePlayer();
@@ -151,7 +165,8 @@ PlayScene::PlayScene(string path)
 
 			case 'b':
 			case 'B':
-				MakeButton();
+				MakeButton(type);
+				i++;
 				break;
 			default:
 				currgird.x += GRIDSIZE;
@@ -162,7 +177,6 @@ PlayScene::PlayScene(string path)
 	}
 
 	fin.close();
-
 }
 
 PlayScene::~PlayScene()

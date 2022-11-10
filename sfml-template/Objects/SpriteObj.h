@@ -22,6 +22,7 @@ public:
 	void SetScale(Vector2f scale);
 	void SetSize(Vector2f size);
 	void FitScale(float size);
+	void SetRotation(int val);
 
 	virtual SpriteObj* NewThis();
 

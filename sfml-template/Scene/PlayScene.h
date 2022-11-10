@@ -21,10 +21,10 @@ public:
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);
 
-	void MakeWall(bool vertical);
+	void MakeWall();
 	void MakeCube();
 	void MakePlayer();
-	void MakeButton();
+	void MakeButton(int dir);
 
 	void PlayerMove(float dt);
 	void GravityEffect(float dt);
