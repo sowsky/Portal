@@ -1,6 +1,7 @@
 #pragma once
 #include "../3rd/Singleton.h"
 #include <SFML/Graphics.hpp>
+#include <box2d/box2d.h>
 using namespace sf;
 using namespace std;
 class Framework : public Singleton<Framework>
@@ -12,6 +13,11 @@ protected:
 	Clock clock;
 	Time deltaTime;
 	float timeScale;
+
+	b2Vec2 gravity;
+	b2World* world;
+	b2BodyDef groundBodyDef;
+
 
 public:
 	Framework();

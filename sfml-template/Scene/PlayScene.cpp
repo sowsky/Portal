@@ -5,9 +5,12 @@
 #include "SceneMgr.h"
 #include "../FrameWork/Framework.h"
 
+
 void PlayScene::Update(float dt)
 {
-	PlayerMove(dt);
+	player->Move(dt);
+	player->Update(dt);
+
 	GravityEffect(dt);
 	worldView.setCenter(player->GetPos());
 
@@ -35,9 +38,7 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(window);
 	}
 
-	for (auto v : checkcurrgrid) {
-		window.draw(*v);
-	}
+
 }
 
 void PlayScene::MakeWall()
@@ -62,10 +63,11 @@ void PlayScene::MakeCube()
 
 	cube.push_back(temp);
 	cube.back()->SetOrigin(Origins::BC);
-	cube.back()->SetPos({ currgrid.x,currgrid.y+GRIDSIZE/2 });
+	cube.back()->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });
 
-	cube.back()->SetSize({ GRIDSIZE/1.5 ,GRIDSIZE/1.5 });
+	cube.back()->SetSize({ GRIDSIZE / 1.5 ,GRIDSIZE / 1.5 });
 	currgrid.x += GRIDSIZE;
+
 
 }
 
@@ -75,8 +77,7 @@ void PlayScene::MakePlayer()
 
 	player->SetSize({ 20,50 });
 	player->SetOrigin(Origins::BC);
-	player->SetPos({ currgrid.x,currgrid.y+GRIDSIZE/2 });
-
+	player->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });
 	currgrid.x += GRIDSIZE;
 }
 
@@ -90,10 +91,10 @@ void PlayScene::MakeButton(int dir)
 	button.back()->SetPos(currgrid);
 	button.back()->SetRotation(dir);
 	//button.back()->FitScale(TILE_SIZE);
-	
+
 	if (dir == 0) {			//top of gird
 		button.back()->SetPos({ currgrid.x,currgrid.y - GRIDSIZE / 2 });
-		button.back()->SetSize({ GRIDSIZE,GRIDSIZE/4 });
+		button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
 
 	}
 	else if (dir == 1) {	//right of gird
@@ -114,44 +115,14 @@ void PlayScene::MakeButton(int dir)
 	currgrid.x += GRIDSIZE;
 }
 
-void PlayScene::PlayerMove(float dt)
-{
-	if (InputMgr::GetKey(Keyboard::A)) {
-		player->SetPos({ player->GetPos().x - 100 * dt
-			, player->GetPos().y });
-	}
-	else if (InputMgr::GetKey(Keyboard::D)) {
-		player->SetPos({ player->GetPos().x + 100 * dt
-			, player->GetPos().y });
-	}
-	if (InputMgr::GetKeyDown(Keyboard::Space) && groundede) {
-		jump = -100;
-		groundede = false;
-		player->SetPos({ player->GetPos().x, player->GetPos().y - 10 });
-
-	}
-
-}
-
 void PlayScene::GravityEffect(float dt)
 {
-	for (auto v : wall) {
-		if (v->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
-			groundede = true;
+	for (auto w : wall) {
+		if (w->GetGlobalBounds().intersects(player->GethitboxGlobalBounds())) {
+			
+			player->SetGround(false);
+			player->SetPos({ player->GetPos().x,w->GetGlobalBounds().top- 0.1f});
 		}
-		for (auto w : cube) {
-			if (!v->GetGlobalBounds().intersects(w->GetGlobalBounds())) {
-				w->SetPos({ w->GetPos().x, w->GetPos().y + dt * 10 });
-			}
-		}
-	}
-	if (groundede)
-		player->SetPos({ player->GetPos().x, player->GetPos().y });
-	else
-		player->SetPos({ player->GetPos().x, player->GetPos().y + dt * jump });
-	jump += 1000 * dt;
-	if (jump >= 100) {
-		jump = 100;
 	}
 
 }
@@ -166,11 +137,7 @@ PlayScene::PlayScene(string path)
 	while (getline(fin, str)) {
 		//verifying each character
 		for (int i = 0; i < str.size() + 1; i++) {
-			checkcurrgrid.push_back( new RectangleShape());
-			Utils::SetOrigin(*checkcurrgrid.back(), Origins::MC);
-			checkcurrgrid.back()->setSize({ 10,10 });
-			checkcurrgrid.back()->setFillColor(Color::Black);
-			checkcurrgrid.back()->setPosition(currgrid);
+
 
 			///////////get button side///////
 			int type;
@@ -202,7 +169,7 @@ PlayScene::PlayScene(string path)
 			}
 
 		}
-		currgrid = { GRIDSIZE/2,currgrid.y + GRIDSIZE };
+		currgrid = { GRIDSIZE / 2,currgrid.y + GRIDSIZE };
 
 	}
 
@@ -238,10 +205,7 @@ void PlayScene::Release()
 	}
 	cube.clear();
 
-	for (auto v : checkcurrgrid) {
-		delete v;
-	}
-	checkcurrgrid.clear();
+
 }
 
 void PlayScene::Enter()

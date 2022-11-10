@@ -6,11 +6,15 @@
 Framework::Framework()
 	: timeScale(1.f)
 {
+	world = new b2World(b2Vec2(0,-10));
+
+	groundBodyDef.position.Set(InputMgr::GetMousePos().x, InputMgr::GetMousePos().y);
+
 }
 
 Framework::~Framework()
 {
-
+	delete world;
 }
 
 float Framework::GetDT() const
