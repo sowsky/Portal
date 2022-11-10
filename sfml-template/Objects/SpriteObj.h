@@ -13,7 +13,7 @@ public:
 	virtual void SetPos(const Vector2f& pos);
 
 	virtual void Update(float dt);
-	virtual void Draw(RenderWindow& window);
+	virtual void Draw(RenderWindow& window);	
 public:
 	void SetResourceTexture(String id);
 	void SetUiTexture(String id);
@@ -23,6 +23,8 @@ public:
 	void SetSize(Vector2f size);
 	void FitScale(float size);
 	void SetRotation(int val);
+
+	char GetId();
 
 	virtual SpriteObj* NewThis();
 

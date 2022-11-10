@@ -73,6 +73,7 @@ void SpriteObj::FitScale(float size)
 	sprite.setScale(sprite.getScale() / scaleRatio);
 }
 
+
 void SpriteObj::SetRotation(int val)
 {
 	if (val == 0) {
@@ -84,6 +85,10 @@ void SpriteObj::SetRotation(int val)
 	else if (val == 3) {
 		sprite.setRotation(90.f);
 	}
+
+char SpriteObj::GetId()
+{
+	return id;
 }
 
 SpriteObj* SpriteObj::NewThis()
