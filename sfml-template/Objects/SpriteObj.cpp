@@ -85,6 +85,7 @@ void SpriteObj::SetRotation(int val)
 	else if (val == 3) {
 		sprite.setRotation(90.f);
 	}
+}
 
 char SpriteObj::GetId()
 {
