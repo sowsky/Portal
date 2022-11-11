@@ -3,7 +3,7 @@
 Button::Button()
 {
 	SetResourceTexture("Graphics/button.png");
-	id = 'b';
+	id = 'b';	
 }
 
 Button::~Button()

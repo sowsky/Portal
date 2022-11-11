@@ -32,13 +32,7 @@ void SpriteObj::Draw(RenderWindow& window)
 
 void SpriteObj::SetResourceTexture(String id)
 {	
-	sprite.setTexture(*RESOURCEMGR->GetTexture(id));
-}
-
-void SpriteObj::SetUiTexture(String id)
-{
-	SetResourceTexture(id);
-	sprite.setScale({ 1.5f, 1.5f });
+	sprite.setTexture(*RESOURCEMGR->GetTexture(id), true);
 }
 
 Sprite* SpriteObj::GetSprite()
@@ -57,6 +51,11 @@ void SpriteObj::SetSize(Vector2f size)
 		return;
 
 	Utils::SetSpriteSize(sprite, size);
+}
+
+Vector2f SpriteObj::GetSize()
+{
+	return Utils::GetSpriteSize(sprite);
 }
 
 void SpriteObj::FitScale(float size)

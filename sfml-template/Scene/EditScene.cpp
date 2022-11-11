@@ -17,14 +17,16 @@ EditScene::EditScene()
 	rightLine.setFillColor(Color::Black);
 	bottomLine.setFillColor(Color::Black);
 
-	background.setTexture(*RESOURCEMGR->GetTexture("Graphics/backgrounds/tiles.png"));	
+	background.setTexture(*RESOURCEMGR->GetTexture("Graphics/backgrounds/ruin2.png"));	
 	shadow.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/shadow.png"));
 	
 
-	uiBackGround.setFillColor(Color::White);
+	uiBackGround.setFillColor(Color(229,232,233,255));
 	uiOutLine.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/uioutline.png"));
 	uiMove.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/cross.png"));
 	Utils::SetOrigin(uiMove, Origins::MC);
+	uiOpenClose.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/cross2.png"));
+	Utils::SetOrigin(uiOpenClose, Origins::MC);
 
 	mapToolCheckBox = new SpriteObj;
 	mapToolCheckBox->SetResourceTexture("Graphics/Ui/checkbox.png");	
@@ -33,6 +35,11 @@ EditScene::EditScene()
 	uiToolCheckBox = new SpriteObj;
 	uiToolCheckBox->SetResourceTexture("Graphics/Ui/checkbox.png");
 	uiToolCheckBox->FitScale(TILE_SIZE * 3.f);
+
+	crossUiCheckBox = new SpriteObj;
+	crossUiCheckBox->SetResourceTexture("Graphics/Ui/checkbox.png");
+	crossUiCheckBox->FitScale(40.f);
+	crossUiCheckBox->SetOrigin(Origins::MC);
 }
 
 EditScene::~EditScene()
@@ -41,14 +48,17 @@ EditScene::~EditScene()
 	delete mouseBoxSprite;
 	delete mapToolCheckBox;
 	delete uiToolCheckBox;
+	delete crossUiCheckBox;
 }
 
 void EditScene::Init()
 {		
 	isScenePlay = true;
 	rowNum = 20;
-	colNum = 20;
-	isPlayer = false;
+	colNum = 20;	
+
+	isUiOpen = true;
+	isGridOn = true;
 
 	mapToolCheckBox->SetActive(false);
 	uiToolCheckBox->SetActive(false);
@@ -70,6 +80,7 @@ void EditScene::Init()
 	uiStartPos.y = (uiViewSize.y - uiOutLine.getGlobalBounds().height) * 0.5f;
 	uiOutLine.setPosition(uiStartPos);
 
+	mouseBoxSprite = nullptr;
 	isUiMoving = false;
 	mouseOnUi = false;
 	InitUiTool();
@@ -78,15 +89,7 @@ void EditScene::Init()
 void EditScene::Release()
 {
 	ReleaseMapTool();
-
-	for (int i = 0; i < uiTool.size(); i++)
-	{
-		for (int j = 0; j < uiTool[i].size(); j++)
-		{
-			if (uiTool[i][j].first != nullptr)
-				delete uiTool[i][j].first;	
-		}
-	}
+	ReleaseUiTool();
 }
 
 void EditScene::Enter()
@@ -117,8 +120,13 @@ void EditScene::Update(float dt)
 }
 
 void EditScene::Draw(RenderWindow& window)
+{	
+	DrawWorldView(window);
+	DrawUiView(window);
+}
+
+void EditScene::DrawWorldView(RenderWindow& window)
 {
-	///////////////////////////// ¿ùµåºä
 	window.setView(worldView);
 	window.draw(shadow);
 	window.draw(background);
@@ -127,25 +135,28 @@ void EditScene::Draw(RenderWindow& window)
 	{
 		for (int j = 0; j < rowNum; j++)
 		{
-			if (!mapArray[i][j].first.empty())
+			if (!mapTool[i][j].first.empty())
 			{
-				for (auto array : mapArray[i][j].first)
+				for (auto array : mapTool[i][j].first)
 				{
 					if (array->GetActive() && array != nullptr)
 						array->Draw(window);
 				}
 			}
 
-			if (mapArray[i][j].second->GetActive())
-				mapArray[i][j].second->Draw(window);			
+			if (mapTool[i][j].second->GetActive() && isGridOn)
+				mapTool[i][j].second->Draw(window);
 		}
 	}
+	DrawWire(window);
 	DrawOutLine(window);
 
 	if (mapToolCheckBox->GetActive())
 		mapToolCheckBox->Draw(window);
+}
 
-	////////////////////////////// UIºä
+void EditScene::DrawUiView(RenderWindow& window)
+{
 	window.setView(uiView);
 
 	window.draw(uiBackGround);
@@ -156,33 +167,41 @@ void EditScene::Draw(RenderWindow& window)
 		{
 			if (uiTool[i][j].first != nullptr && uiTool[i][j].first->GetActive())
 				uiTool[i][j].first->Draw(window);
-			
+
 			window.draw(uiTool[i][j].second);
 		}
 	}
 
-	window.draw(uiOutLine);	
+	window.draw(uiOutLine);
 
 	if (uiToolCheckBox->GetActive())
 		uiToolCheckBox->Draw(window);
 
 	window.draw(uiMove);
+	window.draw(uiOpenClose);
+
+	if (crossUiCheckBox->GetActive())
+		crossUiCheckBox->Draw(window);
 
 	if (mouseBoxSprite != nullptr)
 		mouseBoxSprite->Draw(window);
 }
 
+void EditScene::DrawWire(RenderWindow& window)
+{
+}
+
 
 void EditScene::InitMapTool()
 {
-	for (int i = 0; i < mapArray.size(); i++)
+	for (int i = 0; i < mapTool.size(); i++)
 	{
-		for (int j = 0; j < mapArray[i].size(); j++)
+		for (int j = 0; j < mapTool[i].size(); j++)
 		{
-			mapArray[i][j].second = new SpriteObj;
-			mapArray[i][j].second->SetResourceTexture("Graphics/grid.png");
-			mapArray[i][j].second->FitScale(TILE_SIZE);
-			mapArray[i][j].second->SetActive(false);
+			mapTool[i][j].second = new SpriteObj;
+			mapTool[i][j].second->SetResourceTexture("Graphics/grid.png");
+			mapTool[i][j].second->FitScale(TILE_SIZE);
+			mapTool[i][j].second->SetActive(false);
 		}
 	}
 
@@ -190,7 +209,7 @@ void EditScene::InitMapTool()
 	{
 		for (int j = 0; j < rowNum; j++)
 		{
-			mapArray[i][j].second->SetActive(true);
+			mapTool[i][j].second->SetActive(true);
 		}
 	}
 
@@ -203,27 +222,27 @@ void EditScene::InitMapTool()
 
 void EditScene::ReleaseMapTool()
 {
-	for (int i = 0; i < mapArray.size(); i++)
+	for (int i = 0; i < mapTool.size(); i++)
 	{
-		for (int j = 0; j < mapArray[i].size(); j++)
+		for (int j = 0; j < mapTool[i].size(); j++)
 		{
-			delete mapArray[i][j].second;
+			delete mapTool[i][j].second;
 
-			for (auto array : mapArray[i][j].first)
+			for (auto array : mapTool[i][j].first)
 			{
 				if (array != nullptr)
 				{
 					delete array;					
 				}					
 			}
-			mapArray[i][j].first.clear();
+			mapTool[i][j].first.clear();
 		}
 	}
 }
 
 void EditScene::SetMapToolPos()
 {
-	if (mapArray.empty())
+	if (mapTool.empty())
 		return;
 	
 	//Vector2u size = RESOURCEMGR->GetTexture("Graphics/grid.png")->getSize();	
@@ -234,37 +253,37 @@ void EditScene::SetMapToolPos()
 		for (int j = 0; j < rowNum; j++)
 		{
 			Vector2f pos = { (float)tileSize.x * j, (float)tileSize.y * (-i) };
-			mapArray[i][j].second->SetPos(pos + startPos);
+			mapTool[i][j].second->SetPos(pos + startPos);
 		}
 	}
 
-	background.setPosition(mapArray[colNum - 1][0].second->GetPos());
-	Vector2f shadowPosFix{ 8.f, 8.f };
-	shadow.setPosition(mapArray[colNum - 1][0].second->GetPos() + shadowPosFix);
+	background.setPosition(mapTool[colNum - 1][0].second->GetPos());
+	Vector2f shadowPosFix{ 7.f, 7.f };
+	shadow.setPosition(mapTool[colNum - 1][0].second->GetPos() + shadowPosFix);
 
-	topLine.setPosition(mapArray[colNum - 1][0].second->GetPos());
+	topLine.setPosition(mapTool[colNum - 1][0].second->GetPos());
 	topLine.setSize({ (float)tileSize.x * rowNum , 1.f });
 	leftLine.setPosition(topLine.getPosition());
 	leftLine.setSize({ 1.f, (float)tileSize.y * colNum });
 
 	Vector2f fixPos;
 	fixPos = { (float)tileSize.x, 0.f };
-	rightLine.setPosition(mapArray[colNum - 1][rowNum - 1].second->GetPos() + fixPos);
+	rightLine.setPosition(mapTool[colNum - 1][rowNum - 1].second->GetPos() + fixPos);
 	rightLine.setSize(leftLine.getSize());	
 	fixPos = { 0.f, (float)tileSize.y - 1.f};
-	bottomLine.setPosition(mapArray[0][0].second->GetPos() + fixPos);
+	bottomLine.setPosition(mapTool[0][0].second->GetPos() + fixPos);
 	bottomLine.setSize(topLine.getSize());
 }
 
 void EditScene::SetMapToolSize()
 {
-	for (int i = 0; i < mapArray.size(); i++)
+	for (int i = 0; i < mapTool.size(); i++)
 	{
-		for (int j = 0; j < mapArray[i].size(); j++)
+		for (int j = 0; j < mapTool[i].size(); j++)
 		{
-			mapArray[i][j].second->SetActive(false);
+			mapTool[i][j].second->SetActive(false);
 
-			for (auto array : mapArray[i][j].first)
+			for (auto array : mapTool[i][j].first)
 			{
 				array->SetActive(false);
 			}
@@ -275,9 +294,9 @@ void EditScene::SetMapToolSize()
 	{
 		for (int j = 0; j < rowNum; j++)
 		{
-			mapArray[i][j].second->SetActive(true);
+			mapTool[i][j].second->SetActive(true);
 
-			for (auto array : mapArray[i][j].first)
+			for (auto array : mapTool[i][j].first)
 			{
 				array->SetActive(true);
 			}
@@ -294,38 +313,47 @@ void EditScene::SetMapToolSize()
 void EditScene::FillMapTool()
 {
 	Vector2f mousePos = ScreenToWorldPos((Vector2i)InputMgr::GetMousePos());
+	Vector2f fixPos{ TILE_SIZE / 2,TILE_SIZE };
 	
 	for (int i = 0; i < colNum; i++)
 	{
 		for (int j = 0; j < rowNum; j++)
-		{
-			if (mapArray[i][j].second->GetGlobalBounds().contains(mousePos) &&
+		{		
+			if (mapTool[i][j].second->GetGlobalBounds().contains(mousePos) &&
 				mouseBoxSprite != nullptr &&
 				InputMgr::GetMouseButton(Mouse::Left) &&
 				!mouseOnUi)
 			{
+				if (!mapTool[i][j].first.empty() &&
+					mouseBoxSprite->GetId() == '1' &&
+					mapTool[i][j].first.front()->GetId() == '1')
+					break;
+
 				if (!(mouseBoxSprite->GetId() == 'p' && Player::GetPlayerNum() > 2) &&
 					!(mouseBoxSprite->GetId() == '@' && Goal::GetGoalNum() > 2))
 				{
-					if (!mapArray[i][j].first.empty())
+					if (!mapTool[i][j].first.empty())
 					{
-						delete mapArray[i][j].first.front();
-						mapArray[i][j].first.clear();
+						delete mapTool[i][j].first.front();
+						mapTool[i][j].first.clear();
 					}
 
-					mapArray[i][j].first.push_front(mouseBoxSprite->NewThis());
-					mapArray[i][j].first.front()->FitScale(TILE_SIZE);
-					mapArray[i][j].first.front()->SetPos(mapArray[i][j].second->GetPos());
+					mapTool[i][j].first.push_front(mouseBoxSprite->NewThis());
+					mapTool[i][j].first.front()->FitScale(TILE_SIZE);
+					mapTool[i][j].first.front()->SetOrigin(Origins::BC);
+					mapTool[i][j].first.front()->SetPos(mapTool[i][j].second->GetPos() +fixPos);					
 				}
+				break;
 			}
 
-			if (mapArray[i][j].second->GetGlobalBounds().contains(mousePos) &&
+			if (mapTool[i][j].second->GetGlobalBounds().contains(mousePos) &&
 				mouseBoxSprite == nullptr &&
 				InputMgr::GetMouseButton(Mouse::Right) &&
-				!mapArray[i][j].first.empty())
+				!mapTool[i][j].first.empty())
 			{
-				delete mapArray[i][j].first.front();
-				mapArray[i][j].first.clear();
+				delete mapTool[i][j].first.front();
+				mapTool[i][j].first.clear();
+				break;
 			}
 		}
 	}
@@ -357,11 +385,11 @@ void EditScene::UpdateMapTool(float dt)
 	{
 		for (int j = 0; j < rowNum; j++)
 		{
-			if (mapArray[i][j].second->GetGlobalBounds().contains(mousePos) &&
+			if (mapTool[i][j].second->GetGlobalBounds().contains(mousePos) &&
 				!mouseOnUi)
 			{
 				mapToolCheckBox->SetActive(true);
-				mapToolCheckBox->SetPos(mapArray[i][j].second->GetPos());
+				mapToolCheckBox->SetPos(mapTool[i][j].second->GetPos());
 				break;
 			}
 		}
@@ -395,24 +423,28 @@ void EditScene::Input(float dt)
 		worldView.zoom(1.06f);
 	}
 
-	if (InputMgr::GetKeyDown(Keyboard::Numpad6))
+	if (InputMgr::GetKeyDown(Keyboard::Numpad6) ||
+		InputMgr::GetKeyDown(Keyboard::Right))
 	{
 		rowNum++;
 		SetMapToolSize();
 	}
-	if (InputMgr::GetKeyDown(Keyboard::Numpad4))
+	if (InputMgr::GetKeyDown(Keyboard::Numpad4) ||
+		InputMgr::GetKeyDown(Keyboard::Left))
 	{
 		if (rowNum <= 1)
 			return;
 		rowNum--;
 		SetMapToolSize();
 	}
-	if (InputMgr::GetKeyDown(Keyboard::Numpad8))
+	if (InputMgr::GetKeyDown(Keyboard::Numpad8) ||
+		InputMgr::GetKeyDown(Keyboard::Up))
 	{
 		colNum++;
 		SetMapToolSize();
 	}
-	if (InputMgr::GetKeyDown(Keyboard::Numpad2))
+	if (InputMgr::GetKeyDown(Keyboard::Numpad2) ||
+		InputMgr::GetKeyDown(Keyboard::Down))
 	{
 		if (colNum <= 1)
 			return;
@@ -457,6 +489,11 @@ void EditScene::Input(float dt)
 		ReleaseMapTool();
 		InitMapTool();
 	}
+
+	if (InputMgr::GetKeyDown(Keyboard::Num1))
+	{
+		isGridOn = !isGridOn;
+	}
 }
 
 void EditScene::DrawOutLine(RenderWindow& window)
@@ -473,9 +510,12 @@ void EditScene::InitUiTool()
 	uiBackGround.setSize({ rect.width, rect.height });
 
 	Vector2f uiStartPos = uiOutLine.getPosition();
-	uiBackGround.setPosition(uiStartPos);
-	
+	uiBackGround.setPosition(uiStartPos);	
 	uiMove.setPosition(uiStartPos);
+	
+	Vector2f uiEndPos{ uiStartPos.x + rect.width, uiStartPos.y + rect.height };
+
+	uiOpenClose.setPosition(uiEndPos);
 
 	for (int i = 0; i < uiTool.size(); i++)
 	{
@@ -500,7 +540,7 @@ void EditScene::InitUiTool()
 		{
 			if (uiTool[i][j].first != nullptr)
 			{
-				uiTool[i][j].first->FitScale(60.f);
+				uiTool[i][j].first->FitScale(75.f);
 				uiTool[i][j].first->SetOrigin(Origins::MC);
 				uiTool[i][j].first->SetPos(uiTool[i][j].second.getPosition() + fixPos);
 			}
@@ -508,19 +548,76 @@ void EditScene::InitUiTool()
 	}
 }
 
+void EditScene::ReleaseUiTool()
+{
+	for (int i = 0; i < uiTool.size(); i++)
+	{
+		for (int j = 0; j < uiTool[i].size(); j++)
+		{
+			if (uiTool[i][j].first != nullptr)
+				delete uiTool[i][j].first;
+		}
+	}
+}
+
 void EditScene::UpdateUiTool(float dt)
 {
 	uiToolCheckBox->SetActive(false);
+	crossUiCheckBox->SetActive(false);
 	mouseOnUi = false;
 
 	Vector2f mousePos = InputMgr::GetMousePos();
+
+	if (uiMove.getGlobalBounds().contains(mousePos))
+	{
+		mouseOnUi = true;
+		crossUiCheckBox->SetPos(uiMove.getPosition());
+		crossUiCheckBox->SetActive(true);
+	}
+
+	if (uiOpenClose.getGlobalBounds().contains(mousePos))
+	{
+		mouseOnUi = true;
+		crossUiCheckBox->SetPos(uiOpenClose.getPosition());
+		crossUiCheckBox->SetActive(true);
+	}
+
+	if (uiOpenClose.getGlobalBounds().contains(mousePos) &&
+		InputMgr::GetMouseButtonUp(Mouse::Left))
+	{
+		isUiOpen = !isUiOpen;
+		if (!isUiOpen)
+		{
+			Vector2f pos{ -1000.f,-1000.f };
+			uiOutLine.setPosition(pos);
+			uiBackGround.setPosition(pos);			
+			
+			for (int i = 0; i < uiTool.size(); i++)
+			{
+				for (int j = 0; j < uiTool[i].size(); j++)
+				{					
+					uiTool[i][j].second.setPosition(pos);
+					if (uiTool[i][j].first != nullptr)
+						uiTool[i][j].first->SetPos(uiTool[i][j].second.getPosition());
+				}
+			}			
+		}
+		SetUiToolPos(uiMove.getPosition());
+	}
+
+	if (!isUiOpen)
+		return;
+
+	bool mouseOnCrossBox =
+	uiMove.getGlobalBounds().contains(mousePos) ||
+	uiOpenClose.getGlobalBounds().contains(mousePos);
 
 	for (int i = 0; i < uiTool.size(); i++)
 	{
 		for (int j = 0; j < uiTool[i].size(); j++)
 		{
 			if (uiTool[i][j].second.getGlobalBounds().contains(mousePos) &&
-				!uiMove.getGlobalBounds().contains(mousePos))
+				!mouseOnCrossBox)
 			{
 				mouseOnUi = true;
 				uiToolCheckBox->SetActive(true);
@@ -543,22 +640,37 @@ void EditScene::UpdateUiTool(float dt)
 void EditScene::FillUiToolBox()
 {
 	uiTool[0][0].first = new Tile;
+	uiTool[0][0].first->SetResourceTexture("Graphics/Ui/tile.png");
+
 	uiTool[0][1].first = new Cube;
+	uiTool[0][1].first->SetResourceTexture("Graphics/Ui/cube.png");
+
 	uiTool[0][2].first = new Player;
 
 	uiTool[0][3].first = new Button;	
-	uiTool[0][3].first->SetResourceTexture("Graphics/Ui/buttonui.png");
-	Vector2u size = uiTool[0][3].first->GetSprite()->getTexture()->getSize();
-	uiTool[0][3].first->GetSprite()->setTextureRect({ 0,0, (int)size.x, (int)size.y });
+	uiTool[0][3].first->SetResourceTexture("Graphics/Ui/button.png");
 
 	uiTool[1][0].first = new Goal;
+	uiTool[1][0].first->SetResourceTexture("Graphics/Ui/goal.png");
 }
 
 void EditScene::SetUiToolPos(Vector2f pos)
 {
+	uiMove.setPosition(pos);	
+
+	if (!isUiOpen)
+	{
+		Vector2f fixpos{ 40.f,0.f };
+		uiOpenClose.setPosition(pos + fixpos);
+		return;
+	}
+
 	uiOutLine.setPosition(pos);
 	uiBackGround.setPosition(pos);
-	uiMove.setPosition(pos);
+
+	FloatRect rect = uiOutLine.getLocalBounds();
+	Vector2f uiEndPos{ pos.x + rect.width, pos.y + rect.height };
+	uiOpenClose.setPosition(uiEndPos);	
 
 	Vector2f fixPos = { 75.f * 0.5f, 75.f * 0.5f };
 	for (int i = 0; i < uiTool.size(); i++)
@@ -615,10 +727,10 @@ void EditScene::Save()
 	{
 		for (int j = 0; j < rowNum; j++)
 		{
-			if (mapArray[i][j].first.empty())
+			if (mapTool[i][j].first.empty())
 				txt << '0';
 			else
-				txt << mapArray[i][j].first.front()->GetId();
+				txt << mapTool[i][j].first.front()->GetId();
 		}
 		txt << '\n';
 	}

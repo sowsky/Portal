@@ -12,8 +12,7 @@ Player::Player()
 	playerNum++;
 
 	hitbox = new RectangleShape;
-	hitbox->setFillColor(Color::Red);
-
+	hitbox->setFillColor(Color::Red);	
 }
 
 Player::~Player()

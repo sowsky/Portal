@@ -28,6 +28,8 @@ public:
 
 	void PlayerMove(float dt);
 	void GravityEffect(float dt);
+public:
+	void DrawBackGroundView(RenderWindow& window);
 private:
 
 	//do all RectalgeShape change to Object class
@@ -39,5 +41,7 @@ private:
 		
 	Vector2f currgrid = { GRIDSIZE/2,GRIDSIZE/2 };
 
+	View backgroundView;
+	Sprite background;
 };
 

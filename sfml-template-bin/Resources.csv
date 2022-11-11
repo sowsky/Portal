@@ -6,9 +6,13 @@ Graphics/goal.png,0
 Graphics/player.png,0
 Graphics/Ui/uioutline.png,0
 Graphics/Ui/cross.png,0
-Graphics/Ui/buttonui.png,0
+Graphics/Ui/cross2.png,0
 Graphics/Ui/checkbox.png,0
 Graphics/Ui/shadow.png,0
+Graphics/Ui/tile.png,0
+Graphics/Ui/cube.png,0
+Graphics/Ui/goal.png,0
+Graphics/Ui/button.png,0
 Graphics/Tile/tile.png,0
 Graphics/Tile/tile2.png,0
 Graphics/Tile/tile3.png,0
@@ -19,3 +23,4 @@ Graphics/backgrounds/ruin.png,0
 Graphics/backgrounds/ruin2.png,0
 Graphics/backgrounds/tiles.png,0
 Fonts/NanumGothic.otf,1
+Fonts/times.ttf,1

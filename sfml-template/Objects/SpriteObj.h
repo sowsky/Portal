@@ -16,11 +16,13 @@ public:
 	virtual void Draw(RenderWindow& window);	
 public:
 	void SetResourceTexture(String id);
-	void SetUiTexture(String id);
+	
 	Sprite* GetSprite();
 
 	void SetScale(Vector2f scale);
 	void SetSize(Vector2f size);
+	Vector2f GetSize();
+
 	void FitScale(float size);
 	void SetRotation(int val);
 

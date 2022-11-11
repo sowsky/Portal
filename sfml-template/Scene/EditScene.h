@@ -22,19 +22,25 @@ public:
 	virtual void Draw(RenderWindow& window);
 	
 public:
+	void DrawWorldView(RenderWindow& window);
+	void DrawUiView(RenderWindow& window);
+	void DrawWire(RenderWindow& window);
+
 	void InitMapTool();	
 	void ReleaseMapTool();
+
 	void SetMapToolPos();
 	void SetMapToolSize();
 	void FillMapTool();
 	void UpdateMapTool(float dt);
-
-	void Input(float dt);
 	void DrawOutLine(RenderWindow& window);
 
-	void InitUiTool();	
-	void UpdateUiTool(float dt);
+	void Input(float dt);
 
+	void InitUiTool();	
+	void ReleaseUiTool();
+	void UpdateUiTool(float dt);
+	
 	void FillUiToolBox();
 	void SetUiToolPos(Vector2f pos);
 
@@ -48,7 +54,7 @@ private:
 	int colNum;
 	Vector2f startPos;
 
-	array<array<pair<list<SpriteObj*>, SpriteObj*>, 100>, 100> mapArray;
+	array<array<pair<list<SpriteObj*>, SpriteObj*>, 100>, 100> mapTool;
 
 	RectangleShape topLine;
 	RectangleShape leftLine;
@@ -62,18 +68,23 @@ private:
 	Sprite uiOutLine;
 	RectangleShape uiBackGround;
 	Sprite uiMove;
+	Sprite uiOpenClose;
+
+	array<array<SpriteObj*, 4>, 8> wireTool;
 
 	SpriteObj* mouseBoxSprite;
+
 	SpriteObj* mapToolCheckBox;
 	SpriteObj* uiToolCheckBox;
+	SpriteObj* crossUiCheckBox;
 
 	bool isScenePlay;
 
-	int zoomCount;	
+	int zoomCount;		
 
-	bool isPlayer;
-
+	bool isGridOn;
 	bool isUiMoving;
+	bool isUiOpen;
 	bool mouseOnUi;
 };
 

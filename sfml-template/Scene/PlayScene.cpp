@@ -4,6 +4,7 @@
 #include "../FrameWork/InputMgr.h"
 #include "SceneMgr.h"
 #include "../FrameWork/Framework.h"
+#include "../Manager/ResourceMgr.h"
 
 
 void PlayScene::Update(float dt)
@@ -21,6 +22,8 @@ void PlayScene::Update(float dt)
 
 void PlayScene::Draw(RenderWindow& window)
 {
+	DrawBackGroundView(window);
+
 	window.setView(worldView);
 
 	if (player != nullptr)
@@ -127,6 +130,12 @@ void PlayScene::GravityEffect(float dt)
 
 }
 
+void PlayScene::DrawBackGroundView(RenderWindow& window)
+{	
+	window.setView(backgroundView);
+	window.draw(background);
+}
+
 PlayScene::PlayScene(string path)
 {
 	ifstream fin;
@@ -182,7 +191,7 @@ PlayScene::~PlayScene()
 }
 
 void PlayScene::Init()
-{
+{	
 }
 
 void PlayScene::Release()
@@ -209,11 +218,16 @@ void PlayScene::Release()
 }
 
 void PlayScene::Enter()
-{
+{	
+	background.setTexture(*RESOURCEMGR->GetTexture("Graphics/backgrounds/ruin2.png"));
+	Utils::SetSpriteSize(background, {WINDOW_WIDTH,WINDOW_HEIGHT});	
 	auto size = (Vector2f)FRAMEWORK->GetWindowSize();
 	worldView.setSize(size);
 	worldView.setCenter(size / 2.f);
 	FRAMEWORK->GetWindow().setView(worldView);
+
+	backgroundView.setSize(size);
+	backgroundView.setCenter(size / 2.f);
 }
 
 void PlayScene::Exit()
