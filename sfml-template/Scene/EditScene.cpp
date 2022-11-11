@@ -385,14 +385,14 @@ void EditScene::Input(float dt)
 		if (zoomCount > 20)
 			return;
 		zoomCount++;
-		worldView.zoom(0.95f);		
+		worldView.zoom(0.94f);		
 	}
 	if (InputMgr::GetMouseWheelState() == -1)
 	{		
 		if (zoomCount < -3)
 			return;
 		zoomCount--;
-		worldView.zoom(1.05f);		
+		worldView.zoom(1.06f);
 	}
 
 	if (InputMgr::GetKeyDown(Keyboard::Numpad6))
