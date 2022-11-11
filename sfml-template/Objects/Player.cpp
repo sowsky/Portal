@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "../FrameWork/InputMgr.h"
 #include "../FrameWork/Utils.h"
+#include "../FrameWork/stdafx.h"
 
 int Player::playerNum = 0;
 
@@ -63,8 +64,9 @@ void Player::Move(float dt)
 	}
 	else if (ground) {
 		verticalspeed = 0;
-
 	}
+
+	//cout << verticalspeed << endl;
 	
 }
 

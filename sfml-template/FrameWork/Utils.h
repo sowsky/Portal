@@ -50,6 +50,7 @@ public:
 	static Vector2f RandomOutCirclePoint();
 
 	static void SetSpriteSize(Sprite& sprite, Vector2f size);
+
 	static Vector2f GetSpriteSize(Sprite& sprite);	
 };
 

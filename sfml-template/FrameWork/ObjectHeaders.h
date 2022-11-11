@@ -5,3 +5,5 @@
 #include "../Objects/Player.h"
 #include "../Objects/Button.h"
 #include "../Objects/Goal.h"
+#include "../Objects/Orange.h"
+#include "../Objects/Blue.h"
