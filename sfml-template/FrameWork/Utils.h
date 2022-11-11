@@ -48,5 +48,7 @@ public:
 	static float RandomZeroToOne();
 	static Vector2f RandomInCirclePoint();
 	static Vector2f RandomOutCirclePoint();
+
+	static void SetSpriteSize(Sprite& sprite, Vector2f size);
 };
 

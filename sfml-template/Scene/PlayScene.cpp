@@ -39,7 +39,7 @@ void PlayScene::Draw(RenderWindow& window)
 
 void PlayScene::MakeWall()
 {
-	SmallTile* temp = new SmallTile();
+	Tile* temp = new Tile();
 
 
 	wall.push_back(temp);

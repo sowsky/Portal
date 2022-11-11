@@ -169,7 +169,7 @@
     <ClCompile Include="Scene\SceneMgr.cpp" />
     <ClCompile Include="FrameWork\Utils.cpp" />
     <ClCompile Include="Scene\StartMenu.cpp" />
-    <ClCompile Include="Objects\SmallTile.cpp" />
+    <ClCompile Include="Objects\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Goal.h" />
@@ -195,7 +195,7 @@
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneMgr.h" />
     <ClInclude Include="Scene\StartMenu.h" />
-    <ClInclude Include="Objects\SmallTile.h" />
+    <ClInclude Include="Objects\Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

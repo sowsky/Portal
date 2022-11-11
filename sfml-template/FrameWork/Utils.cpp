@@ -107,3 +107,12 @@ Vector2f Utils::RandomOutCirclePoint()
 	float radian = RandomRange(0.f, M_PI * 2);
 	return Vector2f({ cos(radian),sin(radian) });
 }
+
+void Utils::SetSpriteSize(Sprite& sprite, Vector2f size)
+{
+	Vector2u texSize = sprite.getTexture()->getSize();
+	float ratioX = texSize.x / size.x;
+	float ratioY = texSize.y / size.y;
+
+	sprite.setScale({ 1 / ratioX , 1 / ratioY });
+}

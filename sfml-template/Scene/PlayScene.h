@@ -33,7 +33,7 @@ private:
 	//do all RectalgeShape change to Object class
 
 	Player* player;
-	vector<SmallTile*> wall;
+	vector<Tile*> wall;
 	vector<Button*> button;
 	vector<Cube*> cube;
 		

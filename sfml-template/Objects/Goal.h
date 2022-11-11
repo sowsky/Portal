@@ -8,7 +8,9 @@ public:
     virtual ~Goal();
 
     virtual SpriteObj* NewThis();
+public:
+    static int GetGoalNum();
 protected:
-    
+    static int goalNum;
 };
 

@@ -48,12 +48,15 @@ private:
 	int colNum;
 	Vector2f startPos;
 
-	array<array<list<SpriteObj*>, 100>, 100> mapArray;
+	array<array<pair<list<SpriteObj*>, SpriteObj*>, 100>, 100> mapArray;
 
 	RectangleShape topLine;
 	RectangleShape leftLine;
 	RectangleShape rightLine;
 	RectangleShape bottomLine;	
+
+	Sprite background;
+	Sprite shadow;
 	
 	array<array<pair<SpriteObj*, Sprite>, 4>, 8> uiTool;
 	Sprite uiOutLine;
@@ -67,6 +70,8 @@ private:
 	bool isScenePlay;
 
 	int zoomCount;	
+
+	bool isPlayer;
 
 	bool isUiMoving;
 	bool mouseOnUi;

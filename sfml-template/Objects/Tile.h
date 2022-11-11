@@ -1,10 +1,10 @@
 #pragma once
 #include "SpriteObj.h"
-class SmallTile : public SpriteObj
+class Tile : public SpriteObj
 {
 public:
-	SmallTile();
-	virtual ~SmallTile();
+	Tile();
+	virtual ~Tile();
 
 	virtual SpriteObj* NewThis();
 protected:

@@ -7,6 +7,9 @@ public:
 	virtual ~Player();
 
 	virtual SpriteObj* NewThis();
+public:
+	static int GetPlayerNum();
 protected:
+	static int playerNum;
 };
 

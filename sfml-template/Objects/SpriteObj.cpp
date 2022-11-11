@@ -56,11 +56,7 @@ void SpriteObj::SetSize(Vector2f size)
 	if (sprite.getTexture() == nullptr)
 		return;
 
-	Vector2u texSize = sprite.getTexture()->getSize();
-	float ratioX = texSize.x / size.x;
-	float ratioY = texSize.y / size.y;
-
-	sprite.setScale({ 1 / ratioX , 1 / ratioY });
+	Utils::SetSpriteSize(sprite, size);
 }
 
 void SpriteObj::FitScale(float size)
