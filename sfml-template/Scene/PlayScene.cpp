@@ -5,10 +5,12 @@
 #include "SceneMgr.h"
 #include "../FrameWork/Framework.h"
 
+
 void PlayScene::Update(float dt)
 {
+	player->Move(dt);
+	player->Update(dt);
 
-	PlayerMove(dt);
 	GravityEffect(dt);
 	worldView.setCenter(player->GetPos());
 
@@ -35,20 +37,22 @@ void PlayScene::Draw(RenderWindow& window)
 	for (auto v : cube) {
 		v->Draw(window);
 	}
+
+
 }
 
 void PlayScene::MakeWall()
 {
 	Tile* temp = new Tile();
 
-
 	wall.push_back(temp);
-	wall.back()->SetPos(currgird);
+	wall.back()->SetOrigin(Origins::MC);
+	wall.back()->SetPos(currgrid);
 
 	wall.back()->SetSize({ GRIDSIZE ,GRIDSIZE });
 
 
-	currgird.x += GRIDSIZE;
+	currgrid.x += GRIDSIZE;
 
 }
 
@@ -56,11 +60,14 @@ void PlayScene::MakeCube()
 {
 	Cube* temp = new Cube();
 
-	cube.push_back(temp);
-	cube.back()->SetPos(currgird);
 
-	cube.back()->SetSize({ GRIDSIZE ,GRIDSIZE });
-	currgird.x += GRIDSIZE;
+	cube.push_back(temp);
+	cube.back()->SetOrigin(Origins::BC);
+	cube.back()->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });
+
+	cube.back()->SetSize({ GRIDSIZE / 1.5 ,GRIDSIZE / 1.5 });
+	currgrid.x += GRIDSIZE;
+
 
 }
 
@@ -68,68 +75,54 @@ void PlayScene::MakePlayer()
 {
 	player = new Player();
 
-
-	player->SetPos(currgird);
-
 	player->SetSize({ 20,50 });
-	player->SetOrigin(Origins::MC);
-	currgird.x += GRIDSIZE;
+	player->SetOrigin(Origins::BC);
+	player->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });
+	currgrid.x += GRIDSIZE;
 }
 
 void PlayScene::MakeButton(int dir)
 {
-	//Button* temp = new Button();
+	Button* temp = new Button();
 
-	//button.push_back(temp);
+	button.push_back(temp);
+	button.back()->SetOrigin(Origins::BC);
 
-	////top of gird
-	//if (dir == 0) {
-	//	button.back()->SetRotation(dir);
-	//	button.back()->SetPos();
+	button.back()->SetPos(currgrid);
+	button.back()->SetRotation(dir);
+	//button.back()->FitScale(TILE_SIZE);
 
-	//}
-	//button.back()->SetSize({ GRIDSIZE ,GRIDSIZE });
-	//currgird.x += GRIDSIZE;
-}
-
-void PlayScene::PlayerMove(float dt)
-{
-	if (InputMgr::GetKey(Keyboard::A)) {
-		player->SetPos({ player->GetPos().x - 100 * dt
-			, player->GetPos().y });
-	}
-	else if (InputMgr::GetKey(Keyboard::D)) {
-		player->SetPos({ player->GetPos().x + 100 * dt
-			, player->GetPos().y });
-	}
-	if (InputMgr::GetKeyDown(Keyboard::Space) && groundede) {
-		jump = -100;
-		groundede = false;
-		player->SetPos({ player->GetPos().x, player->GetPos().y - 10 });
+	if (dir == 0) {			//top of gird
+		button.back()->SetPos({ currgrid.x,currgrid.y - GRIDSIZE / 2 });
+		button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
 
 	}
+	else if (dir == 1) {	//right of gird
+		button.back()->SetPos({ currgrid.x + GRIDSIZE / 2,currgrid.y });
+		button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
 
+	}
+	else if (dir == 2) {	//bottom of gird
+		button.back()->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });
+		button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
+
+	}
+	else if (dir == 3) {	//left of gird
+		button.back()->SetPos({ currgrid.x - GRIDSIZE / 2,currgrid.y });
+		button.back()->SetSize({ GRIDSIZE ,GRIDSIZE / 4 });
+
+	}
+	currgrid.x += GRIDSIZE;
 }
 
 void PlayScene::GravityEffect(float dt)
 {
-	for (auto v : wall) {
-		if (v->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
-			groundede = true;
+	for (auto w : wall) {
+		if (w->GetGlobalBounds().intersects(player->GethitboxGlobalBounds())) {
+			
+			player->SetGround(false);
+			player->SetPos({ player->GetPos().x,w->GetGlobalBounds().top- 0.1f});
 		}
-		for (auto w : cube) {
-			if (!v->GetGlobalBounds().intersects(w->GetGlobalBounds())) {
-				w->SetPos({ w->GetPos().x, w->GetPos().y + dt * 10 });
-			}
-		}
-	}
-	if (groundede)
-		player->SetPos({ player->GetPos().x, player->GetPos().y });
-	else
-		player->SetPos({ player->GetPos().x, player->GetPos().y + dt * jump });
-	jump += 1000 * dt;
-	if (jump >= 100) {
-		jump = 100;
 	}
 
 }
@@ -145,10 +138,13 @@ PlayScene::PlayScene(string path)
 		//verifying each character
 		for (int i = 0; i < str.size() + 1; i++) {
 
+
+			///////////get button side///////
 			int type;
 			if (str[i] == 'b' || str[i] == 'B') {
 				type = (int)str[i + 1] - 48;
 			}
+			/////////////////////////////
 
 			switch (str[i]) {
 			case '1':
@@ -169,10 +165,11 @@ PlayScene::PlayScene(string path)
 				i++;
 				break;
 			default:
-				currgird.x += GRIDSIZE;
+				currgrid.x += GRIDSIZE;
 			}
+
 		}
-		currgird = { 0,currgird.y + GRIDSIZE };
+		currgrid = { GRIDSIZE / 2,currgrid.y + GRIDSIZE };
 
 	}
 
@@ -207,6 +204,8 @@ void PlayScene::Release()
 		delete v;
 	}
 	cube.clear();
+
+
 }
 
 void PlayScene::Enter()

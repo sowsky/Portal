@@ -31,9 +31,9 @@ public:
 	FloatRect GetGlobalBounds();
 protected:
 	Sprite sprite;
-	float speed;
-	float velocity;
-	Vector2f direction;
+	float speed=100.f;
+	float velocity=0.f;
+	Vector2f direction={0,0};
 
 	char id;
 };

@@ -22,7 +22,7 @@ bool Object::GetActive() const
 
 void Object::Init()
 {
-	active = true;
+	active = true;	
 }
 
 void Object::Release()

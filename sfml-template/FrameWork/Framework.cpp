@@ -6,11 +6,12 @@
 Framework::Framework()
 	: timeScale(1.f)
 {
+	
+
 }
 
 Framework::~Framework()
 {
-
 }
 
 float Framework::GetDT() const
