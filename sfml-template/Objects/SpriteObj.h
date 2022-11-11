@@ -23,7 +23,8 @@ public:
 	void SetSize(Vector2f size);
 	void FitScale(float size);
 	void SetRotation(int val);
-
+	void SetRotation(float val) { sprite.setRotation(val); }
+	void SetDir(Vector2f dir) { direction = dir; };
 	char GetId();
 
 	virtual SpriteObj* NewThis();

@@ -116,3 +116,10 @@ void Utils::SetSpriteSize(Sprite& sprite, Vector2f size)
 
 	sprite.setScale({ 1 / ratioX , 1 / ratioY });
 }
+
+Vector2f Utils::GetSpriteSize(Sprite& sprite)
+{
+	Vector2u size = sprite.getTexture()->getSize();
+	Vector2f scale = sprite.getScale();
+	return Vector2f{ size.x * scale.x, size.y * scale.y };
+}

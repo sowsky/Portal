@@ -19,6 +19,17 @@ SpriteObj* Goal::NewThis()
 	return new Goal;
 }
 
+void Goal::SetDoor(bool Isopen)
+{
+	on = Isopen;
+	if (on) {
+	//	SetResourceTexture("Graphics/goalopen.png");
+
+	}else
+		SetResourceTexture("Graphics/goal.png");
+
+}
+
 int Goal::GetGoalNum()
 {
 	return goalNum;

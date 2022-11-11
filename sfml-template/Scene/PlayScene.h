@@ -25,8 +25,10 @@ public:
 	void MakeCube();
 	void MakePlayer();
 	void MakeButton(int dir);
+	void MakePortal();
 
-	void PlayerMove(float dt);
+	void MoveToPortal();
+
 	void GravityEffect(float dt);
 private:
 
@@ -35,9 +37,20 @@ private:
 	Player* player;
 	vector<Tile*> wall;
 	vector<Button*> button;
-	vector<Cube*> cube;
-		
+	//vector<Cube*> cube;
+	Cube* cube;
 	Vector2f currgrid = { GRIDSIZE/2,GRIDSIZE/2 };
+
+	Blue* blue;
+	Orange* orange;
+	bool madeblue=false;
+	bool madeorange=false;
+
+	bool grabitem = false;
+
+	////////////////////////////////////////////////////
+	
+	
 
 };
 
