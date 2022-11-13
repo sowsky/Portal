@@ -9,17 +9,16 @@
 
 void PlayScene::Update(float dt)
 {
-
-
+	world->Step(1 / 60.f, 8, 3);
 	//////////////////////////////////////////////////////
 	player->Move(dt);
 	player->Update(dt);
-	cube->Update(dt);
+	//cube->Update(dt);
 	blue->Update(dt);
 	orange->Update(dt);
 //	player->SetGround(true);
 
-	GravityEffect(dt);
+	//GravityEffect(dt);
 	worldView.setCenter(player->GetPos());
 
 	//blue
@@ -31,6 +30,7 @@ void PlayScene::Update(float dt)
 
 	}
 	//orange
+
 	if (InputMgr::GetMouseButtonDown(Mouse::Right)) {
 		orange->SetSize({ 10,10 });
 		madeorange = false;
@@ -41,7 +41,7 @@ void PlayScene::Update(float dt)
 	MakePortal();
 	MoveToPortal();
 
-	if (InputMgr::GetKeyDown(Keyboard::E)) {
+	/*if (InputMgr::GetKeyDown(Keyboard::E)) {
 		if (!grabitem && player->GethitboxGlobalBounds().intersects(cube->GetGlobalBounds())) {
 			grabitem = true;
 
@@ -65,7 +65,7 @@ void PlayScene::Update(float dt)
 		else
 			cube->SetPos({ player->GetPos().x - 40,player->GetPos().y - 20 });
 
-	}
+	}*/
 
 
 	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
@@ -90,11 +90,11 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(window);
 	}
 
-	//for (auto v : cube) {
-	//	v->Draw(window);
-	//}
+	for (auto v : cube) {
+		v->Draw(window);
+	}
 
-	cube->Draw(window);
+	//cube->Draw(window);
 
 	if (madeorange) {
 	orange->Draw(window);
@@ -131,14 +131,16 @@ void PlayScene::MakeCube()
 
 	cube.back()->SetSize({ GRIDSIZE / 1.5 ,GRIDSIZE / 1.5 });*/
 
-	cube = new Cube();
+	/*cube = new Cube();
 	cube->SetOrigin(Origins::BC);
 	cube->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });
 
 	cube->SetSize({ GRIDSIZE / 1.5 ,GRIDSIZE / 1.5 });
-	currgrid.x += GRIDSIZE;
+	currgrid.x += GRIDSIZE;*/
+	//////////////////////////////////////////////////////////////////////////////////
+	Cube* newCube=new Cube(world.get(), Vector2f{ 0.0f,14.0f }, Vector2f({15.0f, 15.0f}));
 
-
+	cube.push_back(newCube);
 }
 
 void PlayScene::MakePlayer()
@@ -311,10 +313,10 @@ void PlayScene::GravityEffect(float dt)
 			player->SetPos({ player->GetPos().x,w->GetGlobalBounds().top - 0.1f });
 		}
 
-		if (w->GetGlobalBounds().intersects(cube->GethitboxGlobalBounds())) {
+		/*if (w->GetGlobalBounds().intersects(cube->GethitboxGlobalBounds())) {
 			cube->SetGround(true);
 			cube->SetPos({ cube->GetPos().x,w->GetGlobalBounds().top - 0.1f });
-		}
+		}*/
 
 	}
 }
@@ -322,7 +324,17 @@ void PlayScene::GravityEffect(float dt)
 
 PlayScene::PlayScene(string path)
 {
+
+	b2Vec2 g(0.0f, -10);
+	world = make_unique<b2World>(g);
 	
+	b2BodyDef groundBodyDef;
+	groundBodyDef.position.Set(0.0f, -10.0f);
+	b2Body* groundBody = world->CreateBody(&groundBodyDef);
+	b2PolygonShape groundBox;
+	groundBox.SetAsBox(50.0f,10.0f);
+	groundBody->CreateFixture(&groundBox, 0.0f);
+
 	/////////////////////////////////////////////////////////////////////////////
 	blue = new Blue;
 	orange = new Orange;
@@ -402,14 +414,15 @@ void PlayScene::Release()
 	}
 	button.clear();
 
-	//for (auto v : cube) {
-	//	delete v;
-	//}
-	//cube.clear();
+	for (auto v : cube) {
+		delete v;
+	}
+	cube.clear();
 
 	delete orange;
 	delete blue;
-	delete cube;
+	//delete cube;
+	
 
 }
 
