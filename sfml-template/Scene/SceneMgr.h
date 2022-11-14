@@ -33,6 +33,7 @@ public:
 	void ChangeScene(Scenes scene);
 
 	void Update(float dt);
+	void PhysicsUpdate(float dt);
 	void Draw(RenderWindow& window);
 };
 

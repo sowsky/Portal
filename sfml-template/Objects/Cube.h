@@ -14,6 +14,8 @@ public:
 	FloatRect GethitboxGlobalBounds() { return hitbox->getGlobalBounds(); }
 
 	virtual void Update(float dt);
+	void PhysicsUpdate();
+
 	virtual void Draw(RenderWindow& window);
 	void SetSide(bool s) { side = s; }
 	bool GetSide() { return side; }

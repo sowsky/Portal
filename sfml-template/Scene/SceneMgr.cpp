@@ -62,6 +62,12 @@ void SceneMgr::Update(float dt)
 	sceneMap[currScene]->Update(dt);
 }
 
+void SceneMgr::PhysicsUpdate(float dt)
+{
+	sceneMap[currScene]->PhysicsUpdate(dt);
+
+}
+
 void SceneMgr::Draw(RenderWindow& window)
 {
 	sceneMap[currScene]->Draw(window);

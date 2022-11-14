@@ -20,6 +20,8 @@ public:
 	virtual void Exit();
 
 	virtual void Update(float dt);
+	virtual void PhysicsUpdate(float dt);
+
 	virtual void Draw(RenderWindow& window);
 
 	void MakeWall();

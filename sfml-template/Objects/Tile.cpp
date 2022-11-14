@@ -1,5 +1,5 @@
 #include "Tile.h"
-
+#include "../FrameWork/Const.h"
 Tile::Tile()	
 {
 	String str;
@@ -29,6 +29,8 @@ Tile::Tile()
 Tile::~Tile()
 {
 	delete fixture;
+	delete hitbox;
+
 }
 
 SpriteObj* Tile::NewThis()
@@ -38,8 +40,21 @@ SpriteObj* Tile::NewThis()
 
 void Tile::Update(float dt)
 {
+	Utils::SetOrigin(*hitbox, Origins::MC);
 	sprite.setRotation(body->GetAngle());
-	sprite.setPosition({ body->GetPosition().x,body->GetPosition().y });
+	sprite.setPosition({ body->GetPosition().x,body->GetPosition().y*-1 });
+	hitbox->setSize({ sprite.getGlobalBounds().width,sprite.getGlobalBounds().height });
+	hitbox->setPosition(sprite.getPosition());
+}
+
+void Tile::Draw(RenderWindow& window)
+{
+	SpriteObj::Draw(window);
+	window.draw(*hitbox);
+}
+
+void Tile::PhysicsUpdate()
+{
 }
 
 Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions)
@@ -67,17 +82,25 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions)
 	SetResourceTexture(str);
 	id = '1';
 
+	Utils::SetOrigin(sprite, Origins::MC);
+
+	hitbox = new RectangleShape;
+	hitbox->setFillColor(Color::Red);
+	Utils::SetOrigin(*hitbox, Origins::MC);
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_staticBody;
-	bodyDef.position.Set(position.x, position.y);
+	bodyDef.position.Set(position.x, position.y*-1);
 	body = world->CreateBody(&bodyDef);
 
 	b2PolygonShape boxShape;
-	boxShape.SetAsBox(dimensions.x / 2.0f, dimensions.y / 2.0f);
+	boxShape.SetAsBox(dimensions.x / 2.0f,dimensions.x / 2.0f);
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
 	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 0.3f;
+	fixtureDef.friction = 1.f;
 	fixture = body->CreateFixture(&fixtureDef);
+
+	sprite.setPosition({ body->GetPosition().x, body->GetPosition().y * -1 });
+	hitbox->setPosition({ body->GetPosition().x, body->GetPosition().y * -1 });
 }

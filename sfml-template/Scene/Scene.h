@@ -23,6 +23,8 @@ public:
 	virtual void Exit() = 0;
 
 	virtual void Update(float dt);
+	virtual void PhysicsUpdate(float dt);
+
 	virtual void Draw(RenderWindow& window);
 
 	Texture* GetTexture(const string& id);

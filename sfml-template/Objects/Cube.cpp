@@ -1,4 +1,5 @@
 #include "Cube.h"
+#include "../FrameWork/Const.h"
 
 Cube::Cube()
 {
@@ -15,13 +16,13 @@ Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
 	id = 'c';
 
 	Utils::SetSpriteSize(sprite, dimensions);
-
+	Utils::SetOrigin(sprite, Origins::BC);
 	hitbox = new RectangleShape;
 	hitbox->setFillColor(Color::Red);
 
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
-	bodyDef.position.Set(position.x, position.y);
+	bodyDef.position.Set(position.x, position.y * -1);
 	body = world->CreateBody(&bodyDef);
 
 	b2PolygonShape boxShape;
@@ -32,13 +33,15 @@ Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
 	fixtureDef.density = 1.0f;
 	fixtureDef.friction = 0.3f;
 	fixture = body->CreateFixture(&fixtureDef);
+
+	sprite.setPosition({ body->GetPosition().x, body->GetPosition().y*-1});
+	hitbox->setPosition({ body->GetPosition().x, body->GetPosition().y*-1 });
 }
 
 Cube::~Cube()
 {
-	delete fixture;
+	//delete fixture;
 	delete hitbox;
-
 }
 
 SpriteObj* Cube::NewThis()
@@ -51,27 +54,19 @@ void Cube::Update(float dt)
 	Utils::SetOrigin(*hitbox, Origins::BC);
 
 	sprite.setRotation(body->GetAngle());
-	sprite.setPosition({ body->GetPosition().x,body->GetPosition().y});
+	Utils::ChangeBCSpriteSFMLPosToBox2dPos(sprite,*body);
 
 	hitbox->setSize({ sprite.getGlobalBounds().width,sprite.getGlobalBounds().height });
 	hitbox->setPosition(sprite.getPosition());
 
-	if (!ground) {
-		if (verticalspeed < 0) {//going up
-			verticalspeed = verticalspeed + (dt * 100);
-		}
-		else {
-			verticalspeed = verticalspeed + (dt * addspeed);
-		}
-		SetPos({ GetPos().x,GetPos().y + verticalspeed * dt });
-	}
-	else if (ground) {
-		verticalspeed = 0;
-	}
+}
+
+void Cube::PhysicsUpdate()
+{
 }
 
 void Cube::Draw(RenderWindow& window)
 {
 	SpriteObj::Draw(window);
-	window.draw(*hitbox);
+	//window.draw(*hitbox);
 }
