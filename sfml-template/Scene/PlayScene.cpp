@@ -9,16 +9,10 @@
 
 void PlayScene::Update(float dt)
 {
-	dtstack += dt;
-
-	if (dtstack >= 1 / 60.f){
-		world->Step(1 / 60.f, 8, 3);
-		dtstack = 0;
-	}
+	
 	//////////////////////////////////////////////////////
-	player->Move(dt);
 	player->Update(dt);
-	//cube->Update(dt);
+
 	for (auto c : cube) {
 		c->Update(dt);
 	}
@@ -27,10 +21,9 @@ void PlayScene::Update(float dt)
 
 	blue->Update(dt);
 	orange->Update(dt);
-	//player->SetGround(true);
 
-	GravityEffect(dt);
-	worldView.setCenter(player->GetPos());
+	worldView.setCenter(player->GetPositions());
+	
 
 	//blue
 	if (InputMgr::GetMouseButtonDown(Mouse::Left)) {
@@ -84,6 +77,27 @@ void PlayScene::Update(float dt)
 	}
 }
 
+void PlayScene::PhysicsUpdate(float dt)
+{
+	dtstack += dt;
+
+	if (dtstack >= 1 / 60.f) {
+		world->Step(1/60.f, 8, 3);
+		for (auto w : wall) {
+			w->PhysicsUpdate();
+		}
+
+		for (auto c : cube) {
+			c->PhysicsUpdate();
+		}
+
+		player->PhysicsUpdate();
+
+		dtstack -= 1/60.f;
+	}
+
+}
+
 void PlayScene::Draw(RenderWindow& window)
 {
 	DrawBackGroundView(window);
@@ -105,8 +119,6 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(window);
 	}
 
-	//cube->Draw(window);
-
 	if (madeorange) {
 		orange->Draw(window);
 	}
@@ -120,9 +132,8 @@ void PlayScene::Draw(RenderWindow& window)
 void PlayScene::MakeWall()
 {
 	Tile* temp = new Tile(world.get(), Vector2f{ currgrid }, Vector2f({ GRIDSIZE, GRIDSIZE }));
-
+	temp->SetOrigin(Origins::MC);
 	wall.push_back(temp);
-
 	/*Tile* temp = new Tile();
 
 	wall.push_back(temp);
@@ -136,20 +147,6 @@ void PlayScene::MakeWall()
 
 void PlayScene::MakeCube()
 {
-	//Cube* temp = new Cube();
-
-	/*cube.push_back(temp);
-	cube.back()->SetOrigin(Origins::BC);
-	cube.back()->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });
-
-	cube.back()->SetSize({ GRIDSIZE / 1.5 ,GRIDSIZE / 1.5 });*/
-
-	/*cube = new Cube();
-	cube->SetOrigin(Origins::BC);
-	cube->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });
-
-	cube->SetSize({ GRIDSIZE / 1.5 ,GRIDSIZE / 1.5 });
-	currgrid.x += GRIDSIZE;*/
 	//////////////////////////////////////////////////////////////////////////////////
 	Cube* newCube = new Cube(world.get(), Vector2f{ currgrid }, Vector2f({ GRIDSIZE, GRIDSIZE }));
 
@@ -158,11 +155,14 @@ void PlayScene::MakeCube()
 
 void PlayScene::MakePlayer()
 {
-	player = new Player();
+	/*player = new Player();
 
 	player->SetSize({ 20,50 });
 	player->SetOrigin(Origins::BC);
-	player->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });
+	player->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });*/
+
+	player = new Player(world.get(), Vector2f{ currgrid }, Vector2f({ 20, 50 }));
+
 	currgrid.x += GRIDSIZE;
 }
 
@@ -176,7 +176,6 @@ void PlayScene::MakeButton(int dir)
 	button.back()->SetPos(currgrid);
 	button.back()->SetRotation(dir);
 	//button.back()->FitScale(TILE_SIZE);
-
 
 	if (dir == 0) {			//top of gird
 		button.back()->SetPos({ currgrid.x,currgrid.y - GRIDSIZE / 2 });
@@ -316,37 +315,11 @@ void PlayScene::MoveToPortal()
 }
 
 
-
-void PlayScene::GravityEffect(float dt)
-{
-
-	for (auto w : wall) {
-		if (w->GetGlobalBounds().intersects(player->GethitboxGlobalBounds())) {
-			player->SetGround(true);
-			player->SetPos({ player->GetPos().x,w->GetGlobalBounds().top - 0.1f });
-		}
-
-		/*if (w->GetGlobalBounds().intersects(cube->GethitboxGlobalBounds())) {
-			cube->SetGround(true);
-			cube->SetPos({ cube->GetPos().x,w->GetGlobalBounds().top - 0.1f });
-		}*/
-
-	}
-}
-
-
 PlayScene::PlayScene(string path)
 {
 
-	b2Vec2 g(0.0f, -10);
+	b2Vec2 g(0.0f, -100);
 	world = make_unique<b2World>(g);
-
-	b2BodyDef groundBodyDef;
-	groundBodyDef.position.Set(0.0f, -10.0f);
-	b2Body* groundBody = world->CreateBody(&groundBodyDef);
-	b2PolygonShape groundBox;
-	groundBox.SetAsBox(50.0f, 10.0f);
-	groundBody->CreateFixture(&groundBox, 0.0f);
 
 	/////////////////////////////////////////////////////////////////////////////
 	blue = new Blue;

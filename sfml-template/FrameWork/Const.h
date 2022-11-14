@@ -5,4 +5,5 @@
 #define WINDOW_HEIGHT 720
 #define TILE_SIZE 25
 #define GRIDSIZE 50
+#define PPM 33.f
 

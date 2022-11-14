@@ -4,6 +4,8 @@ class Player : public SpriteObj
 {
 public:
 	Player();
+	Player(b2World* world, const Vector2f& position, Vector2f dimensions);
+
 	virtual ~Player();
 
 	virtual SpriteObj* NewThis();
@@ -11,8 +13,10 @@ public:
 public:
 	static int GetPlayerNum();
 	virtual void Update(float dt);
+	void PhysicsUpdate();
 	virtual void Draw(RenderWindow& window);
-	void Move(float dt);
+
+	Vector2f GetPositions() { return sprite.getPosition(); }
 
 	static int playerNum;
 
@@ -31,6 +35,10 @@ protected:
 	Vector2f dir={0,0};
 
 	RectangleShape* hitbox;
+	
+	/////////////////////////////////////////////////////////
+	b2Body* body = nullptr;
+	b2Fixture* fixture = nullptr;
 
 };
 

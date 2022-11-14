@@ -12,6 +12,8 @@ public:
 	virtual SpriteObj* NewThis();
 
 	virtual void Update(float dt);
+	virtual void Draw(RenderWindow& window);
+	void PhysicsUpdate();
 
 	////////////////////////////////////////////////////////////////////////////
 	Tile(b2World* world, const Vector2f& position, Vector2f dimensions);
@@ -20,6 +22,9 @@ public:
 protected:
 	b2Body* body = nullptr;
 	b2Fixture* fixture = nullptr;
+	
+	RectangleShape* hitbox;
+
 
 };
 

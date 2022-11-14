@@ -1,6 +1,8 @@
 #pragma once
 #include <random>
 #include <SFML/Graphics.hpp>
+#include "box2d/box2d.h"
+#include "../FrameWork/Const.h"
 
 using namespace sf;
 using namespace std;
@@ -52,5 +54,10 @@ public:
 	static void SetSpriteSize(Sprite& sprite, Vector2f size);
 
 	static Vector2f GetSpriteSize(Sprite& sprite);	
+	
+	static void ChangeCoordSFMLToBox2d(Sprite& sprite,b2Body& body);
+	static void ChangeBCSpriteSFMLPosToBox2dPos(Sprite& sprite, b2Body& body);
+
+	static void ChangePPM(b2Vec2 vec);
 };
 

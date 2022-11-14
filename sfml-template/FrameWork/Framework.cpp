@@ -80,6 +80,7 @@ bool Framework::Do()
 			window.clear();
 
 		SCENE_MGR->Update(dt);
+		SCENE_MGR->PhysicsUpdate(dt);
 		SCENE_MGR->Draw(window);
 		window.display();
 	}	

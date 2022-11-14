@@ -21,6 +21,10 @@ void Scene::Update(float dt)
 	
 }
 
+void Scene::PhysicsUpdate(float dt)
+{
+}
+
 void Scene::Draw(RenderWindow& window)
 {
 
