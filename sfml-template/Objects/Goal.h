@@ -1,18 +1,18 @@
 #pragma once
-#include "SpriteObj.h"
-class Goal :
-    public SpriteObj
+#include "WireableObject.h"
+class Goal : public WireableObject
 {
 public:
     Goal();
-    virtual ~Goal();
+    virtual ~Goal();    
 
     virtual SpriteObj* NewThis();
 
     void SetDoor(bool Isopen);
 public:
-    static int GetGoalNum();
-protected:
+    static int GetGoalNum();    
+protected:    
+
     static int goalNum;
     bool on;
 };

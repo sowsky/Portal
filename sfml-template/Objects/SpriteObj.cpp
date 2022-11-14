@@ -1,7 +1,10 @@
 #include "SpriteObj.h"
 #include "../Manager/ResourceMgr.h"
 
+bool SpriteObj::isWiring = false;
+
 SpriteObj::SpriteObj()
+	:isInMapTool(false)
 {
 }
 

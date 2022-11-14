@@ -32,6 +32,11 @@ public:
 	virtual SpriteObj* NewThis();
 
 	FloatRect GetGlobalBounds();
+
+	static void OnOffWiringState() { isWiring = !isWiring; }
+	virtual bool GetWiringState() { return isWiring; }	
+
+	void SetBoolInMapTool(bool isIn) { isInMapTool = isIn; }
 protected:
 	Sprite sprite;
 	float speed=100.f;
@@ -39,5 +44,8 @@ protected:
 	Vector2f direction={0,0};
 
 	char id;
+
+	static bool isWiring;
+	bool isInMapTool;
 };
 

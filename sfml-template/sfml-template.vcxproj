@@ -173,6 +173,8 @@
     <ClCompile Include="Scene\StartMenu.cpp" />
     <ClCompile Include="Objects\Tile.cpp" />
     <ClCompile Include="Objects\Wire.cpp" />
+    <ClCompile Include="Objects\WireableObject.cpp" />
+    <ClCompile Include="Objects\WirePointArrows.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Blue.h" />
@@ -202,6 +204,8 @@
     <ClInclude Include="Scene\StartMenu.h" />
     <ClInclude Include="Objects\Tile.h" />
     <ClInclude Include="Objects\Wire.h" />
+    <ClInclude Include="Objects\WireableObject.h" />
+    <ClInclude Include="Objects\WirePointArrows.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

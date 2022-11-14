@@ -4,8 +4,13 @@
 #include "../FrameWork/Utils.h"
 #include <vector>
 #include <array>
+#include "../Objects/WireableObject.h"
+#include "../Objects/WirePointArrows.h"
+#include "../Objects/Wire.h"
 
 class SpriteObj;
+//class WireableObject;
+//class WirePointArrows;
 class EditScene : public Scene
 {
 public:
@@ -20,14 +25,17 @@ public:
 
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);
-	
 public:
 	void DrawWorldView(RenderWindow& window);
 	void DrawUiView(RenderWindow& window);
-	void DrawWire(RenderWindow& window);
+	void DrawWireTool(RenderWindow& window);
 
 	void InitMapTool();	
 	void ReleaseMapTool();
+
+	void InitWiringTool();
+	void ReleaseWiringTool();
+	void UpdateWiringTool(float dt);
 
 	void SetMapToolPos();
 	void SetMapToolSize();
@@ -47,14 +55,16 @@ public:
 	void MouseSpriteBoxUpdate();
 
 	void Save();
+	void Reset();
 	void Load();
 
 private:	
 	int rowNum;
 	int colNum;
-	Vector2f startPos;
+	Vector2f startPos;	
 
 	array<array<pair<list<SpriteObj*>, SpriteObj*>, 100>, 100> mapTool;
+	array<array<pair<pair<Wire*, WirePointArrows*>, WireableObject*>, 100>, 100> wiringTool;
 
 	RectangleShape topLine;
 	RectangleShape leftLine;
@@ -69,8 +79,7 @@ private:
 	RectangleShape uiBackGround;
 	Sprite uiMove;
 	Sprite uiOpenClose;
-
-	array<array<SpriteObj*, 100>, 100> wiringTool;
+	RectangleShape wiringModGui;
 
 	SpriteObj* mouseBoxSprite;
 

@@ -27,6 +27,8 @@ EditScene::EditScene()
 	Utils::SetOrigin(uiMove, Origins::MC);
 	uiOpenClose.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/cross2.png"));
 	Utils::SetOrigin(uiOpenClose, Origins::MC);
+	wiringModGui.setFillColor(Color(37, 255, 254, 50));	
+	//wiringModGui.setTexture(RESOURCEMGR->GetTexture("Graphics/Ui/wiringmod.png"));
 
 	mapToolCheckBox = new SpriteObj;
 	mapToolCheckBox->SetResourceTexture("Graphics/Ui/checkbox.png");	
@@ -39,7 +41,7 @@ EditScene::EditScene()
 	crossUiCheckBox = new SpriteObj;
 	crossUiCheckBox->SetResourceTexture("Graphics/Ui/checkbox.png");
 	crossUiCheckBox->FitScale(40.f);
-	crossUiCheckBox->SetOrigin(Origins::MC);
+	crossUiCheckBox->SetOrigin(Origins::MC);	
 }
 
 EditScene::~EditScene()
@@ -72,7 +74,7 @@ void EditScene::Init()
 	startPos.y = (winSize.y - colNum * tileSize.y) * 0.5f + (colNum - 1) * tileSize.y;
 
 	InitMapTool();
-
+	InitWiringTool();
 	zoomCount = 0;
 
 	Vector2f uiViewSize = uiView.getSize();
@@ -149,7 +151,7 @@ void EditScene::DrawWorldView(RenderWindow& window)
 				mapTool[i][j].second->Draw(window);
 		}
 	}
-	DrawWire(window);
+	DrawWireTool(window);
 	DrawOutLine(window);
 
 	if (mapToolCheckBox->GetActive())
@@ -173,9 +175,12 @@ void EditScene::DrawUiView(RenderWindow& window)
 		}
 	}
 
+	if (isWiring)
+		window.draw(wiringModGui);
+
 	window.draw(uiOutLine);
 
-	if (uiToolCheckBox->GetActive())
+	if (uiToolCheckBox->GetActive() && !isWiring)
 		uiToolCheckBox->Draw(window);
 
 	window.draw(uiMove);
@@ -188,8 +193,16 @@ void EditScene::DrawUiView(RenderWindow& window)
 		mouseBoxSprite->Draw(window);
 }
 
-void EditScene::DrawWire(RenderWindow& window)
+void EditScene::DrawWireTool(RenderWindow& window)
 {
+	for (int i = 0; i < wiringTool.size(); i++)
+	{
+		for (int j = 0; j < wiringTool.size(); j++)
+		{
+			wiringTool[i][j].first.first->Draw(window);
+			wiringTool[i][j].first.second->Draw(window);
+		}
+	}
 }
 
 
@@ -239,6 +252,31 @@ void EditScene::ReleaseMapTool()
 			mapTool[i][j].first.clear();
 		}
 	}
+}
+
+void EditScene::InitWiringTool()
+{
+	for (int i = 0; i < wiringTool.size(); i++)
+	{
+		for (int j = 0; j < wiringTool.size(); j++)
+		{
+			Vector2f pos = mapTool[i][j].second->GetPos();
+			wiringTool[i][j].first.first = new Wire;
+			wiringTool[i][j].first.first->SetPos(pos, TILE_SIZE);
+
+			wiringTool[i][j].first.second = new WirePointArrows;
+			wiringTool[i][j].first.second->SetPosition(pos, TILE_SIZE);
+			wiringTool[i][j].second = nullptr;
+		}
+	}
+}
+
+void EditScene::ReleaseWiringTool()
+{
+}
+
+void EditScene::UpdateWiringTool(float dt)
+{
 }
 
 void EditScene::SetMapToolPos()
@@ -342,7 +380,9 @@ void EditScene::FillMapTool()
 					mapTool[i][j].first.push_front(mouseBoxSprite->NewThis());
 					mapTool[i][j].first.front()->FitScale(TILE_SIZE);
 					mapTool[i][j].first.front()->SetOrigin(Origins::BC);
+					mapTool[i][j].first.front()->SetBoolInMapTool(true);
 					mapTool[i][j].first.front()->SetPos(mapTool[i][j].second->GetPos() +fixPos);					
+					mapTool[i][j].first.front()->Init();
 				}
 				break;
 			}
@@ -487,13 +527,17 @@ void EditScene::Input(float dt)
 
 	if (InputMgr::GetKeyDown(Keyboard::R))
 	{
-		ReleaseMapTool();
-		InitMapTool();
+		Reset();
 	}
 
 	if (InputMgr::GetKeyDown(Keyboard::Num1))
 	{
 		isGridOn = !isGridOn;
+	}
+	if (InputMgr::GetKeyDown(Keyboard::Num2))
+	{
+		SpriteObj::OnOffWiringState();	
+		isWiring = !isWiring;
 	}
 }
 
@@ -509,9 +553,11 @@ void EditScene::InitUiTool()
 {
 	FloatRect rect = uiOutLine.getLocalBounds();
 	uiBackGround.setSize({ rect.width, rect.height });
+	wiringModGui.setSize(uiBackGround.getSize());
 
 	Vector2f uiStartPos = uiOutLine.getPosition();
-	uiBackGround.setPosition(uiStartPos);	
+	uiBackGround.setPosition(uiStartPos);
+	wiringModGui.setPosition(uiStartPos);
 	uiMove.setPosition(uiStartPos);
 	
 	Vector2f uiEndPos{ uiStartPos.x + rect.width, uiStartPos.y + rect.height };
@@ -591,7 +637,8 @@ void EditScene::UpdateUiTool(float dt)
 		{
 			Vector2f pos{ -1000.f,-1000.f };
 			uiOutLine.setPosition(pos);
-			uiBackGround.setPosition(pos);			
+			uiBackGround.setPosition(pos);	
+			wiringModGui.setPosition(pos);
 			
 			for (int i = 0; i < uiTool.size(); i++)
 			{
@@ -670,6 +717,7 @@ void EditScene::SetUiToolPos(Vector2f pos)
 
 	uiOutLine.setPosition(pos);
 	uiBackGround.setPosition(pos);
+	wiringModGui.setPosition(pos);
 
 	FloatRect rect = uiOutLine.getLocalBounds();
 	Vector2f uiEndPos{ pos.x + rect.width, pos.y + rect.height };
@@ -690,6 +738,16 @@ void EditScene::SetUiToolPos(Vector2f pos)
 
 void EditScene::MouseSpriteBoxUpdate()
 {
+	if (isWiring)
+	{
+		if (mouseBoxSprite != nullptr)
+		{
+			delete mouseBoxSprite;
+			mouseBoxSprite = nullptr;
+		}
+		return;
+	}
+
 	Vector2f mousePos = InputMgr::GetMousePos();
 
 	for (int i = 0; i < uiTool.size(); i++)
@@ -739,6 +797,13 @@ void EditScene::Save()
 	}
 }
 
+void EditScene::Reset()
+{
+	ReleaseMapTool();
+	InitMapTool();
+}
+
 void EditScene::Load()
 {
+	Reset();
 }
