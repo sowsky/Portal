@@ -39,6 +39,7 @@ bool Framework::Init(int width, int height)
 	windowSize = { width, height };
 
 	window.create(VideoMode(windowSize.x, windowSize.y), "Game", sf::Style::Close);
+	window.setFramerateLimit(60);
 
 	RESOURCEMGR->GetInstance()->LoadAll();
 	//  SOUND_MGR->Init();
@@ -49,8 +50,7 @@ bool Framework::Init(int width, int height)
 }
 
 bool Framework::Do()
-{
-	
+{	
 	while (window.isOpen())
 	{
 		deltaTime = clock.restart();
