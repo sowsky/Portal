@@ -4,7 +4,7 @@
 #include <vector>
 #include "../FrameWork/Const.h"
 #include "../FrameWork/ObjectHeaders.h"
-#include "box2d/box2d.h"
+#include <box2d/box2d.h>
 
 class PlayScene : public Scene
 {
@@ -40,8 +40,8 @@ private:
 	Player* player;
 	vector<Tile*> wall;
 	vector<Button*> button;
-	//vector<Cube*> cube;
 	vector<Cube*> cube;
+	//Cube* cube;
 	Vector2f currgrid = { GRIDSIZE/2,GRIDSIZE/2 };
 
 	View backgroundView;
@@ -56,6 +56,8 @@ private:
 
 	////////////////////////////////////////////////////
 	unique_ptr<b2World> world;
+
+	float dtstack=0.f;
 
 };
 

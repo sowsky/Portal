@@ -50,8 +50,7 @@ bool Framework::Init(int width, int height)
 }
 
 bool Framework::Do()
-{
-	
+{	
 	while (window.isOpen())
 	{
 		deltaTime = clock.restart();

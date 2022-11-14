@@ -9,16 +9,27 @@
 
 void PlayScene::Update(float dt)
 {
-	world->Step(1 / 60.f, 8, 3);
+	dtstack += dt;
+
+	if (dtstack >= 1 / 60.f){
+		world->Step(1 / 60.f, 8, 3);
+		dtstack = 0;
+	}
 	//////////////////////////////////////////////////////
 	player->Move(dt);
 	player->Update(dt);
 	//cube->Update(dt);
+	for (auto c : cube) {
+		c->Update(dt);
+	}
+	for (auto w : wall)
+		w->Update(dt);
+
 	blue->Update(dt);
 	orange->Update(dt);
-//	player->SetGround(true);
+	//player->SetGround(true);
 
-	//GravityEffect(dt);
+	GravityEffect(dt);
 	worldView.setCenter(player->GetPos());
 
 	//blue
@@ -41,31 +52,31 @@ void PlayScene::Update(float dt)
 	MakePortal();
 	MoveToPortal();
 
-	/*if (InputMgr::GetKeyDown(Keyboard::E)) {
-		if (!grabitem && player->GethitboxGlobalBounds().intersects(cube->GetGlobalBounds())) {
-			grabitem = true;
+	//if (InputMgr::GetKeyDown(Keyboard::E)) {
+	//	if (!grabitem && player->GethitboxGlobalBounds().intersects(cube->GetGlobalBounds())) {
+	//		grabitem = true;
 
-			if (player->GetPos().x <= cube->GetPos().x)
-			{
-				cube->SetSide(true);
-			}
-			else if (player->GetPos().x > cube->GetPos().x) {
-				cube->SetSide(false);
-			}
-			cube->SetGround(false);
-		}
-		else if (grabitem) {
-			grabitem = false;
-		}
-	}
+	//		if (player->GetPos().x <= cube->GetPos().x)
+	//		{
+	//			cube->SetSide(true);
+	//		}
+	//		else if (player->GetPos().x > cube->GetPos().x) {
+	//			cube->SetSide(false);
+	//		}
+	//		cube->SetGround(false);
+	//	}
+	//	else if (grabitem) {
+	//		grabitem = false;
+	//	}
+	//}
 
-	if (grabitem) {
-		if (cube->GetSide())
-			cube->SetPos({ player->GetPos().x + 40,player->GetPos().y - 20 });
-		else
-			cube->SetPos({ player->GetPos().x - 40,player->GetPos().y - 20 });
+	//if (grabitem) {
+	//	if (cube->GetSide())
+	//		cube->SetPos({ player->GetPos().x + 40,player->GetPos().y - 20 });
+	//	else
+	//		cube->SetPos({ player->GetPos().x - 40,player->GetPos().y - 20 });
 
-	}*/
+	//}
 
 
 	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
@@ -97,28 +108,30 @@ void PlayScene::Draw(RenderWindow& window)
 	//cube->Draw(window);
 
 	if (madeorange) {
-	orange->Draw(window);
+		orange->Draw(window);
 	}
 
 	if (madeblue) {
-	blue->Draw(window);
+		blue->Draw(window);
 	}
 
 }
 
 void PlayScene::MakeWall()
 {
-	Tile* temp = new Tile();
+	Tile* temp = new Tile(world.get(), Vector2f{ currgrid }, Vector2f({ GRIDSIZE, GRIDSIZE }));
+
+	wall.push_back(temp);
+
+	/*Tile* temp = new Tile();
 
 	wall.push_back(temp);
 	wall.back()->SetOrigin(Origins::MC);
 	wall.back()->SetPos(currgrid);
 
-	wall.back()->SetSize({ GRIDSIZE ,GRIDSIZE });
-
+	wall.back()->SetSize({ GRIDSIZE ,GRIDSIZE });*/
 
 	currgrid.x += GRIDSIZE;
-
 }
 
 void PlayScene::MakeCube()
@@ -138,7 +151,7 @@ void PlayScene::MakeCube()
 	cube->SetSize({ GRIDSIZE / 1.5 ,GRIDSIZE / 1.5 });
 	currgrid.x += GRIDSIZE;*/
 	//////////////////////////////////////////////////////////////////////////////////
-	Cube* newCube=new Cube(world.get(), Vector2f{ 0.0f,14.0f }, Vector2f({15.0f, 15.0f}));
+	Cube* newCube = new Cube(world.get(), Vector2f{ currgrid }, Vector2f({ GRIDSIZE, GRIDSIZE }));
 
 	cube.push_back(newCube);
 }
@@ -255,7 +268,7 @@ void PlayScene::MakePortal()
 
 
 void PlayScene::DrawBackGroundView(RenderWindow& window)
-{	
+{
 	window.setView(backgroundView);
 	window.draw(background);
 }
@@ -264,23 +277,23 @@ void PlayScene::DrawBackGroundView(RenderWindow& window)
 void PlayScene::MoveToPortal()
 {
 
-	if(madeblue&&blue->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
+	if (madeblue && blue->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (orange->GetPortalDir() == 0) {
-			player->SetPos({ orange->GetPos().x,orange->GetPos().y-Utils::GetSpriteSize(*orange->GetSprite()).y/2});
+			player->SetPos({ orange->GetPos().x,orange->GetPos().y - Utils::GetSpriteSize(*orange->GetSprite()).y / 2 });
 		}
 		else if (orange->GetPortalDir() == 1) {
-			player->SetPos({ orange->GetPos().x+20,orange->GetPos().y});
+			player->SetPos({ orange->GetPos().x + 20,orange->GetPos().y });
 
 		}
 		else if (orange->GetPortalDir() == 2) {
-			player->SetPos({ orange->GetPos().x ,orange->GetPos().y+20 });
+			player->SetPos({ orange->GetPos().x ,orange->GetPos().y + 20 });
 
 		}
 		else if (orange->GetPortalDir() == 3) {
-			player->SetPos({ orange->GetPos().x-20 ,orange->GetPos().y });
+			player->SetPos({ orange->GetPos().x - 20 ,orange->GetPos().y });
 
 		}
-		
+
 	}
 
 	if (madeorange && orange->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
@@ -327,12 +340,12 @@ PlayScene::PlayScene(string path)
 
 	b2Vec2 g(0.0f, -10);
 	world = make_unique<b2World>(g);
-	
+
 	b2BodyDef groundBodyDef;
 	groundBodyDef.position.Set(0.0f, -10.0f);
 	b2Body* groundBody = world->CreateBody(&groundBodyDef);
 	b2PolygonShape groundBox;
-	groundBox.SetAsBox(50.0f,10.0f);
+	groundBox.SetAsBox(50.0f, 10.0f);
 	groundBody->CreateFixture(&groundBox, 0.0f);
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -396,7 +409,7 @@ PlayScene::~PlayScene()
 }
 
 void PlayScene::Init()
-{	
+{
 }
 
 void PlayScene::Release()
@@ -422,14 +435,14 @@ void PlayScene::Release()
 	delete orange;
 	delete blue;
 	//delete cube;
-	
+
 
 }
 
 void PlayScene::Enter()
-{	
+{
 	background.setTexture(*RESOURCEMGR->GetTexture("Graphics/backgrounds/ruin2.png"));
-	Utils::SetSpriteSize(background, {WINDOW_WIDTH,WINDOW_HEIGHT});	
+	Utils::SetSpriteSize(background, { WINDOW_WIDTH,WINDOW_HEIGHT });
 	auto size = (Vector2f)FRAMEWORK->GetWindowSize();
 	worldView.setSize(size);
 	worldView.setCenter(size / 2.f);

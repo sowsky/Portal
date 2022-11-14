@@ -1,5 +1,4 @@
 #include "Cube.h"
-#include <gl/GL.h>
 
 Cube::Cube()
 {
@@ -10,8 +9,16 @@ Cube::Cube()
 	hitbox->setFillColor(Color::Red);
 }
 
-Cube::Cube(b2World world, const Vector2f& position, Vector2f dimensions)
+Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
 {
+	SetResourceTexture("Graphics/cube.png");
+	id = 'c';
+
+	Utils::SetSpriteSize(sprite, dimensions);
+
+	hitbox = new RectangleShape;
+	hitbox->setFillColor(Color::Red);
+
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.position.Set(position.x, position.y);
@@ -29,6 +36,7 @@ Cube::Cube(b2World world, const Vector2f& position, Vector2f dimensions)
 
 Cube::~Cube()
 {
+	delete fixture;
 	delete hitbox;
 
 }
@@ -41,6 +49,9 @@ SpriteObj* Cube::NewThis()
 void Cube::Update(float dt)
 {
 	Utils::SetOrigin(*hitbox, Origins::BC);
+
+	sprite.setRotation(body->GetAngle());
+	sprite.setPosition({ body->GetPosition().x,body->GetPosition().y});
 
 	hitbox->setSize({ sprite.getGlobalBounds().width,sprite.getGlobalBounds().height });
 	hitbox->setPosition(sprite.getPosition());
