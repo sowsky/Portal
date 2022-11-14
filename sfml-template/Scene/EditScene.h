@@ -59,7 +59,7 @@ private:
 	RectangleShape topLine;
 	RectangleShape leftLine;
 	RectangleShape rightLine;
-	RectangleShape bottomLine;	
+	RectangleShape bottomLine;
 
 	Sprite background;
 	Sprite shadow;
@@ -70,7 +70,7 @@ private:
 	Sprite uiMove;
 	Sprite uiOpenClose;
 
-	array<array<SpriteObj*, 4>, 8> wireTool;
+	array<array<SpriteObj*, 100>, 100> wiringTool;
 
 	SpriteObj* mouseBoxSprite;
 
@@ -80,11 +80,12 @@ private:
 
 	bool isScenePlay;
 
-	int zoomCount;		
+	int zoomCount;
 
 	bool isGridOn;
 	bool isUiMoving;
 	bool isUiOpen;
 	bool mouseOnUi;
+	bool isWiring;
 };
 

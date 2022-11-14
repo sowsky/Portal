@@ -20,7 +20,7 @@ public:
 	Sprite* GetSprite();
 
 	void SetScale(Vector2f scale);
-	void SetSize(Vector2f size);
+	virtual void SetSize(Vector2f size);
 	Vector2f GetSize();
 
 	void FitScale(float size);

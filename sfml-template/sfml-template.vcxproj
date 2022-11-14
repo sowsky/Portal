@@ -172,6 +172,7 @@
     <ClCompile Include="FrameWork\Utils.cpp" />
     <ClCompile Include="Scene\StartMenu.cpp" />
     <ClCompile Include="Objects\Tile.cpp" />
+    <ClCompile Include="Objects\Wire.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Blue.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Scene\SceneMgr.h" />
     <ClInclude Include="Scene\StartMenu.h" />
     <ClInclude Include="Objects\Tile.h" />
+    <ClInclude Include="Objects\Wire.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

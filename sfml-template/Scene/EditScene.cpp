@@ -59,6 +59,7 @@ void EditScene::Init()
 
 	isUiOpen = true;
 	isGridOn = true;
+	isWiring = false;
 
 	mapToolCheckBox->SetActive(false);
 	uiToolCheckBox->SetActive(false);
@@ -652,6 +653,8 @@ void EditScene::FillUiToolBox()
 
 	uiTool[1][0].first = new Goal;
 	uiTool[1][0].first->SetResourceTexture("Graphics/Ui/goal.png");
+
+	uiTool[1][1].first = new Wire;
 }
 
 void EditScene::SetUiToolPos(Vector2f pos)

@@ -22,6 +22,7 @@
     <ClCompile Include="Objects\Goal.cpp" />
     <ClCompile Include="Objects\Blue.cpp" />
     <ClCompile Include="Objects\Orange.cpp" />
+    <ClCompile Include="Objects\Wire.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Manager\Animator.h" />
@@ -50,5 +51,6 @@
     <ClInclude Include="Objects\Goal.h" />
     <ClInclude Include="Objects\Blue.h" />
     <ClInclude Include="Objects\Orange.h" />
+    <ClInclude Include="Objects\Wire.h" />
   </ItemGroup>
 </Project>

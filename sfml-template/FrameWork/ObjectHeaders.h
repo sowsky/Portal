@@ -7,3 +7,4 @@
 #include "../Objects/Goal.h"
 #include "../Objects/Orange.h"
 #include "../Objects/Blue.h"
+#include "../Objects/Wire.h"
