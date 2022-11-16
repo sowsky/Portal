@@ -39,11 +39,12 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
 	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 0.3f;
+	fixtureDef.friction = 0.2f;
 	fixture = body->CreateFixture(&fixtureDef);
+	body->SetFixedRotation(true);
 
 	Utils::ChangeBCSpriteSFMLPosToBox2dPos(sprite, *body);
-	hitbox->setPosition({ body->GetPosition().x, body->GetPosition().y * -1 });
+	hitbox->setPosition( sprite.getPosition() );
 }
 
 Player::~Player()
@@ -70,29 +71,45 @@ void Player::Update(float dt)
 	SpriteObj::Update(dt);
 	Utils::SetOrigin(*hitbox, Origins::BC);
 
-	sprite.setRotation(body->GetAngle());
 	Utils::ChangeBCSpriteSFMLPosToBox2dPos(sprite, *body);
-	cout << sprite.getPosition().x << " " << sprite.getPosition().y << endl;
+
+	//Utils::ChangeBCSpriteSFMLPosToBox2dPos(sprite, *body);
+	//cout << sprite.getPosition().x << " " << sprite.getPosition().y << endl;
 	hitbox->setSize({ sprite.getGlobalBounds().width - 10,sprite.getGlobalBounds().height });
 	hitbox->setPosition(sprite.getPosition());
+
+
 }
 
 void Player::PhysicsUpdate()
 {
 	if (InputMgr::GetKey(Keyboard::A)) {
-		body->ApplyForce(b2Vec2({ 1000 * -333,0 }), body->GetWorldCenter(), true);
+		body->ApplyForce(b2Vec2({ 10000 * -333,GetPlayerBodyForce().y}), body->GetWorldCenter(), true);
 	}else if (InputMgr::GetKey(Keyboard::D)) {
-		body->ApplyForce(b2Vec2({ 1000 * 333,0 }), body->GetWorldCenter(), true);
+		body->ApplyForce(b2Vec2({ 10000 * 333,GetPlayerBodyForce().y }), body->GetWorldCenter(), true);
 	}
 
-	if (InputMgr::GetKey(Keyboard::Space)) {
-		body->ApplyForce(b2Vec2({body->GetTransform().q.GetYAxis().x, 1000 * 333}), body->GetWorldCenter(), true);
+	if (InputMgr::GetKeyDown(Keyboard::Space)) {
+	//	body->ApplyLinearImpulse(b2Vec2({body->GetTransform().q.GetYAxis().x, 10000 * 333}), body->GetWorldCenter(), true);
+		SetPlayerBodyForce({ GetPlayerBodyForce().x,10000000 });
 	}
 }
 
 void Player::Draw(RenderWindow& window)
 {
 	SpriteObj::Draw(window);
-	window.draw(*hitbox);
+	//window.draw(*hitbox);
+
+}
+
+void Player::SetPlayerBodyPos(Vector2f pos)
+{
+	b2Vec2 newPos({ pos.x,pos.y * -1 });
+	body->SetTransform(newPos,0);
+}
+
+void Player::SetPlayerBodyForce(b2Vec2 force)
+{
+	body->ApplyLinearImpulse(force, body->GetWorldCenter(), true);
 
 }

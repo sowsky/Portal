@@ -1,8 +1,10 @@
 #pragma once
-#include "WireableObject.h"
 
-class Button : public WireableObject
-{
+#include "WireableObject.h"
+#include "SpriteObj.h"
+#include "Goal.h"
+
+class Button : public WireableObject{
 public:
 	Button();
 	virtual ~Button();	
@@ -11,10 +13,16 @@ public:
 public:
 	static int GetButtonNum() { return buttonNum; }
 	static void SetButtonNum(int num) { buttonNum = num; }
-protected:	
-	bool isPressed = false;
-	int buttonId;
 
+	bool GetPressed() { return isPress; }
+	void SetPressed(bool a) { isPress = a; }
+
+	int GetButtonId() { return buttonId; }
+	void SetButtonId(int a) { buttonId = a; }
+protected:
+	bool isPress = false;
+	int buttonId;
 	static int buttonNum;
+
 };
 

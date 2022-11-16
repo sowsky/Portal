@@ -5,7 +5,7 @@ Orange::Orange()
 	SetResourceTexture("Graphics/orange.png");
 
 	Utils::SetOrigin(sprite, Origins::MC);
-
+	SetPos({ -100, -100 });
 	hitbox = new RectangleShape;
 	hitbox->setFillColor(Color::Red);
 }

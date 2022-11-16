@@ -28,7 +28,7 @@ Tile::Tile()
 
 Tile::~Tile()
 {
-	delete fixture;
+	//delete fixture;
 	delete hitbox;
 
 }
@@ -42,9 +42,13 @@ void Tile::Update(float dt)
 {
 	Utils::SetOrigin(*hitbox, Origins::MC);
 	sprite.setRotation(body->GetAngle());
-	sprite.setPosition({ body->GetPosition().x,body->GetPosition().y*-1 });
+	//sprite.setPosition({ body->GetPosition().x,body->GetPosition().y*-1 });
+	SetPos({ body->GetPosition().x,body->GetPosition().y * -1 });
+	float globalboundcenterx = sprite.getGlobalBounds().left + (sprite.getGlobalBounds().width / 2);
+	float globalboundcentery = sprite.getGlobalBounds().top + (sprite.getGlobalBounds().height / 2);
+
 	hitbox->setSize({ sprite.getGlobalBounds().width,sprite.getGlobalBounds().height });
-	hitbox->setPosition(sprite.getPosition());
+	hitbox->setPosition({ globalboundcenterx,globalboundcentery });
 }
 
 void Tile::Draw(RenderWindow& window)
@@ -92,6 +96,7 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions)
 	bodyDef.position.Set(position.x, position.y*-1);
 	body = world->CreateBody(&bodyDef);
 
+	hitbox->setPosition({ bodyDef.position.x,bodyDef.position.y});
 	b2PolygonShape boxShape;
 	boxShape.SetAsBox(dimensions.x / 2.0f,dimensions.x / 2.0f);
 

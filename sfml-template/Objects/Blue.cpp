@@ -4,6 +4,7 @@ Blue::Blue()
 {
 	SetResourceTexture("Graphics/blue.png");
 	Utils::SetOrigin(sprite, Origins::MC);
+	SetPos({ -1000,-1000 });
 	hitbox = new RectangleShape;
 	hitbox->setFillColor(Color::Red);
 }

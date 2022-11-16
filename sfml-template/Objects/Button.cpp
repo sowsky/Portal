@@ -5,14 +5,19 @@
 
 int Button::buttonNum = 0;
 
+
 Button::Button()
 {
 	SetResourceTexture("Graphics/button.png");
 	id = 'b';	
+
 	type = ObjectType::Trigger;
 	buttonNum++;
 	buttonId = buttonNum;
 	
+
+	buttonId++;
+
 }
 
 Button::~Button()
