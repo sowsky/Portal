@@ -200,12 +200,12 @@ void PlayScene::MakeButton(string dir, string id)
 
 		Button* temp = new Button();
 
-		button.push_back(temp);
+	/*	button.push_back(temp);
 		button.back()->SetOrigin(Origins::BC);
 		button.back()->SetButtonId(stoi(idtemp));
 		button.back()->SetPos(currgrid);
 		char temp = b;
-		button.back()->SetRotation(b);
+		button.back()->SetRotation(b);*/
 
 		if (b == '0') {			//top of gird
 			button.back()->SetPos({ currgrid.x,currgrid.y - GRIDSIZE / 2 });
@@ -639,7 +639,7 @@ PlayScene::PlayScene(string path)
 				string idlist;
 				int idnum = str.find(')', i);
 				idlist = str.substr(i, idnum - i);
-				MakeButton(poslist, idlist);
+			//	MakeButton(poslist, idlist);
 				i++;
 			}
 			case'@':
