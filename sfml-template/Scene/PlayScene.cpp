@@ -5,13 +5,21 @@
 #include "SceneMgr.h"
 #include "../FrameWork/Framework.h"
 #include "../Manager/ResourceMgr.h"
-
+#include "../Objects/Goal.h"
 
 void PlayScene::Update(float dt)
 {
-	
+
 	//////////////////////////////////////////////////////
+
+	if (goal->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
+		if (goal->IsFinish()) {
+			SCENE_MGR->ChangeScene(Scenes::GAMESTART);
+			return;
+		}
+	}
 	player->Update(dt);
+	goal->Update(dt);
 
 	for (auto c : cube) {
 		c->Update(dt);
@@ -23,54 +31,72 @@ void PlayScene::Update(float dt)
 	orange->Update(dt);
 
 	worldView.setCenter(player->GetPositions());
-	
 
 	//blue
 	if (InputMgr::GetMouseButtonDown(Mouse::Left)) {
-		blue->SetSize({ 10,10 });
+		blue->SetSize({ 20,20 });
 		madeblue = false;
-		blue->SetPos({ player->GetPos().x,player->GetPos().y - 20 });
-		blue->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPos()));
-
+		blue->SetPos({ player->GetPositions().x,player->GetPositions().y - 25 });
+		blue->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
 	}
-	//orange
 
+	//orange
 	if (InputMgr::GetMouseButtonDown(Mouse::Right)) {
-		orange->SetSize({ 10,10 });
+		orange->SetSize({ 20,20 });
 		madeorange = false;
-		orange->SetPos({ player->GetPos().x,player->GetPos().y - 20 });
-		orange->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPos()));
+		orange->SetPos({ player->GetPositions().x,player->GetPositions().y - 25 });
+		orange->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
 	}
 
 	MakePortal();
 	MoveToPortal();
 
-	//if (InputMgr::GetKeyDown(Keyboard::E)) {
-	//	if (!grabitem && player->GethitboxGlobalBounds().intersects(cube->GetGlobalBounds())) {
-	//		grabitem = true;
 
-	//		if (player->GetPos().x <= cube->GetPos().x)
-	//		{
-	//			cube->SetSide(true);
-	//		}
-	//		else if (player->GetPos().x > cube->GetPos().x) {
-	//			cube->SetSide(false);
-	//		}
-	//		cube->SetGround(false);
-	//	}
-	//	else if (grabitem) {
-	//		grabitem = false;
-	//	}
-	//}
+	if (grabitem) {
+		if (grabbedcube->GetSide())
+			grabbedcube->SetCubeBodyPos({ player->GetPositions().x + 40,player->GetPositions().y - 40 });
+		else
+			grabbedcube->SetCubeBodyPos({ player->GetPositions().x - 40,player->GetPositions().y - 40 });
 
-	//if (grabitem) {
-	//	if (cube->GetSide())
-	//		cube->SetPos({ player->GetPos().x + 40,player->GetPos().y - 20 });
-	//	else
-	//		cube->SetPos({ player->GetPos().x - 40,player->GetPos().y - 20 });
+		if (InputMgr::GetKeyDown(Keyboard::A)) {
+			grabbedcube->SetSide(false);
+		}
+		else if (InputMgr::GetKeyDown(Keyboard::D)) {
+			grabbedcube->SetSide(true);
+		}
 
-	//}
+		if (InputMgr::GetKeyDown(Keyboard::E)) {
+			cout << "drop" << endl;
+			grabitem = false;
+			grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
+			grabbedcube = nullptr;
+		}
 
+	}
+	else if (!grabitem) {
+		for (auto c : cube) {
+			if (c->GethitboxGlobalBounds().intersects(player->GetGlobalBounds()) && InputMgr::GetKeyDown(Keyboard::E)) {
+				if (!grabitem) {
+					cout << "pickup" << endl;
+
+					grabitem = true;
+					grabbedcube = c;
+					float cposX = c->GetGlobalBounds().left + (c->GetGlobalBounds().width / 2);
+					if (player->GetPositions().x <= cposX)
+					{
+						c->SetSide(true);
+						c->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
+					}
+					else if (player->GetPositions().x > cposX) {
+						c->SetSide(false);
+						c->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
+					}
+					c->SetGround(false);
+				}
+
+			}
+		}
+	}
 
 	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
 		SCENE_MGR->ChangeScene(Scenes::GAMESTART);
@@ -82,7 +108,7 @@ void PlayScene::PhysicsUpdate(float dt)
 	dtstack += dt;
 
 	if (dtstack >= 1 / 60.f) {
-		world->Step(1/60.f, 8, 3);
+		world->Step(1 / 60.f, 8, 3);
 		for (auto w : wall) {
 			w->PhysicsUpdate();
 		}
@@ -93,7 +119,7 @@ void PlayScene::PhysicsUpdate(float dt)
 
 		player->PhysicsUpdate();
 
-		dtstack -= 1/60.f;
+		dtstack -= 1 / 60.f;
 	}
 
 }
@@ -103,6 +129,8 @@ void PlayScene::Draw(RenderWindow& window)
 	DrawBackGroundView(window);
 
 	window.setView(worldView);
+
+	goal->Draw(window);
 
 	if (player != nullptr)
 		player->Draw(window);
@@ -119,13 +147,13 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(window);
 	}
 
-	if (madeorange) {
-		orange->Draw(window);
-	}
+	//if (madeorange) {
+	orange->Draw(window);
+	//}
 
-	if (madeblue) {
-		blue->Draw(window);
-	}
+	//if (madeblue) {
+	blue->Draw(window);
+	//}
 
 }
 
@@ -134,20 +162,12 @@ void PlayScene::MakeWall()
 	Tile* temp = new Tile(world.get(), Vector2f{ currgrid }, Vector2f({ GRIDSIZE, GRIDSIZE }));
 	temp->SetOrigin(Origins::MC);
 	wall.push_back(temp);
-	/*Tile* temp = new Tile();
-
-	wall.push_back(temp);
-	wall.back()->SetOrigin(Origins::MC);
-	wall.back()->SetPos(currgrid);
-
-	wall.back()->SetSize({ GRIDSIZE ,GRIDSIZE });*/
 
 	currgrid.x += GRIDSIZE;
 }
 
 void PlayScene::MakeCube()
 {
-	//////////////////////////////////////////////////////////////////////////////////
 	Cube* newCube = new Cube(world.get(), Vector2f{ currgrid }, Vector2f({ GRIDSIZE, GRIDSIZE }));
 
 	cube.push_back(newCube);
@@ -155,113 +175,319 @@ void PlayScene::MakeCube()
 
 void PlayScene::MakePlayer()
 {
-	/*player = new Player();
-
-	player->SetSize({ 20,50 });
-	player->SetOrigin(Origins::BC);
-	player->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });*/
 
 	player = new Player(world.get(), Vector2f{ currgrid }, Vector2f({ 20, 50 }));
 
 	currgrid.x += GRIDSIZE;
 }
 
-void PlayScene::MakeButton(int dir)
+void PlayScene::MakeButton(string dir, string id)
 {
-	Button* temp = new Button();
+	for (auto b : dir) {
+		if (b == ' ')
+			continue;
 
-	button.push_back(temp);
-	button.back()->SetOrigin(Origins::BC);
+		//seek id
+		string idtemp;
+		for (int i = 0; i < id.size(); i++) {
+			if (id[i] == ' '){
+				id.erase(i, i);
+				break;
+			}
+			idtemp.push_back(id[i]);
+			id.erase(i, i);
+		}
 
-	button.back()->SetPos(currgrid);
-	button.back()->SetRotation(dir);
-	//button.back()->FitScale(TILE_SIZE);
+		Button* temp = new Button();
 
-	if (dir == 0) {			//top of gird
-		button.back()->SetPos({ currgrid.x,currgrid.y - GRIDSIZE / 2 });
-		button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
+		button.push_back(temp);
+		button.back()->SetOrigin(Origins::BC);
+		button.back()->SetButtonId(stoi(idtemp));
+		button.back()->SetPos(currgrid);
+		char temp = b;
+		button.back()->SetRotation(b);
 
-	}
-	else if (dir == 1) {	//right of gird
-		button.back()->SetPos({ currgrid.x + GRIDSIZE / 2,currgrid.y });
-		button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
+		if (b == '0') {			//top of gird
+			button.back()->SetPos({ currgrid.x,currgrid.y - GRIDSIZE / 2 });
+			button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
 
-	}
-	else if (dir == 2) {	//bottom of gird
-		button.back()->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });
-		button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
+		}
+		else if (b == '1') {	//right of gird
+			button.back()->SetPos({ currgrid.x + GRIDSIZE / 2,currgrid.y });
+			button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
 
-	}
-	else if (dir == 3) {	//left of gird
-		button.back()->SetPos({ currgrid.x - GRIDSIZE / 2,currgrid.y });
-		button.back()->SetSize({ GRIDSIZE ,GRIDSIZE / 4 });
+		}
+		else if (b == '2') {	//bottom of gird
+			button.back()->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });
+			button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
 
+		}
+		else if (b == '3') {	//left of gird
+			button.back()->SetPos({ currgrid.x - GRIDSIZE / 2,currgrid.y });
+			button.back()->SetSize({ GRIDSIZE ,GRIDSIZE / 4 });
+
+		}
 	}
 	currgrid.x += GRIDSIZE;
 }
 
 void PlayScene::MakePortal()
 {
+	int bluecollidercount = 0;
 	//wall=mc blue=mc
 
+	float sety;
+	float setx;
+
+	bool intersect = false;
+	RectangleShape blueTL;
+	RectangleShape blueTR;
+	RectangleShape blueBL;
+	RectangleShape blueBR;
+
+	Vector2f bluetlpos, bluetrpos, blueblpos, bluebrpos;
+	bool bluetlhit = false;
+	bool bluetrhit = false;
+	bool blueblhit = false;
+	bool bluebrhit = false;
+
 	for (auto w : wall) {
-		//blue
-		//if hit side
 		if (!madeblue && w->GetGlobalBounds().intersects(blue->GetGlobalBounds())) {
-			blue->SetPos({ blue->GetPos().x,blue->GetPos().y });
-			if (blue->GetPos().x > w->GetPos().x + (Utils::GetSpriteSize(*w->GetSprite()).x / 2) ||
-				blue->GetPos().x < w->GetPos().x - (Utils::GetSpriteSize(*w->GetSprite()).x / 2)) {
-				blue->SetSize({ 50,20 });
-				blue->SetRotation(90.f);
-				if (blue->GetPos().x > w->GetPos().x + (Utils::GetSpriteSize(*w->GetSprite()).x / 2)) {
-					blue->SetPortalDir(1);
-				}
-				else
-					blue->SetPortalDir(3);
-			}
-			else {
-				blue->SetSize({ 50,20 });
-				blue->SetRotation(180.f);
-
-				if (blue->GetPos().y > w->GetPos().y - (Utils::GetSpriteSize(*w->GetSprite()).y / 2)) {
-					blue->SetPortalDir(0);
-				}
-				else
-					blue->SetPortalDir(2);
-			}
+			blue->SetSize({ 50,50 });
 			blue->SetDir({ 0,0 });
-			madeblue = true;
-		}
 
-		//orange
-		if (!madeorange && w->GetGlobalBounds().intersects(orange->GetGlobalBounds())) {
-			orange->SetPos({ orange->GetPos().x,orange->GetPos().y });
 
-			//side
-			if (orange->GetPos().x > w->GetPos().x + (Utils::GetSpriteSize(*w->GetSprite()).x / 2) ||
-				orange->GetPos().x < w->GetPos().x - (Utils::GetSpriteSize(*w->GetSprite()).x / 2)) {
-				orange->SetSize({ 50,20 });
-				orange->SetRotation(90.f);
-				if (orange->GetPos().x > w->GetPos().x + (Utils::GetSpriteSize(*w->GetSprite()).x / 2)) {
-					orange->SetPortalDir(1);
-				}
-				else
-					orange->SetPortalDir(3);
-			}
-			else {//top bottom
-				orange->SetSize({ 50,20 });
-				orange->SetRotation(180.f);
+			bluetlpos = { blue->GetGlobalBounds().left,blue->GetGlobalBounds().top };
+			blueTL.setSize({ 0.1f,0.1f });
 
-				if (orange->GetPos().y > w->GetPos().y - (Utils::GetSpriteSize(*w->GetSprite()).y / 2)) {
-					orange->SetPortalDir(0);
-				}
-				else
-					orange->SetPortalDir(2);
-			}
-			orange->SetDir({ 0,0 });
-			madeorange = true;
+			bluetrpos = { blue->GetGlobalBounds().left + blue->GetGlobalBounds().width,blue->GetGlobalBounds().top };
+			blueTR.setSize({ 0.1f,0.1f });
+
+			blueblpos = { blue->GetGlobalBounds().left ,blue->GetGlobalBounds().top + blue->GetGlobalBounds().height };
+			blueBL.setSize({ 0.1f,0.1f });
+
+			bluebrpos = { blue->GetGlobalBounds().left + blue->GetGlobalBounds().width,blue->GetGlobalBounds().top + blue->GetGlobalBounds().height };
+			blueBR.setSize({ 0.1f,0.1f });
+
+			blueBR.setPosition(bluebrpos);
+			blueBL.setPosition(blueblpos);
+			blueTR.setPosition(bluetrpos);
+			blueTL.setPosition(bluetlpos);
+
+			intersect = true;
+			break;
 		}
 	}
+
+	if (intersect)
+	{
+		for (auto w : wall) {
+			if (!madeblue && w->GetGlobalBounds().contains(blueBL.getPosition())) {
+				setx = w->GetGlobalBounds().left + w->GetGlobalBounds().width;
+				sety = w->GetGlobalBounds().top;
+
+				bluecollidercount++;
+				blueblhit = true;
+
+			}
+
+			if (!madeblue && w->GetGlobalBounds().contains(blueBR.getPosition())) {
+
+				setx = w->GetGlobalBounds().left;
+				sety = w->GetGlobalBounds().top;
+				bluecollidercount++;
+				bluebrhit = true;
+
+			}
+			if (!madeblue && w->GetGlobalBounds().contains(blueTL.getPosition())) {
+
+				setx = w->GetGlobalBounds().left + w->GetGlobalBounds().width;
+				sety = w->GetGlobalBounds().top + w->GetGlobalBounds().height;
+				bluecollidercount++;
+				bluetlhit = true;
+
+			}
+			if (!madeblue && w->GetGlobalBounds().contains(blueTR.getPosition())) {
+
+				setx = w->GetGlobalBounds().left;
+				sety = w->GetGlobalBounds().top + w->GetGlobalBounds().height;
+				bluecollidercount++;
+				bluetrhit = true;
+
+			}
+		}
+
+	}
+
+	if (bluecollidercount == 2) {
+
+		//bottom
+		if (bluetlhit && bluetrhit) {
+			blue->SetSize({ 50,20 });
+			blue->SetPos({ blue->GetPos().x,sety });
+			blue->SetPortalDir(2);
+			cout << "low" << endl;
+		}
+		//left
+		else if (bluetrhit && bluebrhit) {
+			blue->SetSize({ 20,50 });
+			blue->SetPos({ setx,blue->GetPos().y });
+			blue->SetPortalDir(3);
+			cout << "left" << endl;
+		}
+		//top
+		else if (blueblhit && bluebrhit) {
+			blue->SetSize({ 50,20 });
+			blue->SetPos({ blue->GetPos().x,sety });
+			blue->SetPortalDir(0);
+			cout << "top" << endl;
+
+		}
+		//right
+		else if (bluetlhit && blueblhit) {
+			blue->SetSize({ 20,50 });
+			blue->SetPos({ blue->GetPos().x,sety });
+			blue->SetPortalDir(1);
+			cout << "right" << endl;
+		}
+		madeblue = true;
+		blue->SetDir({ 0,0 });
+	}
+	else if (bluecollidercount != 0) {
+		blue->SetPos({ -1000,-1000 });
+	}
+
+
+	int orangecollidercount = 0;
+	//wall=mc orange=mc
+
+	float orangesety;
+	float orangesetx;
+	bool orangeintersect = false;
+	RectangleShape orangeTL;
+	RectangleShape orangeTR;
+	RectangleShape orangeBL;
+	RectangleShape orangeBR;
+
+	Vector2f orangetlpos, orangetrpos, orangeblpos, orangebrpos;
+	bool orangetlhit = false;
+	bool orangetrhit = false;
+	bool orangeblhit = false;
+	bool orangebrhit = false;
+
+	for (auto w : wall) {
+		if (!madeorange && w->GetGlobalBounds().intersects(orange->GetGlobalBounds())) {
+			orange->SetSize({ 50,50 });
+			orange->SetDir({ 0,0 });
+
+
+			orangetlpos = { orange->GetGlobalBounds().left,orange->GetGlobalBounds().top };
+			orangeTL.setSize({ 0.1f,0.1f });
+
+			orangetrpos = { orange->GetGlobalBounds().left + orange->GetGlobalBounds().width,orange->GetGlobalBounds().top };
+			orangeTR.setSize({ 0.1f,0.1f });
+
+			orangeblpos = { orange->GetGlobalBounds().left ,orange->GetGlobalBounds().top + orange->GetGlobalBounds().height };
+			orangeBL.setSize({ 0.1f,0.1f });
+
+			orangebrpos = { orange->GetGlobalBounds().left + orange->GetGlobalBounds().width,orange->GetGlobalBounds().top + orange->GetGlobalBounds().height };
+			orangeBR.setSize({ 0.1f,0.1f });
+
+			orangeBR.setPosition(orangebrpos);
+			orangeBL.setPosition(orangeblpos);
+			orangeTR.setPosition(orangetrpos);
+			orangeTL.setPosition(orangetlpos);
+
+			orangeintersect = true;
+			break;
+		}
+	}
+
+	if (orangeintersect)
+	{
+		for (auto w : wall) {
+			if (!madeorange && w->GetGlobalBounds().contains(orangeBL.getPosition())) {
+				orangesetx = w->GetGlobalBounds().left + w->GetGlobalBounds().width;
+				orangesety = w->GetGlobalBounds().top;
+
+				orangecollidercount++;
+				orangeblhit = true;
+
+			}
+
+			if (!madeorange && w->GetGlobalBounds().contains(orangeBR.getPosition())) {
+
+				orangesetx = w->GetGlobalBounds().left;
+				orangesety = w->GetGlobalBounds().top;
+				orangecollidercount++;
+				orangebrhit = true;
+
+			}
+			if (!madeorange && w->GetGlobalBounds().contains(orangeTL.getPosition())) {
+
+				orangesetx = w->GetGlobalBounds().left + w->GetGlobalBounds().width;
+				orangesety = w->GetGlobalBounds().top + w->GetGlobalBounds().height;
+				orangecollidercount++;
+				orangetlhit = true;
+
+			}
+			if (!madeorange && w->GetGlobalBounds().contains(orangeTR.getPosition())) {
+
+				orangesetx = w->GetGlobalBounds().left;
+				orangesety = w->GetGlobalBounds().top + w->GetGlobalBounds().height;
+				orangecollidercount++;
+				orangetrhit = true;
+
+			}
+		}
+
+	}
+
+	if (orangecollidercount == 2) {
+
+		//bottom
+		if (orangetlhit && orangetrhit) {
+			orange->SetSize({ 50,20 });
+			orange->SetPos({ orange->GetPos().x,orangesety });
+			orange->SetPortalDir(2);
+			cout << "low" << endl;
+		}
+		//left
+		else if (orangetrhit && orangebrhit) {
+			orange->SetSize({ 20,50 });
+			orange->SetPos({ orangesetx,orange->GetPos().y });
+			orange->SetPortalDir(3);
+			cout << "left" << endl;
+		}
+		//top
+		else if (orangeblhit && orangebrhit) {
+			orange->SetSize({ 50,20 });
+			orange->SetPos({ orange->GetPos().x,orangesety });
+			orange->SetPortalDir(0);
+			cout << "top" << endl;
+
+		}
+		//right
+		else if (orangetlhit && orangeblhit) {
+			orange->SetSize({ 20,50 });
+			orange->SetPos({ orange->GetPos().x,orangesety });
+			orange->SetPortalDir(1);
+			cout << "right" << endl;
+		}
+		madeorange = true;
+		orange->SetDir({ 0,0 });
+	}
+	else if (orangecollidercount != 0) {
+		orange->SetPos({ -1000,-1000 });
+	}
+
+}
+
+void PlayScene::MakeGoal(string list)
+{
+	goal = new Goal(currgrid, GRIDSIZE, list);
+
+	currgrid.x += GRIDSIZE;
 
 }
 
@@ -278,18 +504,21 @@ void PlayScene::MoveToPortal()
 
 	if (madeblue && blue->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (orange->GetPortalDir() == 0) {
-			player->SetPos({ orange->GetPos().x,orange->GetPos().y - Utils::GetSpriteSize(*orange->GetSprite()).y / 2 });
+			player->SetPlayerBodyPos({ orange->GetPos().x,orange->GetPos().y - player->GetGlobalBounds().height });
+			player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,10000000 });
+
 		}
 		else if (orange->GetPortalDir() == 1) {
-			player->SetPos({ orange->GetPos().x + 20,orange->GetPos().y });
-
+			player->SetPlayerBodyPos({ orange->GetPos().x + 30,orange->GetPos().y });
+			player->SetPlayerBodyForce({ 10000 * 333,0 });
 		}
 		else if (orange->GetPortalDir() == 2) {
-			player->SetPos({ orange->GetPos().x ,orange->GetPos().y + 20 });
-
+			player->SetPlayerBodyPos({ orange->GetPos().x ,orange->GetPos().y + player->GetGlobalBounds().height });
+			player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,-10000000 });
 		}
 		else if (orange->GetPortalDir() == 3) {
-			player->SetPos({ orange->GetPos().x - 20 ,orange->GetPos().y });
+			player->SetPlayerBodyPos({ orange->GetPos().x - 30 ,orange->GetPos().y });
+			player->SetPlayerBodyForce({ 10000 * -333,0 });
 
 		}
 
@@ -297,28 +526,75 @@ void PlayScene::MoveToPortal()
 
 	if (madeorange && orange->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (blue->GetPortalDir() == 0) {
-			player->SetPos({ blue->GetPos().x,blue->GetPos().y - 50 });
+			player->SetPlayerBodyPos({ blue->GetPos().x,blue->GetPos().y - player->GetGlobalBounds().height });
+			player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,10000000 });
 		}
 		else if (blue->GetPortalDir() == 1) {
-			player->SetPos({ blue->GetPos().x + 20,blue->GetPos().y });
+			player->SetPlayerBodyPos({ blue->GetPos().x + 30,blue->GetPos().y });
+			player->SetPlayerBodyForce({ 10000 * 333,0 });
 
 		}
 		else if (blue->GetPortalDir() == 2) {
-			player->SetPos({ blue->GetPos().x ,blue->GetPos().y + 50 });
-
+			player->SetPlayerBodyPos({ blue->GetPos().x ,blue->GetPos().y + player->GetGlobalBounds().height });
+			player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,-10000000 });
 		}
 		else if (blue->GetPortalDir() == 3) {
-			player->SetPos({ blue->GetPos().x - 20 ,blue->GetPos().y });
-
+			player->SetPlayerBodyPos({ blue->GetPos().x - 30 ,blue->GetPos().y });
+			player->SetPlayerBodyForce({ 10000 * -333,0 });
 		}
 	}
+
+
+	///////////////////////////////////////CUBE////////////////////////////////////////////////////
+	for (auto c : cube) {
+		if (madeblue && blue->GetGlobalBounds().intersects(c->GetGlobalBounds())) {
+			if (orange->GetPortalDir() == 0) {
+				c->SetCubeBodyPos({ orange->GetPos().x,orange->GetPos().y - c->GetGlobalBounds().height });
+				c->SetCubeBodyForce({ c->GetCubeBodyForce().x,10000000 });
+
+			}
+			else if (orange->GetPortalDir() == 1) {
+				c->SetCubeBodyPos({ orange->GetPos().x + c->GetGlobalBounds().width,orange->GetPos().y });
+				c->SetCubeBodyForce({ 10000 * 333,0 });
+			}
+			else if (orange->GetPortalDir() == 2) {
+				c->SetCubeBodyPos({ orange->GetPos().x ,orange->GetPos().y + c->GetGlobalBounds().height });
+				c->SetCubeBodyForce({ c->GetCubeBodyForce().x,-10000000 });
+			}
+			else if (orange->GetPortalDir() == 3) {
+				c->SetCubeBodyPos({ orange->GetPos().x - c->GetGlobalBounds().width ,orange->GetPos().y });
+				c->SetCubeBodyForce({ 10000 * -333,0 });
+			}
+		}
+
+		if (madeorange && orange->GetGlobalBounds().intersects(c->GetGlobalBounds())) {
+			if (blue->GetPortalDir() == 0) {
+				c->SetCubeBodyPos({ blue->GetPos().x,blue->GetPos().y - c->GetGlobalBounds().height });
+				c->SetCubeBodyForce({ c->GetCubeBodyForce().x,10000000 });
+			}
+			else if (blue->GetPortalDir() == 1) {
+				c->SetCubeBodyPos({ blue->GetPos().x + c->GetGlobalBounds().width,blue->GetPos().y });
+				c->SetCubeBodyForce({ 10000 * 333,0 });
+
+			}
+			else if (blue->GetPortalDir() == 2) {
+				c->SetCubeBodyPos({ blue->GetPos().x ,blue->GetPos().y + c->GetGlobalBounds().height });
+				c->SetCubeBodyForce({ c->GetCubeBodyForce().x,-10000000 });
+			}
+			else if (blue->GetPortalDir() == 3) {
+				c->SetCubeBodyPos({ blue->GetPos().x - c->GetGlobalBounds().width ,blue->GetPos().y });
+				c->SetCubeBodyForce({ 10000 * -333,0 });
+			}
+		}
+	}
+
 }
 
 
 PlayScene::PlayScene(string path)
 {
 
-	b2Vec2 g(0.0f, -100);
+	b2Vec2 g(0.0f, -900);
 	world = make_unique<b2World>(g);
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -337,15 +613,6 @@ PlayScene::PlayScene(string path)
 	while (getline(fin, str)) {
 		//verifying each character
 		for (int i = 0; i < str.size() + 1; i++) {
-
-
-			///////////get button side///////
-			int side;
-			if (str[i] == 'b' || str[i] == 'B') {
-				side = (int)str[i + 1] - 48;
-			}
-			/////////////////////////////
-
 			switch (str[i]) {
 			case '1':
 				MakeWall();
@@ -361,9 +628,28 @@ PlayScene::PlayScene(string path)
 
 			case 'b':
 			case 'B':
-				MakeButton(side);
+				//b"2 4 4 "(1)
+			{
+				i += 2;//index of gridposition number 
+				string poslist;
+				int posnum = str.find('"', i);
+				poslist = str.substr(i, posnum - i);
+
+				i += 3; //index of buttonId
+				string idlist;
+				int idnum = str.find(')', i);
+				idlist = str.substr(i, idnum - i);
+				MakeButton(poslist, idlist);
 				i++;
-				break;
+			}
+			case'@':
+			{
+				string list;
+				int num = str.find(')', i);
+				list = str.substr(i + 2, num - i - 2);
+				MakeGoal(list);
+				i = num;
+			}
 			default:
 				currgrid.x += GRIDSIZE;
 			}
@@ -372,6 +658,8 @@ PlayScene::PlayScene(string path)
 		currgrid = { GRIDSIZE / 2,currgrid.y + GRIDSIZE };
 
 	}
+
+	goal->SetButtonlist(button);
 
 	fin.close();
 }
@@ -407,8 +695,7 @@ void PlayScene::Release()
 
 	delete orange;
 	delete blue;
-	//delete cube;
-
+	delete goal;
 
 }
 

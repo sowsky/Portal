@@ -6,7 +6,6 @@ class Tile : public SpriteObj
 {
 public:
 	Tile();
-	// Tile(b2World* world, const Vector2f& position, Vector2f dimensions);
 	virtual ~Tile();
 
 	virtual SpriteObj* NewThis();

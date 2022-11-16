@@ -25,6 +25,10 @@ public:
 	
 
 	FloatRect GethitboxGlobalBounds() { return hitbox->getGlobalBounds(); }
+	void SetPlayerBodyPos(Vector2f pos);
+	b2Vec2 GetPlayerBodyPos() { return body->GetPosition(); }
+	void SetPlayerBodyForce(b2Vec2 force);
+	b2Vec2 GetPlayerBodyForce() { return body->GetLinearVelocity(); }
 
 protected:
 	bool ground = false;
