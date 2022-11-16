@@ -3,6 +3,14 @@
 #include "../FrameWork/Utils.h"
 #include <string>
 
+enum class ObjectType
+{
+	None = -1,
+	Trigger,
+	Catcher,
+	Object,
+};
+
 class SpriteObj : public Object
 {
 public:
@@ -34,9 +42,16 @@ public:
 	FloatRect GetGlobalBounds();
 
 	static void OnOffWiringState() { isWiring = !isWiring; }
+	static void OnOffWiringState(bool onoff) { isWiring = onoff; }
+	
 	virtual bool GetWiringState() { return isWiring; }	
 
+	bool IsWireable() { return isWireableObject; }
+
 	void SetBoolInMapTool(bool isIn) { isInMapTool = isIn; }
+
+	void SetType(ObjectType type) { this->type = type; }
+	ObjectType GetObjType() { return type; }
 protected:
 	Sprite sprite;
 	float speed=100.f;
@@ -44,8 +59,10 @@ protected:
 	Vector2f direction={0,0};
 
 	char id;
+	ObjectType type;
 
 	static bool isWiring;
+	bool isWireableObject;
 	bool isInMapTool;
 };
 

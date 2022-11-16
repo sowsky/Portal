@@ -1,6 +1,7 @@
 #include "Goal.h"
 #include "../Manager/ResourceMgr.h"
 #include "../FrameWork/Utils.h"
+#include "Button.h"
 
 int Goal::goalNum = 0;
 
@@ -9,9 +10,7 @@ Goal::Goal()
 	SetResourceTexture("Graphics/goal.png");
 	id = '@';
 	goalNum++;
-
-	wireCheckBox.setTexture(RESOURCEMGR->GetTexture("Graphics/Ui/wirebox.png"));
-	wireCheckBox.setSize((Vector2f)sprite.getTexture()->getSize());	
+	type = ObjectType::Catcher;
 }
 
 Goal::~Goal()
@@ -28,7 +27,7 @@ void Goal::SetDoor(bool Isopen)
 {
 	on = Isopen;
 	if (on) {
-	//	SetResourceTexture("Graphics/goalopen.png");
+		SetResourceTexture("Graphics/goalopen.png");
 
 	}else
 		SetResourceTexture("Graphics/goal.png");

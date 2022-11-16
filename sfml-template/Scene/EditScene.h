@@ -7,6 +7,7 @@
 #include "../Objects/WireableObject.h"
 #include "../Objects/WirePointArrows.h"
 #include "../Objects/Wire.h"
+#include "../Objects/NumBox.h"
 
 class SpriteObj;
 //class WireableObject;
@@ -28,20 +29,23 @@ public:
 public:
 	void DrawWorldView(RenderWindow& window);
 	void DrawUiView(RenderWindow& window);
-	void DrawWireTool(RenderWindow& window);
 
 	void InitMapTool();	
 	void ReleaseMapTool();
-
-	void InitWiringTool();
-	void ReleaseWiringTool();
-	void UpdateWiringTool(float dt);
 
 	void SetMapToolPos();
 	void SetMapToolSize();
 	void FillMapTool();
 	void UpdateMapTool(float dt);
 	void DrawOutLine(RenderWindow& window);
+
+	void InitWireMod();
+	void UpdateWireMod(float dt);
+	void FillNumBox();
+	void DrawWireMod(RenderWindow& window);
+	void DrawWireModMouseBox(RenderWindow& window);
+	void LoadDataToWireableList();
+	void RelaseWireableList();
 
 	void Input(float dt);
 
@@ -54,8 +58,8 @@ public:
 
 	void MouseSpriteBoxUpdate();
 
-	void Save();
 	void Reset();
+	void Save();
 	void Load();
 
 private:	
@@ -64,7 +68,8 @@ private:
 	Vector2f startPos;	
 
 	array<array<pair<list<SpriteObj*>, SpriteObj*>, 100>, 100> mapTool;
-	array<array<pair<pair<Wire*, WirePointArrows*>, WireableObject*>, 100>, 100> wiringTool;
+	list<WireableObject*> wireableList;
+	list<NumBox*> numBox;
 
 	RectangleShape topLine;
 	RectangleShape leftLine;
@@ -75,6 +80,7 @@ private:
 	Sprite shadow;
 	
 	array<array<pair<SpriteObj*, Sprite>, 4>, 8> uiTool;
+	
 	Sprite uiOutLine;
 	RectangleShape uiBackGround;
 	Sprite uiMove;
@@ -82,6 +88,7 @@ private:
 	RectangleShape wiringModGui;
 
 	SpriteObj* mouseBoxSprite;
+	Sprite link;
 
 	SpriteObj* mapToolCheckBox;
 	SpriteObj* uiToolCheckBox;

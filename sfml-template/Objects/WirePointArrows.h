@@ -13,13 +13,14 @@ public:
 	void SetPosition(Vector2f pos, float tileSize);
 	void Update(float dt);
 	void Draw(RenderWindow& window);
+	void SetSize(Vector2f size);
 
+	void SetActive(bool act) { active = act; }
+	bool GetAcitve() { return active; }
 private:	
-	Sprite up;
-	Sprite left;
-	Sprite right;
-	Sprite down;
-	array<Sprite, 4> arrowContainer;
+	array<pair<bool, Sprite>, 4> arrowContainer;
+
+	bool active;
 
 	Vector2f position;
 };

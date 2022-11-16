@@ -50,7 +50,7 @@ void Tile::Update(float dt)
 void Tile::Draw(RenderWindow& window)
 {
 	SpriteObj::Draw(window);
-	window.draw(*hitbox);
+	//window.draw(*hitbox);
 }
 
 void Tile::PhysicsUpdate()

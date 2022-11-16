@@ -1,17 +1,20 @@
 #pragma once
 #include "WireableObject.h"
+
 class Button : public WireableObject
 {
 public:
 	Button();
-	virtual ~Button();
-
-	virtual void Update(float dt);	
+	virtual ~Button();	
 
 	virtual SpriteObj* NewThis();
 public:
-	
-protected:
-	bool isPressed;
+	static int GetButtonNum() { return buttonNum; }
+	static void SetButtonNum(int num) { buttonNum = num; }
+protected:	
+	bool isPressed = false;
+	int buttonId;
+
+	static int buttonNum;
 };
 

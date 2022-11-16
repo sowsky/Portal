@@ -14,6 +14,7 @@ Wire::Wire()
 	{
 		wires[i].second.setTexture(*sprite.getTexture());
 		Utils::SetOrigin(wires[i].second, Origins::MC);
+		wires[i].second.setColor(Color(37, 255, 254));
 	}
 
 	sprite.setColor(Color(37, 255, 254));
@@ -26,11 +27,11 @@ Wire::~Wire()
 
 void Wire::Init()
 {
-	Object::Init();
+	active = false;	
 	for (int i = 0; i < wires.size(); i++)
 	{
 		wires[i].first = false;
-	}
+	}	
 }
 
 void Wire::SetPos(const Vector2f& pos)
@@ -57,6 +58,9 @@ void Wire::Update(float dt)
 
 void Wire::Draw(RenderWindow& window)
 {
+	if (!active)
+		return;
+
 	SpriteObj::Draw(window);	
 	for (int i = 0; i < wires.size(); i++)
 	{
@@ -70,7 +74,7 @@ void Wire::SetSize(Vector2f size)
 	Utils::SetSpriteSize(sprite, size);
 	for (int i = 0; i < wires.size(); i++)
 	{
-		Utils::SetSpriteSize(wires[0].second, size);
+		Utils::SetSpriteSize(wires[i].second, size);
 	}
 }
 

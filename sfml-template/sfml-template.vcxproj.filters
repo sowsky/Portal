@@ -25,6 +25,7 @@
     <ClCompile Include="Objects\Wire.cpp" />
     <ClCompile Include="Objects\WireableObject.cpp" />
     <ClCompile Include="Objects\WirePointArrows.cpp" />
+    <ClCompile Include="Objects\NumBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Manager\Animator.h" />
@@ -56,5 +57,6 @@
     <ClInclude Include="Objects\Wire.h" />
     <ClInclude Include="Objects\WireableObject.h" />
     <ClInclude Include="Objects\WirePointArrows.h" />
+    <ClInclude Include="Objects\NumBox.h" />
   </ItemGroup>
 </Project>

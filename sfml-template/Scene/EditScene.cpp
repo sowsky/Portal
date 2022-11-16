@@ -42,6 +42,8 @@ EditScene::EditScene()
 	crossUiCheckBox->SetResourceTexture("Graphics/Ui/checkbox.png");
 	crossUiCheckBox->FitScale(40.f);
 	crossUiCheckBox->SetOrigin(Origins::MC);	
+
+	link.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/link.png"));
 }
 
 EditScene::~EditScene()
@@ -62,6 +64,7 @@ void EditScene::Init()
 	isUiOpen = true;
 	isGridOn = true;
 	isWiring = false;
+	SpriteObj::OnOffWiringState(false);
 
 	mapToolCheckBox->SetActive(false);
 	uiToolCheckBox->SetActive(false);
@@ -73,8 +76,8 @@ void EditScene::Init()
 	startPos.x = (winSize.x - rowNum * tileSize.x) * 0.5f;
 	startPos.y = (winSize.y - colNum * tileSize.y) * 0.5f + (colNum - 1) * tileSize.y;
 
-	InitMapTool();
-	InitWiringTool();
+	InitMapTool();	
+	InitWireMod();
 	zoomCount = 0;
 
 	Vector2f uiViewSize = uiView.getSize();
@@ -91,7 +94,7 @@ void EditScene::Init()
 
 void EditScene::Release()
 {
-	ReleaseMapTool();
+	ReleaseMapTool();	
 	ReleaseUiTool();
 }
 
@@ -116,7 +119,8 @@ void EditScene::Update(float dt)
 		return;
 
 	Input(dt);
-	UpdateMapTool(dt);
+	UpdateMapTool(dt);	
+	UpdateWireMod(dt);
 	UpdateUiTool(dt);
 
 	MouseSpriteBoxUpdate();	
@@ -150,12 +154,13 @@ void EditScene::DrawWorldView(RenderWindow& window)
 			if (mapTool[i][j].second->GetActive() && isGridOn)
 				mapTool[i][j].second->Draw(window);
 		}
-	}
-	DrawWireTool(window);
+	}	
 	DrawOutLine(window);
 
 	if (mapToolCheckBox->GetActive())
 		mapToolCheckBox->Draw(window);
+
+	DrawWireMod(window);
 }
 
 void EditScene::DrawUiView(RenderWindow& window)
@@ -191,20 +196,9 @@ void EditScene::DrawUiView(RenderWindow& window)
 
 	if (mouseBoxSprite != nullptr)
 		mouseBoxSprite->Draw(window);
-}
 
-void EditScene::DrawWireTool(RenderWindow& window)
-{
-	for (int i = 0; i < wiringTool.size(); i++)
-	{
-		for (int j = 0; j < wiringTool.size(); j++)
-		{
-			wiringTool[i][j].first.first->Draw(window);
-			wiringTool[i][j].first.second->Draw(window);
-		}
-	}
+	DrawWireModMouseBox(window);
 }
-
 
 void EditScene::InitMapTool()
 {
@@ -252,31 +246,6 @@ void EditScene::ReleaseMapTool()
 			mapTool[i][j].first.clear();
 		}
 	}
-}
-
-void EditScene::InitWiringTool()
-{
-	for (int i = 0; i < wiringTool.size(); i++)
-	{
-		for (int j = 0; j < wiringTool.size(); j++)
-		{
-			Vector2f pos = mapTool[i][j].second->GetPos();
-			wiringTool[i][j].first.first = new Wire;
-			wiringTool[i][j].first.first->SetPos(pos, TILE_SIZE);
-
-			wiringTool[i][j].first.second = new WirePointArrows;
-			wiringTool[i][j].first.second->SetPosition(pos, TILE_SIZE);
-			wiringTool[i][j].second = nullptr;
-		}
-	}
-}
-
-void EditScene::ReleaseWiringTool()
-{
-}
-
-void EditScene::UpdateWiringTool(float dt)
-{
 }
 
 void EditScene::SetMapToolPos()
@@ -351,6 +320,9 @@ void EditScene::SetMapToolSize()
 
 void EditScene::FillMapTool()
 {
+	if (isWiring)
+		return;
+
 	Vector2f mousePos = ScreenToWorldPos((Vector2i)InputMgr::GetMousePos());
 	Vector2f fixPos{ TILE_SIZE / 2,TILE_SIZE };
 	
@@ -364,8 +336,8 @@ void EditScene::FillMapTool()
 				!mouseOnUi)
 			{
 				if (!mapTool[i][j].first.empty() &&
-					mouseBoxSprite->GetId() == '1' &&
-					mapTool[i][j].first.front()->GetId() == '1')
+					mouseBoxSprite->GetId() ==
+					mapTool[i][j].first.front()->GetId())
 					break;
 
 				if (!(mouseBoxSprite->GetId() == 'p' && Player::GetPlayerNum() > 2) &&
@@ -382,7 +354,13 @@ void EditScene::FillMapTool()
 					mapTool[i][j].first.front()->SetOrigin(Origins::BC);
 					mapTool[i][j].first.front()->SetBoolInMapTool(true);
 					mapTool[i][j].first.front()->SetPos(mapTool[i][j].second->GetPos() +fixPos);					
-					mapTool[i][j].first.front()->Init();
+					mapTool[i][j].first.front()->Init();	
+
+					if (mapTool[i][j].first.front()->GetObjType() == ObjectType::Trigger)
+					{
+						Button* temp = (Button*)mapTool[i][j].first.front();
+						temp->AddNumBox(Button::GetButtonNum() - 1);
+					}
 				}
 				break;
 			}
@@ -391,7 +369,7 @@ void EditScene::FillMapTool()
 				mouseBoxSprite == nullptr &&
 				InputMgr::GetMouseButton(Mouse::Right) &&
 				!mapTool[i][j].first.empty())
-			{
+			{			
 				delete mapTool[i][j].first.front();
 				mapTool[i][j].first.clear();
 				break;
@@ -538,6 +516,18 @@ void EditScene::Input(float dt)
 	{
 		SpriteObj::OnOffWiringState();	
 		isWiring = !isWiring;
+		isWiring ? LoadDataToWireableList() : RelaseWireableList();
+	}
+	if (InputMgr::GetKeyDown(Keyboard::A) &&
+		isWiring &&
+		numBox.front()->GetNum() > 1)
+	{
+		numBox.front()->SetNum(numBox.front()->GetNum() - 1);
+	}
+	if (InputMgr::GetKeyDown(Keyboard::D) &&
+		isWiring)
+	{
+		numBox.front()->SetNum(numBox.front()->GetNum() + 1);
 	}
 }
 
@@ -547,6 +537,75 @@ void EditScene::DrawOutLine(RenderWindow& window)
 	window.draw(leftLine);
 	window.draw(rightLine);
 	window.draw(bottomLine);
+}
+
+void EditScene::InitWireMod()
+{
+	numBox.push_back(new NumBox);
+	numBox.back()->SetNum(1);
+}
+
+void EditScene::UpdateWireMod(float dt)
+{
+	if (!isWiring || !isScenePlay)
+		return;
+
+	numBox.front()->SetPos(MouseWorldPos());
+	FillNumBox();
+}
+
+void EditScene::FillNumBox()
+{
+	if (wireableList.empty())
+		return;
+
+	for (auto wlist : wireableList)
+	{
+		if (wlist->IsMouseIn()
+			&& InputMgr::GetMouseButtonDown(Mouse::Left))
+		{
+			wlist->AddNumBox(numBox.front());
+		}
+	}
+}
+
+void EditScene::DrawWireMod(RenderWindow& window)
+{
+	if (!isWiring)
+		return;
+
+	for (auto i : numBox)
+	{
+		i->Draw(window);
+	}
+}
+
+void EditScene::DrawWireModMouseBox(RenderWindow& window)
+{
+	if (!isWiring)
+		return;
+
+
+}
+
+void EditScene::LoadDataToWireableList()
+{
+	for (int i = 0; i < colNum; i++)
+	{
+		for (int j = 0; j < rowNum; j++)
+		{
+			if (!mapTool[i][j].first.empty() &&
+				(mapTool[i][j].first.front()->GetObjType() == ObjectType::Catcher))
+			{
+				wireableList.push_back((WireableObject*)mapTool[i][j].first.front());
+			}
+		}
+	}
+}
+
+void EditScene::RelaseWireableList()
+{
+	wireableList.clear();
 }
 
 void EditScene::InitUiTool()
@@ -697,11 +756,10 @@ void EditScene::FillUiToolBox()
 
 	uiTool[0][3].first = new Button;	
 	uiTool[0][3].first->SetResourceTexture("Graphics/Ui/button.png");
+	Button::SetButtonNum(0);
 
 	uiTool[1][0].first = new Goal;
-	uiTool[1][0].first->SetResourceTexture("Graphics/Ui/goal.png");
-
-	uiTool[1][1].first = new Wire;
+	uiTool[1][0].first->SetResourceTexture("Graphics/Ui/goal.png");	
 }
 
 void EditScene::SetUiToolPos(Vector2f pos)
@@ -760,10 +818,12 @@ void EditScene::MouseSpriteBoxUpdate()
 				!uiMove.getGlobalBounds().contains(InputMgr::GetMousePos()))
 			{
 				if (mouseBoxSprite != nullptr)
+				{								
 					delete mouseBoxSprite;
+				}			
 
 				mouseBoxSprite = uiTool[i][j].first->NewThis();
-				mouseBoxSprite->FitScale(50.f);		
+				mouseBoxSprite->FitScale(50.f);				
 			}
 		}
 	}
@@ -779,10 +839,43 @@ void EditScene::MouseSpriteBoxUpdate()
 		mouseBoxSprite->SetPos(mousePos);
 }
 
-void EditScene::Save()
+void EditScene::Reset()
 {
-	cout << "파일 저장\n";	
-	ofstream txt("Map/temp.txt");
+	ReleaseMapTool();
+	InitMapTool();
+}
+
+void EditScene::Save()
+{	
+	ofstream txt("Map/temp.txt");	
+
+	bool isPlayer = false;
+	bool isGoal = false;
+
+	for (int i = 0; i < colNum; i++)
+	{
+		for (int j = 0; j < rowNum; j++)
+		{
+			if (!mapTool[i][j].first.empty() &&
+				mapTool[i][j].first.front()->GetId() == 'p')
+				isPlayer = true;
+			if (!mapTool[i][j].first.empty() &&
+				mapTool[i][j].first.front()->GetId() == '@')
+				isGoal = true;
+		}
+	}
+
+	if (!isPlayer)
+	{
+		cout << "파일 저장 실패:플레이어 없음\n";
+		return;			
+	}
+
+	if (!isGoal)
+	{
+		cout << "파일 저장 실패:출구 없음\n";
+		return;
+	}
 	
 	for (int i = colNum - 1; i >= 0 ; i--)
 	{
@@ -791,19 +884,134 @@ void EditScene::Save()
 			if (mapTool[i][j].first.empty())
 				txt << '0';
 			else
+			{
 				txt << mapTool[i][j].first.front()->GetId();
+				if (mapTool[i][j].first.front()->GetObjType() == ObjectType::Trigger ||
+					mapTool[i][j].first.front()->GetObjType() == ObjectType::Catcher)
+				{
+					if (mapTool[i][j].first.front()->GetObjType() == ObjectType::Trigger)
+					{
+						txt << '\"';
+						txt << '2';
+						txt << '\"';
+					}		
+										
+					txt << '(';
+					WireableObject* temp = (WireableObject*)mapTool[i][j].first.front();
+					for (auto num : temp->GetWireListFromMapTool())
+					{
+						txt << num;
+						txt << ' ';
+					}
+					txt << ')';
+				}
+			}
 		}
+		if (i == 0)
+			continue;
 		txt << '\n';
 	}
-}
 
-void EditScene::Reset()
-{
-	ReleaseMapTool();
-	InitMapTool();
+	cout << "파일 저장 성공\n";
 }
 
 void EditScene::Load()
-{
+{	
 	Reset();
+
+	ifstream txt("Map/temp.txt");
+	string s;
+
+	colNum = 0;
+	rowNum = 0;
+
+	Vector2f fixPos{ TILE_SIZE / 2,TILE_SIZE };
+
+	while (getline(txt, s))
+	{		
+		int row = 0;
+		for (int i = 0; i < s.size(); i++)
+		{
+			switch (s[i])
+			{
+			case '0':
+				break;
+			case '1':
+				mapTool[colNum][row].first.push_front(new Tile);
+				break;
+			case '@':
+				mapTool[colNum][row].first.push_front(new Goal);
+				mapTool[colNum][row].first.front()->SetPos(mapTool[colNum][row].second->GetPos() + fixPos);
+				i += 2;
+				while (s[i] != ')')
+				{
+					WireableObject* tempObj = (WireableObject*)mapTool[colNum][row].first.front();					
+					string tempStr;
+					while (s[i] != ' ')
+					{
+						tempStr += s[i];
+						i++;
+					}
+					tempObj->AddNumBox(stoi(tempStr));
+					i++;
+				}				
+				break;
+			case 'b':
+				mapTool[colNum][row].first.push_front(new Button);
+				mapTool[colNum][row].first.front()->SetPos(mapTool[colNum][row].second->GetPos() + fixPos);
+				i += 5;
+				while (s[i] != ')')
+				{
+					WireableObject* tempObj = (WireableObject*)mapTool[colNum][row].first.front();
+					string tempStr;
+					while (s[i] != ' ')
+					{
+						tempStr += s[i];
+						i++;
+					}
+					tempObj->AddNumBox(stoi(tempStr));
+					i++;
+				}				
+				break;
+			}
+			if (!mapTool[colNum][row].first.empty())
+			{
+				mapTool[colNum][row].first.front()->FitScale(TILE_SIZE);
+				mapTool[colNum][row].first.front()->SetOrigin(Origins::BC);
+				mapTool[colNum][row].first.front()->SetBoolInMapTool(true);
+				mapTool[colNum][row].first.front()->SetPos(mapTool[colNum][row].second->GetPos() + fixPos);
+				mapTool[colNum][row].first.front()->Init();
+			}
+			row++;
+		}
+		++colNum;
+	}
+	
+	bool noneObj = false;
+	for (int i = 0; i < s.size(); i++)
+	{
+		++rowNum;
+		if (s[i] == '(')
+		{
+			noneObj = true;
+		}
+		if (s[i] == ')')
+		{
+			noneObj = false;
+			--rowNum;
+		}
+		if (s[i] == '\"')
+		{
+			noneObj = !noneObj;
+			if (!noneObj)
+				--rowNum;
+		}			
+
+		if (noneObj)
+			--rowNum;
+	}	
+
+	cout << "세로: " << colNum << "가로: " << rowNum << endl;
+
+	SetMapToolSize();
 }

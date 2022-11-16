@@ -7,3 +7,4 @@
 #define GRIDSIZE 50
 #define PPM 33.f
 
+#define NUMBOX_SIZE 15

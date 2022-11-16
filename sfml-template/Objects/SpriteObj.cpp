@@ -4,7 +4,7 @@
 bool SpriteObj::isWiring = false;
 
 SpriteObj::SpriteObj()
-	:isInMapTool(false)
+	:isInMapTool(false), isWireableObject(false), type(ObjectType::Object)
 {
 }
 

@@ -5,7 +5,7 @@ Cube::Cube()
 {
 	SetResourceTexture("Graphics/cube.png");
 	id = 'c';
-
+	
 	hitbox = new RectangleShape;
 	hitbox->setFillColor(Color::Red);
 }
@@ -68,5 +68,5 @@ void Cube::PhysicsUpdate()
 void Cube::Draw(RenderWindow& window)
 {
 	SpriteObj::Draw(window);
-	//window.draw(*hitbox);
+	window.draw(*hitbox);
 }

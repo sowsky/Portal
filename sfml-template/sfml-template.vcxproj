@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Objects\NumBox.cpp" />
     <ClCompile Include="Objects\Blue.cpp" />
     <ClCompile Include="Objects\Goal.cpp" />
     <ClCompile Include="Objects\Button.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="Objects\WirePointArrows.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Objects\NumBox.h" />
     <ClInclude Include="Objects\Blue.h" />
     <ClInclude Include="Objects\Goal.h" />
     <ClInclude Include="Objects\Button.h" />
