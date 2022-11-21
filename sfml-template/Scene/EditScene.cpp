@@ -104,6 +104,7 @@ void EditScene::Enter()
 	Scene::SetWorldView();
 	Scene::SetUiView();
 	Init();
+	Button::SetIsEditMap(true);
 }
 
 void EditScene::Exit()
@@ -111,6 +112,7 @@ void EditScene::Exit()
 	cout << "Exit EditScene\n";
 	isScenePlay = false;
 	Release();
+	Button::SetIsEditMap(false);
 }
 
 void EditScene::Update(float dt)

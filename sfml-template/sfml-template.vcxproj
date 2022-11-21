@@ -162,6 +162,8 @@
     <ClCompile Include="Objects\SpriteObj.cpp" />
     <ClCompile Include="Objects\Player.cpp" />
     <ClCompile Include="Objects\Orange.cpp" />
+    <ClCompile Include="Particle\Particle.cpp" />
+    <ClCompile Include="Particle\ParticleSystem.cpp" />
     <ClCompile Include="Scene\PlayScene.cpp" />
     <ClCompile Include="Scene\MapList.cpp" />
     <ClCompile Include="Scene\EditScene.cpp" />
@@ -190,6 +192,8 @@
     <ClInclude Include="Objects\SpriteObj.h" />
     <ClInclude Include="Objects\Player.h" />
     <ClInclude Include="Objects\Orange.h" />
+    <ClInclude Include="Particle\Particle.h" />
+    <ClInclude Include="Particle\ParticleSystem.h" />
     <ClInclude Include="Scene\PlayScene.h" />
     <ClInclude Include="Scene\MapList.h" />
     <ClInclude Include="Scene\EditScene.h" />

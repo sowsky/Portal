@@ -26,6 +26,8 @@
     <ClCompile Include="Objects\WireableObject.cpp" />
     <ClCompile Include="Objects\WirePointArrows.cpp" />
     <ClCompile Include="Objects\NumBox.cpp" />
+    <ClCompile Include="Particle\Particle.cpp" />
+    <ClCompile Include="Particle\ParticleSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Manager\Animator.h" />
@@ -58,5 +60,7 @@
     <ClInclude Include="Objects\WireableObject.h" />
     <ClInclude Include="Objects\WirePointArrows.h" />
     <ClInclude Include="Objects\NumBox.h" />
+    <ClInclude Include="Particle\Particle.h" />
+    <ClInclude Include="Particle\ParticleSystem.h" />
   </ItemGroup>
 </Project>

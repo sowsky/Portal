@@ -21,12 +21,13 @@ public:
 
 	int GetButtonId() { return buttonId; }
 	void SetButtonId(int a) { buttonId = a; }
-
+	static void SetIsEditMap(bool edit) { isEditMap = edit; }
 
 protected:
 	bool isPress = false;
 	int buttonId;
 	static int buttonNum;
+	static bool isEditMap;
 	RectangleShape* hitbox;
 
 };
