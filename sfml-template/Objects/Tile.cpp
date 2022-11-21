@@ -2,14 +2,15 @@
 #include "../FrameWork/Const.h"
 #include "../FrameWork/Framework.h"
 #include "../Manager/ResourceMgr.h"
+#include "../FrameWork/InputMgr.h"
 
 bool Tile::isPlayingGame = false;
 
-Tile::Tile()
+Tile::Tile()	
 {
 	SetResourceTexture(GetRandTileTex());
 	id = '1';
-	type = ObjectType::Tile;
+	type = ObjectType::Tile;	
 }
 
 Tile::~Tile()
@@ -41,8 +42,6 @@ void Tile::Update(float dt)
 
 	hitbox->setSize({ sprite.getGlobalBounds().width,sprite.getGlobalBounds().height });
 	hitbox->setPosition({ globalboundcenterx,globalboundcentery });
-
-
 }
 
 void Tile::Draw(RenderWindow& window)
@@ -105,7 +104,7 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions)
 		sideTiles[i].second[2].texCoords = (Vector2f)texSize;
 		sideTiles[i].second[3].texCoords = { 0.f, (float)texSize.y };
 	}
-	backFace.setFillColor(Color::Red);
+	backFace.setFillColor(Color::Red);	
 }
 
 string Tile::GetRandTileTex()
