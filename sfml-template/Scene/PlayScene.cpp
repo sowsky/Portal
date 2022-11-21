@@ -588,9 +588,7 @@ void PlayScene::Input()
 
 	if (InputMgr::GetKeyDown(Keyboard::Num8))
 	{
-		if (!particle.running())
-		{
-		}
+		SpriteObj::OnOffWiringState();
 	}
 }
 

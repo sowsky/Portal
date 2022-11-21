@@ -11,7 +11,7 @@ void ParticleSystem::init(int numParticles)
 	{
 		srand(time(0) + i);
 		float angle = (rand() % 360) * 3.14f / 180.f;
-		float speed = (rand() % 600) + 0.f;
+		float speed = (rand() % 50) + 0.f;
 		Vector2f direction;
 		direction = Vector2f(cos(angle) * speed,
 			sin(angle) * speed);

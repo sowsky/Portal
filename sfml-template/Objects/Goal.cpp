@@ -7,8 +7,8 @@
 
 Goal::Goal()
 {
-	SetResourceTexture("Graphics/goal.png");
-
+	SetResourceTexture("Graphics/goal2.png");
+	
 	id = '@';	
 
 	type = ObjectType::Catcher;
