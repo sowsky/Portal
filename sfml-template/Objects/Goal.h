@@ -19,6 +19,7 @@ public:
     virtual void Update(float dt);
     virtual void Draw(RenderWindow& window);
     void Setbutton(Button* but) { button.push_back(but); }
+    bool GetOn() { return on; }
 
     void SetDoor(float dt);
 
@@ -38,4 +39,6 @@ protected:
     Texture* doorTex;
     float leftDoorPos;
     float rightDoorPos;
+
+    
 };

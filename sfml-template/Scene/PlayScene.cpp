@@ -32,7 +32,7 @@ void PlayScene::Update(float dt)
 		worldView.setCenter(player->GetPositions());
 
 	//blue
-	if (InputMgr::GetMouseButtonDown(Mouse::Left)) {
+	if (InputMgr::GetMouseButtonDown(Mouse::Left)&&!grabitem) {
 		blue->SetSize({ 20,20 });
 		madeblue = false;
 		blue->SetPos({ player->GetPositions().x,player->GetPositions().y - 25 });
@@ -40,7 +40,7 @@ void PlayScene::Update(float dt)
 	}
 
 	//orange
-	if (InputMgr::GetMouseButtonDown(Mouse::Right)) {
+	if (InputMgr::GetMouseButtonDown(Mouse::Right) && !grabitem) {
 		orange->SetSize({ 20,20 });
 		madeorange = false;
 		orange->SetPos({ player->GetPositions().x,player->GetPositions().y - 25 });
@@ -376,9 +376,11 @@ void PlayScene::MakePortal()
 			cout << "right" << endl;
 		}
 		madeblue = true;
+
 		blue->SetDir({ 0,0 });
 	}
 	else if (bluecollidercount != 0) {
+		particle.emitParticles(blue->GetPos(), false);
 		blue->SetPos({ -1000,-1000 });
 	}
 
@@ -503,6 +505,7 @@ void PlayScene::MakePortal()
 		orange->SetDir({ 0,0 });
 	}
 	else if (orangecollidercount != 0) {
+		particle.emitParticles(orange->GetPos(), true);
 		orange->SetPos({ -1000,-1000 });
 	}
 
@@ -521,16 +524,26 @@ void PlayScene::MakeGoal(string list)
 
 void PlayScene::PushButton()
 {
+	for (auto b : button) {
+		for (auto c : cube) {
+			if (b->GetPressed() && !c->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
+				b->SetPressed(false);
+				cout << "¶³¾îÁü" << endl;
+				break;
+			}
+		}
+	}
 
 	for (auto b : button) {
 		for (auto c : cube) {
 			if (!b->GetPressed() && c->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
 				b->SetPressed(true);
+				cout << "ºÙ¾îÁü" << endl;
+
 				break;
 			}
-			b->SetPressed(false);
-
 		}
+
 	}
 }
 
@@ -577,7 +590,6 @@ void PlayScene::Input()
 	{
 		if (!particle.running())
 		{
-			particle.emitParticles(player->GetPositions());
 		}
 	}
 }
@@ -730,7 +742,7 @@ PlayScene::PlayScene(string path)
 				MakeButton(poslist, idlist);
 
 				/////////
-				i++;				
+				i++;
 				/////////
 
 				break;
@@ -807,7 +819,7 @@ PlayScene::PlayScene(string path)
 		}
 	}
 
-	particle.init(1000);
+	particle.init(100);
 }
 
 PlayScene::~PlayScene()

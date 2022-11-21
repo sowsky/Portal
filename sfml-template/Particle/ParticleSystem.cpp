@@ -37,17 +37,21 @@ void ParticleSystem::update(float dt)
 	}
 }
 
-void ParticleSystem::emitParticles(Vector2f startPosition)
+void ParticleSystem::emitParticles(Vector2f startPosition, bool color)
 {
 	m_IsRunning = true;
-	m_Duration = 2;
+	m_Duration = 0.5f;
 
 	int currentVertex = 0;
 	for (auto it = m_Particles.begin();
 		it != m_Particles.end();
 		it++)
 	{
-		m_Vertices[currentVertex++].color = Color(248, 147, 30);
+		if (!color)
+			m_Vertices[currentVertex++].color = Color(37, 255, 254);
+		else
+			m_Vertices[currentVertex++].color = Color(248, 147, 30);
+
 		it->setPosition(startPosition);
 	}
 

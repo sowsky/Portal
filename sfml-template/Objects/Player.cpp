@@ -84,6 +84,7 @@ void Player::PhysicsUpdate()
 	if (InputMgr::GetKeyDown(Keyboard::Space)&&(int)(body->GetLinearVelocity().y)==0) {
 		//	body->ApplyLinearImpulse(b2Vec2({body->GetTransform().q.GetYAxis().x, 10000 * 333}), body->GetWorldCenter(), true);
 		SetPlayerBodyForce({ GetPlayerBodyForce().x,10000000 });
+	//	body->ApplyLinearImpulse({ 0,90000000 }, body->GetWorldCenter(), true);
 	}
 }
 

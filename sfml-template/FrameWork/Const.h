@@ -8,5 +8,5 @@
 #define PPM 33.f
 
 #define NUMBOX_SIZE 15
-#define DEPTH 0.95f
+#define DEPTH 0.98f
 

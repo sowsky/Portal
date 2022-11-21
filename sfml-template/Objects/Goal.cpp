@@ -64,17 +64,19 @@ void Goal::Update(float dt)
 	{
 		on = !on;
 	}*/
+	//cout << on << endl;
 
+	SetDoor(dt);
 	for (auto b : button) {
 		if (!b->GetPressed()) {
 			on = false;
 			return;
 		}
 	}
+
 	//active door
 	on = true;
 
-	SetDoor(dt);
 }
 
 void Goal::Draw(RenderWindow& window)

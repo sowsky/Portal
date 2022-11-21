@@ -15,7 +15,7 @@ public:
 		RenderStates states) const;
 
 	void init(int count);
-	void emitParticles(Vector2f position);
+	void emitParticles(Vector2f position,bool color);
 	void update(float elapsed);
 	bool running();
 };

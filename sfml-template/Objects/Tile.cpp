@@ -86,8 +86,6 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions)
 
 	type = ObjectType::Tile;
 
-
-
 	backFace.setSize({ GRIDSIZE * DEPTH, GRIDSIZE * DEPTH });
 	Utils::SetOrigin(backFace, Origins::MC);
 
@@ -140,7 +138,8 @@ void Tile::SetActiveSideTiles(int pos, bool active)
 
 void Tile::SetSideTilesPosition(RenderWindow& window)
 {
-	Vector2f vanishingPoint = FRAMEWORK->GetWindow().getView().getCenter();
+	//Vector2f vanishingPoint = FRAMEWORK->GetWindow().getView().getCenter();
+	Vector2f vanishingPoint = { WINDOW_WIDTH / 2,WINDOW_HEIGHT / 2 };
 	backFace.setPosition(
 		sprite.getPosition() + (vanishingPoint - sprite.getPosition()) * (1.f - DEPTH)
 	);
