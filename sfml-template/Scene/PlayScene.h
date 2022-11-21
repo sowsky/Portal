@@ -6,6 +6,7 @@
 #include "../FrameWork/ObjectHeaders.h"
 #include "../Objects/Goal.h"
 #include <box2d/box2d.h>
+#include "../Particle/ParticleSystem.h"
 
 class PlayScene : public Scene
 {
@@ -70,5 +71,7 @@ private:
 
 	vector<SpriteObj*> tempContainer;
 	vector<vector<SpriteObj*>> objInfos;
+
+	ParticleSystem particle;
 };
 

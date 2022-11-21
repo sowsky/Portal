@@ -97,6 +97,9 @@ void PlayScene::Update(float dt)
 		}
 	}
 
+	if (particle.running())
+		particle.update(dt);
+
 	Input();
 }
 
@@ -152,6 +155,8 @@ void PlayScene::Draw(RenderWindow& window)
 	blue->Draw(window);
 	//}
 
+	if (particle.running())
+		window.draw(particle);
 }
 
 void PlayScene::MakeWall()
@@ -173,9 +178,12 @@ void PlayScene::MakeCube()
 
 	cube.push_back(newCube);
 
+	currgrid.x += GRIDSIZE;
+
 	///////////////
 	tempContainer.push_back(newCube);
 	//////////////
+
 }
 
 void PlayScene::MakePlayer()
@@ -236,9 +244,9 @@ void PlayScene::MakeButton(string dir, string id)
 
 		}
 
-		//////////////
-		//tempContainer.push_back(temp);
-		//////////////
+		////////////
+		tempContainer.push_back(temp);
+		////////////
 	}
 	currgrid.x += GRIDSIZE;
 
@@ -560,6 +568,14 @@ void PlayScene::Input()
 	{
 		isMovingViewCenter = false;
 	}
+
+	if (InputMgr::GetKeyDown(Keyboard::Num8))
+	{
+		if (!particle.running())
+		{
+			particle.emitParticles(player->GetPositions());
+		}
+	}
 }
 
 
@@ -711,8 +727,7 @@ PlayScene::PlayScene(string path)
 				MakeButton(poslist, idlist);
 
 				/////////
-				i++;
-				tempContainer.push_back(nullptr);
+				i++;				
 				/////////
 
 				break;
@@ -748,8 +763,19 @@ PlayScene::PlayScene(string path)
 	fin.close();
 
 	
+	for (int i = 0; i < objInfos.size(); i++)
+	{
+		for (int j = 0; j < objInfos[i].size(); j++)
+		{
+			if (objInfos[i][j])
+				cout << objInfos[i][j]->GetId() << ' ';
+			else
+				cout << "0 ";
+		}
+		cout << "±æÀÌ : " << objInfos[i].size() << endl;		
+	}
 
-	/*for (int i = 0; i < objInfos.size(); i++)
+	for (int i = 0; i < objInfos.size(); i++)
 	{
 		for (int j = 0; j < objInfos[i].size(); j++)
 		{
@@ -789,8 +815,9 @@ PlayScene::PlayScene(string path)
 				}
 			}						
 		}
-	}*/
+	}
 
+	particle.init(1000);
 }
 
 PlayScene::~PlayScene()

@@ -4,7 +4,7 @@
 #include "NumBox.h"
 
 int Button::buttonNum = 0;
-
+bool Button::isEditMap = false;
 
 Button::Button()
 {
@@ -41,7 +41,8 @@ void Button::Draw(RenderWindow& window)
 	Utils::SetOrigin(*hitbox, Origins::MC);
 	hitbox->setSize({Utils::GetSpriteSize(sprite).x-20,Utils::GetSpriteSize(sprite).y});
 	hitbox->setPosition(sprite.getPosition());
-	if (hitbox != nullptr) {
+	if (hitbox != nullptr
+		&& !isEditMap) {
 		window.draw(*hitbox);
 	}
 }

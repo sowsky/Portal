@@ -79,7 +79,7 @@ void Cube::Update(float dt)
 
 	hitbox->setPosition(sprite.getPosition());
 
-	cout << body->GetLinearVelocity().y << endl;
+	//cout << body->GetLinearVelocity().y << endl;
 
 }
 
