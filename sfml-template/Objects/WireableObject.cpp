@@ -64,7 +64,7 @@ void WireableObject::WireModDraw(RenderWindow& window)
 	wireCheckBox.setFillColor(isMouseIn ? Color(248, 147, 30) : Color(37, 255, 254));
 
 	if (isWiring && isInMapTool)
-	{
+	{		
 		window.draw(wireCheckBox);
 	}
 

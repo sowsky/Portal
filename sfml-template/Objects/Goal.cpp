@@ -60,10 +60,11 @@ SpriteObj* Goal::NewThis()
 
 void Goal::Update(float dt)
 {
-	/*if (InputMgr::GetKeyDown(Keyboard::Z))
+	if (InputMgr::GetKeyDown(Keyboard::Z))
 	{
 		on = !on;
-	}*/
+	}
+	SetDoor(dt);
 
 	for (auto b : button) {
 		if (!b->GetPressed()) {
@@ -73,14 +74,12 @@ void Goal::Update(float dt)
 	}
 	//active door
 	on = true;
-
-	SetDoor(dt);
 }
 
 void Goal::Draw(RenderWindow& window)
 {
 	window.draw(door, doorTex);
-	SpriteObj::Draw(window);
+	WireableObject::Draw(window);
 }
 
 void Goal::SetDoor(float dt)

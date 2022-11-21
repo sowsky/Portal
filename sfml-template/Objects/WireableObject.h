@@ -27,7 +27,7 @@ public:
 
 	list<int>& GetWireNum() { return wireNum; }
 
-	bool IsMouseIn() { return isMouseIn; }
+	bool IsMouseIn() { return isMouseIn; }	
 protected:
 	RectangleShape wireCheckBox;
 
