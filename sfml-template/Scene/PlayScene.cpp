@@ -161,6 +161,10 @@ void PlayScene::MakeWall()
 	wall.push_back(temp);
 
 	currgrid.x += GRIDSIZE;
+
+	///////////////
+	tempContainer.push_back(temp);
+	///////////////
 }
 
 void PlayScene::MakeCube()
@@ -168,14 +172,22 @@ void PlayScene::MakeCube()
 	Cube* newCube = new Cube(world.get(), Vector2f{ currgrid }, Vector2f({ GRIDSIZE, GRIDSIZE }));
 
 	cube.push_back(newCube);
+
+	///////////////
+	tempContainer.push_back(newCube);
+	//////////////
 }
 
 void PlayScene::MakePlayer()
 {
 
 	player = new Player(world.get(), Vector2f{ currgrid }, Vector2f({ 20, 50 }));
-
+	
 	currgrid.x += GRIDSIZE;
+
+	/////////////////
+	tempContainer.push_back(player);
+	/////////////////
 }
 
 void PlayScene::MakeButton(string dir, string id)
@@ -223,8 +235,14 @@ void PlayScene::MakeButton(string dir, string id)
 			button.back()->SetSize({ GRIDSIZE ,GRIDSIZE / 4 });
 
 		}
+
+		//////////////
+		//tempContainer.push_back(temp);
+		//////////////
 	}
 	currgrid.x += GRIDSIZE;
+
+	
 }
 
 void PlayScene::MakePortal()
@@ -485,6 +503,9 @@ void PlayScene::MakeGoal(string list)
 
 	currgrid.x += GRIDSIZE;
 
+	////////////
+	tempContainer.push_back(goal);
+	////////////
 }
 
 void PlayScene::PushButton()
@@ -686,7 +707,13 @@ PlayScene::PlayScene(string path)
 				idlist = str.substr(i, idnum - i);
 				//	MakeButton(poslist, idlist);
 				i++;
+
 				MakeButton(poslist, idlist);
+
+				/////////
+				i++;
+				tempContainer.push_back(nullptr);
+				/////////
 
 				break;
 			}
@@ -701,16 +728,69 @@ PlayScene::PlayScene(string path)
 			}
 			default:
 				currgrid.x += GRIDSIZE;
+
+				///////
+				tempContainer.push_back(nullptr);
+				///////
 			}
 
 		}
 		currgrid = { GRIDSIZE / 2,currgrid.y + GRIDSIZE };
 
+		///////////
+		objInfos.push_back(tempContainer);
+		tempContainer.clear();
+		///////////
 	}
 
 	goal->SetButtonlist(button);
 
 	fin.close();
+
+	
+
+	/*for (int i = 0; i < objInfos.size(); i++)
+	{
+		for (int j = 0; j < objInfos[i].size(); j++)
+		{
+			if (objInfos[i][j] &&
+				objInfos[i][j]->GetId() == '1')
+			{
+				if (i - 1 >= 0 &&
+					objInfos[i - 1][j] &&
+					objInfos[i - 1][j]->GetId() == '1')
+				{
+					Tile* temp = (Tile*)objInfos[i][j];
+					temp->SetActiveSideTiles(0, false);
+				}
+
+				if (j + 1 < objInfos[i].size() &&
+					objInfos[i][j + 1] &&
+					objInfos[i][j + 1]->GetId() == '1')
+				{
+					Tile* temp = (Tile*)objInfos[i][j];
+					temp->SetActiveSideTiles(1, false);
+				}
+
+				if (i + 1 < objInfos.size() &&
+					objInfos[i + 1][j] &&
+					objInfos[i + 1][j]->GetId() == '1')
+				{
+					Tile* temp = (Tile*)objInfos[i][j];
+					temp->SetActiveSideTiles(2, false);
+				}
+
+				if (j - 1 >= 0 &&
+					objInfos[i][j - 1] &&
+					objInfos[i][j - 1]->GetId() == '1')
+				{
+					Tile* temp = (Tile*)objInfos[i][j];
+					temp->SetActiveSideTiles(3, false);
+				}
+			}						
+		}
+	}*/
+
 }
 
 PlayScene::~PlayScene()

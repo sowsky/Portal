@@ -67,5 +67,8 @@ private:
 
 	int zoomCount;
 	bool isMovingViewCenter;
+
+	vector<SpriteObj*> tempContainer;
+	vector<vector<SpriteObj*>> objInfos;
 };
 

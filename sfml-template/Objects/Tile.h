@@ -39,8 +39,6 @@ protected:
 
 	RectangleShape backFace;
 	array<pair<bool, VertexArray>, 4> sideTiles;
-	array<Texture*, 4> tileTextures;
-
-
+	array<Texture*, 4> tileTextures;	
 };
 
