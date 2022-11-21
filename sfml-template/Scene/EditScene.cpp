@@ -340,28 +340,25 @@ void EditScene::FillMapTool()
 					mapTool[i][j].first.front()->GetId())
 					break;
 
-				if (!(mouseBoxSprite->GetId() == 'p' && Player::GetPlayerNum() > 2) &&
-					!(mouseBoxSprite->GetId() == '@' && Goal::GetGoalNum() > 2))
+				if (!mapTool[i][j].first.empty())
 				{
-					if (!mapTool[i][j].first.empty())
-					{
-						delete mapTool[i][j].first.front();
-						mapTool[i][j].first.clear();
-					}
-
-					mapTool[i][j].first.push_front(mouseBoxSprite->NewThis());
-					mapTool[i][j].first.front()->FitScale(TILE_SIZE);
-					mapTool[i][j].first.front()->SetOrigin(Origins::BC);
-					mapTool[i][j].first.front()->SetBoolInMapTool(true);
-					mapTool[i][j].first.front()->SetPos(mapTool[i][j].second->GetPos() +fixPos);					
-					mapTool[i][j].first.front()->Init();	
-
-					if (mapTool[i][j].first.front()->GetObjType() == ObjectType::Trigger)
-					{
-						Button* temp = (Button*)mapTool[i][j].first.front();
-						temp->AddNumBox(Button::GetButtonNum() - 1);
-					}
+					delete mapTool[i][j].first.front();
+					mapTool[i][j].first.clear();
 				}
+
+				mapTool[i][j].first.push_front(mouseBoxSprite->NewThis());
+				mapTool[i][j].first.front()->FitScale(TILE_SIZE);
+				mapTool[i][j].first.front()->SetOrigin(Origins::BC);
+				mapTool[i][j].first.front()->SetBoolInMapTool(true);
+				mapTool[i][j].first.front()->SetPos(mapTool[i][j].second->GetPos() + fixPos);
+				mapTool[i][j].first.front()->Init();
+
+				if (mapTool[i][j].first.front()->GetObjType() == ObjectType::Trigger)
+				{
+					Button* temp = (Button*)mapTool[i][j].first.front();
+					temp->AddNumBox(Button::GetButtonNum() - 1);
+				}
+
 				break;
 			}
 
@@ -550,7 +547,7 @@ void EditScene::UpdateWireMod(float dt)
 	if (!isWiring || !isScenePlay)
 		return;
 
-	numBox.front()->SetPos(MouseWorldPos());
+	numBox.front()->SetPos(GetMouseWorldPos());
 	FillNumBox();
 }
 
@@ -849,8 +846,8 @@ void EditScene::Save()
 {	
 	ofstream txt("Map/temp.txt");	
 
-	bool isPlayer = false;
-	bool isGoal = false;
+	int playerNum = 0;
+	int goalNum = 0;
 
 	for (int i = 0; i < colNum; i++)
 	{
@@ -858,22 +855,22 @@ void EditScene::Save()
 		{
 			if (!mapTool[i][j].first.empty() &&
 				mapTool[i][j].first.front()->GetId() == 'p')
-				isPlayer = true;
+				playerNum++;
 			if (!mapTool[i][j].first.empty() &&
 				mapTool[i][j].first.front()->GetId() == '@')
-				isGoal = true;
+				goalNum++;
 		}
 	}
 
-	if (!isPlayer)
+	if (playerNum != 1)
 	{
-		cout << "파일 저장 실패:플레이어 없음\n";
+		cout << "파일 저장 실패 : 플레이어 숫자는 하나여야 합니다.\n";
 		return;			
-	}
+	}	
 
-	if (!isGoal)
+	if (goalNum != 1)
 	{
-		cout << "파일 저장 실패:출구 없음\n";
+		cout << "파일 저장 실패 : 출구 숫자는 하나여야 합니다.\n";
 		return;
 	}
 	

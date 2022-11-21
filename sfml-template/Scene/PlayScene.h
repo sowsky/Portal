@@ -35,6 +35,7 @@ public:
 	void MoveToPortal();
 public:
 	void DrawBackGroundView(RenderWindow& window);
+	void Input();
 private:
 
 	//do all RectalgeShape change to Object class
@@ -44,24 +45,26 @@ private:
 	vector<Tile*> wall;
 	vector<Button*> button;
 	vector<Cube*> cube;
-	
-	Cube* grabbedcube=nullptr;
-	Vector2f currgrid = { GRIDSIZE/2,GRIDSIZE/2 };
+
+	Cube* grabbedcube = nullptr;
+	Vector2f currgrid = { GRIDSIZE / 2,GRIDSIZE / 2 };
 
 	View backgroundView;
 	Sprite background;
 
 	Blue* blue;
 	Orange* orange;
-	bool madeblue=false;
-	bool madeorange=false;
+	bool madeblue = false;
+	bool madeorange = false;
 
 	bool grabitem = false;
 
 	////////////////////////////////////////////////////
 	unique_ptr<b2World> world;
 
-	float dtstack=0.f;
+	float dtstack = 0.f;
 
+	int zoomCount;
+	bool isMovingViewCenter;
 };
 

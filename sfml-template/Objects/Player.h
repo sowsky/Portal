@@ -10,15 +10,12 @@ public:
 
 	virtual SpriteObj* NewThis();
 
-public:
-	static int GetPlayerNum();
+public:	
 	virtual void Update(float dt);
 	void PhysicsUpdate();
 	virtual void Draw(RenderWindow& window);
 
-	Vector2f GetPositions() { return sprite.getPosition(); }
-
-	static int playerNum;
+	Vector2f GetPositions() { return sprite.getPosition(); }	
 
 	bool GetGround() { return ground; }
 	void SetGround(bool a) { ground = a; }

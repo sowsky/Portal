@@ -8,6 +8,7 @@ enum class ObjectType
 	None = -1,
 	Trigger,
 	Catcher,
+	Tile,
 	Object,
 };
 
@@ -44,9 +45,7 @@ public:
 	static void OnOffWiringState() { isWiring = !isWiring; }
 	static void OnOffWiringState(bool onoff) { isWiring = onoff; }
 	
-	virtual bool GetWiringState() { return isWiring; }	
-
-	bool IsWireable() { return isWireableObject; }
+	virtual bool GetWiringState() { return isWiring; }		
 
 	void SetBoolInMapTool(bool isIn) { isInMapTool = isIn; }
 
@@ -61,8 +60,7 @@ protected:
 	char id;
 	ObjectType type;
 
-	static bool isWiring;
-	bool isWireableObject;
+	static bool isWiring;	
 	bool isInMapTool;
 };
 

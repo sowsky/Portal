@@ -1,5 +1,4 @@
 #pragma once
-
 #include "WireableObject.h"
 #include "SpriteObj.h"
 #include "Button.h"
@@ -12,7 +11,7 @@ class Goal : public WireableObject
 {
 public:
     Goal();
-    Goal(Vector2f currgrid, float size,string buttonlist);
+    Goal(Vector2f currgrid, float size, string buttonlist);
     virtual ~Goal();
 
     virtual SpriteObj* NewThis();
@@ -21,17 +20,22 @@ public:
     virtual void Draw(RenderWindow& window);
     void Setbutton(Button* but) { button.push_back(but); }
 
-    void SetDoor(bool Isopen);
+    void SetDoor(float dt);
 
     bool IsFinish() { return on; }
 
-    void SetButtonlist(vector<Button*>& button);           
-
-    static int GetGoalNum();
+    void SetButtonlist(vector<Button*>& button);
+    
 protected:
     list<Button*> button;
-    vector<int>buttonid;
-    static int goalNum;
+    vector<int>buttonid;    
     bool on;
-};
 
+    VertexArray door;
+    float leftDoorTexCoords;
+    float rightDoorTexCoords;
+
+    Texture* doorTex;
+    float leftDoorPos;
+    float rightDoorPos;
+};

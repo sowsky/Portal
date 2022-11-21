@@ -64,7 +64,7 @@ Vector2i Scene::UiPosToScreen(Vector2f UiPos)
 	return window.mapCoordsToPixel(UiPos, uiView);
 }
 
-Vector2f Scene::MouseWorldPos()
+Vector2f Scene::GetMouseWorldPos()
 {
 	return ScreenToWorldPos((Vector2i)InputMgr::GetMousePos());
 }

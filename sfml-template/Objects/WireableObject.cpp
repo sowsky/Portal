@@ -7,7 +7,7 @@
 
 WireableObject::WireableObject()
 {
-	isWireableObject = true;
+	
 }
 
 WireableObject::~WireableObject()

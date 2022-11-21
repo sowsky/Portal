@@ -3,14 +3,11 @@
 #include "../FrameWork/Utils.h"
 #include "../FrameWork/stdafx.h"
 
-int Player::playerNum = 0;
 
 Player::Player()
 {
 	SetResourceTexture("Graphics/player.png");
-	id = 'p';
-
-	playerNum++;
+	id = 'p';	
 
 	hitbox = new RectangleShape;
 	hitbox->setFillColor(Color::Red);	
@@ -19,9 +16,7 @@ Player::Player()
 Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 {
 	SetResourceTexture("Graphics/player.png");
-	id = 'p';
-
-	playerNum++;
+	id = 'p';	
 
 	hitbox = new RectangleShape;
 	hitbox->setFillColor(Color::Red);
@@ -49,21 +44,12 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 
 Player::~Player()
 {
-	playerNum--;
-
 	delete hitbox;
 }
 
 SpriteObj* Player::NewThis()
 {
 	return new Player;
-}
-
-
-int Player::GetPlayerNum()
-{
-	return playerNum;
-
 }
 
 void Player::Update(float dt)
