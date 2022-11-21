@@ -184,13 +184,14 @@ void PlayScene::MakeCube()
 	tempContainer.push_back(newCube);
 	//////////////
 
+	currgrid.x += GRIDSIZE;
 }
 
 void PlayScene::MakePlayer()
 {
 
 	player = new Player(world.get(), Vector2f{ currgrid }, Vector2f({ 20, 50 }));
-	
+
 	currgrid.x += GRIDSIZE;
 
 	/////////////////
@@ -250,7 +251,7 @@ void PlayScene::MakeButton(string dir, string id)
 	}
 	currgrid.x += GRIDSIZE;
 
-	
+
 }
 
 void PlayScene::MakePortal()
@@ -272,12 +273,13 @@ void PlayScene::MakePortal()
 	bool bluetrhit = false;
 	bool blueblhit = false;
 	bool bluebrhit = false;
+	float bluey;
+	float bluex;
 
 	for (auto w : wall) {
 		if (!madeblue && w->GetGlobalBounds().intersects(blue->GetGlobalBounds())) {
 			blue->SetSize({ 50,50 });
 			blue->SetDir({ 0,0 });
-
 
 			bluetlpos = { blue->GetGlobalBounds().left,blue->GetGlobalBounds().top };
 			blueTL.setSize({ 0.1f,0.1f });
@@ -296,6 +298,8 @@ void PlayScene::MakePortal()
 			blueTR.setPosition(bluetrpos);
 			blueTL.setPosition(bluetlpos);
 
+			bluey = blue->GetPos().y;
+			bluex = blue->GetPos().x;
 			intersect = true;
 			break;
 		}
@@ -342,7 +346,6 @@ void PlayScene::MakePortal()
 	}
 
 	if (bluecollidercount == 2) {
-
 		//bottom
 		if (bluetlhit && bluetrhit) {
 			blue->SetSize({ 50,20 });
@@ -368,7 +371,7 @@ void PlayScene::MakePortal()
 		//right
 		else if (bluetlhit && blueblhit) {
 			blue->SetSize({ 20,50 });
-			blue->SetPos({ blue->GetPos().x,sety });
+			blue->SetPos({ setx,bluey });
 			blue->SetPortalDir(1);
 			cout << "right" << endl;
 		}
@@ -518,17 +521,18 @@ void PlayScene::MakeGoal(string list)
 
 void PlayScene::PushButton()
 {
-	for (auto c : cube) {
-		for (auto b : button) {
-			if (c->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
+
+	for (auto b : button) {
+		for (auto c : cube) {
+			if (!b->GetPressed() && c->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
 				b->SetPressed(true);
 				break;
 			}
+			b->SetPressed(false);
+
 		}
 	}
-
 }
-
 
 void PlayScene::DrawBackGroundView(RenderWindow& window)
 {
@@ -675,7 +679,6 @@ void PlayScene::MoveToPortal()
 
 PlayScene::PlayScene(string path)
 {
-
 	b2Vec2 g(0.0f, -900);
 	world = make_unique<b2World>(g);
 
@@ -762,19 +765,6 @@ PlayScene::PlayScene(string path)
 
 	fin.close();
 
-	
-	for (int i = 0; i < objInfos.size(); i++)
-	{
-		for (int j = 0; j < objInfos[i].size(); j++)
-		{
-			if (objInfos[i][j])
-				cout << objInfos[i][j]->GetId() << ' ';
-			else
-				cout << "0 ";
-		}
-		cout << "±æÀÌ : " << objInfos[i].size() << endl;		
-	}
-
 	for (int i = 0; i < objInfos.size(); i++)
 	{
 		for (int j = 0; j < objInfos[i].size(); j++)
@@ -813,7 +803,7 @@ PlayScene::PlayScene(string path)
 					Tile* temp = (Tile*)objInfos[i][j];
 					temp->SetActiveSideTiles(3, false);
 				}
-			}						
+			}
 		}
 	}
 
