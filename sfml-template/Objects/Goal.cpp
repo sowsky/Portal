@@ -48,9 +48,9 @@ Goal::Goal(Vector2f currgrid, float size, string buttonlist)
 
 Goal::~Goal()
 {	
-	for (auto b : button)
+	/*for (auto b : button)
 		delete b;
-	button.clear();
+	button.clear();*/
 }
 
 SpriteObj* Goal::NewThis()
@@ -60,19 +60,19 @@ SpriteObj* Goal::NewThis()
 
 void Goal::Update(float dt)
 {
-	if (InputMgr::GetKeyDown(Keyboard::Z))
+	/*if (InputMgr::GetKeyDown(Keyboard::Z))
 	{
 		on = !on;
-	}
+	}*/
 
-	//for (auto b : button) {
-	//	if (!b->GetPressed()) {
-	//		on = false;
-	//		return;
-	//	}
-	//}
-	////active door
-	//on = true;
+	for (auto b : button) {
+		if (!b->GetPressed()) {
+			on = false;
+			return;
+		}
+	}
+	//active door
+	on = true;
 
 	SetDoor(dt);
 }

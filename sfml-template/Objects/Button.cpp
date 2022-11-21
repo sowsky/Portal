@@ -18,6 +18,11 @@ Button::Button()
 
 	buttonId++;
 
+	hitbox = new RectangleShape;
+	hitbox->setFillColor(Color::Red);
+	hitbox->setSize(sprite.getPosition());
+	hitbox->setPosition(sprite.getPosition());
+
 }
 
 Button::~Button()
@@ -28,4 +33,15 @@ Button::~Button()
 SpriteObj* Button::NewThis()
 {
 	return new Button;
+}
+
+void Button::Draw(RenderWindow& window)
+{
+	WireableObject::Draw(window);
+	Utils::SetOrigin(*hitbox, Origins::MC);
+	hitbox->setSize({Utils::GetSpriteSize(sprite).x-20,Utils::GetSpriteSize(sprite).y});
+	hitbox->setPosition(sprite.getPosition());
+	if (hitbox != nullptr) {
+		window.draw(*hitbox);
+	}
 }

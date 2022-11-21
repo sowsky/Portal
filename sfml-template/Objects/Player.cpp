@@ -7,16 +7,16 @@
 Player::Player()
 {
 	SetResourceTexture("Graphics/player.png");
-	id = 'p';	
+	id = 'p';
 
 	hitbox = new RectangleShape;
-	hitbox->setFillColor(Color::Red);	
+	hitbox->setFillColor(Color::Red);
 }
 
 Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 {
 	SetResourceTexture("Graphics/player.png");
-	id = 'p';	
+	id = 'p';
 
 	hitbox = new RectangleShape;
 	hitbox->setFillColor(Color::Red);
@@ -39,7 +39,7 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	body->SetFixedRotation(true);
 
 	Utils::ChangeBCSpriteSFMLPosToBox2dPos(sprite, *body);
-	hitbox->setPosition( sprite.getPosition() );
+	hitbox->setPosition(sprite.getPosition());
 }
 
 Player::~Player()
@@ -64,19 +64,25 @@ void Player::Update(float dt)
 	hitbox->setSize({ sprite.getGlobalBounds().width - 10,sprite.getGlobalBounds().height });
 	hitbox->setPosition(sprite.getPosition());
 
-
+	/*static int a;
+	a += dt;
+	cout << a << endl;
+	if (a >= 1.0f) {*/
+	//	a = 0;
+	
 }
 
 void Player::PhysicsUpdate()
 {
 	if (InputMgr::GetKey(Keyboard::A)) {
-		body->ApplyForce(b2Vec2({ 10000 * -333,GetPlayerBodyForce().y}), body->GetWorldCenter(), true);
-	}else if (InputMgr::GetKey(Keyboard::D)) {
+		body->ApplyForce(b2Vec2({ 10000 * -333,GetPlayerBodyForce().y }), body->GetWorldCenter(), true);
+	}
+	else if (InputMgr::GetKey(Keyboard::D)) {
 		body->ApplyForce(b2Vec2({ 10000 * 333,GetPlayerBodyForce().y }), body->GetWorldCenter(), true);
 	}
 
-	if (InputMgr::GetKeyDown(Keyboard::Space)) {
-	//	body->ApplyLinearImpulse(b2Vec2({body->GetTransform().q.GetYAxis().x, 10000 * 333}), body->GetWorldCenter(), true);
+	if (InputMgr::GetKeyDown(Keyboard::Space)&&(int)(body->GetLinearVelocity().y)==0) {
+		//	body->ApplyLinearImpulse(b2Vec2({body->GetTransform().q.GetYAxis().x, 10000 * 333}), body->GetWorldCenter(), true);
 		SetPlayerBodyForce({ GetPlayerBodyForce().x,10000000 });
 	}
 }
@@ -91,7 +97,7 @@ void Player::Draw(RenderWindow& window)
 void Player::SetPlayerBodyPos(Vector2f pos)
 {
 	b2Vec2 newPos({ pos.x,pos.y * -1 });
-	body->SetTransform(newPos,0);
+	body->SetTransform(newPos, 0);
 }
 
 void Player::SetPlayerBodyForce(b2Vec2 force)

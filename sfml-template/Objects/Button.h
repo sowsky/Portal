@@ -13,16 +13,21 @@ public:
 public:
 	static int GetButtonNum() { return buttonNum; }
 	static void SetButtonNum(int num) { buttonNum = num; }
+	virtual void Draw(RenderWindow& window);
 
+	RectangleShape* GetHitbox() { return hitbox; }
 	bool GetPressed() { return isPress; }
 	void SetPressed(bool a) { isPress = a; }
 
 	int GetButtonId() { return buttonId; }
 	void SetButtonId(int a) { buttonId = a; }
+
+
 protected:
 	bool isPress = false;
 	int buttonId;
 	static int buttonNum;
+	RectangleShape* hitbox;
 
 };
 

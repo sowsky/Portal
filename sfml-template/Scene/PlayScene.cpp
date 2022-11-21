@@ -9,9 +9,7 @@
 
 void PlayScene::Update(float dt)
 {
-
 	//////////////////////////////////////////////////////
-
 	if (goal->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (goal->IsFinish()) {
 			SCENE_MGR->ChangeScene(Scenes::GAMESTART);
@@ -30,7 +28,7 @@ void PlayScene::Update(float dt)
 	blue->Update(dt);
 	orange->Update(dt);
 
-	if(!isMovingViewCenter)
+	if (!isMovingViewCenter)
 		worldView.setCenter(player->GetPositions());
 
 	//blue
@@ -51,7 +49,7 @@ void PlayScene::Update(float dt)
 
 	MakePortal();
 	MoveToPortal();
-
+	PushButton();
 
 	if (grabitem) {
 		if (grabbedcube->GetSide())
@@ -182,7 +180,7 @@ void PlayScene::MakePlayer()
 
 void PlayScene::MakeButton(string dir, string id)
 {
-	for (auto b : dir) {
+	for (auto& b : dir) {
 		if (b == ' ')
 			continue;
 
@@ -190,21 +188,20 @@ void PlayScene::MakeButton(string dir, string id)
 		string idtemp;
 		for (int i = 0; i < id.size(); i++) {
 			if (id[i] == ' ') {
-				id.erase(i, i);
+				id.erase(i, i + 1);
 				break;
 			}
 			idtemp.push_back(id[i]);
-			id.erase(i, i);
+			id.erase(i, i + 1);
 		}
 
 		Button* temp = new Button();
 
-		/*	button.push_back(temp);
-			button.back()->SetOrigin(Origins::BC);
-			button.back()->SetButtonId(stoi(idtemp));
-			button.back()->SetPos(currgrid);
-			char temp = b;
-			button.back()->SetRotation(b);*/
+		button.push_back(temp);
+		button.back()->SetOrigin(Origins::BC);
+		button.back()->SetButtonId(stoi(idtemp));
+		button.back()->SetPos(currgrid);
+		button.back()->SetRotation(atoi(&b));
 
 		if (b == '0') {			//top of gird
 			button.back()->SetPos({ currgrid.x,currgrid.y - GRIDSIZE / 2 });
@@ -490,6 +487,19 @@ void PlayScene::MakeGoal(string list)
 
 }
 
+void PlayScene::PushButton()
+{
+	for (auto c : cube) {
+		for (auto b : button) {
+			if (c->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
+				b->SetPressed(true);
+				break;
+			}
+		}
+	}
+
+}
+
 
 void PlayScene::DrawBackGroundView(RenderWindow& window)
 {
@@ -534,7 +544,9 @@ void PlayScene::Input()
 
 void PlayScene::MoveToPortal()
 {
-
+	if (!madeblue || !madeorange) {
+		return;
+	}
 	if (madeblue && blue->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (orange->GetPortalDir() == 0) {
 			player->SetPlayerBodyPos({ orange->GetPos().x,orange->GetPos().y - player->GetGlobalBounds().height });
@@ -674,6 +686,9 @@ PlayScene::PlayScene(string path)
 				idlist = str.substr(i, idnum - i);
 				//	MakeButton(poslist, idlist);
 				i++;
+				MakeButton(poslist, idlist);
+
+				break;
 			}
 			case'@':
 			{
@@ -682,6 +697,7 @@ PlayScene::PlayScene(string path)
 				list = str.substr(i + 2, num - i - 2);
 				MakeGoal(list);
 				i = num;
+				break;
 			}
 			default:
 				currgrid.x += GRIDSIZE;

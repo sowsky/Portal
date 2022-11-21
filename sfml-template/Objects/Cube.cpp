@@ -1,5 +1,6 @@
 #include "Cube.h"
 #include "../FrameWork/Const.h"
+#include "../FrameWork/stdafx.h"
 
 Cube::Cube()
 {
@@ -77,6 +78,9 @@ void Cube::Update(float dt)
 	Utils::ChangeBCSpriteSFMLPosToBox2dPos(sprite, *body);
 
 	hitbox->setPosition(sprite.getPosition());
+
+	cout << body->GetLinearVelocity().y << endl;
+
 }
 
 void Cube::PhysicsUpdate()
@@ -87,11 +91,7 @@ void Cube::Draw(RenderWindow& window)
 {
 
 	SpriteObj::Draw(window);
-	window.draw(*hitbox);
-
 	//window.draw(*hitbox);
-	SpriteObj::Draw(window);
-
 }
 
 void Cube::SetSide(bool s)

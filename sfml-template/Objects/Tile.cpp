@@ -184,11 +184,11 @@ void Tile::SetSideTilesPosition(RenderWindow& window)
 
 void Tile::DrawSideTiles(RenderWindow& window)
 {
-	SetSideTilesPosition(window);
+	/*SetSideTilesPosition(window);
 
 	for (int i = 0; i < sideTiles.size(); i++)
 	{
 		if (sideTiles[i].first)
 			window.draw(sideTiles[i].second, tileTextures[i]);
-	}
+	}*/
 }

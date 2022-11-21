@@ -31,6 +31,7 @@ public:
 	void MakeButton(string dir, string id);
 	void MakePortal();
 	void MakeGoal(string list);
+	void PushButton();
 
 	void MoveToPortal();
 public:
