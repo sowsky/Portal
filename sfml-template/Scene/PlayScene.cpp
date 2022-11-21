@@ -30,7 +30,8 @@ void PlayScene::Update(float dt)
 	blue->Update(dt);
 	orange->Update(dt);
 
-	worldView.setCenter(player->GetPositions());
+	if(!isMovingViewCenter)
+		worldView.setCenter(player->GetPositions());
 
 	//blue
 	if (InputMgr::GetMouseButtonDown(Mouse::Left)) {
@@ -98,9 +99,7 @@ void PlayScene::Update(float dt)
 		}
 	}
 
-	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
-		SCENE_MGR->ChangeScene(Scenes::GAMESTART);
-	}
+	Input();
 }
 
 void PlayScene::PhysicsUpdate(float dt)
@@ -130,14 +129,14 @@ void PlayScene::Draw(RenderWindow& window)
 
 	window.setView(worldView);
 
+	for (auto v : wall) {
+		v->Draw(window);
+	}
+
 	goal->Draw(window);
 
 	if (player != nullptr)
 		player->Draw(window);
-
-	for (auto v : wall) {
-		v->Draw(window);
-	}
 
 	for (auto v : button) {
 		v->Draw(window);
@@ -190,7 +189,7 @@ void PlayScene::MakeButton(string dir, string id)
 		//seek id
 		string idtemp;
 		for (int i = 0; i < id.size(); i++) {
-			if (id[i] == ' '){
+			if (id[i] == ' ') {
 				id.erase(i, i);
 				break;
 			}
@@ -200,12 +199,12 @@ void PlayScene::MakeButton(string dir, string id)
 
 		Button* temp = new Button();
 
-		button.push_back(temp);
-		button.back()->SetOrigin(Origins::BC);
-		button.back()->SetButtonId(stoi(idtemp));
-		button.back()->SetPos(currgrid);
-		char temp = b;
-		button.back()->SetRotation(b);
+		/*	button.push_back(temp);
+			button.back()->SetOrigin(Origins::BC);
+			button.back()->SetButtonId(stoi(idtemp));
+			button.back()->SetPos(currgrid);
+			char temp = b;
+			button.back()->SetRotation(b);*/
 
 		if (b == '0') {			//top of gird
 			button.back()->SetPos({ currgrid.x,currgrid.y - GRIDSIZE / 2 });
@@ -498,6 +497,40 @@ void PlayScene::DrawBackGroundView(RenderWindow& window)
 	window.draw(background);
 }
 
+void PlayScene::Input()
+{
+	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
+		SCENE_MGR->ChangeScene(Scenes::GAMESTART);
+	}
+
+	if (InputMgr::GetMouseWheelState() == 1)
+	{
+		if (zoomCount > 20)
+			return;
+		zoomCount++;
+		worldView.zoom(0.94f);
+	}
+	if (InputMgr::GetMouseWheelState() == -1)
+	{
+		if (zoomCount < -3)
+			return;
+		zoomCount--;
+		worldView.zoom(1.06f);
+	}
+
+	if (InputMgr::GetMouseButton(Mouse::Middle))
+	{
+		isMovingViewCenter = true;
+		Vector2f pos = InputMgr::GetMousePosDisplacement();
+		worldView.setCenter(worldView.getCenter() + pos);
+	}
+
+	if (InputMgr::GetMouseButtonUp(Mouse::Middle))
+	{
+		isMovingViewCenter = false;
+	}
+}
+
 
 void PlayScene::MoveToPortal()
 {
@@ -639,7 +672,7 @@ PlayScene::PlayScene(string path)
 				string idlist;
 				int idnum = str.find(')', i);
 				idlist = str.substr(i, idnum - i);
-				MakeButton(poslist, idlist);
+				//	MakeButton(poslist, idlist);
 				i++;
 			}
 			case'@':
@@ -710,9 +743,14 @@ void PlayScene::Enter()
 
 	backgroundView.setSize(size);
 	backgroundView.setCenter(size / 2.f);
+
+	Tile::SetIsPlayingGame(true);
+	zoomCount = 0;
+	isMovingViewCenter = false;
 }
 
 void PlayScene::Exit()
 {
-
+	Tile::SetIsPlayingGame(false);
+	zoomCount = 0;
 }

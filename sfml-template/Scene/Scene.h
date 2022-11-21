@@ -39,6 +39,7 @@ public:
 	Vector2f ScreenToUiPos(Vector2i screenPos);
 	Vector2i UiPosToScreen(Vector2f UiPos);
 
+	Vector2f GetMouseWorldPos();
 		
 };
 

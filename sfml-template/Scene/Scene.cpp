@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "../Framework/Framework.h"
+#include "../FrameWork/InputMgr.h"
 
 Scene::Scene()
 {
@@ -61,5 +62,10 @@ Vector2i Scene::UiPosToScreen(Vector2f UiPos)
 {
 	RenderWindow& window = FRAMEWORK->GetWindow();
 	return window.mapCoordsToPixel(UiPos, uiView);
+}
+
+Vector2f Scene::GetMouseWorldPos()
+{
+	return ScreenToWorldPos((Vector2i)InputMgr::GetMousePos());
 }
 
