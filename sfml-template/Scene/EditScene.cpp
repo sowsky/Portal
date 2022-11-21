@@ -384,18 +384,6 @@ void EditScene::UpdateMapTool(float dt)
 
 	FillMapTool();
 
-	//for (int i = 0; i < colNum; i++)
-	//{
-	//	for (int j = 0; j < rowNum; j++)
-	//	{
-	//		for (auto array : mapArray[i][j])
-	//		{
-	//			if(array->GetActive())
-	//				array->Update(dt);				
-	//		}	
-	//	}
-	//}
-
 	Vector2f mousePos = ScreenToWorldPos((Vector2i)InputMgr::GetMousePos());
 	mapToolCheckBox->SetActive(false);
 
@@ -512,9 +500,8 @@ void EditScene::Input(float dt)
 		isGridOn = !isGridOn;
 	}
 	if (InputMgr::GetKeyDown(Keyboard::Num2))
-	{
-		SpriteObj::OnOffWiringState();	
-		isWiring = !isWiring;
+	{		
+		SpriteObj::OnOffWiringState(isWiring = !isWiring);
 		isWiring ? LoadDataToWireableList() : RelaseWireableList();
 	}
 	if (InputMgr::GetKeyDown(Keyboard::A) &&
@@ -523,8 +510,10 @@ void EditScene::Input(float dt)
 	{
 		numBox.front()->SetNum(numBox.front()->GetNum() - 1);
 	}
+
 	if (InputMgr::GetKeyDown(Keyboard::D) &&
-		isWiring)
+		isWiring &&
+		numBox.front()->GetNum() < Button::GetButtonNum())
 	{
 		numBox.front()->SetNum(numBox.front()->GetNum() + 1);
 	}
