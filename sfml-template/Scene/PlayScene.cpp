@@ -31,6 +31,7 @@ void PlayScene::Update(float dt)
 	if (!isMovingViewCenter)
 		worldView.setCenter(player->GetPositions());
 
+
 	//blue
 	if (InputMgr::GetMouseButtonDown(Mouse::Left)&&!grabitem) {
 		blue->SetSize({ 20,20 });
@@ -401,6 +402,8 @@ void PlayScene::MakePortal()
 	bool orangetrhit = false;
 	bool orangeblhit = false;
 	bool orangebrhit = false;
+	float orangey;
+	float orangex;
 
 	for (auto w : wall) {
 		if (!madeorange && w->GetGlobalBounds().intersects(orange->GetGlobalBounds())) {
@@ -426,6 +429,8 @@ void PlayScene::MakePortal()
 			orangeTL.setPosition(orangetlpos);
 
 			orangeintersect = true;
+			orangex = orange->GetPos().x;
+			orangey = orange->GetPos().y;
 			break;
 		}
 	}
@@ -497,7 +502,8 @@ void PlayScene::MakePortal()
 		//right
 		else if (orangetlhit && orangeblhit) {
 			orange->SetSize({ 20,50 });
-			orange->SetPos({ orange->GetPos().x,orangesety });
+			orange->SetPos({ orangesetx,orangey });
+
 			orange->SetPortalDir(1);
 			cout << "right" << endl;
 		}
@@ -523,12 +529,28 @@ void PlayScene::MakeGoal(string list)
 }
 
 void PlayScene::PushButton()
-{
+{	
+	for (auto b : button) {
+		if (b->GetHitbox()->getGlobalBounds().intersects(player->GethitboxGlobalBounds())) {
+			b->SetPressed(true);
+			cout << "test1" << endl;
+			break;
+		}
+	}
+
+	for (auto b : button) {
+		if (b->GetPressed() && !b->GetHitbox()->getGlobalBounds().intersects(player->GetGlobalBounds())) {
+			b->SetPressed(false);
+			cout << "test2" << endl;
+			break;
+		}	
+	}
+
 	for (auto b : button) {
 		for (auto c : cube) {
-			if (b->GetPressed() && !c->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
-				b->SetPressed(false);
-				cout << "¶³¾îÁü" << endl;
+			if (!b->GetPressed() && !c->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
+				b->SetPressed(false);	
+				cout << "fuck" << endl;
 				break;
 			}
 		}
@@ -538,8 +560,6 @@ void PlayScene::PushButton()
 		for (auto c : cube) {
 			if (!b->GetPressed() && c->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
 				b->SetPressed(true);
-				cout << "ºÙ¾îÁü" << endl;
-
 				break;
 			}
 		}
@@ -819,7 +839,7 @@ PlayScene::PlayScene(string path)
 		}
 	}
 
-	particle.init(100);
+	particle.init(500);
 }
 
 PlayScene::~PlayScene()
