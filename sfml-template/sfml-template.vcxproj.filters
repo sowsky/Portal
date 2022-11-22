@@ -28,6 +28,15 @@
     <ClCompile Include="Objects\NumBox.cpp" />
     <ClCompile Include="Particle\Particle.cpp" />
     <ClCompile Include="Particle\ParticleSystem.cpp" />
+    <ClCompile Include="src\Color.cpp" />
+    <ClCompile Include="src\Constants.cpp" />
+    <ClCompile Include="src\DirectedLight.cpp" />
+    <ClCompile Include="src\LightingArea.cpp" />
+    <ClCompile Include="src\LightSource.cpp" />
+    <ClCompile Include="src\Line.cpp" />
+    <ClCompile Include="src\Polygon.cpp" />
+    <ClCompile Include="src\RadialLight.cpp" />
+    <ClCompile Include="src\VertexArray.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Manager\Animator.h" />
