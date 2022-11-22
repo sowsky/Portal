@@ -43,6 +43,6 @@ void Button::Draw(RenderWindow& window)
 	hitbox->setPosition(sprite.getPosition());
 	if (hitbox != nullptr
 		&& !isEditMap) {
-		window.draw(*hitbox);
+	//	window.draw(*hitbox);
 	}
 }

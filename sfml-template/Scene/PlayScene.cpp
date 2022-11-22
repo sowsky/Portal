@@ -148,13 +148,13 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(window);
 	}
 
-	//if (madeorange) {
+	if (madeorange) {
 	orange->Draw(window);
-	//}
+	}
 
-	//if (madeblue) {
+	if (madeblue) {
 	blue->Draw(window);
-	//}
+	}
 
 	if (particle.running())
 		window.draw(particle);
@@ -178,8 +178,6 @@ void PlayScene::MakeCube()
 	Cube* newCube = new Cube(world.get(), Vector2f{ currgrid }, Vector2f({ GRIDSIZE, GRIDSIZE }));
 
 	cube.push_back(newCube);
-
-	currgrid.x += GRIDSIZE;
 
 	///////////////
 	tempContainer.push_back(newCube);
@@ -550,7 +548,7 @@ void PlayScene::PushButton()
 		for (auto c : cube) {
 			if (!b->GetPressed() && !c->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
 				b->SetPressed(false);	
-				cout << "fuck" << endl;
+			
 				break;
 			}
 		}
