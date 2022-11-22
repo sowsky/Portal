@@ -117,6 +117,9 @@ void PlayScene::Update(float dt)
 		particle.update(dt);
 
 	Input();
+	///
+	light.setPosition(GetMouseWorldPos());
+	///
 }
 
 void PlayScene::PhysicsUpdate(float dt)
@@ -174,8 +177,13 @@ void PlayScene::Draw(RenderWindow& window)
 	if (particle.running())
 		window.draw(particle);
 
+	window.draw(light);
+
 	window.setView(endingView);
 	window.draw(ending);
+
+	
+
 }
 
 void PlayScene::MakeWall()
@@ -854,6 +862,10 @@ PlayScene::PlayScene(string path)
 	}
 
 	particle.init(500);
+
+	//
+	light.setRange(150);
+	//
 }
 
 PlayScene::~PlayScene()

@@ -8,6 +8,11 @@
 #include <box2d/box2d.h>
 #include "../Particle/ParticleSystem.h"
 
+//////////////////////////
+#include <Candle/Candle.hpp>
+using namespace candle;
+/////////////////////////
+
 class PlayScene : public Scene
 {
 public:
@@ -76,5 +81,9 @@ private:
 	vector<vector<SpriteObj*>> objInfos;
 
 	ParticleSystem particle;
+
+	//////
+	RadialLight light;
+	/////
 };
 
