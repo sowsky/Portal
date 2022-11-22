@@ -52,6 +52,7 @@ private:
 	Vector2f currgrid = { GRIDSIZE / 2,GRIDSIZE / 2 };
 
 	View backgroundView;
+	View endingView;
 	Sprite background;
 
 	Blue* blue;
@@ -61,11 +62,13 @@ private:
 
 	bool grabitem = false;
 
+	RectangleShape ending;
+
 	////////////////////////////////////////////////////
 	unique_ptr<b2World> world;
 
 	float dtstack = 0.f;
-
+	int dark = 0;
 	int zoomCount;
 	bool isMovingViewCenter;
 

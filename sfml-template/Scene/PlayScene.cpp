@@ -12,10 +12,25 @@ void PlayScene::Update(float dt)
 	//////////////////////////////////////////////////////
 	if (goal->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (goal->IsFinish()) {
+			dark += dt*500;
+			ending.setFillColor(Color(0, 0, 0, dark));
+		
+		}
+
+		if (dark>=255) {
 			SCENE_MGR->ChangeScene(Scenes::GAMESTART);
 			return;
 		}
 	}
+	else {
+		if (dark > 0) {
+			dark -= dt * 500;
+			ending.setFillColor(Color(0, 0, 0, dark));
+
+		}
+	}
+
+
 	player->Update(dt);
 	goal->Update(dt);
 
@@ -158,6 +173,9 @@ void PlayScene::Draw(RenderWindow& window)
 
 	if (particle.running())
 		window.draw(particle);
+
+	window.setView(endingView);
+	window.draw(ending);
 }
 
 void PlayScene::MakeWall()
@@ -713,7 +731,7 @@ PlayScene::PlayScene(string path)
 	/////////////////////////////////////////////////////////////////////////////
 	blue = new Blue;
 	orange = new Orange;
-
+	
 
 	blue->SetSize({ 10,10 });
 	orange->SetSize({ 10,10 });
@@ -884,7 +902,12 @@ void PlayScene::Enter()
 
 	backgroundView.setSize(size);
 	backgroundView.setCenter(size / 2.f);
+	ending.setSize(size);
+	ending.setFillColor(Color(0, 0, 0, 0));
 
+	endingView.setSize(size);
+	endingView.setCenter(size / 2.f);
+	
 	Tile::SetIsPlayingGame(true);
 	zoomCount = 0;
 	isMovingViewCenter = false;
