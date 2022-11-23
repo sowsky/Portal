@@ -127,6 +127,33 @@ Vector2f Utils::GetSpriteSize(Sprite& sprite)
 	return Vector2f{ size.x * scale.x, size.y * scale.y };	
 }
 
+#include <iostream>
+
+void Utils::SetRotateSpriteInBox(Sprite& sprite, int rotationNum, float boxLineSize, Vector2f boxPos)
+{	
+	Utils::SetOrigin(sprite, Origins::BC);	
+
+	switch (rotationNum)
+	{
+	case 0:
+		sprite.setRotation(180.f);
+		sprite.setPosition({ boxPos.x + boxLineSize * 0.5f, boxPos.y });
+		break;
+	case 1:
+		sprite.setRotation(270.f);
+		sprite.setPosition({ boxPos.x + boxLineSize, boxPos.y + boxLineSize * 0.5f });
+		break;
+	case 2:
+		sprite.setRotation(0.f);
+		sprite.setPosition({ boxPos.x + boxLineSize * 0.5f, boxPos.y + boxLineSize });
+		break;
+	case 3:
+		sprite.setRotation(90.f);
+		sprite.setPosition({ boxPos.x , boxPos.y + boxLineSize * 0.5f });
+		break;
+	}
+}
+
 void Utils::ChangeCoordSFMLToBox2d(Sprite& sprite, b2Body& body)
 {
 	//sprite.setPosition();

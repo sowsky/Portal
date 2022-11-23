@@ -30,6 +30,21 @@ EditScene::EditScene()
 	wiringModGui.setFillColor(Color(37, 255, 254, 50));	
 	//wiringModGui.setTexture(RESOURCEMGR->GetTexture("Graphics/Ui/wiringmod.png"));
 
+	SetTex(uiTool2, "Graphics/Ui/uitool2.png");	
+	SetTex(saveMap, "Graphics/Ui/save.png");
+	SetTex(loadMap, "Graphics/Ui/load.png");
+	SetTex(resetMap, "Graphics/Ui/reset.png");
+	SetTex(playMap, "Graphics/Ui/play.png");
+	Utils::SetSpriteSize(saveMap, { 75.f,75.f });
+	Utils::SetSpriteSize(loadMap, { 75.f,75.f });
+	Utils::SetSpriteSize(resetMap, { 75.f,75.f });
+	Utils::SetSpriteSize(playMap, { 75.f,75.f });
+
+	uiTool2List.push_back(&saveMap);
+	uiTool2List.push_back(&loadMap);
+	uiTool2List.push_back(&resetMap);
+	uiTool2List.push_back(&playMap);
+
 	mapToolCheckBox = new SpriteObj;
 	mapToolCheckBox->SetResourceTexture("Graphics/Ui/checkbox.png");	
 	mapToolCheckBox->FitScale(TILE_SIZE);
@@ -37,6 +52,10 @@ EditScene::EditScene()
 	uiToolCheckBox = new SpriteObj;
 	uiToolCheckBox->SetResourceTexture("Graphics/Ui/checkbox.png");
 	uiToolCheckBox->FitScale(TILE_SIZE * 3.f);
+
+	uiTool2CheckBox = new SpriteObj;
+	uiTool2CheckBox->SetResourceTexture("Graphics/Ui/checkbox.png");
+	uiTool2CheckBox->FitScale(TILE_SIZE * 3.f);
 
 	crossUiCheckBox = new SpriteObj;
 	crossUiCheckBox->SetResourceTexture("Graphics/Ui/checkbox.png");
@@ -52,6 +71,7 @@ EditScene::~EditScene()
 	delete mouseBoxSprite;
 	delete mapToolCheckBox;
 	delete uiToolCheckBox;
+	delete uiTool2CheckBox;
 	delete crossUiCheckBox;
 }
 
@@ -68,6 +88,7 @@ void EditScene::Init()
 
 	mapToolCheckBox->SetActive(false);
 	uiToolCheckBox->SetActive(false);
+	uiTool2CheckBox->SetActive(false);
 
 	//Vector2u tileSize = RESOURCEMGR->GetTexture("Graphics/grid.png")->getSize();
 	Vector2u tileSize = { TILE_SIZE, TILE_SIZE };
@@ -186,9 +207,18 @@ void EditScene::DrawUiView(RenderWindow& window)
 		window.draw(wiringModGui);
 
 	window.draw(uiOutLine);
-
+	
 	if (uiToolCheckBox->GetActive() && !isWiring)
 		uiToolCheckBox->Draw(window);
+
+	window.draw(uiTool2);
+	window.draw(saveMap);
+	window.draw(loadMap);
+	window.draw(resetMap);
+	window.draw(playMap);
+
+	if (uiTool2CheckBox->GetActive() && !isWiring)
+		uiTool2CheckBox->Draw(window);
 
 	window.draw(uiMove);
 	window.draw(uiOpenClose);
@@ -337,15 +367,49 @@ void EditScene::FillMapTool()
 				InputMgr::GetMouseButton(Mouse::Left) &&
 				!mouseOnUi)
 			{
-				if (!mapTool[i][j].first.empty() &&
-					mouseBoxSprite->GetId() ==
-					mapTool[i][j].first.front()->GetId())
-					break;
+	
+				if (!mapTool[i][j].first.empty())
+				{
+					for (auto tool : mapTool[i][j].first)
+					{
+						if (mouseBoxSprite->GetId() == tool->GetId() &&
+							mouseBoxSprite->GetRotation() == tool->GetRotation())
+						{
+							return;
+						}
+					}
+
+					auto it = mapTool[i][j].first.begin();
+					while (it != mapTool[i][j].first.end())
+					{
+						if (mouseBoxSprite->GetId() != (*it)->GetId() &&
+							mouseBoxSprite->GetRotation() == (*it)->GetRotation())
+						{
+							SpriteObj* temp = *it;
+							mapTool[i][j].first.erase(it);
+							delete temp;
+							break;
+						}						
+						else ++it;
+					}
+
+					if (mouseBoxSprite->GetObjSize() == ObjectSize::Big)
+					{
+						for (auto tool : mapTool[i][j].first)
+						{
+							delete tool;
+						}
+						mapTool[i][j].first.clear();
+					}
+				}		
 
 				if (!mapTool[i][j].first.empty())
 				{
-					delete mapTool[i][j].first.front();
-					mapTool[i][j].first.clear();
+					if (mapTool[i][j].first.front()->GetObjSize() == ObjectSize::Big)
+					{
+						delete mapTool[i][j].first.front();
+						mapTool[i][j].first.pop_front();
+					}
 				}
 
 				mapTool[i][j].first.push_front(mouseBoxSprite->NewThis());
@@ -353,13 +417,18 @@ void EditScene::FillMapTool()
 				mapTool[i][j].first.front()->SetOrigin(Origins::BC);
 				mapTool[i][j].first.front()->SetBoolInMapTool(true);
 				mapTool[i][j].first.front()->SetPos(mapTool[i][j].second->GetPos() + fixPos);
-				mapTool[i][j].first.front()->Init();
+				if (mapTool[i][j].first.front()->GetObjSize() == ObjectSize::Normal)
+				{
+					int rotNum = (int)mouseBoxSprite->GetRotation();
+					mapTool[i][j].first.front()->SetRotationInBox(rotNum, TILE_SIZE, mapTool[i][j].second->GetPos());
+				}
 
 				if (mapTool[i][j].first.front()->GetObjType() == ObjectType::Trigger)
 				{
 					Button* temp = (Button*)mapTool[i][j].first.front();
 					temp->AddNumBox(Button::GetButtonNum() - 1);
 				}
+				mapTool[i][j].first.front()->Init();
 
 				break;
 			}
@@ -369,7 +438,10 @@ void EditScene::FillMapTool()
 				InputMgr::GetMouseButton(Mouse::Right) &&
 				!mapTool[i][j].first.empty())
 			{			
-				delete mapTool[i][j].first.front();
+				for (auto tool : mapTool[i][j].first)
+				{
+					delete tool;
+				}
 				mapTool[i][j].first.clear();
 				break;
 			}
@@ -492,7 +564,12 @@ void EditScene::Input(float dt)
 
 	if (InputMgr::GetKeyDown(Keyboard::R))
 	{
-		Reset();
+		if (mouseBoxSprite != nullptr &&
+			mouseBoxSprite->GetObjSize() == ObjectSize::Normal)
+		{
+			int rot = (int)mouseBoxSprite->GetRotation();
+			mouseBoxSprite->SetRotationInBox((rot + 1) % 4, 50.f, InputMgr::GetMousePos());
+		}
 	}
 
 	if (InputMgr::GetKeyDown(Keyboard::Num1))
@@ -582,10 +659,15 @@ void EditScene::LoadDataToWireableList()
 	{
 		for (int j = 0; j < rowNum; j++)
 		{
-			if (!mapTool[i][j].first.empty() &&
-				(mapTool[i][j].first.front()->GetObjType() == ObjectType::Catcher))
+			if (!mapTool[i][j].first.empty())
 			{
-				wireableList.push_back((WireableObject*)mapTool[i][j].first.front());
+				for (auto tool : mapTool[i][j].first)
+				{
+					if (tool->GetObjType() == ObjectType::Catcher)
+					{
+						wireableList.push_back((WireableObject*)tool);
+					}
+				}
 			}
 		}
 	}
@@ -640,6 +722,15 @@ void EditScene::InitUiTool()
 			}
 		}
 	}
+
+	Vector2u uitoolSize = uiTool2.getTexture()->getSize();
+	Vector2f tool2FixPos = { 75.f,0.f };
+
+	uiTool2.setPosition(WINDOW_WIDTH - uitoolSize.x - 10.f, WINDOW_HEIGHT - uitoolSize.y - 10.f);
+	saveMap.setPosition(uiTool2.getPosition());	
+	loadMap.setPosition(saveMap.getPosition() + tool2FixPos);
+	resetMap.setPosition(loadMap.getPosition() + tool2FixPos);
+	playMap.setPosition(resetMap.getPosition() + tool2FixPos);
 }
 
 void EditScene::ReleaseUiTool()
@@ -657,10 +748,40 @@ void EditScene::ReleaseUiTool()
 void EditScene::UpdateUiTool(float dt)
 {
 	uiToolCheckBox->SetActive(false);
+	uiTool2CheckBox->SetActive(false);
 	crossUiCheckBox->SetActive(false);
 	mouseOnUi = false;
 
 	Vector2f mousePos = InputMgr::GetMousePos();
+
+	for (int i = 0; i < uiTool2List.size(); i++)
+	{
+		if (uiTool2List[i]->getGlobalBounds().contains(mousePos))
+		{
+			mouseOnUi = true;
+			uiTool2CheckBox->SetActive(true);
+			uiTool2CheckBox->SetPos(uiTool2List[i]->getPosition());
+			if (InputMgr::GetMouseButtonDown(Mouse::Left))
+			{
+				switch (i)
+				{
+				case 0:
+					Save();
+					break;
+				case 1:
+					Load();
+					break;
+				case 2:
+					Reset();
+					break;
+				case 3:
+					//Play();
+					break;
+				}
+			}
+			return;
+		}
+	}
 
 	if (uiMove.getGlobalBounds().contains(mousePos))
 	{
@@ -699,6 +820,7 @@ void EditScene::UpdateUiTool(float dt)
 		}
 		SetUiToolPos(uiMove.getPosition());
 	}
+
 
 	if (!isUiOpen)
 		return;

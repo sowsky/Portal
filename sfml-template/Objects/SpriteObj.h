@@ -12,6 +12,23 @@ enum class ObjectType
 	Object,
 };
 
+enum class ObjectSize
+{
+	None = -1,
+	Carriable,
+	Normal,
+	Big,
+};
+
+enum class Rotate
+{
+	None = -1,
+	Up,
+	Right,
+	Down,
+	Left,
+};
+
 class SpriteObj : public Object
 {
 public:
@@ -33,8 +50,14 @@ public:
 	Vector2f GetSize();
 
 	void FitScale(float size);
+
 	void SetRotation(int val);
+	void SetRotation(Rotate rotation);
 	void SetRotation(float val) { sprite.setRotation(val); }
+	void SetRotationInBox(int rotationNum, float boxLineHeight, Vector2f boxPos);
+
+	Rotate GetRotation() { return attatchedPos; }
+
 	void SetDir(Vector2f dir) { direction = dir; };
 	char GetId();
 
@@ -51,6 +74,8 @@ public:
 
 	void SetType(ObjectType type) { this->type = type; }
 	ObjectType GetObjType() { return type; }
+	ObjectSize GetObjSize() { return objSize; }
+	void SetObjSize(ObjectSize size) { objSize = size; }
 protected:
 	Sprite sprite;
 	float speed=100.f;
@@ -59,6 +84,8 @@ protected:
 
 	char id;
 	ObjectType type;
+	ObjectSize objSize;
+	Rotate attatchedPos;
 
 	static bool isWiring;	
 	bool isInMapTool;

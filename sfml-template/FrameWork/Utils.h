@@ -54,6 +54,8 @@ public:
 	static void SetSpriteSize(Sprite& sprite, Vector2f size);
 
 	static Vector2f GetSpriteSize(Sprite& sprite);	
+
+	static void SetRotateSpriteInBox(Sprite& sprite, int rotationNum, float boxHeight, Vector2f boxPos);
 	
 	static void ChangeCoordSFMLToBox2d(Sprite& sprite,b2Body& body);
 	static void ChangeBCSpriteSFMLPosToBox2dPos(Sprite& sprite, b2Body& body);

@@ -53,6 +53,7 @@ void WireableObject::SetWireCheckBox()
 	wireCheckBox.setSize((Vector2f)sprite.getTexture()->getSize());
 	wireCheckBox.setScale(scale);
 	wireCheckBox.setPosition(sprite.getPosition());
+	wireCheckBox.setRotation(sprite.getRotation());
 }
 
 void WireableObject::WireModDraw(RenderWindow& window)
@@ -99,7 +100,7 @@ void WireableObject::AddNumBox(int num)
 {
 	numbox.push_back(new NumBox);
 	numbox.back()->SetNum(num);
-	numbox.back()->SetPos(GetPos());
+	numbox.back()->SetPos(sprite.getPosition());
 }
 
 void WireableObject::RemoveNumBox()

@@ -87,11 +87,21 @@ private:
 	Sprite uiOpenClose;
 	RectangleShape wiringModGui;
 
+	Sprite uiTool2;
+	
+	Sprite saveMap;
+	Sprite loadMap;
+	Sprite resetMap;
+	Sprite playMap;	
+	vector<Sprite*> uiTool2List;
+
+
 	SpriteObj* mouseBoxSprite;
 	Sprite link;
 
 	SpriteObj* mapToolCheckBox;
 	SpriteObj* uiToolCheckBox;
+	SpriteObj* uiTool2CheckBox;
 	SpriteObj* crossUiCheckBox;
 
 	bool isScenePlay;
@@ -101,7 +111,7 @@ private:
 	bool isGridOn;
 	bool isUiMoving;
 	bool isUiOpen;
-	bool mouseOnUi;
+	bool mouseOnUi;	
 	bool isWiring;
 };
 

@@ -40,6 +40,6 @@ public:
 	Vector2i UiPosToScreen(Vector2f UiPos);
 
 	Vector2f GetMouseWorldPos();
-		
+	void SetTex(Sprite& sprite, string id);		
 };
 

@@ -11,6 +11,8 @@ Tile::Tile()
 	SetResourceTexture(GetRandTileTex());
 	id = '1';
 	type = ObjectType::Tile;	
+	objSize = ObjectSize::Big;
+	attatchedPos = Rotate::Down;
 }
 
 Tile::~Tile()

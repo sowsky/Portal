@@ -9,6 +9,9 @@ Cube::Cube()
 	
 	hitbox = new RectangleShape;
 	hitbox->setFillColor(Color::Red);
+
+	objSize = ObjectSize::Carriable;
+	attatchedPos = Rotate::Down;
 }
 
 Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)

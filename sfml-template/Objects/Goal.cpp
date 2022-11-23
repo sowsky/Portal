@@ -12,8 +12,11 @@ Goal::Goal()
 	id = '@';	
 
 	type = ObjectType::Catcher;
+	objSize = ObjectSize::Big;
+	attatchedPos = Rotate::Down;
 
 	Utils::SetOrigin(sprite, Origins::BC);
+
 }
 
 Goal::Goal(Vector2f currgrid, float size, string buttonlist)

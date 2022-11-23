@@ -23,6 +23,8 @@ Button::Button()
 	hitbox->setSize(sprite.getPosition());
 	hitbox->setPosition(sprite.getPosition());
 
+	objSize = ObjectSize::Normal;
+	attatchedPos = Rotate::Down;
 }
 
 Button::~Button()

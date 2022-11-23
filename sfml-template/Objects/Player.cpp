@@ -11,6 +11,9 @@ Player::Player()
 
 	hitbox = new RectangleShape;
 	hitbox->setFillColor(Color::Red);
+
+	objSize = ObjectSize::Carriable;
+	attatchedPos = Rotate::Down;
 }
 
 Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)

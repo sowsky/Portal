@@ -4,7 +4,7 @@
 bool SpriteObj::isWiring = false;
 
 SpriteObj::SpriteObj()
-	:isInMapTool(false), type(ObjectType::Object)
+	:isInMapTool(false), type(ObjectType::Object), attatchedPos(Rotate::Down)
 {
 }
 
@@ -85,6 +85,35 @@ void SpriteObj::SetRotation(int val)
 	}
 	else
 		sprite.setRotation(0.f);
+}
+
+void SpriteObj::SetRotation(Rotate rotation)
+{
+	switch (rotation)
+	{
+	case Rotate::Up:
+		sprite.setRotation(180.f);
+		attatchedPos = Rotate::Up;
+		break;
+	case Rotate::Right:
+		sprite.setRotation(270.f);
+		attatchedPos = Rotate::Right;
+		break;
+	case Rotate::Down:
+		sprite.setRotation(0.f);
+		attatchedPos = Rotate::Down;
+		break;
+	case Rotate::Left:
+		sprite.setRotation(90.f);
+		attatchedPos = Rotate::Left;
+		break;
+	}
+}
+
+void SpriteObj::SetRotationInBox(int rotationNum, float boxHeight, Vector2f boxPos)
+{
+	Utils::SetRotateSpriteInBox(sprite, rotationNum, boxHeight, boxPos);
+	attatchedPos = (Rotate)rotationNum;
 }
 
 char SpriteObj::GetId()

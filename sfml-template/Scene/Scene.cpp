@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include "../Framework/Framework.h"
 #include "../FrameWork/InputMgr.h"
+#include "../Manager/ResourceMgr.h"
 
 Scene::Scene()
 {
@@ -67,5 +68,10 @@ Vector2i Scene::UiPosToScreen(Vector2f UiPos)
 Vector2f Scene::GetMouseWorldPos()
 {
 	return ScreenToWorldPos((Vector2i)InputMgr::GetMousePos());
+}
+
+void Scene::SetTex(Sprite& sprite, string id)
+{
+	sprite.setTexture(*RESOURCEMGR->GetTexture(id));
 }
 
