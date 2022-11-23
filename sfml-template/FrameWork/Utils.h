@@ -7,6 +7,7 @@
 using namespace sf;
 using namespace std;
 
+class SpriteObj;
 enum class Origins
 {
 	TL,	// 0
@@ -56,7 +57,7 @@ public:
 	static Vector2f GetSpriteSize(Sprite& sprite);	
 	
 	static void ChangeCoordSFMLToBox2d(Sprite& sprite,b2Body& body);
-	static void ChangeBCSpriteSFMLPosToBox2dPos(Sprite& sprite, b2Body& body);
+	static void ChangeBCSpriteSFMLPosToBox2dPos(SpriteObj& sprite, b2Body& body,float dt);
 
 	static void ChangePPM(b2Vec2 vec);
 };

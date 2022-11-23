@@ -18,7 +18,7 @@ public:
 	void PhysicsUpdate();
 
 	////////////////////////////////////////////////////////////////////////////
-	Tile(b2World* world, const Vector2f& position, Vector2f dimensions);
+	Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*bunch of wall size*/, Vector2f box2dposition, bool isEnd);
 	b2Body* GetBody() { return body; }
 	b2Fixture* GetFixture() { return fixture; }
 

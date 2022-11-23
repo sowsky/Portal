@@ -31,13 +31,14 @@ public:
 
 	virtual void Draw(RenderWindow& window);
 
-	void MakeWall();
+	void MakeWall(bool isEnd);
 	void MakeCube();
 	void MakePlayer();
 	void MakeButton(string dir, string id);
 	void MakePortal();
 	void MakeGoal(string list);
 	void PushButton();
+	Vector2f CameraMove(Vector2f currpos, Vector2f playerpos, float dt);
 
 	void MoveToPortal();
 public:
@@ -55,6 +56,8 @@ private:
 
 	Cube* grabbedcube = nullptr;
 	Vector2f currgrid = { GRIDSIZE / 2,GRIDSIZE / 2 };
+	float wallbunchwidth = 50;
+	Vector2f box2dposition={ GRIDSIZE / 2,GRIDSIZE / 2 };
 
 	View backgroundView;
 	View endingView;
@@ -69,6 +72,7 @@ private:
 
 	RectangleShape ending;
 
+
 	////////////////////////////////////////////////////
 	unique_ptr<b2World> world;
 
@@ -82,8 +86,5 @@ private:
 
 	ParticleSystem particle;
 
-	//////
-	RadialLight light;
-	/////
 };
 

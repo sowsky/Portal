@@ -1,5 +1,8 @@
 #pragma once
 #include "SpriteObj.h"
+#include <Candle/Candle.hpp>
+
+using namespace candle;
 
 class Blue :public SpriteObj
 {
@@ -11,10 +14,14 @@ public:
 	virtual void Draw(RenderWindow& window);
 	void SetPortalDir(int side) { dir = side; }
 	int GetPortalDir() { return dir; }
+	void SetLightDir(int side);
 protected:
 	RectangleShape* hitbox;
 	float projectilespeed=1000.f;
 	int dir;
+	RadialLight light;
+	EdgeVector edges;
+
 
 };
 

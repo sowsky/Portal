@@ -12,7 +12,7 @@ public:
 
 public:	
 	virtual void Update(float dt);
-	void PhysicsUpdate();
+	virtual void PhysicsUpdate(float dt);
 	virtual void Draw(RenderWindow& window);
 
 	Vector2f GetPositions() { return sprite.getPosition(); }	
@@ -27,10 +27,11 @@ public:
 	void SetPlayerBodyForce(b2Vec2 force);
 	b2Vec2 GetPlayerBodyForce() { return body->GetLinearVelocity(); }
 
+	b2Body* GetBody() { return body; }
 protected:
 	bool ground = false;
 	float verticalspeed=0.f;
-	float addspeed = 50;
+	float speed = 50;
 	float maxspeed = 80;
 
 	Vector2f dir={0,0};

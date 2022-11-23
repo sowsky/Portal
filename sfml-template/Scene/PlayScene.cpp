@@ -12,12 +12,10 @@ void PlayScene::Update(float dt)
 	//////////////////////////////////////////////////////
 	if (goal->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (goal->IsFinish()) {
-			dark += dt*500;
+			dark += dt * 500;
 			ending.setFillColor(Color(0, 0, 0, dark));
-		
 		}
-
-		if (dark>=255) {
+		if (dark >= 255) {
 			SCENE_MGR->ChangeScene(Scenes::GAMESTART);
 			return;
 		}
@@ -33,7 +31,6 @@ void PlayScene::Update(float dt)
 
 	player->Update(dt);
 	goal->Update(dt);
-
 	for (auto c : cube) {
 		c->Update(dt);
 	}
@@ -44,14 +41,13 @@ void PlayScene::Update(float dt)
 	orange->Update(dt);
 
 	if (!isMovingViewCenter)
-		worldView.setCenter(player->GetPositions());
-
+		worldView.setCenter({ player->GetPos()});
 
 	//blue
-	if (InputMgr::GetMouseButtonDown(Mouse::Left)&&!grabitem) {
+	if (InputMgr::GetMouseButtonDown(Mouse::Left) && !grabitem) {
 		blue->SetSize({ 20,20 });
 		madeblue = false;
-		blue->SetPos({ player->GetPositions().x,player->GetPositions().y - 25 });
+		blue->SetPos({ player->GetPos().x,player->GetPos().y - 25 });
 		blue->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
 	}
 
@@ -59,7 +55,7 @@ void PlayScene::Update(float dt)
 	if (InputMgr::GetMouseButtonDown(Mouse::Right) && !grabitem) {
 		orange->SetSize({ 20,20 });
 		madeorange = false;
-		orange->SetPos({ player->GetPositions().x,player->GetPositions().y - 25 });
+		orange->SetPos({ player->GetPos().x,player->GetPos().y - 25 });
 		orange->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
 	}
 
@@ -67,11 +63,12 @@ void PlayScene::Update(float dt)
 	MoveToPortal();
 	PushButton();
 
+
 	if (grabitem) {
 		if (grabbedcube->GetSide())
-			grabbedcube->SetCubeBodyPos({ player->GetPositions().x + 40,player->GetPositions().y - 40 });
+			grabbedcube->SetPos({ player->GetPos().x + 40,player->GetPos().y - 40 });
 		else
-			grabbedcube->SetCubeBodyPos({ player->GetPositions().x - 40,player->GetPositions().y - 40 });
+			grabbedcube->SetPos({ player->GetPos().x - 40,player->GetPos().y - 40 });
 
 		if (InputMgr::GetKeyDown(Keyboard::A)) {
 			grabbedcube->SetSide(false);
@@ -102,7 +99,7 @@ void PlayScene::Update(float dt)
 						c->SetSide(true);
 						c->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
 					}
-					else if (player->GetPositions().x > cposX) {
+					else if (player->GetPos().x > cposX) {
 						c->SetSide(false);
 						c->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
 					}
@@ -117,9 +114,6 @@ void PlayScene::Update(float dt)
 		particle.update(dt);
 
 	Input();
-	///
-	light.setPosition(GetMouseWorldPos());
-	///
 }
 
 void PlayScene::PhysicsUpdate(float dt)
@@ -136,7 +130,7 @@ void PlayScene::PhysicsUpdate(float dt)
 			c->PhysicsUpdate();
 		}
 
-		player->PhysicsUpdate();
+		player->PhysicsUpdate(dt);
 
 		dtstack -= 1 / 60.f;
 	}
@@ -149,12 +143,21 @@ void PlayScene::Draw(RenderWindow& window)
 
 	window.setView(worldView);
 
+	if (madeorange) {
+		orange->Draw(window);
+	}
+
+	if (madeblue) {
+		blue->Draw(window);
+	}
+
 	for (auto v : wall) {
 		v->Draw(window);
 	}
 
-	goal->Draw(window);
-
+	if (goal != nullptr) {
+		goal->Draw(window);
+	}
 	if (player != nullptr)
 		player->Draw(window);
 
@@ -166,29 +169,164 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(window);
 	}
 
-	if (madeorange) {
-	orange->Draw(window);
-	}
 
-	if (madeblue) {
-	blue->Draw(window);
-	}
 
 	if (particle.running())
 		window.draw(particle);
 
-	window.draw(light);
-
 	window.setView(endingView);
 	window.draw(ending);
-
-	
-
 }
 
-void PlayScene::MakeWall()
+
+
+PlayScene::PlayScene(string path)
 {
-	Tile* temp = new Tile(world.get(), Vector2f{ currgrid }, Vector2f({ GRIDSIZE, GRIDSIZE }));
+	b2Vec2 g(0.0f, -10);
+	world = make_unique<b2World>(g);
+
+	/////////////////////////////////////////////////////////////////////////////
+	blue = new Blue;
+	orange = new Orange;
+
+	blue->SetSize({ 10,10 });
+	orange->SetSize({ 10,10 });
+
+	ifstream fin;
+	fin.open(path);
+
+	string str;
+	//each line
+	while (getline(fin, str)) {
+		//verifying each character
+		for (int i = 0; i < str.size() + 1; i++) {
+			switch (str[i]) {
+			case '1':
+				if (str[i + 1] == '1') {
+					MakeWall(false);
+					wallbunchwidth += GRIDSIZE;
+				}
+				else {
+					MakeWall(true);
+					cout <<"첫번째벽위치:"<< wall[0]->GetPos().x << " " << wall[0]->GetPos().y << endl;
+					box2dposition.x += currgrid.x + GRIDSIZE;
+					wallbunchwidth = 50;
+					
+				}
+				break;
+			case 'p':
+			case 'P':
+				MakePlayer();
+				break;
+			case 'C':
+			case 'c':
+				MakeCube();
+				break;
+
+			case 'b':
+			case 'B':
+				//b"2 4 4 "(1)
+			{
+				i += 2;//index of gridposition number 
+				string poslist;
+				int posnum = str.find('"', i);
+				poslist = str.substr(i, posnum - i);
+
+				i += 3; //index of buttonId
+				string idlist;
+				int idnum = str.find(')', i);
+				idlist = str.substr(i, idnum - i);
+				//	MakeButton(poslist, idlist);
+				i++;
+
+				MakeButton(poslist, idlist);
+
+				/////////
+				i++;
+				/////////
+
+				break;
+			}
+			case'@':
+			{
+				string list;
+				int num = str.find(')', i);
+				list = str.substr(i + 2, num - i - 2);
+				MakeGoal(list);
+				i = num;
+				break;
+			}
+			default:
+				currgrid.x += GRIDSIZE;
+
+				///////
+				tempContainer.push_back(nullptr);
+				///////
+			}
+
+		}
+		currgrid = { GRIDSIZE / 2, currgrid.y + GRIDSIZE };
+		box2dposition = { GRIDSIZE / 2, currgrid.y + GRIDSIZE };
+		wallbunchwidth = 50;
+
+		///////////
+		objInfos.push_back(tempContainer);
+		tempContainer.clear();
+		///////////
+	}
+
+	goal->SetButtonlist(button);
+
+	fin.close();
+
+	/*for (int i = 0; i < objInfos.size(); i++)
+	{
+		for (int j = 0; j < objInfos[i].size(); j++)
+		{
+			if (objInfos[i][j] &&
+				objInfos[i][j]->GetId() == '1')
+			{
+				if (i - 1 >= 0 &&
+					objInfos[i - 1][j] &&
+					objInfos[i - 1][j]->GetId() == '1')
+				{
+					Tile* temp = (Tile*)objInfos[i][j];
+					temp->SetActiveSideTiles(0, false);
+				}
+
+				if (j + 1 < objInfos[i].size() &&
+					objInfos[i][j + 1] &&
+					objInfos[i][j + 1]->GetId() == '1')
+				{
+					Tile* temp = (Tile*)objInfos[i][j];
+					temp->SetActiveSideTiles(1, false);
+				}
+
+				if (i + 1 < objInfos.size() &&
+					objInfos[i + 1][j] &&
+					objInfos[i + 1][j]->GetId() == '1')
+				{
+					Tile* temp = (Tile*)objInfos[i][j];
+					temp->SetActiveSideTiles(2, false);
+				}
+
+				if (j - 1 >= 0 &&
+					objInfos[i][j - 1] &&
+					objInfos[i][j - 1]->GetId() == '1')
+				{
+					Tile* temp = (Tile*)objInfos[i][j];
+					temp->SetActiveSideTiles(3, false);
+				}
+			}
+		}
+	}*/
+
+	particle.init(500);
+}
+
+void PlayScene::MakeWall(bool isEnd)
+{
+	Tile* temp = new Tile(world.get(), currgrid, Vector2f({ wallbunchwidth, GRIDSIZE }), box2dposition, isEnd);
 	temp->SetOrigin(Origins::MC);
 	wall.push_back(temp);
 
@@ -373,6 +511,7 @@ void PlayScene::MakePortal()
 	if (bluecollidercount == 2) {
 		//bottom
 		if (bluetlhit && bluetrhit) {
+			blue->SetLightDir(90);
 			blue->SetSize({ 50,20 });
 			blue->SetPos({ blue->GetPos().x,sety });
 			blue->SetPortalDir(2);
@@ -380,6 +519,7 @@ void PlayScene::MakePortal()
 		}
 		//left
 		else if (bluetrhit && bluebrhit) {
+			blue->SetLightDir(180);
 			blue->SetSize({ 20,50 });
 			blue->SetPos({ setx,blue->GetPos().y });
 			blue->SetPortalDir(3);
@@ -387,6 +527,7 @@ void PlayScene::MakePortal()
 		}
 		//top
 		else if (blueblhit && bluebrhit) {
+			blue->SetLightDir(270);
 			blue->SetSize({ 50,20 });
 			blue->SetPos({ blue->GetPos().x,sety });
 			blue->SetPortalDir(0);
@@ -395,6 +536,7 @@ void PlayScene::MakePortal()
 		}
 		//right
 		else if (bluetlhit && blueblhit) {
+			blue->SetLightDir(0);
 			blue->SetSize({ 20,50 });
 			blue->SetPos({ setx,bluey });
 			blue->SetPortalDir(1);
@@ -503,6 +645,7 @@ void PlayScene::MakePortal()
 
 		//bottom
 		if (orangetlhit && orangetrhit) {
+			orange->SetLightDir(90);
 			orange->SetSize({ 50,20 });
 			orange->SetPos({ orange->GetPos().x,orangesety });
 			orange->SetPortalDir(2);
@@ -510,6 +653,7 @@ void PlayScene::MakePortal()
 		}
 		//left
 		else if (orangetrhit && orangebrhit) {
+			orange->SetLightDir(180);
 			orange->SetSize({ 20,50 });
 			orange->SetPos({ orangesetx,orange->GetPos().y });
 			orange->SetPortalDir(3);
@@ -517,6 +661,7 @@ void PlayScene::MakePortal()
 		}
 		//top
 		else if (orangeblhit && orangebrhit) {
+			orange->SetLightDir(270);
 			orange->SetSize({ 50,20 });
 			orange->SetPos({ orange->GetPos().x,orangesety });
 			orange->SetPortalDir(0);
@@ -525,6 +670,7 @@ void PlayScene::MakePortal()
 		}
 		//right
 		else if (orangetlhit && orangeblhit) {
+			orange->SetLightDir(0);
 			orange->SetSize({ 20,50 });
 			orange->SetPos({ orangesetx,orangey });
 
@@ -553,7 +699,7 @@ void PlayScene::MakeGoal(string list)
 }
 
 void PlayScene::PushButton()
-{	
+{
 	for (auto b : button) {
 		if (b->GetHitbox()->getGlobalBounds().intersects(player->GethitboxGlobalBounds())) {
 			b->SetPressed(true);
@@ -567,14 +713,14 @@ void PlayScene::PushButton()
 			b->SetPressed(false);
 			cout << "test2" << endl;
 			break;
-		}	
+		}
 	}
 
 	for (auto b : button) {
 		for (auto c : cube) {
 			if (!b->GetPressed() && !c->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
-				b->SetPressed(false);	
-			
+				b->SetPressed(false);
+
 				break;
 			}
 		}
@@ -589,6 +735,15 @@ void PlayScene::PushButton()
 		}
 
 	}
+}
+
+Vector2f PlayScene::CameraMove(Vector2f currpos, Vector2f playerpos, float dt)
+{
+	//return currpos * (1 - dt) + playerpos * dt;
+	float x = currpos.x + dt * (playerpos.x - currpos.x);
+	float y = currpos.y + dt * (playerpos.y - currpos.y);
+
+	return Vector2f(x, y);
 }
 
 void PlayScene::DrawBackGroundView(RenderWindow& window)
@@ -612,7 +767,7 @@ void PlayScene::Input()
 	}
 	if (InputMgr::GetMouseWheelState() == -1)
 	{
-		if (zoomCount < -3)
+		if (zoomCount < -10)
 			return;
 		zoomCount--;
 		worldView.zoom(1.06f);
@@ -645,20 +800,20 @@ void PlayScene::MoveToPortal()
 	if (madeblue && blue->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (orange->GetPortalDir() == 0) {
 			player->SetPlayerBodyPos({ orange->GetPos().x,orange->GetPos().y - player->GetGlobalBounds().height });
-			player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,10000000 });
+			//player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,10000000 });
 
 		}
 		else if (orange->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ orange->GetPos().x + 30,orange->GetPos().y });
-			player->SetPlayerBodyForce({ 10000 * 333,0 });
+			//player->SetPlayerBodyForce({ 10000 * 333,0 });
 		}
 		else if (orange->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ orange->GetPos().x ,orange->GetPos().y + player->GetGlobalBounds().height });
-			player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,-10000000 });
+			//	player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,-10000000 });
 		}
 		else if (orange->GetPortalDir() == 3) {
 			player->SetPlayerBodyPos({ orange->GetPos().x - 30 ,orange->GetPos().y });
-			player->SetPlayerBodyForce({ 10000 * -333,0 });
+			//player->SetPlayerBodyForce({ 10000 * -333,0 });
 
 		}
 
@@ -667,20 +822,20 @@ void PlayScene::MoveToPortal()
 	if (madeorange && orange->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (blue->GetPortalDir() == 0) {
 			player->SetPlayerBodyPos({ blue->GetPos().x,blue->GetPos().y - player->GetGlobalBounds().height });
-			player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,10000000 });
+			player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,10 });
 		}
 		else if (blue->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ blue->GetPos().x + 30,blue->GetPos().y });
-			player->SetPlayerBodyForce({ 10000 * 333,0 });
+			player->SetPlayerBodyForce({ 10,0 });
 
 		}
 		else if (blue->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ blue->GetPos().x ,blue->GetPos().y + player->GetGlobalBounds().height });
-			player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,-10000000 });
+			player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,-10 });
 		}
 		else if (blue->GetPortalDir() == 3) {
 			player->SetPlayerBodyPos({ blue->GetPos().x - 30 ,blue->GetPos().y });
-			player->SetPlayerBodyForce({ 10000 * -333,0 });
+			player->SetPlayerBodyForce({ 10,0 });
 		}
 	}
 
@@ -730,143 +885,6 @@ void PlayScene::MoveToPortal()
 
 }
 
-
-PlayScene::PlayScene(string path)
-{
-	b2Vec2 g(0.0f, -900);
-	world = make_unique<b2World>(g);
-
-	/////////////////////////////////////////////////////////////////////////////
-	blue = new Blue;
-	orange = new Orange;
-	
-
-	blue->SetSize({ 10,10 });
-	orange->SetSize({ 10,10 });
-
-	ifstream fin;
-	fin.open(path);
-
-	string str;
-	//each line
-	while (getline(fin, str)) {
-		//verifying each character
-		for (int i = 0; i < str.size() + 1; i++) {
-			switch (str[i]) {
-			case '1':
-				MakeWall();
-				break;
-			case 'p':
-			case 'P':
-				MakePlayer();
-				break;
-			case 'C':
-			case 'c':
-				MakeCube();
-				break;
-
-			case 'b':
-			case 'B':
-				//b"2 4 4 "(1)
-			{
-				i += 2;//index of gridposition number 
-				string poslist;
-				int posnum = str.find('"', i);
-				poslist = str.substr(i, posnum - i);
-
-				i += 3; //index of buttonId
-				string idlist;
-				int idnum = str.find(')', i);
-				idlist = str.substr(i, idnum - i);
-				//	MakeButton(poslist, idlist);
-				i++;
-
-				MakeButton(poslist, idlist);
-
-				/////////
-				i++;
-				/////////
-
-				break;
-			}
-			case'@':
-			{
-				string list;
-				int num = str.find(')', i);
-				list = str.substr(i + 2, num - i - 2);
-				MakeGoal(list);
-				i = num;
-				break;
-			}
-			default:
-				currgrid.x += GRIDSIZE;
-
-				///////
-				tempContainer.push_back(nullptr);
-				///////
-			}
-
-		}
-		currgrid = { GRIDSIZE / 2,currgrid.y + GRIDSIZE };
-
-		///////////
-		objInfos.push_back(tempContainer);
-		tempContainer.clear();
-		///////////
-	}
-
-	goal->SetButtonlist(button);
-
-	fin.close();
-
-	for (int i = 0; i < objInfos.size(); i++)
-	{
-		for (int j = 0; j < objInfos[i].size(); j++)
-		{
-			if (objInfos[i][j] &&
-				objInfos[i][j]->GetId() == '1')
-			{
-				if (i - 1 >= 0 &&
-					objInfos[i - 1][j] &&
-					objInfos[i - 1][j]->GetId() == '1')
-				{
-					Tile* temp = (Tile*)objInfos[i][j];
-					temp->SetActiveSideTiles(0, false);
-				}
-
-				if (j + 1 < objInfos[i].size() &&
-					objInfos[i][j + 1] &&
-					objInfos[i][j + 1]->GetId() == '1')
-				{
-					Tile* temp = (Tile*)objInfos[i][j];
-					temp->SetActiveSideTiles(1, false);
-				}
-
-				if (i + 1 < objInfos.size() &&
-					objInfos[i + 1][j] &&
-					objInfos[i + 1][j]->GetId() == '1')
-				{
-					Tile* temp = (Tile*)objInfos[i][j];
-					temp->SetActiveSideTiles(2, false);
-				}
-
-				if (j - 1 >= 0 &&
-					objInfos[i][j - 1] &&
-					objInfos[i][j - 1]->GetId() == '1')
-				{
-					Tile* temp = (Tile*)objInfos[i][j];
-					temp->SetActiveSideTiles(3, false);
-				}
-			}
-		}
-	}
-
-	particle.init(500);
-
-	//
-	light.setRange(150);
-	//
-}
 
 PlayScene::~PlayScene()
 {
@@ -919,7 +937,7 @@ void PlayScene::Enter()
 
 	endingView.setSize(size);
 	endingView.setCenter(size / 2.f);
-	
+
 	Tile::SetIsPlayingGame(true);
 	zoomCount = 0;
 	isMovingViewCenter = false;
