@@ -54,6 +54,7 @@ public:
 	Vector2f CameraMove(Vector2f currpos, Vector2f playerpos, float dt);
 
 	void MoveToPortal();
+	
 public:
 	void DrawBackGroundView(RenderWindow& window);
 	void DrawRenderedBuffer(RenderWindow& window);
@@ -105,8 +106,8 @@ private:
 
 	ParticleSystem particle;
 	
-	const int width = WINDOW_WIDTH;
-	const int height = WINDOW_HEIGHT;
+	const int width = WINDOW_WIDTH*2;
+	const int height = WINDOW_HEIGHT*2;
 
 
 	// Front and backbuffer as Pointer for std::swap

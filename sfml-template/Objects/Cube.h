@@ -28,7 +28,9 @@ public:
 	Cube(b2World* world, const Vector2f& position, Vector2f dimensions);
 	b2Body* GetBody() { return body; }
 	b2Fixture* GetFixture() { return fixture; }	
-	
+
+	Vector2f GetRecentSpeed() { return maxspeed; }
+
 protected:
 	bool ground = false;
 	RectangleShape* hitbox;
@@ -37,6 +39,11 @@ protected:
 	bool side=false; //false=left true=right
 	bool grab = false;
 
+	float speedtX = 0.f;
+	float speedtY = 0.f;
+	float maximumspeed = 18.f;
+
+	Vector2f maxspeed;
 	///////////////////////////////////////////////////////////////////////
 	b2Body* body = nullptr;
 	b2Fixture* fixture = nullptr;
