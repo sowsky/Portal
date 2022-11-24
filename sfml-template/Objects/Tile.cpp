@@ -57,7 +57,7 @@ void Tile::PhysicsUpdate()
 {
 }
 
-Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*bunch of wall size*/, Vector2f box2dposition, bool isEnd)
+Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*size of bunch wall */, Vector2f box2dposition, bool isEnd)
 {
 	SetResourceTexture(GetRandTileTex());
 	id = '1';
@@ -66,10 +66,10 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*bunch 
 
 
 	if (isEnd) {
-		cout << "box2dÀ§Ä¡:"<<box2dposition.x << " " << box2dposition.y << endl;
+		float tilewidth = dimensions.y;
 		b2BodyDef bodyDef;
 		bodyDef.type = b2_staticBody;
-		bodyDef.position.Set(box2dposition.x / SCALE, box2dposition.y / SCALE * -1);
+		bodyDef.position.Set(((box2dposition.x + dimensions.x / 2)- tilewidth/2) / SCALE, (box2dposition.y - GRIDSIZE) / SCALE * -1);
 		body = world->CreateBody(&bodyDef);
 
 		b2PolygonShape boxShape;
@@ -85,10 +85,14 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*bunch 
 		Utils::SetOrigin(*hitbox, Origins::MC);
 		hitbox->setFillColor(Color::Red);
 		hitbox->setPosition(body->GetPosition().x * SCALE, body->GetPosition().y * SCALE);
+
+
 	}
 
-	sprite.setPosition({ position.x, position.y });
+
 	SetPos({ position.x,position.y });
+
+
 
 	type = ObjectType::Tile;
 
