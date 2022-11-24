@@ -28,11 +28,11 @@ Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
 
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
-	bodyDef.position.Set(position.x, position.y * -1);
+	bodyDef.position.Set(position.x/SCALE, position.y/SCALE* -1);
 	body = world->CreateBody(&bodyDef);
 
 	b2PolygonShape boxShape;
-	boxShape.SetAsBox(Utils::GetSpriteSize(sprite).x / 2.0f, Utils::GetSpriteSize(sprite).y / 2.0f);
+	boxShape.SetAsBox(30.f/ SCALE / 2.0f, 30.f/ SCALE / 2.0f);
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
@@ -40,8 +40,13 @@ Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
 	fixtureDef.friction = 1.0f;
 	fixture = body->CreateFixture(&fixtureDef);
 
-	sprite.setPosition({ body->GetPosition().x, body->GetPosition().y * -1 });
-	hitbox->setPosition({ body->GetPosition().x, body->GetPosition().y * -1 });
+	Utils::ChangeBCSpriteSFMLPosToBox2dPos(*this, *body,1/60.f);
+
+	float tempx = position.x;
+	float tempy = position.y;
+	SetPos({ tempx,tempy });
+	hitbox->setPosition(GetPos());
+
 }
 
 Cube::~Cube()
@@ -77,24 +82,26 @@ void Cube::Update(float dt)
 {
 	Utils::SetOrigin(*hitbox, Origins::BC);
 
+	Utils::ChangeBCSpriteSFMLPosToBox2dPos(*this, *body,dt);
 	sprite.setRotation(body->GetAngle());
-	Utils::ChangeBCSpriteSFMLPosToBox2dPos(sprite, *body);
 
-	hitbox->setPosition(sprite.getPosition());
-
+	hitbox->setSize({ GetSize().x+10,GetSize().y});
+	hitbox->setPosition(GetPos() );
+	hitbox->setRotation(body->GetAngle());
 
 	//cout << body->GetLinearVelocity().y << endl;
 }
 
 void Cube::PhysicsUpdate()
 {
+	//body->SetTransform(b2Vec2(GetPos().x / SCALE,GetPos().y / SCALE),body->GetAngle());
 }
 
 void Cube::Draw(RenderWindow& window)
 {
 
 	SpriteObj::Draw(window);
-	//window.draw(*hitbox);
+	window.draw(*hitbox);
 }
 
 void Cube::SetSide(bool s)

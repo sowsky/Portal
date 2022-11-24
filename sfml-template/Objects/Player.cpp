@@ -2,7 +2,7 @@
 #include "../FrameWork/InputMgr.h"
 #include "../FrameWork/Utils.h"
 #include "../FrameWork/stdafx.h"
-
+#include "../FrameWork/Const.h"
 
 Player::Player()
 {
@@ -25,14 +25,28 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	hitbox->setFillColor(Color::Red);
 	Utils::SetSpriteSize(sprite, dimensions);
 	Utils::SetOrigin(sprite, Origins::BC);
-	////////////////////////////////////////////
+
+	////////////////////////////////////////////////////////////////////////
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
-	bodyDef.position.Set(position.x, position.y * -1);
+	bodyDef.position.Set(position.x / SCALE, position.y / SCALE * -1);
 	body = world->CreateBody(&bodyDef);
 
+	FloatRect bound = sprite.getGlobalBounds();
+	float radius = bound.width * 0.5f;
+
 	b2PolygonShape boxShape;
-	boxShape.SetAsBox(dimensions.x / 2.0f, dimensions.y / 2.0f);
+
+	b2Vec2 center(0, 0);
+	center.y = (bound.height-radius)/2-(bound.height/2-radius)-5;
+	center.y /= SCALE;
+
+
+	boxShape.SetAsBox(
+		dimensions.x / SCALE / 2.0f,
+		dimensions.y / SCALE / 2.0f,
+		center, 0.f);
+
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
@@ -41,8 +55,26 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	fixture = body->CreateFixture(&fixtureDef);
 	body->SetFixedRotation(true);
 
-	Utils::ChangeBCSpriteSFMLPosToBox2dPos(sprite, *body);
-	hitbox->setPosition(sprite.getPosition());
+
+	b2CircleShape circleShape;
+	circleShape.m_radius = radius / SCALE;
+	circleShape.m_p.Set(0, -(bound.height / 2 - radius) / SCALE); //position, relative to body position
+
+	b2FixtureDef circlefixtureDef;
+	circlefixtureDef.shape = &circleShape;
+	circlefixtureDef.density = 1.0f;
+	circlefixtureDef.friction = 0.2f;
+	//fixture = body->CreateFixture(&circlefixtureDef);
+	body->SetFixedRotation(true);
+
+	//body->SetGravityScale(0);
+	Utils::ChangeBCSpriteSFMLPosToBox2dPos(*this, *body, 1 / 60.f);
+
+	float tempx = position.x;
+	float tempy = position.y;
+	SetPos({ tempx,tempy });
+	hitbox->setPosition(GetPos());
+
 }
 
 Player::~Player()
@@ -58,49 +90,55 @@ SpriteObj* Player::NewThis()
 void Player::Update(float dt)
 {
 	SpriteObj::Update(dt);
+	//cout<<GetPos().y << endl;
+
+	dir.x = InputMgr::GetAxis(Axis::Horizontal);
+
+	Utils::ChangeBCSpriteSFMLPosToBox2dPos(*this, *body, dt);
+
 	Utils::SetOrigin(*hitbox, Origins::BC);
-
-	Utils::ChangeBCSpriteSFMLPosToBox2dPos(sprite, *body);
-
-	//Utils::ChangeBCSpriteSFMLPosToBox2dPos(sprite, *body);
-	//cout << sprite.getPosition().x << " " << sprite.getPosition().y << endl;
-	hitbox->setSize({ sprite.getGlobalBounds().width - 10,sprite.getGlobalBounds().height });
-	hitbox->setPosition(sprite.getPosition());
-
-	/*static int a;
-	a += dt;
-	cout << a << endl;
-	if (a >= 1.0f) {*/
-	//	a = 0;
-	
+	hitbox->setSize({ GetSize() });
+	hitbox->setPosition(GetPos());
 }
 
-void Player::PhysicsUpdate()
+void Player::PhysicsUpdate(float dt)
 {
-	if (InputMgr::GetKey(Keyboard::A)) {
-		body->ApplyForce(b2Vec2({ 10000 * -333,GetPlayerBodyForce().y }), body->GetWorldCenter(), true);
+	if (dir.x != 0)
+	{		//body->SetLinearVelocity({ dir.x * 10,GetPlayerBodyForce().y });
+		if (body->GetLinearVelocity().x <= 2.5&& body->GetLinearVelocity().x >=-2.5 ) {
+			body->ApplyForce(b2Vec2({ dir.x * 10 , 0 }), body->GetWorldCenter(), true);
+		}
 	}
-	else if (InputMgr::GetKey(Keyboard::D)) {
-		body->ApplyForce(b2Vec2({ 10000 * 333,GetPlayerBodyForce().y }), body->GetWorldCenter(), true);
+	else
+	{
+		body->SetLinearVelocity({ 0,GetPlayerBodyForce().y });
 	}
 
-	if (InputMgr::GetKeyDown(Keyboard::Space)&&(int)(body->GetLinearVelocity().y)==0) {
-		//	body->ApplyLinearImpulse(b2Vec2({body->GetTransform().q.GetYAxis().x, 10000 * 333}), body->GetWorldCenter(), true);
-		SetPlayerBodyForce({ GetPlayerBodyForce().x,10000000 });
-	//	body->ApplyLinearImpulse({ 0,90000000 }, body->GetWorldCenter(), true);
+	if (InputMgr::GetKeyDown(Keyboard::Space) && (body->GetLinearVelocity().y > -0.1f && body->GetLinearVelocity().y < 0.1f)) {
+		//body->SetTransform({body->GetPosition().x,body->GetPosition().y+0.1f},0);
+		body->ApplyLinearImpulse({ 0,1.5f }, GetPlayerBodyForce(), 1);
 	}
+	/*if (body->GetLinearVelocity().y > -0.1 && body->GetLinearVelocity().y < 0.1) {
+		body->SetGravityScale(0.f);
+		cout << "set 0" << endl;
+	}
+	else
+		body->SetGravityScale(10.f);
+	cout << body->GetLinearVelocity().y << endl;*/
+
+
 }
 
 void Player::Draw(RenderWindow& window)
 {
 	SpriteObj::Draw(window);
-	//window.draw(*hitbox);
+	window.draw(*hitbox);
 
 }
 
 void Player::SetPlayerBodyPos(Vector2f pos)
 {
-	b2Vec2 newPos({ pos.x,pos.y * -1 });
+	b2Vec2 newPos({ pos.x / SCALE,pos.y / SCALE * -1 });
 	body->SetTransform(newPos, 0);
 }
 

@@ -7,10 +7,11 @@
 
 bool Tile::isPlayingGame = false;
 
-Tile::Tile()	
+Tile::Tile()
 {
 	SetResourceTexture(GetRandTileTex());
 	id = '1';
+
 	type = ObjectType::Tile;	
 	objSize = ObjectSize::Big;
 	attatchedPos = Rotate::Down;
@@ -36,23 +37,25 @@ SpriteObj* Tile::NewThis()
 
 void Tile::Update(float dt)
 {
-	Utils::SetOrigin(*hitbox, Origins::MC);
-	sprite.setRotation(body->GetAngle());
+	//Utils::SetOrigin(*hitbox, Origins::MC);
+	//if (body != nullptr)
+		//sprite.setRotation(body->GetAngle());
 	//sprite.setPosition({ body->GetPosition().x,body->GetPosition().y*-1 });
-	SetPos({ body->GetPosition().x,body->GetPosition().y * -1 });
-	float globalboundcenterx = sprite.getGlobalBounds().left + (sprite.getGlobalBounds().width / 2);
-	float globalboundcentery = sprite.getGlobalBounds().top + (sprite.getGlobalBounds().height / 2);
+	//SetPos({ body->GetPosition().x * SCALE,body->GetPosition().y * SCALE * -1 });
 
-	hitbox->setSize({ sprite.getGlobalBounds().width,sprite.getGlobalBounds().height });
-	hitbox->setPosition({ globalboundcenterx,globalboundcentery });
+	//hitbox->setSize(GetSize());
+	//if (body != nullptr)
+		//hitbox->setPosition(body->GetPosition().x * SCALE, body->GetPosition().y * SCALE);
+
 }
 
 void Tile::Draw(RenderWindow& window)
 {
+
 	DrawSideTiles(window);
-	//window.draw(backFace);
-	//SpriteObj::Draw(window);
+	
 	//window.draw(*hitbox);
+
 }
 
 void Tile::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
@@ -65,7 +68,7 @@ void Tile::PhysicsUpdate()
 {
 }
 
-Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions)
+Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*size of bunch wall */, Vector2f box2dposition, bool isEnd)
 {
 	GetRandDiffuseAndNormal();
 	id = '1';
@@ -73,26 +76,35 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions)
 
 	Utils::SetOrigin(sprite, Origins::MC);
 
-	hitbox = new RectangleShape;
-	//hitbox->setFillColor(Color::Red);
-	Utils::SetOrigin(*hitbox, Origins::MC);
-	b2BodyDef bodyDef;
-	bodyDef.type = b2_staticBody;
-	bodyDef.position.Set(position.x, position.y * -1);
-	body = world->CreateBody(&bodyDef);
 
-	hitbox->setPosition({ bodyDef.position.x,bodyDef.position.y });
-	b2PolygonShape boxShape;
-	boxShape.SetAsBox(dimensions.x / 2.0f, dimensions.x / 2.0f);
+	if (isEnd) {
+		float tilewidth = dimensions.y;
+		b2BodyDef bodyDef;
+		bodyDef.type = b2_staticBody;
+		bodyDef.position.Set(((box2dposition.x + dimensions.x / 2)- tilewidth/2) / SCALE, (box2dposition.y - GRIDSIZE) / SCALE * -1);
+		body = world->CreateBody(&bodyDef);
 
-	b2FixtureDef fixtureDef;
-	fixtureDef.shape = &boxShape;
-	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 1.f;
-	fixture = body->CreateFixture(&fixtureDef);
+		b2PolygonShape boxShape;
+		boxShape.SetAsBox(dimensions.x / SCALE / 2.0f, dimensions.y / SCALE / 2.0f);
 
-	sprite.setPosition({ body->GetPosition().x, body->GetPosition().y * -1 });
-	hitbox->setPosition({ body->GetPosition().x, body->GetPosition().y * -1 });
+		b2FixtureDef fixtureDef;
+		fixtureDef.shape = &boxShape;
+		fixtureDef.density = 1.0f;
+		fixtureDef.friction = 1.f;
+		fixture = body->CreateFixture(&fixtureDef);
+
+		hitbox = new RectangleShape;
+		Utils::SetOrigin(*hitbox, Origins::MC);
+		hitbox->setFillColor(Color::Red);
+		hitbox->setPosition(body->GetPosition().x * SCALE, body->GetPosition().y * SCALE);
+
+
+	}
+
+
+	SetPos({ position.x,position.y });
+
+
 
 	type = ObjectType::Tile;
 
@@ -112,7 +124,7 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions)
 		sideTiles[i].second[2].texCoords = (Vector2f)texSize;
 		sideTiles[i].second[3].texCoords = { 0.f, (float)texSize.y };
 	}
-	backFace.setFillColor(Color::Red);	
+	backFace.setFillColor(Color::Red);
 }
 
 string Tile::GetRandTileTex()
@@ -162,8 +174,10 @@ void Tile::SetActiveSideTiles(int pos, bool active)
 
 void Tile::SetSideTilesPosition(RenderWindow& window)
 {
+
 	Vector2f vanishingPoint = window.getView().getCenter();
 	//Vector2f vanishingPoint = { WINDOW_WIDTH / 2,WINDOW_HEIGHT / 2 };
+
 	backFace.setPosition(
 		sprite.getPosition() + (vanishingPoint - sprite.getPosition()) * (1.f - DEPTH)
 	);

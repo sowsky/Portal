@@ -10,3 +10,4 @@
 #define NUMBOX_SIZE 15
 #define DEPTH 0.95f
 
+#define SCALE 50

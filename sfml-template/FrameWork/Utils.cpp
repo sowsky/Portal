@@ -2,6 +2,7 @@
 #include "const.h"
 #include "box2d/box2d.h"
 #include <math.h>
+#include "../Objects/SpriteObj.h"
 
 random_device Utils::rd;
 mt19937 Utils::gen(Utils::rd());
@@ -159,12 +160,14 @@ void Utils::ChangeCoordSFMLToBox2d(Sprite& sprite, b2Body& body)
 	//sprite.setPosition();
 }
 
-void Utils::ChangeBCSpriteSFMLPosToBox2dPos(Sprite& sprite, b2Body& body)
+void Utils::ChangeBCSpriteSFMLPosToBox2dPos(SpriteObj& sprite, b2Body& body,float dt)
 {
 	b2Vec2 bodypos = body.GetPosition();
-	Vector2f spritesize = Utils::GetSpriteSize(sprite);
+	Vector2f spritesize = Utils::GetSpriteSize(*sprite.GetSprite());
 
-	sprite.setPosition({bodypos.x,(bodypos.y - spritesize.y / 2)*-1});
+	float spritesetY = Utils::GetSpriteSize(*sprite.GetSprite()).y / 2;
+	Vector2f temp(body.GetPosition().x * SCALE, (body.GetPosition().y * SCALE * -1)+Utils::GetSpriteSize(*sprite.GetSprite()).y/2);
+	sprite.SetPos(temp);
 }
 
 void Utils::ChangePPM(b2Vec2 vec)
