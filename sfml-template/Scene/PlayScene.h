@@ -51,7 +51,7 @@ public:
 	void MakePortal();
 	void MakeGoal(string list);
 	void PushButton();
-	Vector2f CameraMove(Vector2f currpos, Vector2f playerpos, float dt);
+	Vector2f CameraMove(Vector2f currpos, Vector2f playerpos,float, float dt);
 
 	void MoveToPortal();
 public:
@@ -62,9 +62,6 @@ public:
 	void ClearRenderBuffer();
 	
 private:
-
-	//do all RectalgeShape change to Object class
-
 	Player* player;
 	Goal* goal;
 	vector<Tile*> wall;

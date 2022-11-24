@@ -43,8 +43,15 @@ void PlayScene::Update(float dt)
 	blue->Update(dt);
 	orange->Update(dt);
 
-	if (!isMovingViewCenter)
-		worldView.setCenter({ wall.back()->GetPos() });
+	if (!isMovingViewCenter) {
+		
+		Vector2f currentcampos= worldView.getCenter();
+		cout << currentcampos.x << " " << currentcampos.y << endl;
+		cout << player->GetPos().x << " " << player->GetPos().y << endl<<endl;
+
+		worldView.setCenter(CameraMove(currentcampos,player->GetPos(),1.0f,dt));
+		//worldView.setCenter(player->GetPos());
+	}
 
 	//blue
 	if (InputMgr::GetMouseButtonDown(Mouse::Left) && !grabitem) {
@@ -141,7 +148,7 @@ void PlayScene::PhysicsUpdate(float dt)
 }
 
 void PlayScene::Draw(RenderWindow& window)
-{	
+{
 	DrawBackGroundView(window);
 
 	window.setView(worldView);
@@ -186,11 +193,12 @@ void PlayScene::Draw(RenderWindow& window)
 
 
 PlayScene::PlayScene(string path)
-:light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
+	:light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
 		sf::Vector3f(0, 0, 0.02),
 		sf::Vector3f(0.5, 0.5, 0.5)),
 	falloff(0.5, 0.5, 0.5)
 {
+
 	b2Vec2 g(0.0f, -10);
 	world = make_unique<b2World>(g);
 
@@ -331,6 +339,8 @@ PlayScene::PlayScene(string path)
 	}*/
 
 	particle.init(500);
+	worldView.setCenter(player->GetPos());
+
 }
 
 void PlayScene::MakeWall(bool isEnd)
@@ -747,11 +757,11 @@ void PlayScene::PushButton()
 	}
 }
 
-Vector2f PlayScene::CameraMove(Vector2f currpos, Vector2f playerpos, float dt)
+Vector2f PlayScene::CameraMove(Vector2f currpos, Vector2f playerpos,float alpah, float dt)
 {
 	//return currpos * (1 - dt) + playerpos * dt;
-	float x = currpos.x + dt * (playerpos.x - currpos.x);
-	float y = currpos.y + dt * (playerpos.y - currpos.y);
+	float x = (currpos.x + alpah * (playerpos.x - currpos.x))*dt;
+	float y = (currpos.y + alpah * (playerpos.y - currpos.y))*dt;
 
 	return Vector2f(x, y);
 }
@@ -766,12 +776,12 @@ void PlayScene::DrawRenderedBuffer(RenderWindow& window)
 {
 	pass_diffuse.display();
 	pass_normals.display();
-	
+
 	lights_shader.setParameter("resolution", sf::Vector2f(width, height));
 	lights_shader.setParameter("sampler_normal", pass_normals.getTexture());
 	lights_shader.setParameter("ambient_intensity", ambient_intensity);
 	lights_shader.setParameter("falloff", falloff);
-	
+
 	lights_shader.setParameter("sampler_light", front->getTexture());
 	lights_shader.setParameter("light_pos", light.position);
 	lights_shader.setParameter("light_color", light.color);
@@ -853,7 +863,7 @@ void PlayScene::LightTestInputForDev()
 	if (InputMgr::GetKeyDown(Keyboard::Numpad4))
 	{
 		falloff /= 0.5f;
-		cout 
+		cout
 			<< "falloff : "
 			<< falloff.x << ','
 			<< falloff.y << ','
@@ -873,7 +883,7 @@ void PlayScene::LightTestInputForDev()
 }
 
 void PlayScene::ClearRenderBuffer()
-{	
+{
 	back->clear();
 	front->clear();
 	pass_diffuse.clear(Color::Transparent);
@@ -890,7 +900,7 @@ void PlayScene::MoveToPortal()
 	if (madeblue && blue->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (orange->GetPortalDir() == 0) {
 			player->SetPlayerBodyPos({ orange->GetPos().x,orange->GetPos().y - player->GetGlobalBounds().height });
-		//	player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,1 });
+			//	player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,1 });
 			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyForce().x,5 });
 
 		}
@@ -903,7 +913,7 @@ void PlayScene::MoveToPortal()
 		else if (orange->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ orange->GetPos().x ,orange->GetPos().y + player->GetGlobalBounds().height });
 			//	player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,-10000000 });
-			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyForce().x,-5});
+			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyForce().x,-5 });
 
 		}
 		else if (orange->GetPortalDir() == 3) {
@@ -925,7 +935,7 @@ void PlayScene::MoveToPortal()
 		}
 		else if (blue->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ blue->GetPos().x + 30,blue->GetPos().y });
-		//	player->SetPlayerBodyForce({ 1,player->GetPlayerBodyForce().y });
+			//	player->SetPlayerBodyForce({ 1,player->GetPlayerBodyForce().y });
 			player->GetBody()->SetLinearVelocity({ 5,player->GetPlayerBodyForce().y });
 
 
@@ -939,7 +949,7 @@ void PlayScene::MoveToPortal()
 		else if (blue->GetPortalDir() == 3) {
 			player->SetPlayerBodyPos({ blue->GetPos().x - 30 ,blue->GetPos().y });
 			//player->SetPlayerBodyForce({ 10,0 });
-			player->GetBody()->SetLinearVelocity({-5,player->GetPlayerBodyForce().y });
+			player->GetBody()->SetLinearVelocity({ -5,player->GetPlayerBodyForce().y });
 
 		}
 	}
