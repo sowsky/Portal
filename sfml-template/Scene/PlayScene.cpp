@@ -7,8 +7,11 @@
 #include "../Manager/ResourceMgr.h"
 #include "../Objects/Goal.h"
 
+#pragma warning(disable:4996)
+
 void PlayScene::Update(float dt)
 {
+	ClearRenderBuffer();
 	//////////////////////////////////////////////////////
 	if (goal->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (goal->IsFinish()) {
@@ -117,9 +120,7 @@ void PlayScene::Update(float dt)
 		particle.update(dt);
 
 	Input();
-	///
-	light.setPosition(GetMouseWorldPos());
-	///
+
 }
 
 void PlayScene::PhysicsUpdate(float dt)
@@ -144,14 +145,16 @@ void PlayScene::PhysicsUpdate(float dt)
 }
 
 void PlayScene::Draw(RenderWindow& window)
-{
+{	
 	DrawBackGroundView(window);
 
 	window.setView(worldView);
 
 	for (auto v : wall) {
 		v->Draw(window);
+		v->Draw(pass_diffuse, normals_shader, pass_normals);
 	}
+	DrawRenderedBuffer(window);
 
 	goal->Draw(window);
 
@@ -176,8 +179,7 @@ void PlayScene::Draw(RenderWindow& window)
 
 	if (particle.running())
 		window.draw(particle);
-
-	window.draw(light);
+	
 
 	window.setView(endingView);
 	window.draw(ending);
@@ -597,8 +599,32 @@ void PlayScene::DrawBackGroundView(RenderWindow& window)
 	window.draw(background);
 }
 
+void PlayScene::DrawRenderedBuffer(RenderWindow& window)
+{
+	pass_diffuse.display();
+	pass_normals.display();
+	
+	lights_shader.setParameter("resolution", sf::Vector2f(width, height));
+	lights_shader.setParameter("sampler_normal", pass_normals.getTexture());
+	lights_shader.setParameter("ambient_intensity", ambient_intensity);
+	lights_shader.setParameter("falloff", falloff);
+	
+	lights_shader.setParameter("sampler_light", front->getTexture());
+	lights_shader.setParameter("light_pos", light.position);
+	lights_shader.setParameter("light_color", light.color);
+	back->draw(sf::Sprite(pass_diffuse.getTexture()), &lights_shader);
+	back->display();
+	std::swap(back, front);
+
+	// Draw diffuse color
+	window.draw(sf::Sprite(pass_diffuse.getTexture()));
+	// Blend lighting over
+	window.draw(sf::Sprite(front->getTexture()), sf::BlendMultiply);
+}
+
 void PlayScene::Input()
 {
+	LightTestInputForDev();
 	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
 		SCENE_MGR->ChangeScene(Scenes::GAMESTART);
 	}
@@ -634,6 +660,62 @@ void PlayScene::Input()
 	{
 		SpriteObj::OnOffWiringState();
 	}
+
+	light.position.x = GetMouseWorldPos().x;
+	light.position.y = height - GetMouseWorldPos().y;
+}
+
+void PlayScene::LightTestInputForDev()
+{
+	if (InputMgr::GetKeyDown(Keyboard::Numpad8))
+	{
+		light.position.z += 0.01f;
+		cout << "light.position.z : " << light.position.z << endl;
+	}
+	if (InputMgr::GetKeyDown(Keyboard::Numpad2))
+	{
+		light.position.z -= 0.01f;
+		cout << "light.position.z : " << light.position.z << endl;
+	}
+	if (InputMgr::GetKeyDown(Keyboard::Add))
+	{
+		ambient_intensity += 0.05f;
+		cout << "ambient_intensity : " << ambient_intensity << endl;
+	}
+	if (InputMgr::GetKeyDown(Keyboard::Subtract))
+	{
+		ambient_intensity -= 0.05f;
+		cout << "ambient_intensity : " << ambient_intensity << endl;
+	}
+	if (InputMgr::GetKeyDown(Keyboard::Numpad4))
+	{
+		falloff /= 0.5f;
+		cout 
+			<< "falloff : "
+			<< falloff.x << ','
+			<< falloff.y << ','
+			<< falloff.z << ','
+			<< endl;
+	}
+	if (InputMgr::GetKeyDown(Keyboard::Numpad6))
+	{
+		falloff *= 0.5f;
+		cout
+			<< "falloff : "
+			<< falloff.x << ','
+			<< falloff.y << ','
+			<< falloff.z << ','
+			<< endl;
+	}
+}
+
+void PlayScene::ClearRenderBuffer()
+{	
+	back->clear();
+	front->clear();
+	pass_diffuse.clear(Color::Transparent);
+	// Set normals buffer to neutral color
+	pass_normals.clear(Color(128, 128, 255));
 }
 
 
@@ -732,6 +814,10 @@ void PlayScene::MoveToPortal()
 
 
 PlayScene::PlayScene(string path)
+	:light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
+		sf::Vector3f(0, 0, 0.02),
+		sf::Vector3f(0.5, 0.5, 0.5)),
+	falloff(0.5, 0.5, 0.5)
 {
 	b2Vec2 g(0.0f, -900);
 	world = make_unique<b2World>(g);
@@ -863,9 +949,6 @@ PlayScene::PlayScene(string path)
 
 	particle.init(500);
 
-	//
-	light.setRange(150);
-	//
 }
 
 PlayScene::~PlayScene()
@@ -923,6 +1006,18 @@ void PlayScene::Enter()
 	Tile::SetIsPlayingGame(true);
 	zoomCount = 0;
 	isMovingViewCenter = false;
+
+	front = unique_ptr<RenderTexture>(new RenderTexture());
+	back = unique_ptr<RenderTexture>(new RenderTexture());
+
+	front->create(width, height);
+	back->create(width, height);
+
+	pass_normals.create(width, height);
+	pass_diffuse.create(width, height);
+
+	lights_shader.loadFromFile("Shader/light.frag", Shader::Fragment);
+	normals_shader.loadFromFile("Shader/normals.frag", Shader::Fragment);
 }
 
 void PlayScene::Exit()

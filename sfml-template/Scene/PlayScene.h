@@ -10,13 +10,26 @@
 
 //////////////////////////
 #include <Candle/Candle.hpp>
+#include <memory>
 using namespace candle;
 /////////////////////////
+
+struct Light
+{
+	Light(sf::Vector3f col, sf::Vector3f pos, sf::Vector3f att) : color(col),
+		position(pos),
+		attenuation(att)
+	{
+	}
+	sf::Vector3f color;
+	sf::Vector3f position;
+	sf::Vector3f attenuation;
+};
 
 class PlayScene : public Scene
 {
 public:
-	PlayScene() {};
+	//PlayScene() {};
 	PlayScene(string path);
 	virtual ~PlayScene();
 
@@ -42,7 +55,11 @@ public:
 	void MoveToPortal();
 public:
 	void DrawBackGroundView(RenderWindow& window);
+	void DrawRenderedBuffer(RenderWindow& window);
 	void Input();
+	void LightTestInputForDev();
+	void ClearRenderBuffer();
+	
 private:
 
 	//do all RectalgeShape change to Object class
@@ -77,13 +94,28 @@ private:
 	int zoomCount;
 	bool isMovingViewCenter;
 
+
+	//////
 	vector<SpriteObj*> tempContainer;
 	vector<vector<SpriteObj*>> objInfos;
 
 	ParticleSystem particle;
+	
+	const int width = WINDOW_WIDTH;
+	const int height = WINDOW_HEIGHT;
 
-	//////
-	RadialLight light;
+	// Front and backbuffer as Pointer for std::swap
+	unique_ptr<RenderTexture> front, back;
+	RenderTexture pass_normals, pass_diffuse;
+	//Texture normal_map, diffuse_map;
+
+	Shader lights_shader;
+	Shader normals_shader;
+
+	Light light;
+
+	float ambient_intensity = 0.7;
+	Vector3f falloff;
 	/////
 };
 

@@ -40,6 +40,8 @@ public:
 
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);	
+	virtual void Draw
+	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
 public:
 	void SetResourceTexture(String id);
 	
@@ -65,19 +67,22 @@ public:
 
 	FloatRect GetGlobalBounds();
 
+	void NormalPass
+	(RenderTexture& normalPass, Sprite& sprite, Texture* tex, Shader& nShader);
 	static void OnOffWiringState() { isWiring = !isWiring; }
 	static void OnOffWiringState(bool onoff) { isWiring = onoff; }
 	
 	virtual bool GetWiringState() { return isWiring; }		
 
 	void SetBoolInMapTool(bool isIn) { isInMapTool = isIn; }
-
+	
 	void SetType(ObjectType type) { this->type = type; }
 	ObjectType GetObjType() { return type; }
 	ObjectSize GetObjSize() { return objSize; }
 	void SetObjSize(ObjectSize size) { objSize = size; }
 protected:
 	Sprite sprite;
+	Texture* normalMap;
 	float speed=100.f;
 	float velocity=0.f;
 	Vector2f direction={0,0};

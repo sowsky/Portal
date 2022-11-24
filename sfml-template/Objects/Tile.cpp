@@ -3,6 +3,7 @@
 #include "../FrameWork/Framework.h"
 #include "../Manager/ResourceMgr.h"
 #include "../FrameWork/InputMgr.h"
+#pragma warning(disable:4996)
 
 bool Tile::isPlayingGame = false;
 
@@ -50,8 +51,14 @@ void Tile::Draw(RenderWindow& window)
 {
 	DrawSideTiles(window);
 	//window.draw(backFace);
-	SpriteObj::Draw(window);
+	//SpriteObj::Draw(window);
 	//window.draw(*hitbox);
+}
+
+void Tile::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
+{
+	diffuse.draw(sprite);
+	NormalPass(normal, sprite, normalMap, nShader);
 }
 
 void Tile::PhysicsUpdate()
@@ -60,8 +67,9 @@ void Tile::PhysicsUpdate()
 
 Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions)
 {
-	SetResourceTexture(GetRandTileTex());
+	GetRandDiffuseAndNormal();
 	id = '1';
+	SetSize({ GRIDSIZE,GRIDSIZE });
 
 	Utils::SetOrigin(sprite, Origins::MC);
 
@@ -110,11 +118,11 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions)
 string Tile::GetRandTileTex()
 {
 	String str;
-	int rand = Utils::RandomRange(0, 5);
+	int rand = Utils::RandomRange(0, 3);
 	switch (rand)
 	{
 	case 0:
-		str = "Graphics/Tile/tile.png";
+		str = "Graphics/Tile/tile1.png";
 		break;
 	case 1:
 		str = "Graphics/Tile/tile2.png";
@@ -122,15 +130,29 @@ string Tile::GetRandTileTex()
 	case 2:
 		str = "Graphics/Tile/tile3.png";
 		break;
-	case 3:
-		str = "Graphics/Tile/tile4.png";
-		break;
-	case 4:
-		str = "Graphics/Tile/tile5.png";
-		break;
 	}
 
 	return str;
+}
+
+void Tile::GetRandDiffuseAndNormal()
+{
+	int rand = Utils::RandomRange(0, 3);
+	switch (rand)
+	{
+	case 0:
+		SetResourceTexture("Graphics/Tile/tile1.png");
+		normalMap = RESOURCEMGR->GetTexture("Graphics/Tile/tile1n.png");
+		break;
+	case 1:
+		SetResourceTexture("Graphics/Tile/tile2.png");
+		normalMap = RESOURCEMGR->GetTexture("Graphics/Tile/tile2n.png");
+		break;
+	case 2:
+		SetResourceTexture("Graphics/Tile/tile3.png");
+		normalMap = RESOURCEMGR->GetTexture("Graphics/Tile/tile3n.png");
+		break;
+	}
 }
 
 void Tile::SetActiveSideTiles(int pos, bool active)
@@ -140,8 +162,8 @@ void Tile::SetActiveSideTiles(int pos, bool active)
 
 void Tile::SetSideTilesPosition(RenderWindow& window)
 {
-	//Vector2f vanishingPoint = FRAMEWORK->GetWindow().getView().getCenter();
-	Vector2f vanishingPoint = { WINDOW_WIDTH / 2,WINDOW_HEIGHT / 2 };
+	Vector2f vanishingPoint = window.getView().getCenter();
+	//Vector2f vanishingPoint = { WINDOW_WIDTH / 2,WINDOW_HEIGHT / 2 };
 	backFace.setPosition(
 		sprite.getPosition() + (vanishingPoint - sprite.getPosition()) * (1.f - DEPTH)
 	);

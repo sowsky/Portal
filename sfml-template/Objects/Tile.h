@@ -15,6 +15,8 @@ public:
 
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);
+	virtual void Draw
+	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
 	void PhysicsUpdate();
 
 	////////////////////////////////////////////////////////////////////////////
@@ -26,6 +28,7 @@ public:
 	static void SetIsPlayingGame(bool play) { isPlayingGame = play; }
 	string GetRandTileTex();
 
+	void GetRandDiffuseAndNormal();
 	void SetActiveSideTiles(int pos, bool active);
 	void SetSideTilesPosition(RenderWindow& window);
 	void DrawSideTiles(RenderWindow& window);
@@ -37,8 +40,9 @@ protected:
 
 	static bool isPlayingGame;
 
+	Texture* normal;
 	RectangleShape backFace;
 	array<pair<bool, VertexArray>, 4> sideTiles;
-	array<Texture*, 4> tileTextures;	
+	array<Texture*, 4> tileTextures;
 };
 

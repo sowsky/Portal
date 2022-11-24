@@ -1,5 +1,6 @@
 #include "SpriteObj.h"
 #include "../Manager/ResourceMgr.h"
+#pragma warning(disable:4996)
 
 bool SpriteObj::isWiring = false;
 
@@ -31,6 +32,11 @@ void SpriteObj::Update(float dt)
 void SpriteObj::Draw(RenderWindow& window)
 {
 	window.draw(sprite);
+}
+
+void SpriteObj::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
+{
+
 }
 
 void SpriteObj::SetResourceTexture(String id)
@@ -129,4 +135,10 @@ SpriteObj* SpriteObj::NewThis()
 FloatRect SpriteObj::GetGlobalBounds()
 {
 	return sprite.getGlobalBounds();
+}
+
+void SpriteObj::NormalPass(RenderTexture& normalPass, Sprite& sprite, Texture* tex, Shader& nShader)
+{
+	nShader.setParameter("sampler_normal", *tex);
+	normalPass.draw(sprite, &nShader);
 }
