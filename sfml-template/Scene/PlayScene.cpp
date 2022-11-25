@@ -10,7 +10,7 @@
 #pragma warning(disable:4996)
 
 void PlayScene::Update(float dt)
-{
+{	
 	ClearRenderBuffer();
 	//////////////////////////////////////////////////////
 	if (goal->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
@@ -32,6 +32,7 @@ void PlayScene::Update(float dt)
 	}
 
 
+
 	player->Update(dt);
 	goal->Update(dt);
 	for (auto c : cube) {
@@ -49,7 +50,7 @@ void PlayScene::Update(float dt)
 		cout << currentcampos.x << " " << currentcampos.y << endl;
 		cout << player->GetPos().x << " " << player->GetPos().y << endl<<endl;
 
-		worldView.setCenter(CameraMove(currentcampos,player->GetPos(),1.0f,dt));
+		worldView.setCenter(Utils::Lerp(currentcampos.x,player->GetPos().x,0.1), Utils::Lerp(currentcampos.y, player->GetPos().y, 0.1));
 		//worldView.setCenter(player->GetPos());
 	}
 

@@ -62,5 +62,7 @@ public:
 	static void ChangeBCSpriteSFMLPosToBox2dPos(SpriteObj& sprite, b2Body& body,float dt);
 
 	static void ChangePPM(b2Vec2 vec);
+
+	static float Lerp(float currpos, float playerpos, float alpha);
 };
 
