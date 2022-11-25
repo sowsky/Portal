@@ -37,7 +37,7 @@ Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
 	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 1.0f;
+	fixtureDef.friction = 0.5f;
 	fixture = body->CreateFixture(&fixtureDef);
 
 	Utils::ChangeBCSpriteSFMLPosToBox2dPos(*this, *body,1/60.f);

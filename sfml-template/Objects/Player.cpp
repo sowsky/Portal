@@ -126,8 +126,8 @@ void Player::Update(float dt)
 }
 
 void Player::PhysicsUpdate(float dt)
-{
-	cout << body->GetLinearVelocity().x<<" "<< body->GetLinearVelocity().y << endl;
+{ 
+	//cout << body->GetLinearVelocity().x<<" "<< body->GetLinearVelocity().y << endl;
 	if (dir.x != 0)
 	{		
 		if (body->GetLinearVelocity().x <= 2.5 && body->GetLinearVelocity().x >= -2.5) {
@@ -136,7 +136,7 @@ void Player::PhysicsUpdate(float dt)
 	}
 	else
 	{
-		body->SetLinearVelocity({ 0,GetPlayerBodyLinearVelocity().y });
+		body->SetLinearVelocity({ GetPlayerBodyLinearVelocity().x-0.5f*dt,GetPlayerBodyLinearVelocity().y});
 	}
 
 	if (InputMgr::GetKeyDown(Keyboard::Space) && (body->GetLinearVelocity().y > -0.1f && body->GetLinearVelocity().y < 0.1f)) {
@@ -150,7 +150,7 @@ void Player::PhysicsUpdate(float dt)
 void Player::Draw(RenderWindow& window)
 {
 	SpriteObj::Draw(window);
-	window.draw(*hitbox);
+	//window.draw(*hitbox);
 
 }
 
@@ -160,7 +160,7 @@ void Player::SetPlayerBodyPos(Vector2f pos)
 	body->SetTransform(newPos, 0);
 }
 
-void Player::SetPlayerBodyForce(b2Vec2 force)
+void Player::SetPlayerBodyLinearVelocityForce(b2Vec2 force)
 {
 	body->ApplyLinearImpulse(force, body->GetWorldCenter(), true);
 

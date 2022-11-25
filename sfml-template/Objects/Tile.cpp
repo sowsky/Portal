@@ -52,7 +52,7 @@ void Tile::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
 {
 	diffuse.draw(sprite);
 	NormalPass(normal, sprite, normalMap, nShader);
-	diffuse.draw(*hitbox);
+	//diffuse.draw(*hitbox);
 
 }
 

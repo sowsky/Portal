@@ -24,7 +24,7 @@ public:
 	FloatRect GethitboxGlobalBounds() { return hitbox->getGlobalBounds(); }
 	void SetPlayerBodyPos(Vector2f pos);
 	b2Vec2 GetPlayerBodyPos() { return body->GetPosition(); }
-	void SetPlayerBodyForce(b2Vec2 force);
+	void SetPlayerBodyLinearVelocityForce(b2Vec2 force);
 	b2Vec2 GetPlayerBodyLinearVelocity() { return body->GetLinearVelocity(); }
 
 	b2Body* GetBody() { return body; }
