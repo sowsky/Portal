@@ -37,6 +37,7 @@
     <ClCompile Include="src\Polygon.cpp" />
     <ClCompile Include="src\RadialLight.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
+    <ClCompile Include="Objects\Tunnel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Manager\Animator.h" />
@@ -71,5 +72,6 @@
     <ClInclude Include="Objects\NumBox.h" />
     <ClInclude Include="Particle\Particle.h" />
     <ClInclude Include="Particle\ParticleSystem.h" />
+    <ClInclude Include="Objects\Tunnel.h" />
   </ItemGroup>
 </Project>

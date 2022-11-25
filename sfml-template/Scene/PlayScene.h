@@ -68,7 +68,7 @@ private:
 	vector<Tile*> wall;
 	vector<Button*> button;
 	vector<Cube*> cube;
-
+	vector<Tunnel*> tunnel;
 	Cube* grabbedcube = nullptr;
 	Vector2f currgrid = { GRIDSIZE / 2,GRIDSIZE / 2 };
 	float wallbunchwidth = 50;

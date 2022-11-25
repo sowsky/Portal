@@ -32,8 +32,6 @@ void PlayScene::Update(float dt)
 		}
 	}
 
-
-
 	player->Update(dt);
 	goal->Update(dt);
 	for (auto c : cube) {
@@ -41,7 +39,9 @@ void PlayScene::Update(float dt)
 	}
 	for (auto w : wall)
 		w->Update(dt);
-
+	for (auto t : tunnel) {
+		t->Update(dt);
+	}
 	blue->Update(dt);
 	orange->Update(dt);
 
@@ -224,7 +224,6 @@ PlayScene::PlayScene(string path)
 				}
 				else {
 					MakeWall(true);
-					//cout<<
 					box2dposition.x += currgrid.x + GRIDSIZE;
 					wallbunchwidth = GRIDSIZE;
 				}
@@ -240,7 +239,6 @@ PlayScene::PlayScene(string path)
 
 			case 'b':
 			case 'B':
-				//b"2 4 4 "(1)
 			{
 				i += 2;//index of gridposition number 
 				string poslist;

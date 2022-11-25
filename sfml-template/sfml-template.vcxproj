@@ -187,6 +187,7 @@
     <ClCompile Include="src\Polygon.cpp" />
     <ClCompile Include="src\RadialLight.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
+    <ClCompile Include="Objects\Tunnel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\NumBox.h" />
@@ -221,6 +222,7 @@
     <ClInclude Include="Objects\Wire.h" />
     <ClInclude Include="Objects\WireableObject.h" />
     <ClInclude Include="Objects\WirePointArrows.h" />
+    <ClInclude Include="Objects\Tunnel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
