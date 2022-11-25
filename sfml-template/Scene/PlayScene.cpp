@@ -51,7 +51,7 @@ void PlayScene::Update(float dt)
 		cout << currentcampos.x << " " << currentcampos.y << endl;
 		cout << player->GetPos().x << " " << player->GetPos().y << endl<<endl;
 
-		worldView.setCenter(Utils::Lerp(currentcampos.x,player->GetPos().x,0.1), Utils::Lerp(currentcampos.y, player->GetPos().y, 0.1));
+		worldView.setCenter(Utils::Lerp(currentcampos.x,player->GetPos().x,dt*4), Utils::Lerp(currentcampos.y, player->GetPos().y, dt*4));
 		
 	}
 
