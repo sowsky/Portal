@@ -11,11 +11,12 @@
 
 void PlayScene::Update(float dt)
 {	
+	
 	ClearRenderBuffer();
 	//////////////////////////////////////////////////////
 	if (goal->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (goal->IsFinish()) {
-			dark += dt * 500;
+			dark += dt * 100;
 			ending.setFillColor(Color(0, 0, 0, dark));
 		}
 		if (dark >= 255) {
@@ -47,10 +48,7 @@ void PlayScene::Update(float dt)
 
 	if (!isMovingViewCenter) {
 		
-		Vector2f currentcampos= worldView.getCenter();
-		cout << currentcampos.x << " " << currentcampos.y << endl;
-		cout << player->GetPos().x << " " << player->GetPos().y << endl<<endl;
-
+		Vector2f currentcampos = worldView.getCenter();
 		worldView.setCenter(Utils::Lerp(currentcampos.x,player->GetPos().x,dt*4), Utils::Lerp(currentcampos.y, player->GetPos().y, dt*4));
 		
 	}
@@ -352,7 +350,6 @@ void PlayScene::MakeWall(bool isEnd)
 	Tile* temp = new Tile(world.get(), currgrid, Vector2f({ wallbunchwidth, GRIDSIZE }), box2dposition, isEnd);
 	temp->SetOrigin(Origins::MC);
 	wall.push_back(temp);
-	cout << wall.back()->GetPos().x << " " << wall.back()->GetPos().y << endl;
 
 	currgrid.x += GRIDSIZE;
 
@@ -904,34 +901,27 @@ void PlayScene::MoveToPortal()
 	if (madeblue && blue->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (orange->GetPortalDir() == 0) {
 			player->SetPlayerBodyPos({ orange->GetPos().x,orange->GetPos().y - player->GetGlobalBounds().height });
-
-			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyForce().x,player->GetRecentSpeed().y*-1+1});
+			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyLinearVelocity().x,player->GetRecentSpeed().y*-1});
 		}
 		else if (orange->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ orange->GetPos().x + 30,orange->GetPos().y });
 			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().y*-1 ,player->GetRecentSpeed().y });
-
 		}
 		else if (orange->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ orange->GetPos().x ,orange->GetPos().y + player->GetGlobalBounds().height });
-			//	player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,-10000000 });
-			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyForce().x,player->GetRecentSpeed().y-1 });
+			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyLinearVelocity().x,player->GetRecentSpeed().y-1 });
 		}
 		else if (orange->GetPortalDir() == 3) {
 			player->SetPlayerBodyPos({ orange->GetPos().x - 30 ,orange->GetPos().y });
-			//player->SetPlayerBodyForce({ 10000 * -333,0 });
-			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().y,player->GetPlayerBodyForce().y });
-
-
+			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().y,player->GetPlayerBodyLinearVelocity().y });
 		}
-
 	}
 
+	//////////////////////////////move to blue//////////////////////////////////////
 	if (madeorange && orange->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (blue->GetPortalDir() == 0) {
 			player->SetPlayerBodyPos({ blue->GetPos().x,blue->GetPos().y - player->GetGlobalBounds().height });
-			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyForce().x,player->GetRecentSpeed().y * -1 +1 });
-
+			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyLinearVelocity().x,player->GetRecentSpeed().y * -1  });
 		}
 		else if (blue->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ blue->GetPos().x + 30,blue->GetPos().y });
@@ -939,12 +929,12 @@ void PlayScene::MoveToPortal()
 		}
 		else if (blue->GetPortalDir() == 2) {			
 			player->SetPlayerBodyPos({ blue->GetPos().x ,blue->GetPos().y + player->GetGlobalBounds().height });
-			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyForce().x,player->GetRecentSpeed().y - 1 });
+			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyLinearVelocity().x,player->GetRecentSpeed().y - 1 });
 
 		}
 		else if (blue->GetPortalDir() == 3) {
 			player->SetPlayerBodyPos({ blue->GetPos().x - 30 ,blue->GetPos().y });			
-			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().y,player->GetPlayerBodyForce().y });
+			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().y,player->GetPlayerBodyLinearVelocity().y });
 
 		}
 	}
@@ -994,7 +984,6 @@ void PlayScene::MoveToPortal()
 		}
 	}
 	
-	cout << player->GetPlayerBodyForce().x << endl<<" "<< player->GetPlayerBodyForce().y << endl;
 }
 
 
