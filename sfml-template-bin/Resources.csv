@@ -28,6 +28,7 @@ Graphics/Ui/load.png,0
 Graphics/Ui/reset.png,0
 Graphics/Ui/play.png,0
 Graphics/Ui/uitool2.png,0
+Graphics/Ui/savebg.png,0
 Graphics/Tile/tile1.png,0
 Graphics/Tile/tile1n.png,0
 Graphics/Tile/tile2.png,0
@@ -38,7 +39,8 @@ Graphics/backgrounds/narrow.png,0
 Graphics/backgrounds/ruin.png,0
 Graphics/backgrounds/ruin2.png,0
 Graphics/backgrounds/tiles.png,0
-Fonts/NanumGothic.otf,1
-Fonts/times.ttf,1
 Graphics/blue.png,0
 Graphics/orange.png,0
+Fonts/NanumGothic.otf,1
+Fonts/times.ttf,1
+Fonts/D-DINCondensed-Bold.otf,1

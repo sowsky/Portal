@@ -118,6 +118,8 @@ void SpriteObj::SetRotation(Rotate rotation)
 
 void SpriteObj::SetRotationInBox(int rotationNum, float boxHeight, Vector2f boxPos)
 {
+	if (objSize == ObjectSize::Big)
+		return;
 	Utils::SetRotateSpriteInBox(sprite, rotationNum, boxHeight, boxPos);
 	attatchedPos = (Rotate)rotationNum;
 }

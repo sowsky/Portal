@@ -38,6 +38,7 @@ private:
 	static Vector2f mousePosDisplacement;
 
 	static int mouseWheel;
+	static char textInput;
 
 public:
 	static void Init();
@@ -58,6 +59,7 @@ public:
 	static bool GetMouseButtonUp(Mouse::Button key);
 
 	static int GetMouseWheelState();
+	static char GetTextInput();
 
 	static Vector2f GetMousePosDisplacement();
 

@@ -28,11 +28,18 @@ public:
 	b2Vec2 GetPlayerBodyForce() { return body->GetLinearVelocity(); }
 
 	b2Body* GetBody() { return body; }
+
+	Vector2f GetRecentSpeed() { return maxspeed; }
+	void SetMaxSpeed(Vector2f vec) { maxspeed = vec; }
 protected:
 	bool ground = false;
 	float verticalspeed=0.f;
-	float speed = 50;
-	float maxspeed = 80;
+	float speedtX = 0.f;
+	float speedtY = 0.f;
+
+	float maximumspeed=18.f;
+
+	Vector2f maxspeed;
 
 	Vector2f dir={0,0};
 
