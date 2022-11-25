@@ -15,6 +15,7 @@ Vector2f InputMgr::prevMousePos;
 Vector2f InputMgr::mousePosDisplacement;
 
 int InputMgr::mouseWheel;
+char InputMgr::textInput = 0;
 
 void InputMgr::Init()
 {
@@ -53,6 +54,7 @@ void InputMgr::Update(float dt)
 	downList.clear();
 	upList.clear();
 	mouseWheel = 0;
+	textInput = 0;
 
 	for (auto& it : axisInfoMap)
 	{
@@ -112,6 +114,9 @@ void InputMgr::ProcessInput(Event& ev)
 	case Event::EventType::MouseWheelMoved:
 		mouseWheel = ev.mouseWheel.delta;		
 		break;
+	case Event::TextEntered:
+		textInput = ev.text.unicode;
+
 	}	
 }
 
@@ -187,6 +192,11 @@ bool InputMgr::GetMouseButtonUp(Mouse::Button key)
 int InputMgr::GetMouseWheelState()
 {
 	return mouseWheel;
+}
+
+char InputMgr::GetTextInput()
+{
+	return textInput;
 }
 
 

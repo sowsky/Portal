@@ -58,6 +58,8 @@ public:
 
 	void MouseSpriteBoxUpdate();
 
+	void UpdateSaveString();
+
 	void Reset();
 	void Save();
 	void Load();
@@ -113,5 +115,14 @@ private:
 	bool isUiOpen;
 	bool mouseOnUi;	
 	bool isWiring;
+
+	bool isSaving;
+
+	String saveString;
+	Text saveText;
+	Sprite saveScreen;
+
+	Text saveMsg;
+	float msgTime;
 };
 

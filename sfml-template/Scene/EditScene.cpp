@@ -63,6 +63,17 @@ EditScene::EditScene()
 	crossUiCheckBox->SetOrigin(Origins::MC);	
 
 	link.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/link.png"));
+
+	saveText.setFont(*RESOURCEMGR->GetFont("Fonts/D-DINCondensed-Bold.otf"));
+	saveText.setCharacterSize(100);
+	saveText.setFillColor(Color::Black);
+	saveText.setPosition({ WINDOW_WIDTH / 2 - 330 ,WINDOW_HEIGHT / 2  - 60});
+
+	saveMsg.setFont(*RESOURCEMGR->GetFont("Fonts/D-DINCondensed-Bold.otf"));	
+	saveMsg.setPosition({ WINDOW_WIDTH / 2  ,WINDOW_HEIGHT / 2 });
+	saveMsg.setCharacterSize(75);
+
+	SetTex(saveScreen, "Graphics/Ui/savebg.png");	
 }
 
 EditScene::~EditScene()
@@ -90,6 +101,8 @@ void EditScene::Init()
 	uiToolCheckBox->SetActive(false);
 	uiTool2CheckBox->SetActive(false);
 
+	isSaving = false;
+
 	//Vector2u tileSize = RESOURCEMGR->GetTexture("Graphics/grid.png")->getSize();
 	Vector2u tileSize = { TILE_SIZE, TILE_SIZE };
 	auto winSize = (Vector2f)FRAMEWORK->GetWindowSize();
@@ -110,6 +123,10 @@ void EditScene::Init()
 	mouseBoxSprite = nullptr;
 	isUiMoving = false;
 	mouseOnUi = false;
+
+	saveString.clear();
+	saveText.setString(saveString);
+
 	InitUiTool();
 }
 
@@ -122,6 +139,9 @@ void EditScene::Release()
 void EditScene::Enter()
 {	
 	cout << "Enter EditScene\n";	
+
+	ofstream txt("Map/temp.txt");
+
 	Scene::SetWorldView();
 	Scene::SetUiView();
 	Init();
@@ -147,12 +167,22 @@ void EditScene::Update(float dt)
 	UpdateUiTool(dt);
 
 	MouseSpriteBoxUpdate();	
+
+	if (msgTime < 0.f)
+		return;
+
+	msgTime -= dt;
+
+	if (msgTime < 2.f)
+	{		
+		saveMsg.setFillColor(Color(0, 0, 0, 55 + 200 * msgTime));
+	}
 }
 
 void EditScene::Draw(RenderWindow& window)
 {	
 	DrawWorldView(window);
-	DrawUiView(window);
+	DrawUiView(window);	
 }
 
 void EditScene::DrawWorldView(RenderWindow& window)
@@ -230,6 +260,15 @@ void EditScene::DrawUiView(RenderWindow& window)
 		mouseBoxSprite->Draw(window);
 
 	DrawWireModMouseBox(window);
+
+	if (isSaving)
+	{
+		window.draw(saveScreen);
+		window.draw(saveText);
+	}
+		
+	if (msgTime > 0 && !isSaving)
+		window.draw(saveMsg);
 }
 
 void EditScene::InitMapTool()
@@ -352,7 +391,7 @@ void EditScene::SetMapToolSize()
 
 void EditScene::FillMapTool()
 {
-	if (isWiring)
+	if (isWiring || isSaving)
 		return;
 
 	Vector2f mousePos = ScreenToWorldPos((Vector2i)InputMgr::GetMousePos());
@@ -476,12 +515,15 @@ void EditScene::UpdateMapTool(float dt)
 
 void EditScene::Input(float dt)
 {
+	UpdateSaveString();
+
 	if (InputMgr::GetKeyDown(Keyboard::Escape))
 	{
-		SCENE_MGR->ChangeScene(Scenes::GAMESTART);
+		if(!isSaving)
+			SCENE_MGR->ChangeScene(Scenes::GAMESTART);		
 	}
 
-	if (InputMgr::GetKeyDown(Keyboard::BackSpace))
+	if (InputMgr::GetKeyDown(Keyboard::Tab))
 	{
 		exit(1);
 	}
@@ -554,7 +596,7 @@ void EditScene::Input(float dt)
 
 	if (InputMgr::GetKeyDown(Keyboard::F5))
 	{
-		Save();
+		isSaving = true;
 	}
 
 	if (InputMgr::GetKeyDown(Keyboard::F9))
@@ -747,6 +789,9 @@ void EditScene::ReleaseUiTool()
 
 void EditScene::UpdateUiTool(float dt)
 {
+	if (isSaving)
+		return;
+
 	uiToolCheckBox->SetActive(false);
 	uiTool2CheckBox->SetActive(false);
 	crossUiCheckBox->SetActive(false);
@@ -766,7 +811,7 @@ void EditScene::UpdateUiTool(float dt)
 				switch (i)
 				{
 				case 0:
-					Save();
+					isSaving = true;
 					break;
 				case 1:
 					Load();
@@ -852,6 +897,52 @@ void EditScene::UpdateUiTool(float dt)
 	//			uiTool[i][j].first->Update(dt);
 	//	}
 	//}
+}
+
+void EditScene::UpdateSaveString()
+{
+	if (!isSaving)
+		return;	
+
+	if (InputMgr::GetKeyDown(Keyboard::Enter))
+	{
+		isSaving = false;
+		Save();
+		return;
+	}
+
+	bool backSpace = false;
+
+	if (InputMgr::GetKeyDown(Keyboard::Escape))
+	{
+		backSpace = true;
+	}
+
+	if (InputMgr::GetKeyUp(Keyboard::Escape))
+	{
+		isSaving = false;	
+		saveString.clear();
+		saveText.setString(saveString);
+		return;
+	}
+
+	if (InputMgr::GetKeyDown(Keyboard::BackSpace))
+	{
+		backSpace = true;
+		if (!saveString.isEmpty())
+		{			
+			saveString.erase(saveString.getSize() - 1);
+		}
+	}
+
+	if (char temp = InputMgr::GetTextInput())
+	{
+		if (!backSpace &&
+			saveString.getSize() < 13)
+			saveString += temp;
+
+		saveText.setString(saveString);
+	}	
 }
 
 void EditScene::FillUiToolBox()
@@ -956,8 +1047,17 @@ void EditScene::Reset()
 }
 
 void EditScene::Save()
-{	
-	ofstream txt("Map/temp.txt");	
+{		
+	msgTime = 4.f;
+	saveMsg.setFillColor(Color::Black);
+
+	string mapName =
+		saveString.isEmpty() ? "Map/temp.txt" : saveString;
+
+	ofstream map(mapName);
+
+	saveString.clear();
+	saveText.setString(saveString);
 
 	int playerNum = 0;
 	int goalNum = 0;
@@ -966,24 +1066,23 @@ void EditScene::Save()
 	{
 		for (int j = 0; j < rowNum; j++)
 		{
-			if (!mapTool[i][j].first.empty() &&
-				mapTool[i][j].first.front()->GetId() == 'p')
-				playerNum++;
-			if (!mapTool[i][j].first.empty() &&
-				mapTool[i][j].first.front()->GetId() == '@')
-				goalNum++;
+			if (!mapTool[i][j].first.empty())
+			{
+				for (auto obj : mapTool[i][j].first)
+				{
+					if(obj->GetId() == 'p')
+						playerNum++;
+					if (obj->GetId() == '@')
+						goalNum++;
+				}
+			}
 		}
 	}
 
-	if (playerNum != 1)
-	{
-		cout << "파일 저장 실패 : 플레이어 숫자는 하나여야 합니다.\n";
-		return;			
-	}	
-
-	if (goalNum != 1)
-	{
-		cout << "파일 저장 실패 : 출구 숫자는 하나여야 합니다.\n";
+	if (playerNum != 1 || goalNum != 1)
+	{				
+		saveMsg.setString("Save Failed : Player or Eixt must be one");
+		Utils::SetOrigin(saveMsg, Origins::MC);		
 		return;
 	}
 	
@@ -992,34 +1091,43 @@ void EditScene::Save()
 		for (int j = 0; j < rowNum; j++)
 		{
 			if (mapTool[i][j].first.empty())
-				txt << '0';
+				map << "[:0:0:0:0]";
 			else
 			{
-				txt << mapTool[i][j].first.front()->GetId();
-				if (mapTool[i][j].first.front()->GetObjType() == ObjectType::Trigger ||
-					mapTool[i][j].first.front()->GetObjType() == ObjectType::Catcher)
+				map << '[';
+
+				for (auto obj : mapTool[i][j].first)
 				{
-					if (mapTool[i][j].first.front()->GetObjType() == ObjectType::Trigger)
-					{
-						txt << '\"';
-						txt << '2';
-						txt << '\"';
-					}		
-										
-					txt << '(';
-					WireableObject* temp = (WireableObject*)mapTool[i][j].first.front();
-					for (auto num : temp->GetWireListFromMapTool())
-					{
-						txt << num;
-						txt << ' ';
-					}
-					txt << ')';
+
 				}
+
+				map << ']';
+
+				//map << mapTool[i][j].first.front()->GetId();
+				//if (mapTool[i][j].first.front()->GetObjType() == ObjectType::Trigger ||
+				//	mapTool[i][j].first.front()->GetObjType() == ObjectType::Catcher)
+				//{
+				//	if (mapTool[i][j].first.front()->GetObjType() == ObjectType::Trigger)
+				//	{
+				//		txt << '\"';
+				//		txt << '2';
+				//		txt << '\"';
+				//	}		
+				//						
+				//	txt << '(';
+				//	WireableObject* temp = (WireableObject*)mapTool[i][j].first.front();
+				//	for (auto num : temp->GetWireListFromMapTool())
+				//	{
+				//		txt << num;
+				//		txt << ' ';
+				//	}
+				//	txt << ')';
+				//}
 			}
 		}
 		if (i == 0)
 			continue;
-		txt << '\n';
+		//txt << '\n';
 	}
 
 	cout << "파일 저장 성공\n";
