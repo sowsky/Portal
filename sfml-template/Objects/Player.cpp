@@ -41,18 +41,17 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	center.y = (bound.height - radius) / 2 - (bound.height / 2 - radius) - 5;
 	center.y /= SCALE;
 
-
 	boxShape.SetAsBox(
 		dimensions.x / SCALE / 2.0f,
 		dimensions.y / SCALE / 2.0f,
 		center, 0.f);
-
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
 	fixtureDef.density = 1.0f;
 	fixtureDef.friction = 0.2f;
 	fixture = body->CreateFixture(&fixtureDef);
+
 	body->SetFixedRotation(true);
 
 
@@ -136,7 +135,7 @@ void Player::PhysicsUpdate(float dt)
 	}
 	else
 	{
-		body->SetLinearVelocity({ GetPlayerBodyLinearVelocity().x-0.5f*dt,GetPlayerBodyLinearVelocity().y});
+		body->ApplyForce({0*dt,0}, body->GetWorldCenter(), true );
 	}
 
 	if (InputMgr::GetKeyDown(Keyboard::Space) && (body->GetLinearVelocity().y > -0.1f && body->GetLinearVelocity().y < 0.1f)) {

@@ -167,6 +167,7 @@ void Utils::ChangeBCSpriteSFMLPosToBox2dPos(SpriteObj& sprite, b2Body& body,floa
 
 	float spritesetY = Utils::GetSpriteSize(*sprite.GetSprite()).y / 2;
 	Vector2f temp(body.GetPosition().x * SCALE, (body.GetPosition().y * SCALE * -1)+Utils::GetSpriteSize(*sprite.GetSprite()).y/2);
+	//sprite.SetRotation(body.GetAngle());
 	sprite.SetPos(temp);
 }
 

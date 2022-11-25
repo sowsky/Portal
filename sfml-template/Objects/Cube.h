@@ -31,6 +31,8 @@ public:
 
 	Vector2f GetRecentSpeed() { return maxspeed; }
 
+	void SetGravity(int g) { body->SetGravityScale(g); }
+
 protected:
 	bool ground = false;
 	RectangleShape* hitbox;

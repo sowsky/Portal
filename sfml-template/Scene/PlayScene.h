@@ -50,6 +50,7 @@ public:
 	void MakeButton(string dir, string id);
 	void MakePortal();
 	void MakeGoal(string list);
+	void MakeTunnel(string dir, string id);
 	void PushButton();
 	Vector2f CameraMove(Vector2f currpos, Vector2f playerpos,float, float dt);
 
