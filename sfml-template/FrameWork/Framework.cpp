@@ -72,7 +72,7 @@ bool Framework::Do()
 
 			InputMgr::ProcessInput(ev);
 		}
-
+		
 		//SOUND_MGR->Update();
 		if (SCENE_MGR->GetCurrKey() == Scenes::MAPEDITER||SCENE_MGR->GetCurrKey()==Scenes::PLAY)
 			window.clear(Color::White);
