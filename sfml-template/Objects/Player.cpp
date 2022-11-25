@@ -38,7 +38,7 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	b2PolygonShape boxShape;
 
 	b2Vec2 center(0, 0);
-	center.y = (bound.height-radius)/2-(bound.height/2-radius)-5;
+	center.y = (bound.height - radius) / 2 - (bound.height / 2 - radius) - 5;
 	center.y /= SCALE;
 
 
@@ -99,13 +99,42 @@ void Player::Update(float dt)
 	Utils::SetOrigin(*hitbox, Origins::BC);
 	hitbox->setSize({ GetSize() });
 	hitbox->setPosition(GetPos());
+
+
+	if (body->GetLinearVelocity().x != 0) {
+		if (maxspeed.x > body->GetLinearVelocity().x&&abs(maxspeed.x)<= maximumspeed)
+			maxspeed.x = body->GetLinearVelocity().x;
+		speedtX = 0;
+	}
+
+	if (body->GetLinearVelocity().y != 0 ) {
+		if (maxspeed.y > body->GetLinearVelocity().y && abs(maxspeed.y) <= maximumspeed)
+			maxspeed.y = body->GetLinearVelocity().y;
+		speedtY = 0;
+	}
+
+	speedtX += dt;
+	speedtY += dt;
+	if (speedtX >= 0.2f ) {
+		maxspeed.x = 0;
+		//cout << "x리셋" << endl;
+		speedtX = 0;
+
+	}
+	if (speedtY >= 0.2f) {
+		maxspeed.y = 0;
+		//cout << "y리셋" << endl;
+		speedtY = 0;
+	}
+
+	//cout << maxspeed.x << " " << maxspeed.y << endl;
 }
 
 void Player::PhysicsUpdate(float dt)
 {
 	if (dir.x != 0)
 	{		//body->SetLinearVelocity({ dir.x * 10,GetPlayerBodyForce().y });
-		if (body->GetLinearVelocity().x <= 2.5&& body->GetLinearVelocity().x >=-2.5 ) {
+		if (body->GetLinearVelocity().x <= 2.5 && body->GetLinearVelocity().x >= -2.5) {
 			body->ApplyForce(b2Vec2({ dir.x * 10 , 0 }), body->GetWorldCenter(), true);
 		}
 	}
@@ -132,7 +161,7 @@ void Player::PhysicsUpdate(float dt)
 void Player::Draw(RenderWindow& window)
 {
 	SpriteObj::Draw(window);
-	window.draw(*hitbox);
+	//window.draw(*hitbox);
 
 }
 

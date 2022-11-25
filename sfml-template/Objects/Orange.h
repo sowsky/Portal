@@ -17,7 +17,7 @@ public:
 	void SetLightDir(int side);
 protected:
 	RectangleShape* hitbox;
-	float projectilespeed = 1000.f;
+	float projectilespeed = 2000.f;
 	int dir;
 	RadialLight light;
 	EdgeVector edges;

@@ -4,7 +4,7 @@
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 #define TILE_SIZE 25
-#define GRIDSIZE 50
+#define GRIDSIZE 64
 #define PPM 33.f
 
 #define NUMBOX_SIZE 15

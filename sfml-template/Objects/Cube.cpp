@@ -63,7 +63,7 @@ SpriteObj* Cube::NewThis()
 
 void Cube::SetCubeBodyPos(Vector2f pos)
 {
-	b2Vec2 newPos({ pos.x,pos.y * -1 });
+	b2Vec2 newPos({ pos.x/SCALE,pos.y/SCALE * -1 });
 	body->SetTransform(newPos, 0);
 }
 
@@ -89,6 +89,33 @@ void Cube::Update(float dt)
 	hitbox->setPosition(GetPos() );
 	hitbox->setRotation(body->GetAngle());
 
+
+	if (body->GetLinearVelocity().x != 0) {
+		if (maxspeed.x > body->GetLinearVelocity().x && abs(maxspeed.x) <= maximumspeed)
+			maxspeed.x = body->GetLinearVelocity().x;
+		speedtX = 0;
+	}
+
+	if (body->GetLinearVelocity().y != 0) {
+		if (maxspeed.y > body->GetLinearVelocity().y && abs(maxspeed.y) <= maximumspeed)
+			maxspeed.y = body->GetLinearVelocity().y;
+		speedtY = 0;
+	}
+
+	speedtX += dt;
+	speedtY += dt;
+	if (speedtX >= 0.2f) {
+		maxspeed.x = 0;
+	//	cout << "x리셋" << endl;
+		speedtX = 0;
+
+	}
+	if (speedtY >= 0.2f) {
+		maxspeed.y = 0;
+	//	cout << "y리셋" << endl;
+		speedtY = 0;
+	}
+
 	//cout << body->GetLinearVelocity().y << endl;
 }
 
@@ -101,7 +128,7 @@ void Cube::Draw(RenderWindow& window)
 {
 
 	SpriteObj::Draw(window);
-	window.draw(*hitbox);
+	//window.draw(*hitbox);
 }
 
 void Cube::SetSide(bool s)
