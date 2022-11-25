@@ -1051,10 +1051,11 @@ void EditScene::Save()
 	msgTime = 4.f;
 	saveMsg.setFillColor(Color::Black);
 
-	string mapName =
-		saveString.isEmpty() ? "Map/temp.txt" : saveString;
+	string mapName = "Map/";
 
-	ofstream map(mapName);
+	mapName += saveString.isEmpty() ? "temp" : saveString;
+
+	mapName += ".txt";	
 
 	saveString.clear();
 	saveText.setString(saveString);
@@ -1085,22 +1086,39 @@ void EditScene::Save()
 		Utils::SetOrigin(saveMsg, Origins::MC);		
 		return;
 	}
+
+	ofstream map(mapName);
 	
 	for (int i = colNum - 1; i >= 0 ; i--)
 	{
 		for (int j = 0; j < rowNum; j++)
 		{
-			if (mapTool[i][j].first.empty())
-				map << "[:0:0:0:0]";
-			else
-			{
-				map << '[';
+			map << '[';
+			string
+				str1 = ":0",
+				str2 = ":0",
+				str3 = ":0",
+				str4 = ":0";	
 
-				for (auto obj : mapTool[i][j].first)
+			for (auto obj : mapTool[i][j].first)
+			{
+				if (obj->GetRotation() == Rotate::Up)
+				{
+					str1.pop_back();
+					str1 += obj->GetId();
+				}
+				if (obj->GetRotation() == Rotate::Right)
 				{
 
 				}
+				if (obj->GetRotation() == Rotate::Down)
+				{
 
+				}
+				if (obj->GetRotation() == Rotate::Left)
+				{
+
+				}
 				map << ']';
 
 				//map << mapTool[i][j].first.front()->GetId();
@@ -1128,9 +1146,7 @@ void EditScene::Save()
 		if (i == 0)
 			continue;
 		//txt << '\n';
-	}
-
-	cout << "파일 저장 성공\n";
+	}	
 }
 
 void EditScene::Load()
