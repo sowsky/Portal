@@ -953,7 +953,7 @@ void PlayScene::MoveToPortal()
 		else if (orange->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ orange->GetPos().x + 30,orange->GetPos().y });
 			float force = (abs(player->GetRecentSpeed().y)) + (abs(player->GetRecentSpeed().x));
-			player->GetBody()->SetLinearVelocity({ force + 1 ,0 });
+			player->GetBody()->SetLinearVelocity({ force ,0 });
 		}
 		else if (orange->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ orange->GetPos().x ,orange->GetPos().y + player->GetGlobalBounds().height });
@@ -963,7 +963,7 @@ void PlayScene::MoveToPortal()
 		else if (orange->GetPortalDir() == 3) {
 			player->SetPlayerBodyPos({ orange->GetPos().x - 30 ,orange->GetPos().y });
 			float force = (abs(player->GetRecentSpeed().y)) + (abs(player->GetRecentSpeed().x));
-			player->GetBody()->SetLinearVelocity({ force * -1 - 1 ,0 });
+			player->GetBody()->SetLinearVelocity({ force *-1,0 });
 		}
 	}
 
@@ -983,17 +983,17 @@ void PlayScene::MoveToPortal()
 		else if (blue->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ blue->GetPos().x + 30,blue->GetPos().y });
 			float force = (abs(player->GetRecentSpeed().y)) + (abs(player->GetRecentSpeed().x));
-			player->GetBody()->SetLinearVelocity({ force + 1 ,0 });
+			player->GetBody()->SetLinearVelocity({ force ,0 });
 		}
 		else if (blue->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ blue->GetPos().x ,blue->GetPos().y + player->GetGlobalBounds().height });
-			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyLinearVelocity().x,player->GetRecentSpeed().y - 1 });
+			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyLinearVelocity().x,player->GetRecentSpeed().y});
 
 		}
 		else if (blue->GetPortalDir() == 3) {
 			player->SetPlayerBodyPos({ blue->GetPos().x - 30 ,blue->GetPos().y });
 			float force = (abs(player->GetRecentSpeed().y)) + (abs(player->GetRecentSpeed().x));
-			player->GetBody()->SetLinearVelocity({ force * -1 - 1 ,0 });
+			player->GetBody()->SetLinearVelocity({ force * -1 ,0 });
 		}
 	}
 
@@ -1014,16 +1014,16 @@ void PlayScene::MoveToPortal()
 			else if (orange->GetPortalDir() == 1) {
 				c->SetCubeBodyPos({ orange->GetPos().x + c->GetGlobalBounds().width,orange->GetPos().y });
 				float force = (abs(c->GetRecentSpeed().y)) + (abs(c->GetRecentSpeed().x));
-				c->GetBody()->SetLinearVelocity({ force + 1 ,0 });
+				c->GetBody()->SetLinearVelocity({ force ,0 });
 			}
 			else if (orange->GetPortalDir() == 2) {
 				c->SetCubeBodyPos({ orange->GetPos().x ,orange->GetPos().y + c->GetGlobalBounds().height });
-				c->GetBody()->SetLinearVelocity({ c->GetCubeBodyForce().x,c->GetRecentSpeed().y - 1 });
+				c->GetBody()->SetLinearVelocity({ c->GetCubeBodyForce().x,c->GetRecentSpeed().y });
 			}
 			else if (orange->GetPortalDir() == 3) {
 				c->SetCubeBodyPos({ orange->GetPos().x - c->GetGlobalBounds().width ,orange->GetPos().y });
 				float force = (abs(c->GetRecentSpeed().y)) + (abs(c->GetRecentSpeed().x));
-				c->GetBody()->SetLinearVelocity({ force * -1 - 1 ,0 });
+				c->GetBody()->SetLinearVelocity({ force * -1  ,0 });
 			}
 		}
 
@@ -1042,17 +1042,17 @@ void PlayScene::MoveToPortal()
 			else if (blue->GetPortalDir() == 1) {
 				c->SetCubeBodyPos({ blue->GetPos().x + c->GetGlobalBounds().width,blue->GetPos().y });
 				float force = (abs(c->GetRecentSpeed().y)) + (abs(c->GetRecentSpeed().x));
-				c->GetBody()->SetLinearVelocity({ force + 1 ,0 });
+				c->GetBody()->SetLinearVelocity({ force  ,0 });
 
 			}
 			else if (blue->GetPortalDir() == 2) {
 				c->SetCubeBodyPos({ blue->GetPos().x ,blue->GetPos().y + c->GetGlobalBounds().height });
-				c->GetBody()->SetLinearVelocity({ c->GetCubeBodyForce().x,c->GetRecentSpeed().y - 1 });
+				c->GetBody()->SetLinearVelocity({ c->GetCubeBodyForce().x,c->GetRecentSpeed().y  });
 			}
 			else if (blue->GetPortalDir() == 3) {
 				c->SetCubeBodyPos({ blue->GetPos().x - c->GetGlobalBounds().width ,blue->GetPos().y });
 				float force = (abs(c->GetRecentSpeed().y)) + (abs(c->GetRecentSpeed().x));
-				c->GetBody()->SetLinearVelocity({ force * -1 - 1 ,0 });
+				c->GetBody()->SetLinearVelocity({ force * -1 ,0 });
 			}
 		}
 	}
