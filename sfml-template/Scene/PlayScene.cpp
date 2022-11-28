@@ -294,7 +294,7 @@ PlayScene::PlayScene(string path)
 					{
 						Button_sturct* tempB = (Button_sturct*)obj;
 						MakeButton(obj->rotation, tempB->buttonId);
-						break;
+						break;						
 					}
 					case'@':
 					{

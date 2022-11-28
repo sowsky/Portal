@@ -1,5 +1,13 @@
 #include "Tunnel.h"
 
+Tunnel::Tunnel()
+{
+	SetResourceTexture("Graphics/tunnel.png");
+	id = 't';
+
+	objSize = ObjectSize::Normal;	
+}
+
 Tunnel::Tunnel(const Vector2f& position, bool Horizon, int d,string buttonlist)
 	:IsBlue(true), dir(d)
 {
@@ -64,6 +72,8 @@ void Tunnel::Draw(RenderWindow& window)
 {
 	if (active)
 		window.draw(tuns);
+
+	SpriteObj::Draw(window);
 	//window.draw(hitbox);
 }
 

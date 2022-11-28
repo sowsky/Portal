@@ -5,6 +5,7 @@ Graphics/cube.png,0
 Graphics/goal.png,0
 Graphics/goal2.png,0
 Graphics/door.png,0
+Graphics/tunnel.png,0
 Graphics/goalopen.png,0
 Graphics/player.png,0
 Graphics/wire.png,0
@@ -23,6 +24,7 @@ Graphics/Ui/tile.png,0
 Graphics/Ui/cube.png,0
 Graphics/Ui/goal.png,0
 Graphics/Ui/button.png,0
+Graphics/Ui/tbeam.png,0
 Graphics/Ui/save.png,0
 Graphics/Ui/load.png,0
 Graphics/Ui/reset.png,0
