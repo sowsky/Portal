@@ -158,14 +158,17 @@ void Tile::GetRandDiffuseAndNormal()
 	{
 	case 0:
 		SetResourceTexture("Graphics/Tile/tile1.png");
+		frontFace.setTexture(*RESOURCEMGR->GetTexture("Graphics/Tile/tile1.png"));
 		normalMap = RESOURCEMGR->GetTexture("Graphics/Tile/tile1n.png");
 		break;
 	case 1:
 		SetResourceTexture("Graphics/Tile/tile2.png");
+		frontFace.setTexture(*RESOURCEMGR->GetTexture("Graphics/Tile/tile2.png"));
 		normalMap = RESOURCEMGR->GetTexture("Graphics/Tile/tile2n.png");
 		break;
 	case 2:
 		SetResourceTexture("Graphics/Tile/tile3.png");
+		frontFace.setTexture(*RESOURCEMGR->GetTexture("Graphics/Tile/tile3.png"));
 		normalMap = RESOURCEMGR->GetTexture("Graphics/Tile/tile3n.png");
 		break;
 	}
@@ -174,6 +177,13 @@ void Tile::GetRandDiffuseAndNormal()
 void Tile::SetActiveSideTiles(int pos, bool active)
 {
 	sideTiles[pos].first = active;
+}
+
+void Tile::SetFrontFacePosition(RenderWindow& window)
+{
+	Vector2f vanishingPoint = window.getView().getCenter();
+
+
 }
 
 void Tile::SetSideTilesPosition(RenderWindow& window)

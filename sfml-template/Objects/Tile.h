@@ -30,6 +30,7 @@ public:
 
 	void GetRandDiffuseAndNormal();
 	void SetActiveSideTiles(int pos, bool active);
+	void SetFrontFacePosition(RenderWindow& window);
 	void SetSideTilesPosition(RenderWindow& window);
 	void DrawSideTiles(RenderWindow& window);
 protected:
@@ -42,6 +43,7 @@ protected:
 
 	Texture* normal;
 	RectangleShape backFace;
+	Sprite frontFace;
 	array<pair<bool, VertexArray>, 4> sideTiles;
 	array<Texture*, 4> tileTextures;
 };
