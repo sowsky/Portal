@@ -12,7 +12,7 @@
 using json = nlohmann::json;
 
 void PlayScene::Update(float dt)
-{	
+{
 	ClearRenderBuffer();
 	//////////////////////////////////////////////////////
 	if (goal->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
@@ -33,8 +33,6 @@ void PlayScene::Update(float dt)
 		}
 	}
 
-
-
 	player->Update(dt);
 	goal->Update(dt);
 	for (auto c : cube) {
@@ -48,13 +46,13 @@ void PlayScene::Update(float dt)
 
 
 	if (!isMovingViewCenter) {
-		
-		Vector2f currentcampos= worldView.getCenter();
+
+		Vector2f currentcampos = worldView.getCenter();
 		//cout << currentcampos.x << " " << currentcampos.y << endl;
 		//cout << player->GetPos().x << " " << player->GetPos().y << endl<<endl;
 
-		worldView.setCenter(Utils::Lerp(currentcampos.x,player->GetPos().x,0.1), Utils::Lerp(currentcampos.y, player->GetPos().y, 0.1));
-		
+		worldView.setCenter(Utils::Lerp(currentcampos.x, player->GetPos().x, 0.1), Utils::Lerp(currentcampos.y, player->GetPos().y, 0.1));
+
 	}
 
 	//blue
@@ -75,7 +73,7 @@ void PlayScene::Update(float dt)
 
 	MakePortal();
 	MoveToPortal();
-	
+
 	PushButton();
 
 
@@ -196,8 +194,6 @@ void PlayScene::Draw(RenderWindow& window)
 	window.draw(ending);
 }
 
-
-
 PlayScene::PlayScene(string path)
 	:light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
 		sf::Vector3f(0, 0, 0.02),
@@ -227,7 +223,7 @@ PlayScene::PlayScene(string path)
 	for (int i = 0; i < colNum; i++)
 	{
 		loadedArray[i].resize(rowNum);
-	}	
+	}
 
 	loadedArray[loadObjInfo.player.posY][loadObjInfo.player.posX].push_back(&loadObjInfo.player);
 	loadedArray[loadObjInfo.goal.posY][loadObjInfo.goal.posX].push_back(&loadObjInfo.goal);
@@ -235,7 +231,7 @@ PlayScene::PlayScene(string path)
 	for (auto& p : loadObjInfo.buttons)
 	{
 		loadedArray[p.posY][p.posX].push_back(&p);
-		cout << p.posX << ", " << p.posY << endl;				
+		cout << p.posX << ", " << p.posY << endl;
 	}
 
 	for (auto& p : loadObjInfo.cubes)
@@ -251,13 +247,14 @@ PlayScene::PlayScene(string path)
 	{
 		for (int j = 0; j < rowNum; j++)
 		{
-			if (!loadedArray[i][j].empty())
+			if (loadedArray[i][j].empty())
 			{
-				for (auto obj : loadedArray[i][j])
+				currgrid.x += GRIDSIZE;
+				box2dposition.x = currgrid.x;
+			}
+			else {
+				for (auto obj : loadedArray[i][j])  //load all object on 1grid
 				{
-					currgrid.x = GRIDSIZE * j;
-					currgrid.y = GRIDSIZE * i;
-
 					switch (obj->id)
 					{
 					case '1':
@@ -271,7 +268,6 @@ PlayScene::PlayScene(string path)
 						else
 						{
 							MakeWall(true);
-							//cout<<
 							box2dposition.x += currgrid.x + GRIDSIZE;
 							wallbunchwidth = GRIDSIZE;
 						}
@@ -286,23 +282,20 @@ PlayScene::PlayScene(string path)
 						break;
 					case 'b':
 					case 'B':
-					{				
-						Button_sturct* tempB = (Button_sturct*)obj;						
+					{
+						Button_sturct* tempB = (Button_sturct*)obj;
 						MakeButton(obj->rotation, tempB->buttonId);
 						break;
 					}
 					case'@':
 					{
-						Goal_struct* tempG = (Goal_struct*)obj;						
+						Goal_struct* tempG = (Goal_struct*)obj;
 						MakeGoal(tempG->buttonList);
 						break;
 					}
-					default:
-						currgrid.x += GRIDSIZE;
-						box2dposition.x = currgrid.x;						
 					}
 				}
-			}				
+			}
 		}
 		currgrid = { GRIDSIZE / 2, currgrid.y + GRIDSIZE };
 		box2dposition = { GRIDSIZE / 2, currgrid.y + GRIDSIZE };
@@ -369,6 +362,7 @@ void PlayScene::MakeWall(bool isEnd)
 	cout << wall.back()->GetPos().x << " " << wall.back()->GetPos().y << endl;
 
 	currgrid.x += GRIDSIZE;
+
 }
 
 void PlayScene::MakeCube()
@@ -737,11 +731,11 @@ void PlayScene::PushButton()
 	}
 }
 
-Vector2f PlayScene::CameraMove(Vector2f currpos, Vector2f playerpos,float alpah, float dt)
+Vector2f PlayScene::CameraMove(Vector2f currpos, Vector2f playerpos, float alpah, float dt)
 {
 	//return currpos * (1 - dt) + playerpos * dt;
-	float x = (currpos.x + alpah * (playerpos.x - currpos.x))*dt;
-	float y = (currpos.y + alpah * (playerpos.y - currpos.y))*dt;
+	float x = (currpos.x + alpah * (playerpos.x - currpos.x)) * dt;
+	float y = (currpos.y + alpah * (playerpos.y - currpos.y)) * dt;
 
 	return Vector2f(x, y);
 }
@@ -881,17 +875,17 @@ void PlayScene::MoveToPortal()
 		if (orange->GetPortalDir() == 0) {
 			player->SetPlayerBodyPos({ orange->GetPos().x,orange->GetPos().y - player->GetGlobalBounds().height });
 
-			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyForce().x,player->GetRecentSpeed().y*-1+1});
+			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyForce().x,player->GetRecentSpeed().y * -1 + 1 });
 		}
 		else if (orange->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ orange->GetPos().x + 30,orange->GetPos().y });
-			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().y*-1 ,player->GetRecentSpeed().y });
+			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().y * -1 ,player->GetRecentSpeed().y });
 
 		}
 		else if (orange->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ orange->GetPos().x ,orange->GetPos().y + player->GetGlobalBounds().height });
 			//	player->SetPlayerBodyForce({ player->GetPlayerBodyForce().x,-10000000 });
-			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyForce().x,player->GetRecentSpeed().y-1 });
+			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyForce().x,player->GetRecentSpeed().y - 1 });
 		}
 		else if (orange->GetPortalDir() == 3) {
 			player->SetPlayerBodyPos({ orange->GetPos().x - 30 ,orange->GetPos().y });
@@ -906,20 +900,20 @@ void PlayScene::MoveToPortal()
 	if (madeorange && orange->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (blue->GetPortalDir() == 0) {
 			player->SetPlayerBodyPos({ blue->GetPos().x,blue->GetPos().y - player->GetGlobalBounds().height });
-			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyForce().x,player->GetRecentSpeed().y * -1 +1 });
+			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyForce().x,player->GetRecentSpeed().y * -1 + 1 });
 
 		}
 		else if (blue->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ blue->GetPos().x + 30,blue->GetPos().y });
 			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().y * -1 ,player->GetRecentSpeed().y });
 		}
-		else if (blue->GetPortalDir() == 2) {			
+		else if (blue->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ blue->GetPos().x ,blue->GetPos().y + player->GetGlobalBounds().height });
 			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyForce().x,player->GetRecentSpeed().y - 1 });
 
 		}
 		else if (blue->GetPortalDir() == 3) {
-			player->SetPlayerBodyPos({ blue->GetPos().x - 30 ,blue->GetPos().y });			
+			player->SetPlayerBodyPos({ blue->GetPos().x - 30 ,blue->GetPos().y });
 			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().y,player->GetPlayerBodyForce().y });
 
 		}
@@ -969,8 +963,8 @@ void PlayScene::MoveToPortal()
 			}
 		}
 	}
-	
-	cout << player->GetPlayerBodyForce().x << endl<<" "<< player->GetPlayerBodyForce().y << endl;
+
+	cout << player->GetPlayerBodyForce().x << endl << " " << player->GetPlayerBodyForce().y << endl;
 }
 
 
