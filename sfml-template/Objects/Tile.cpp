@@ -43,18 +43,21 @@ void Tile::Update(float dt)
 	//sprite.setPosition({ body->GetPosition().x,body->GetPosition().y*-1 });
 	//SetPos({ body->GetPosition().x * SCALE,body->GetPosition().y * SCALE * -1 });
 
-	//hitbox->setSize(GetSize());
-	//if (body != nullptr)
-		//hitbox->setPosition(body->GetPosition().x * SCALE, body->GetPosition().y * SCALE);
+	if (body != nullptr)
+	{
+		hitbox->setSize(GetSize());
+		hitbox->setPosition(body->GetPosition().x * SCALE, body->GetPosition().y * SCALE);
+	}
 
 }
 
 void Tile::Draw(RenderWindow& window)
 {
+	if (!isPlayingGame)
+		window.draw(sprite);
 
-	DrawSideTiles(window);
-	
-	//window.draw(*hitbox);
+	if(isPlayingGame)
+		DrawSideTiles(window);	
 
 }
 
@@ -62,6 +65,9 @@ void Tile::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
 {
 	diffuse.draw(sprite);
 	NormalPass(normal, sprite, normalMap, nShader);
+
+	if (hitbox != nullptr)
+		diffuse.draw(*hitbox);
 }
 
 void Tile::PhysicsUpdate()
@@ -93,18 +99,16 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*size o
 		fixtureDef.friction = 1.f;
 		fixture = body->CreateFixture(&fixtureDef);
 
-		hitbox = new RectangleShape;
-		Utils::SetOrigin(*hitbox, Origins::MC);
-		hitbox->setFillColor(Color::Red);
-		hitbox->setPosition(body->GetPosition().x * SCALE, body->GetPosition().y * SCALE);
-
-
 	}
+
 
 
 	SetPos({ position.x,position.y });
 
-
+	hitbox = new RectangleShape;
+	Utils::SetOrigin(*hitbox, Origins::MC);
+	hitbox->setFillColor(Color::Red);
+	hitbox->setPosition(GetPos());
 
 	type = ObjectType::Tile;
 

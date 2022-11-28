@@ -11,7 +11,7 @@ class Goal : public WireableObject
 {
 public:
     Goal();
-    Goal(Vector2f currgrid, float size, string buttonlist);
+    Goal(Vector2f currgrid, float size, vector<int> buttonlist);
     virtual ~Goal();
 
     virtual SpriteObj* NewThis();

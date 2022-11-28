@@ -97,8 +97,8 @@ void Player::Update(float dt)
 	Utils::ChangeBCSpriteSFMLPosToBox2dPos(*this, *body, dt);
 
 	Utils::SetOrigin(*hitbox, Origins::BC);
-	hitbox->setSize({ GetSize() });
-	hitbox->setPosition(GetPos());
+	hitbox->setSize({ GetSize()});
+	hitbox->setPosition(body->GetPosition().x * SCALE, body->GetPosition().x * SCALE);
 
 
 	if (body->GetLinearVelocity().x != 0) {
@@ -161,7 +161,7 @@ void Player::PhysicsUpdate(float dt)
 void Player::Draw(RenderWindow& window)
 {
 	SpriteObj::Draw(window);
-	//window.draw(*hitbox);
+	window.draw(*hitbox);
 
 }
 

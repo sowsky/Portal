@@ -47,9 +47,9 @@ public:
 	void MakeWall(bool isEnd);
 	void MakeCube();
 	void MakePlayer();
-	void MakeButton(string dir, string id);
+	void MakeButton(int rotaion, int id);
 	void MakePortal();
-	void MakeGoal(string list);
+	void MakeGoal(vector<int> list);
 	void PushButton();
 	Vector2f CameraMove(Vector2f currpos, Vector2f playerpos,float, float dt);
 
@@ -98,13 +98,10 @@ private:
 
 
 	//////
-	vector<SpriteObj*> tempContainer;
-	vector<vector<SpriteObj*>> objInfos;
-
 	ParticleSystem particle;
 	
-	const int width = WINDOW_WIDTH*2;
-	const int height = WINDOW_HEIGHT*2;
+	int width;
+	int height;
 
 
 	// Front and backbuffer as Pointer for std::swap

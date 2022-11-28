@@ -19,20 +19,17 @@ Goal::Goal()
 
 }
 
-Goal::Goal(Vector2f currgrid, float size, string buttonlist)
+Goal::Goal(Vector2f currgrid, float size, vector<int> buttonlist)
 {
 	SetResourceTexture("Graphics/goal.png");
-	id = '@';	
+	id = '@';
 
 	Utils::SetOrigin(sprite, Origins::MC);
 
 	SetSize({ GRIDSIZE,GRIDSIZE });
 	SetPos(currgrid);
 
-	for (int i = 0; i < buttonlist.size(); i++) {
-		char temp = buttonlist[i];
-		buttonid.push_back(atoi(&temp));
-	}
+	buttonid = buttonlist;
 
 	door.setPrimitiveType(Quads);
 	door.resize(8);

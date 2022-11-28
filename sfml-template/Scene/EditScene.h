@@ -59,6 +59,8 @@ public:
 	void MouseSpriteBoxUpdate();
 
 	void UpdateSaveString();
+	void LoadMapList();
+	void DrawMapList(RenderWindow& window);
 
 	void Reset();
 	void Save();
@@ -116,7 +118,7 @@ private:
 	bool mouseOnUi;	
 	bool isWiring;
 
-	bool isSaving;
+	bool isSaving;	
 
 	String saveString;
 	Text saveText;
@@ -124,5 +126,13 @@ private:
 
 	Text saveMsg;
 	float msgTime;
+	int msgTrasp;
+
+	bool isLoading;
+
+	string loadString;
+	Sprite loadScreen;
+	View loadView;
+	list<pair<RectangleShape*, Text*>> loadList;
 };
 

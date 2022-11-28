@@ -25,7 +25,7 @@ public:
 
 	list<int> GetWireListFromMapTool();
 
-	list<int>& GetWireNum() { return wireNum; }
+	//list<int>& GetWireNum() { return wireNum; }
 
 	bool IsMouseIn() { return isMouseIn; }	
 protected:
@@ -33,6 +33,6 @@ protected:
 
 	bool isMouseIn;
 	list<NumBox*> numbox;
-	list<int> wireNum;
+	//list<int> wireNum;
 };
 

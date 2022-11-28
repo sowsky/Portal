@@ -6,8 +6,10 @@
 #include "../FrameWork/Framework.h"
 #include "../Manager/ResourceMgr.h"
 #include "../Objects/Goal.h"
+#include "../Objects/FileData.h"
 
 #pragma warning(disable:4996)
+using json = nlohmann::json;
 
 void PlayScene::Update(float dt)
 {	
@@ -48,8 +50,8 @@ void PlayScene::Update(float dt)
 	if (!isMovingViewCenter) {
 		
 		Vector2f currentcampos= worldView.getCenter();
-		cout << currentcampos.x << " " << currentcampos.y << endl;
-		cout << player->GetPos().x << " " << player->GetPos().y << endl<<endl;
+		//cout << currentcampos.x << " " << currentcampos.y << endl;
+		//cout << player->GetPos().x << " " << player->GetPos().y << endl<<endl;
 
 		worldView.setCenter(Utils::Lerp(currentcampos.x,player->GetPos().x,0.1), Utils::Lerp(currentcampos.y, player->GetPos().y, 0.1));
 		
@@ -213,92 +215,104 @@ PlayScene::PlayScene(string path)
 	blue->SetSize({ 10,10 });
 	orange->SetSize({ 10,10 });
 
-	ifstream fin;
-	fin.open(path);
+	ifstream ifs(path);
+	Data_struct loadObjInfo = json::parse(ifs);
 
-	string str;
-	//each line
-	while (getline(fin, str)) {
-		//verifying each character
-		for (int i = 0; i < str.size() + 1; i++) {
-			switch (str[i]) {
-			case '1':
-				if (str[i + 1] == '1') {
-					MakeWall(false);
-					wallbunchwidth += GRIDSIZE;
-				}
-				else {
-					MakeWall(true);
-					//cout<<
-					box2dposition.x += currgrid.x + GRIDSIZE;
-					wallbunchwidth = GRIDSIZE;
-				}
-				break;
-			case 'p':
-			case 'P':
-				MakePlayer();
-				break;
-			case 'C':
-			case 'c':
-				MakeCube();
-				break;
+	const int rowNum = loadObjInfo.map_size.row;
+	const int colNum = loadObjInfo.map_size.col;
 
-			case 'b':
-			case 'B':
-				//b"2 4 4 "(1)
+	vector<vector<list<Object_struct*>>> loadedArray;
+
+	loadedArray.resize(colNum);
+	for (int i = 0; i < colNum; i++)
+	{
+		loadedArray[i].resize(rowNum);
+	}	
+
+	loadedArray[loadObjInfo.player.posY][loadObjInfo.player.posX].push_back(&loadObjInfo.player);
+	loadedArray[loadObjInfo.goal.posY][loadObjInfo.goal.posX].push_back(&loadObjInfo.goal);
+
+	for (auto& p : loadObjInfo.buttons)
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+		cout << p.posX << ", " << p.posY << endl;				
+	}
+
+	for (auto& p : loadObjInfo.cubes)
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+	for (auto& p : loadObjInfo.tiles)
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+
+	for (int i = 0; i < colNum; i++)
+	{
+		for (int j = 0; j < rowNum; j++)
+		{
+			if (!loadedArray[i][j].empty())
 			{
-				i += 2;//index of gridposition number 
-				string poslist;
-				int posnum = str.find('"', i);
-				poslist = str.substr(i, posnum - i);
+				for (auto obj : loadedArray[i][j])
+				{
+					currgrid.x = GRIDSIZE * j;
+					currgrid.y = GRIDSIZE * i;
 
-				i += 3; //index of buttonId
-				string idlist;
-				int idnum = str.find(')', i);
-				idlist = str.substr(i, idnum - i);
-				//	MakeButton(poslist, idlist);
-				i++;
-
-				MakeButton(poslist, idlist);
-
-				/////////
-				i++;
-				/////////
-
-				break;
-			}
-			case'@':
-			{
-				string list;
-				int num = str.find(')', i);
-				list = str.substr(i + 2, num - i - 2);
-				MakeGoal(list);
-				i = num;
-				break;
-			}
-			default:
-				currgrid.x += GRIDSIZE;
-				box2dposition.x = currgrid.x;
-
-				///////
-				tempContainer.push_back(nullptr);
-				///////
-			}
-
+					switch (obj->id)
+					{
+					case '1':
+						if (j + 1 < rowNum &&
+							!loadedArray[i][j + 1].empty() &&
+							loadedArray[i][j + 1].front()->id == '1')
+						{
+							MakeWall(false);
+							wallbunchwidth += GRIDSIZE;
+						}
+						else
+						{
+							MakeWall(true);
+							//cout<<
+							box2dposition.x += currgrid.x + GRIDSIZE;
+							wallbunchwidth = GRIDSIZE;
+						}
+						break;
+					case 'p':
+					case 'P':
+						MakePlayer();
+						break;
+					case 'C':
+					case 'c':
+						MakeCube();
+						break;
+					case 'b':
+					case 'B':
+					{				
+						Button_sturct* tempB = (Button_sturct*)obj;						
+						MakeButton(obj->rotation, tempB->buttonId);
+						break;
+					}
+					case'@':
+					{
+						Goal_struct* tempG = (Goal_struct*)obj;						
+						MakeGoal(tempG->buttonList);
+						break;
+					}
+					default:
+						currgrid.x += GRIDSIZE;
+						box2dposition.x = currgrid.x;						
+					}
+				}
+			}				
 		}
 		currgrid = { GRIDSIZE / 2, currgrid.y + GRIDSIZE };
 		box2dposition = { GRIDSIZE / 2, currgrid.y + GRIDSIZE };
 		wallbunchwidth = GRIDSIZE;
-
-		///////////
-		objInfos.push_back(tempContainer);
-		tempContainer.clear();
-		///////////
 	}
 
-	goal->SetButtonlist(button);
+	height = GRIDSIZE * colNum;
+	width = GRIDSIZE * rowNum;
 
-	fin.close();
+	goal->SetButtonlist(button);
 
 	/*for (int i = 0; i < objInfos.size(); i++)
 	{
@@ -355,10 +369,6 @@ void PlayScene::MakeWall(bool isEnd)
 	cout << wall.back()->GetPos().x << " " << wall.back()->GetPos().y << endl;
 
 	currgrid.x += GRIDSIZE;
-
-	///////////////
-	tempContainer.push_back(temp);
-	///////////////
 }
 
 void PlayScene::MakeCube()
@@ -366,10 +376,6 @@ void PlayScene::MakeCube()
 	Cube* newCube = new Cube(world.get(), Vector2f{ currgrid }, Vector2f({ GRIDSIZE, GRIDSIZE }));
 
 	cube.push_back(newCube);
-
-	///////////////
-	tempContainer.push_back(newCube);
-	//////////////
 
 	currgrid.x += GRIDSIZE;
 }
@@ -380,65 +386,39 @@ void PlayScene::MakePlayer()
 	player = new Player(world.get(), Vector2f{ currgrid }, Vector2f({ 20, 50 }));
 
 	currgrid.x += GRIDSIZE;
-
-	/////////////////
-	tempContainer.push_back(player);
-	/////////////////
 }
 
-void PlayScene::MakeButton(string dir, string id)
+void PlayScene::MakeButton(int rotaion, int id)
 {
-	for (auto& b : dir) {
-		if (b == ' ')
-			continue;
+	Button* temp = new Button();
 
-		//seek id
-		string idtemp;
-		for (int i = 0; i < id.size(); i++) {
-			if (id[i] == ' ') {
-				id.erase(i, i + 1);
-				break;
-			}
-			idtemp.push_back(id[i]);
-			id.erase(i, i + 1);
-		}
+	button.push_back(temp);
+	button.back()->SetOrigin(Origins::BC);
+	button.back()->SetButtonId(id);
+	button.back()->SetPos(currgrid);
+	button.back()->SetRotation(rotaion);
 
-		Button* temp = new Button();
+	if (rotaion == 0) {			//top of gird
+		button.back()->SetPos({ currgrid.x,currgrid.y - GRIDSIZE / 2 });
+		button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
 
-		button.push_back(temp);
-		button.back()->SetOrigin(Origins::BC);
-		button.back()->SetButtonId(stoi(idtemp));
-		button.back()->SetPos(currgrid);
-		button.back()->SetRotation(atoi(&b));
+	}
+	else if (rotaion == 1) {	//right of gird
+		button.back()->SetPos({ currgrid.x + GRIDSIZE / 2,currgrid.y });
+		button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
 
-		if (b == '0') {			//top of gird
-			button.back()->SetPos({ currgrid.x,currgrid.y - GRIDSIZE / 2 });
-			button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
+	}
+	else if (rotaion == 2) {	//bottom of gird
+		button.back()->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });
+		button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
 
-		}
-		else if (b == '1') {	//right of gird
-			button.back()->SetPos({ currgrid.x + GRIDSIZE / 2,currgrid.y });
-			button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
+	}
+	else if (rotaion == 3) {	//left of gird
+		button.back()->SetPos({ currgrid.x - GRIDSIZE / 2,currgrid.y });
+		button.back()->SetSize({ GRIDSIZE ,GRIDSIZE / 4 });
 
-		}
-		else if (b == '2') {	//bottom of gird
-			button.back()->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });
-			button.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
-
-		}
-		else if (b == '3') {	//left of gird
-			button.back()->SetPos({ currgrid.x - GRIDSIZE / 2,currgrid.y });
-			button.back()->SetSize({ GRIDSIZE ,GRIDSIZE / 4 });
-
-		}
-
-		////////////
-		tempContainer.push_back(temp);
-		////////////
 	}
 	currgrid.x += GRIDSIZE;
-
-
 }
 
 void PlayScene::MakePortal()
@@ -711,15 +691,11 @@ void PlayScene::MakePortal()
 
 }
 
-void PlayScene::MakeGoal(string list)
+void PlayScene::MakeGoal(vector<int> list)
 {
 	goal = new Goal(currgrid, GRIDSIZE, list);
 
 	currgrid.x += GRIDSIZE;
-
-	////////////
-	tempContainer.push_back(goal);
-	////////////
 }
 
 void PlayScene::PushButton()
