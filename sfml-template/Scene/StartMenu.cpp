@@ -67,7 +67,6 @@ void StartMenu::Update(float dt)
 	Utils::SetOrigin(start, Origins::MC);
 
 	mousePos->setPosition(InputMgr::GetMousePos());
-	cout << "this is start menu" << endl;
 
 	if (mousePos->getGlobalBounds().intersects(startbox->getGlobalBounds()) && InputMgr::GetMouseButtonDown(Mouse::Left)) {
 		SCENE_MGR->ChangeScene(Scenes::MAPLIST);

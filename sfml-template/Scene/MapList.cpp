@@ -104,13 +104,13 @@ void MapList::Update(float dt)
 		if (InputMgr::GetMouseWheelState() == 1&&
 			stagelist.front()->getPosition().y < 0) {
 			for (auto v : stagelist) {
-				v->setPosition(v->getPosition().x,v->getPosition().y+40 );
+				v->setPosition(v->getPosition().x,v->getPosition().y+10 );
 			}
 		}   //wheel down
 		else if (InputMgr::GetMouseWheelState() == -1&&
 			stagelist.back()->getGlobalBounds().top+ stagelist.back()->getGlobalBounds().height > FRAMEWORK->GetWindowSize().y) {
 			for (auto v : stagelist) {
-				v->setPosition(v->getPosition().x, v->getPosition().y - 40);
+				v->setPosition(v->getPosition().x, v->getPosition().y - 10);
 			}
 		}
 	}

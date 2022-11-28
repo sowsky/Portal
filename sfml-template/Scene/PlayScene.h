@@ -49,7 +49,11 @@ public:
 	void MakePlayer();
 	void MakeButton(int rotaion, int id);
 	void MakePortal();
+
 	void MakeGoal(vector<int> list);
+
+	void MakeTunnel(string dir, string id);
+
 	void PushButton();
 	Vector2f CameraMove(Vector2f currpos, Vector2f playerpos,float, float dt);
 
@@ -68,7 +72,7 @@ private:
 	vector<Tile*> wall;
 	vector<Button*> button;
 	vector<Cube*> cube;
-
+	vector<Tunnel*> tunnel;
 	Cube* grabbedcube = nullptr;
 	Vector2f currgrid = { GRIDSIZE / 2,GRIDSIZE / 2 };
 	float wallbunchwidth = 50;

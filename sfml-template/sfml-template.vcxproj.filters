@@ -37,6 +37,7 @@
     <ClCompile Include="src\Polygon.cpp" />
     <ClCompile Include="src\RadialLight.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
+    <ClCompile Include="Objects\Tunnel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Manager\Animator.h" />
@@ -75,5 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <ClInclude Include="Objects\Tunnel.h" />
+
   </ItemGroup>
 </Project>

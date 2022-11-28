@@ -24,13 +24,13 @@ public:
 	FloatRect GethitboxGlobalBounds() { return hitbox->getGlobalBounds(); }
 	void SetPlayerBodyPos(Vector2f pos);
 	b2Vec2 GetPlayerBodyPos() { return body->GetPosition(); }
-	void SetPlayerBodyForce(b2Vec2 force);
-	b2Vec2 GetPlayerBodyForce() { return body->GetLinearVelocity(); }
+	void SetPlayerBodyLinearVelocityForce(b2Vec2 force);
+	b2Vec2 GetPlayerBodyLinearVelocity() { return body->GetLinearVelocity(); }
 
 	b2Body* GetBody() { return body; }
 
-	Vector2f GetRecentSpeed() { return maxspeed; }
-	void SetMaxSpeed(Vector2f vec) { maxspeed = vec; }
+	Vector2f GetRecentSpeed() { return recentspeed; }
+	void SetMaxSpeed(Vector2f vec) { recentspeed = vec; }
 protected:
 	bool ground = false;
 	float verticalspeed=0.f;
@@ -39,7 +39,7 @@ protected:
 
 	float maximumspeed=18.f;
 
-	Vector2f maxspeed;
+	Vector2f recentspeed;
 
 	Vector2f dir={0,0};
 

@@ -8,3 +8,4 @@
 #include "../Objects/Orange.h"
 #include "../Objects/Blue.h"
 #include "../Objects/Wire.h"
+#include "../Objects/Tunnel.h"

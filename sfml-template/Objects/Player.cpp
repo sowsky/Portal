@@ -41,18 +41,17 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	center.y = (bound.height - radius) / 2 - (bound.height / 2 - radius) - 5;
 	center.y /= SCALE;
 
-
 	boxShape.SetAsBox(
 		dimensions.x / SCALE / 2.0f,
 		dimensions.y / SCALE / 2.0f,
 		center, 0.f);
-
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
 	fixtureDef.density = 1.0f;
 	fixtureDef.friction = 0.2f;
 	fixture = body->CreateFixture(&fixtureDef);
+
 	body->SetFixedRotation(true);
 
 
@@ -64,10 +63,9 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	circlefixtureDef.shape = &circleShape;
 	circlefixtureDef.density = 1.0f;
 	circlefixtureDef.friction = 0.2f;
-	//fixture = body->CreateFixture(&circlefixtureDef);
+	fixture = body->CreateFixture(&circlefixtureDef);
 	body->SetFixedRotation(true);
 
-	//body->SetGravityScale(0);
 	Utils::ChangeBCSpriteSFMLPosToBox2dPos(*this, *body, 1 / 60.f);
 
 	float tempx = position.x;
@@ -90,7 +88,6 @@ SpriteObj* Player::NewThis()
 void Player::Update(float dt)
 {
 	SpriteObj::Update(dt);
-	//cout<<GetPos().y << endl;
 
 	dir.x = InputMgr::GetAxis(Axis::Horizontal);
 
@@ -102,58 +99,49 @@ void Player::Update(float dt)
 
 
 	if (body->GetLinearVelocity().x != 0) {
-		if (maxspeed.x > body->GetLinearVelocity().x&&abs(maxspeed.x)<= maximumspeed)
-			maxspeed.x = body->GetLinearVelocity().x;
+		if (abs(recentspeed.x)<= maximumspeed)
+			recentspeed.x = body->GetLinearVelocity().x;
 		speedtX = 0;
 	}
 
 	if (body->GetLinearVelocity().y != 0 ) {
-		if (maxspeed.y > body->GetLinearVelocity().y && abs(maxspeed.y) <= maximumspeed)
-			maxspeed.y = body->GetLinearVelocity().y;
+		if ( abs(recentspeed.y) <= maximumspeed)
+			recentspeed.y = body->GetLinearVelocity().y;
 		speedtY = 0;
 	}
 
 	speedtX += dt;
 	speedtY += dt;
 	if (speedtX >= 0.2f ) {
-		maxspeed.x = 0;
-		//cout << "x리셋" << endl;
+		recentspeed.x = 0;
 		speedtX = 0;
 
 	}
 	if (speedtY >= 0.2f) {
-		maxspeed.y = 0;
-		//cout << "y리셋" << endl;
+		recentspeed.y = 0;
 		speedtY = 0;
 	}
 
-	//cout << maxspeed.x << " " << maxspeed.y << endl;
 }
 
 void Player::PhysicsUpdate(float dt)
-{
+{ 
+	//cout << body->GetLinearVelocity().x<<" "<< body->GetLinearVelocity().y << endl;
 	if (dir.x != 0)
-	{		//body->SetLinearVelocity({ dir.x * 10,GetPlayerBodyForce().y });
+	{		
 		if (body->GetLinearVelocity().x <= 2.5 && body->GetLinearVelocity().x >= -2.5) {
 			body->ApplyForce(b2Vec2({ dir.x * 10 , 0 }), body->GetWorldCenter(), true);
 		}
 	}
 	else
 	{
-		body->SetLinearVelocity({ 0,GetPlayerBodyForce().y });
+		body->ApplyForce({0*dt,0}, body->GetWorldCenter(), true );
 	}
 
 	if (InputMgr::GetKeyDown(Keyboard::Space) && (body->GetLinearVelocity().y > -0.1f && body->GetLinearVelocity().y < 0.1f)) {
-		//body->SetTransform({body->GetPosition().x,body->GetPosition().y+0.1f},0);
-		body->ApplyLinearImpulse({ 0,1.5f }, GetPlayerBodyForce(), 1);
+		body->ApplyLinearImpulse({ 0,1.5f }, GetPlayerBodyLinearVelocity(), 1);
 	}
-	/*if (body->GetLinearVelocity().y > -0.1 && body->GetLinearVelocity().y < 0.1) {
-		body->SetGravityScale(0.f);
-		cout << "set 0" << endl;
-	}
-	else
-		body->SetGravityScale(10.f);
-	cout << body->GetLinearVelocity().y << endl;*/
+
 
 
 }
@@ -171,7 +159,7 @@ void Player::SetPlayerBodyPos(Vector2f pos)
 	body->SetTransform(newPos, 0);
 }
 
-void Player::SetPlayerBodyForce(b2Vec2 force)
+void Player::SetPlayerBodyLinearVelocityForce(b2Vec2 force)
 {
 	body->ApplyLinearImpulse(force, body->GetWorldCenter(), true);
 

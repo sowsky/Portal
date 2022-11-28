@@ -12,7 +12,7 @@ Tile::Tile()
 	SetResourceTexture(GetRandTileTex());
 	id = '1';
 
-	type = ObjectType::Tile;	
+	type = ObjectType::Tile;
 	objSize = ObjectSize::Big;
 	attatchedPos = Rotate::Down;
 }
@@ -37,6 +37,7 @@ SpriteObj* Tile::NewThis()
 
 void Tile::Update(float dt)
 {
+
 	//Utils::SetOrigin(*hitbox, Origins::MC);
 	//if (body != nullptr)
 		//sprite.setRotation(body->GetAngle());
@@ -49,6 +50,11 @@ void Tile::Update(float dt)
 		hitbox->setPosition(body->GetPosition().x * SCALE, body->GetPosition().y * SCALE);
 	}
 
+
+	Utils::SetOrigin(*hitbox, Origins::MC);
+	hitbox->setSize({ });
+	hitbox->setPosition(GetPos());
+
 }
 
 void Tile::Draw(RenderWindow& window)
@@ -56,8 +62,10 @@ void Tile::Draw(RenderWindow& window)
 	if (!isPlayingGame)
 		window.draw(sprite);
 
+
 	if(isPlayingGame)
 		DrawSideTiles(window);	
+
 
 }
 
@@ -66,8 +74,14 @@ void Tile::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
 	diffuse.draw(sprite);
 	NormalPass(normal, sprite, normalMap, nShader);
 
+
 	if (hitbox != nullptr)
 		diffuse.draw(*hitbox);
+
+	if (body != nullptr) {
+		diffuse.draw(*hitbox);
+	}
+
 }
 
 void Tile::PhysicsUpdate()
@@ -87,7 +101,7 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*size o
 		float tilewidth = dimensions.y;
 		b2BodyDef bodyDef;
 		bodyDef.type = b2_staticBody;
-		bodyDef.position.Set(((box2dposition.x + dimensions.x / 2)- tilewidth/2) / SCALE, (box2dposition.y - GRIDSIZE) / SCALE * -1);
+		bodyDef.position.Set(((box2dposition.x + dimensions.x / 2) - tilewidth / 2) / SCALE, (box2dposition.y - GRIDSIZE) / SCALE * -1);
 		body = world->CreateBody(&bodyDef);
 
 		b2PolygonShape boxShape;
@@ -98,7 +112,6 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*size o
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 1.f;
 		fixture = body->CreateFixture(&fixtureDef);
-
 	}
 
 
@@ -109,6 +122,9 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*size o
 	Utils::SetOrigin(*hitbox, Origins::MC);
 	hitbox->setFillColor(Color::Red);
 	hitbox->setPosition(GetPos());
+
+
+	SetPos({ position.x,position.y });
 
 	type = ObjectType::Tile;
 
@@ -129,6 +145,14 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*size o
 		sideTiles[i].second[3].texCoords = { 0.f, (float)texSize.y };
 	}
 	backFace.setFillColor(Color::Red);
+
+
+	hitbox = new RectangleShape;
+	hitbox->setFillColor(Color::Red);
+	Utils::SetOrigin(*hitbox, Origins::MC);
+	hitbox->setSize(Utils::GetSpriteSize(sprite));
+	hitbox->setPosition(GetPos());
+
 }
 
 string Tile::GetRandTileTex()

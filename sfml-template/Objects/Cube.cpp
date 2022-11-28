@@ -20,7 +20,7 @@ Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
 	id = 'c';
 
 	Utils::SetSpriteSize(sprite, dimensions);
-	Utils::SetOrigin(sprite, Origins::BC);
+	Utils::SetOrigin(sprite, Origins::MC);
 	Utils::SetSpriteSize(sprite, { 30,30 });
 	hitbox = new RectangleShape;
 	hitbox->setFillColor(Color::Red);
@@ -29,6 +29,7 @@ Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.position.Set(position.x/SCALE, position.y/SCALE* -1);
+	bodyDef.bullet = true;
 	body = world->CreateBody(&bodyDef);
 
 	b2PolygonShape boxShape;
@@ -64,13 +65,13 @@ SpriteObj* Cube::NewThis()
 void Cube::SetCubeBodyPos(Vector2f pos)
 {
 	b2Vec2 newPos({ pos.x/SCALE,pos.y/SCALE * -1 });
-	body->SetTransform(newPos, body->GetAngle());
+	body->SetTransform(newPos, 0);
 }
 
 void Cube::ChangeBodyTypeBetweenStaticAndDynamic(bool b)
 {
 	if (b) {
-		body->SetType(b2BodyType::b2_staticBody);
+		body->SetType(b2BodyType::b2_kinematicBody);
 		grab = true;
 	}else{
 		body->SetType(b2BodyType::b2_dynamicBody);
@@ -80,15 +81,15 @@ void Cube::ChangeBodyTypeBetweenStaticAndDynamic(bool b)
 
 void Cube::Update(float dt)
 {
-	Utils::SetOrigin(*hitbox, Origins::BC);
+	Utils::SetOrigin(*hitbox, Origins::MC);
 
-	Utils::ChangeBCSpriteSFMLPosToBox2dPos(*this, *body,dt);
-	sprite.setRotation(body->GetAngle());
+	Vector2f temp(body->GetPosition().x * SCALE, (body->GetPosition().y * SCALE * -1));
+	SetPos(temp);
+
+	sprite.setRotation(180.0 * body->GetAngle()*-1 / M_PI);
 
 	hitbox->setSize({ GetSize().x+10,GetSize().y});
 	hitbox->setPosition(GetPos() );
-	hitbox->setRotation(body->GetAngle());
-
 
 	if (body->GetLinearVelocity().x != 0) {
 		if (maxspeed.x > body->GetLinearVelocity().x && abs(maxspeed.x) <= maximumspeed)
