@@ -95,8 +95,7 @@ void Player::Update(float dt)
 
 	Utils::SetOrigin(*hitbox, Origins::BC);
 	hitbox->setSize({ GetSize()});
-	hitbox->setPosition(body->GetPosition().x * SCALE, body->GetPosition().x * SCALE);
-
+	hitbox->setPosition(GetPos());
 
 	if (body->GetLinearVelocity().x != 0) {
 		if (abs(recentspeed.x)<= maximumspeed)
