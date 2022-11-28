@@ -6,7 +6,7 @@
 class Tunnel :public SpriteObj
 {
 public:
-	Tunnel() {};
+	Tunnel();
 	Tunnel(const Vector2f& position, bool Horizon,int d, string buttonlist);
 	virtual ~Tunnel();
 
@@ -20,6 +20,7 @@ public:
 	void SetHitwall(bool a) { hitwall = a; }
 	FloatRect GetHitBoxGlobalbound() { return hitbox.getGlobalBounds(); }
 
+	virtual SpriteObj* NewThis() { return new Tunnel; }
 	void SetButtonlist(vector<Button*>& button);
 private:
 	list<Button*> button;

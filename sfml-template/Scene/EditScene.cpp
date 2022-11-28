@@ -1076,6 +1076,9 @@ void EditScene::FillUiToolBox()
 
 	uiTool[1][0].first = new Goal;
 	uiTool[1][0].first->SetResourceTexture("Graphics/Ui/goal.png");
+
+	uiTool[1][1].first = new Tunnel;
+	uiTool[1][1].first->SetResourceTexture("Graphics/Ui/tbeam.png");
 }
 
 void EditScene::SetUiToolPos(Vector2f pos)
@@ -1270,6 +1273,16 @@ void EditScene::Save()
 						WireableObject* wobj = (WireableObject*)tool;
 						button.buttonId = wobj->GetWireListFromMapTool().front();
 						saveObjInfo.buttons.push_back(button);
+						break;
+					}
+					case 't':
+					{
+						Tunnel_sturct tunnel;
+						tunnel.id = 't';
+						tunnel.posX = j;
+						tunnel.posY = posY;
+						tunnel.rotation = (int)tool->GetRotation();
+						saveObjInfo.tunnels.push_back(tunnel);
 					}
 					}
 				}

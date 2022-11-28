@@ -46,6 +46,13 @@ struct Button_sturct : public Object_struct
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Button_sturct, posX, posY, rotation, id, buttonId);
 };
 
+struct Tunnel_sturct : public Object_struct
+{
+	bool IsBlue;  //false=orange
+	bool active;
+	vector<int> buttonList;
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Tunnel_sturct, posX, posY, rotation, id, IsBlue, active, buttonList);
+};
 
 struct Data_struct
 {
@@ -55,5 +62,6 @@ struct Data_struct
 	vector<Tile_struct> tiles;
 	vector<Cube_struct> cubes;
 	vector<Button_sturct> buttons;
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Data_struct, map_size, player, goal, tiles, cubes, buttons);
+	vector<Tunnel_sturct> tunnels;
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Data_struct, map_size, player, goal, tiles, cubes, buttons, tunnels);
 };
