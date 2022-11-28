@@ -251,6 +251,10 @@ PlayScene::PlayScene(string path)
 	{
 		loadedArray[p.posY][p.posX].push_back(&p);
 	}
+	for (auto& p : loadObjInfo.tunnels)
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
 
 	for (int i = 0; i < colNum; i++)
 	{
