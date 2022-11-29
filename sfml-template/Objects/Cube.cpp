@@ -122,13 +122,13 @@ void Cube::Update(float dt)
 
 	speedtX += dt;
 	speedtY += dt;
-	if (speedtX >= 0.2f) {
+	if (speedtX >= 0.1f) {
 		maxspeed.x = 0;
 	//	cout << "x리셋" << endl;
 		speedtX = 0;
 
 	}
-	if (speedtY >= 0.2f) {
+	if (speedtY >= 0.1f) {
 		maxspeed.y = 0;
 	//	cout << "y리셋" << endl;
 		speedtY = 0;
