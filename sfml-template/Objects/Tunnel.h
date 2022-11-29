@@ -2,37 +2,53 @@
 #include <SFML/Graphics.hpp>
 #include "WireableObject.h"
 #include "Button.h"
+#include "Tile.h"
 
 class Tunnel : public WireableObject
 {
 public:
 	Tunnel();
-	Tunnel(const Vector2f& position, bool Horizon,int d, string buttonlist);
+	Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool Isblue, bool active,int connected);
 	virtual ~Tunnel();
 
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);
 
 	void SetDir(bool b) { IsBlue = b; }  //true==blue,false=orange
-	bool GetDir() { return IsBlue; }
+	bool GetColor() { return IsBlue; }
+
+	void ChangeDir();
+	void ChangeColor();
+	void TurnOn();
 
 	bool GetHitwall() { return hitwall; }
 	void SetHitwall(bool a) { hitwall = a; }
 	FloatRect GetHitBoxGlobalbound() { return hitbox.getGlobalBounds(); }
-
+	
+	void Setwhohitwall(Tile& victim) { whohitwall = &victim; }
 	virtual SpriteObj* NewThis() { return new Tunnel; }
+
 	virtual void SetButtonlist(vector<Button*>& button);
 	virtual void SetButtonlist(vector<int> idList) { buttonid = idList; }
+
+	FloatRect GetHitbox() { return hitbox.getGlobalBounds(); }
+
+	int GetDir() { return dir; }
+	Vector2f GetTunsPos() { return tuns.getPosition(); }
+	int GetConnected() { return connected; }
+
 private:
 	list<Button*> button;
 	vector<int>buttonid;
 
+	Tile* whohitwall = nullptr;
 	RectangleShape tuns;
 	RectangleShape hitbox;
-	bool IsBlue = true;
-	bool active = false;
+	Vector2f startpos;
+	bool IsBlue;
+	bool active;
 	bool hitwall = false;
 	int dir = 0;
-
+	int connected = 0; //0==none 1==follow blue 2==follow orange
 };
 

@@ -55,6 +55,7 @@ public:
 	void MakeTunnel(string dir, string id);
 
 	void PushButton();
+	void TunnelCheck();
 	Vector2f CameraMove(Vector2f currpos, Vector2f playerpos,float, float dt);
 
 	void MoveToPortal();
@@ -88,6 +89,9 @@ private:
 	bool madeorange = false;
 
 	bool grabitem = false;
+
+	bool IsMadeTunnelFollowOrangePortal = false;
+	bool IsMadeTunnelFollowBluePortal = false;
 
 	RectangleShape ending;
 
