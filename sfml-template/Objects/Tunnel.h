@@ -17,6 +17,10 @@ public:
 	void SetDir(bool b) { IsBlue = b; }  //true==blue,false=orange
 	bool GetColor() { return IsBlue; }
 
+	void ChangeDir();
+	void ChangeColor();
+	void TurnOn();
+
 	bool GetHitwall() { return hitwall; }
 	void SetHitwall(bool a) { hitwall = a; }
 	FloatRect GetHitBoxGlobalbound() { return hitbox.getGlobalBounds(); }

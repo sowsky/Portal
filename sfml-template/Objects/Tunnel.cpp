@@ -11,9 +11,13 @@ Tunnel::Tunnel()
 }
 
 Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool Isblue, bool active, int connected)
-	:IsBlue(Isblue), dir(dir), active(active),connected(connected)
+	:IsBlue(Isblue), dir(dir), active(active), connected(connected)
 {
-	tuns.setFillColor(Color(0, 255, 0, 128));
+	if (Isblue)
+		tuns.setFillColor(Color(0, 255, 0, 128));
+	else{
+		tuns.setFillColor(Color(255, 255, 0, 128));
+	}
 
 	for (int i = 0; i < buttonlist.size(); i++) {
 		char temp = buttonlist[i];
@@ -24,7 +28,7 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 	if (dir == 0 || dir == 2) {
 		if (dir == 0) {
 			Utils::SetOrigin(tuns, Origins::TC);
-			startpos={ position.x, position.y - GRIDSIZE / 2 };
+			startpos = { position.x, position.y - GRIDSIZE / 2 };
 			tuns.setPosition(startpos);
 		}
 		else if (dir == 2) {
@@ -37,12 +41,12 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 	else {
 		if (dir == 1) {
 			Utils::SetOrigin(tuns, Origins::MR);
-			startpos ={ position.x + GRIDSIZE / 2,position.y };
+			startpos = { position.x + GRIDSIZE / 2,position.y };
 			tuns.setPosition(startpos);
 		}
 		else if (dir == 3) {
 			Utils::SetOrigin(tuns, Origins::ML);
-			startpos={ position.x - GRIDSIZE / 2,position.y };
+			startpos = { position.x - GRIDSIZE / 2,position.y };
 			tuns.setPosition(startpos);
 
 		}
@@ -62,11 +66,35 @@ Tunnel::~Tunnel()
 
 void Tunnel::Update(float dt)
 {
-	static bool test = false;
-	if (InputMgr::GetKeyDown(Keyboard::A))
-	{
-		test = !test;
+	if (!active) {
+		if (dir == 0 || dir == 2) {
+			if (dir == 0) {
+				Utils::SetOrigin(tuns, Origins::TC);
+				tuns.setPosition(startpos);
+			}
+			else if (dir == 2) {
+				Utils::SetOrigin(tuns, Origins::BC);
+				tuns.setPosition(startpos);
+			}
+			tuns.setSize({ 50,0 });
+		}
+		else {
+			if (dir == 1) {
+				Utils::SetOrigin(tuns, Origins::MR);
+				tuns.setPosition(startpos);
+			}
+			else if (dir == 3) {
+				Utils::SetOrigin(tuns, Origins::ML);
+				tuns.setPosition(startpos);
+
+			}
+			tuns.setSize({ 0,50 });
+		}
+		hitbox.setSize(tuns.getSize());
+		hitwall = false;
+		return;
 	}
+
 	if (!hitwall) {
 		if (dir == 0 || dir == 2) {
 			tuns.setSize({ tuns.getSize().x,tuns.getSize().y + 50 });
@@ -90,25 +118,25 @@ void Tunnel::Update(float dt)
 
 		}
 	}
-	else if (hitwall&&whohitwall!=nullptr) {
+	else if (hitwall && whohitwall != nullptr) {
 		if (dir == 0) {
-			tuns.setSize({ tuns.getSize().x,whohitwall->GetGlobalBounds().top-tuns.getPosition().y});
+			tuns.setSize({ tuns.getSize().x,whohitwall->GetGlobalBounds().top - tuns.getPosition().y });
 		}
 		else if (dir == 2) {
 			Utils::SetOrigin(tuns, Origins::BC);
-			tuns.setSize({ tuns.getSize().x,tuns.getPosition().y-(whohitwall->GetGlobalBounds().top+whohitwall->GetGlobalBounds().height)});
+			tuns.setSize({ tuns.getSize().x,tuns.getPosition().y - (whohitwall->GetGlobalBounds().top + whohitwall->GetGlobalBounds().height) });
 
 		}
 		else if (dir == 1) {
 			Utils::SetOrigin(tuns, Origins::MR);
 
-			tuns.setSize({ tuns.getPosition().x - (whohitwall->GetGlobalBounds().left+whohitwall->GetGlobalBounds().width),tuns.getSize().y});
+			tuns.setSize({ tuns.getPosition().x - (whohitwall->GetGlobalBounds().left + whohitwall->GetGlobalBounds().width),tuns.getSize().y });
 
 		}
 		else if (dir == 3) {
 			Utils::SetOrigin(tuns, Origins::ML);
 
-			tuns.setSize({(whohitwall->GetGlobalBounds().left)-tuns.getPosition().x,tuns.getSize().y });
+			tuns.setSize({ (whohitwall->GetGlobalBounds().left) - tuns.getPosition().x,tuns.getSize().y });
 
 		}
 	}
@@ -142,6 +170,40 @@ void Tunnel::Draw(RenderWindow& window)
 
 	SpriteObj::Draw(window);
 	//window.draw(hitbox);
+}
+
+void Tunnel::ChangeDir()
+{
+	if (dir == 0)
+		dir = 2;
+	else if (dir == 1)
+		dir = 3;
+	else if (dir == 2)
+		dir = 0;
+	else if (dir == 3)
+		dir = 1;
+}
+
+void Tunnel::ChangeColor()
+{
+	IsBlue = !IsBlue;
+	if (IsBlue)
+		tuns.setFillColor(Color(0, 255, 0, 128));
+	else {
+		tuns.setFillColor(Color(255, 255, 0, 128));
+	}
+}
+
+void Tunnel::TurnOn()
+{
+	for (auto b : button) {
+		if (!b->GetPressed()) {
+			active = false;
+		}
+	}
+
+	//active door
+	active = true;
 }
 
 void Tunnel::SetButtonlist(vector<Button*>& button)

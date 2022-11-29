@@ -286,7 +286,7 @@ PlayScene::PlayScene(string path)
 					case 'T':
 					{
 						Tunnel_sturct* tempT = (Tunnel_sturct*)obj;
-						tunnel.push_back(new Tunnel({ currgrid.x,currgrid.y }, tempT->rotation, tempT->buttonList, tempT->IsBlue, tempT->active, 0));
+						tunnel.push_back(new Tunnel({ currgrid.x,currgrid.y }, tempT->rotation, tempT->buttonList,0, tempT->active, 0));
 
 						int rotaion = tempT->rotation;
 						if (rotaion == 0) {			//top of gird
@@ -481,7 +481,10 @@ void PlayScene::MakePortal()
 
 	}
 
-	if (bluecollidercount == 2) {
+	if (madeorange&&orange->GetGlobalBounds().intersects(blue->GetGlobalBounds())) {
+		particle.emitParticles(blue->GetPos(), false);
+		blue->SetPos({ -1000,-1000 });
+	}else if (bluecollidercount == 2) {
 		//bottom
 		if (bluetlhit && bluetrhit) {
 			blue->SetLightDir(90);
@@ -614,8 +617,10 @@ void PlayScene::MakePortal()
 
 	}
 
-	if (orangecollidercount == 2) {
-
+	if (madeblue&& blue->GetGlobalBounds().intersects(orange->GetGlobalBounds())) {
+		particle.emitParticles(orange->GetPos(), false);
+		orange->SetPos({ -1000,-1000 });
+	}else if (orangecollidercount == 2) {
 		//bottom
 		if (orangetlhit && orangetrhit) {
 			orange->SetLightDir(90);
@@ -741,6 +746,11 @@ void PlayScene::TunnelCheck()
 							player->GetBody()->SetLinearVelocity({ player->GetBody()->GetLinearVelocity().x,-2 });
 
 					}
+					if (!t->GetColor()) {
+						float x = player->GetPlayerBodyLinearVelocity().x;
+						float y = player->GetPlayerBodyLinearVelocity().y;
+						player->GetBody()->SetLinearVelocity({x,y*-1});
+					}
 				}
 				else if (t->GetDir() == 2) {
 					if (!player->GetIsMoving()) {
@@ -755,6 +765,11 @@ void PlayScene::TunnelCheck()
 						else
 							player->GetBody()->SetLinearVelocity({ player->GetBody()->GetLinearVelocity().x,2 });
 
+					}
+					if (!t->GetColor()) {
+						float x = player->GetPlayerBodyLinearVelocity().x;
+						float y = player->GetPlayerBodyLinearVelocity().y;
+						player->GetBody()->SetLinearVelocity({ x,y*-1 });
 					}
 				}
 				else if (t->GetDir() == 1) {
