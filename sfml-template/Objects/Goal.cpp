@@ -5,7 +5,7 @@
 #include "../FrameWork/InputMgr.h"
 #include "../FrameWork/Const.h"
 
-Goal::Goal()
+Goal::Goal()	
 {
 	SetResourceTexture("Graphics/goal2.png");
 	
@@ -19,7 +19,7 @@ Goal::Goal()
 
 }
 
-Goal::Goal(Vector2f currgrid, float size, vector<int> buttonlist)
+Goal::Goal(Vector2f currgrid, float size, vector<int> buttonlist)	
 {
 	SetResourceTexture("Graphics/goal.png");
 	id = '@';
@@ -44,6 +44,24 @@ Goal::Goal(Vector2f currgrid, float size, vector<int> buttonlist)
 	rightDoorPos = pos.x;
 
 	on = false;
+
+	float dp = DEPTH * 2 - 1.f;
+	backFace.setSize({ GRIDSIZE * dp, GRIDSIZE * dp });
+	Utils::SetOrigin(backFace, Origins::MC);
+
+	Vector2u goalTexSize = sprite.getTexture()->getSize();
+	normalMap = RESOURCEMGR->GetTexture("Graphics/goaln.png");
+	for (int i = 0; i < sideTiles.size(); i++)
+	{
+		tileTextures[i] = RESOURCEMGR->GetTexture("Graphics/goalside.png");
+		sideTiles[i].first = true;
+		sideTiles[i].second.setPrimitiveType(Quads);
+		sideTiles[i].second.resize(4);
+		sideTiles[i].second[0].texCoords = { 0.f, 0.f };
+		sideTiles[i].second[1].texCoords = { (float)goalTexSize.x, 0.f };
+		sideTiles[i].second[2].texCoords = (Vector2f)goalTexSize;
+		sideTiles[i].second[3].texCoords = { 0.f, (float)goalTexSize.y };
+	}
 }
 
 Goal::~Goal()
@@ -73,9 +91,73 @@ void Goal::Update(float dt)
 }
 
 void Goal::Draw(RenderWindow& window)
+{	
+	if (!isPlayingGame)
+	{		
+		WireableObject::Draw(window);
+	}	
+	if (isPlayingGame)
+	{
+		DrawSides(window);
+		window.draw(door, doorTex);
+		window.draw(sprite);
+	}		
+}
+
+void Goal::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
 {
-	window.draw(door, doorTex);
-	WireableObject::Draw(window);
+	//diffuse.draw(sprite);
+	//NormalPass(normal, sprite, normalMap, nShader);
+}
+
+void Goal::DrawSides(RenderWindow& window)
+{
+	Vector2f vanishingPoint = window.getView().getCenter();
+
+	backFace.setPosition(
+		sprite.getPosition() + (vanishingPoint - sprite.getPosition()) * (1.f - DEPTH)
+	);
+
+	FloatRect backRect = backFace.getGlobalBounds();
+	FloatRect frontRect = sprite.getGlobalBounds();
+
+	if (sideTiles[0].first)
+	{
+		sideTiles[0].second[0].position = { backRect.left, backRect.top };
+		sideTiles[0].second[1].position = { backRect.left + backRect.width, backRect.top };
+		sideTiles[0].second[2].position = { frontRect.left + frontRect.width, frontRect.top };
+		sideTiles[0].second[3].position = { frontRect.left, frontRect.top };
+	}
+
+	if (sideTiles[1].first)
+	{
+		sideTiles[1].second[0].position = { frontRect.left + frontRect.width, frontRect.top };
+		sideTiles[1].second[1].position = { backRect.left + backRect.width, backRect.top };
+		sideTiles[1].second[2].position = { backRect.left + backRect.width, backRect.top + backRect.height };
+		sideTiles[1].second[3].position = { frontRect.left + frontRect.width, frontRect.top + frontRect.height };
+	}
+
+	if (sideTiles[2].first)
+	{
+		sideTiles[2].second[0].position = { backRect.left, backRect.top + backRect.height };
+		sideTiles[2].second[1].position = { backRect.left + backRect.width, backRect.top + backRect.height };
+		sideTiles[2].second[2].position = { frontRect.left + frontRect.width, frontRect.top + frontRect.height };
+		sideTiles[2].second[3].position = { frontRect.left , frontRect.top + frontRect.height };
+	}
+
+	if (sideTiles[3].first)
+	{
+		sideTiles[3].second[0].position = { frontRect.left, frontRect.top };
+		sideTiles[3].second[1].position = { backRect.left, backRect.top };
+		sideTiles[3].second[2].position = { backRect.left, backRect.top + backRect.height };
+		sideTiles[3].second[3].position = { frontRect.left , frontRect.top + frontRect.height };
+	}
+
+	for (int i = 0; i < sideTiles.size(); i++)
+	{
+		if (sideTiles[i].first)
+			window.draw(sideTiles[i].second, tileTextures[i]);
+	}
 }
 
 void Goal::SetDoor(float dt)

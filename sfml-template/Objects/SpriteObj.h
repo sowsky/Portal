@@ -2,6 +2,7 @@
 #include "Object.h"
 #include "../FrameWork/Utils.h"
 #include <string>
+#include "VertexArrayObj.h"
 
 enum class ObjectType
 {

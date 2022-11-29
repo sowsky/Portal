@@ -5,7 +5,6 @@
 #include <list>
 
 class Button;
-
 class Goal : public WireableObject
 
 {
@@ -18,6 +17,9 @@ public:
 
     virtual void Update(float dt);
     virtual void Draw(RenderWindow& window);
+    virtual void Draw
+    (RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
+    void DrawSides(RenderWindow& window);
     void Setbutton(Button* but) { button.push_back(but); }
     bool GetOn() { return on; }
 
@@ -41,5 +43,7 @@ protected:
     float leftDoorPos;
     float rightDoorPos;
 
-    
+    RectangleShape backFace;
+    array<pair<bool, VertexArray>, 4> sideTiles;
+    array<Texture*, 4> tileTextures;
 };

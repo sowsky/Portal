@@ -150,6 +150,11 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
 	}
 
+	if (goal != nullptr) {
+		goal->Draw(window);
+		//goal->Draw(pass_diffuse, normals_shader, pass_normals);
+	}
+
 	DrawRenderedBuffer(window);
 
 	if (madeorange) {
@@ -161,9 +166,7 @@ void PlayScene::Draw(RenderWindow& window)
 	}
 
 
-	if (goal != nullptr) {
-		goal->Draw(window);
-	}
+
 	if (player != nullptr)
 		player->Draw(window);
 
