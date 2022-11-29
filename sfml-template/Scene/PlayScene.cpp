@@ -164,13 +164,14 @@ void PlayScene::Draw(RenderWindow& window)
 	for (auto v : button) {
 		v->Draw(window);
 	}
+	for (auto v : cube) {
+		v->Draw(window);
+	}
 	for (auto v : tunnel) {
 		v->Draw(window);
 	}
 
-	for (auto v : cube) {
-		v->Draw(window);
-	}
+
 
 	if (particle.running())
 		window.draw(particle);
@@ -286,7 +287,7 @@ PlayScene::PlayScene(string path)
 					case 'T':
 					{
 						Tunnel_sturct* tempT = (Tunnel_sturct*)obj;
-						tunnel.push_back(new Tunnel({ currgrid.x,currgrid.y }, tempT->rotation, tempT->buttonList,0, tempT->active, 0));
+						tunnel.push_back(new Tunnel({ currgrid.x,currgrid.y }, tempT->rotation, tempT->buttonList, 0, tempT->active, 0));
 
 						int rotaion = tempT->rotation;
 						if (rotaion == 0) {			//top of gird
@@ -481,10 +482,11 @@ void PlayScene::MakePortal()
 
 	}
 
-	if (madeorange&&orange->GetGlobalBounds().intersects(blue->GetGlobalBounds())) {
+	if (madeorange && orange->GetGlobalBounds().intersects(blue->GetGlobalBounds())) {
 		particle.emitParticles(blue->GetPos(), false);
 		blue->SetPos({ -1000,-1000 });
-	}else if (bluecollidercount == 2) {
+	}
+	else if (bluecollidercount == 2) {
 		//bottom
 		if (bluetlhit && bluetrhit) {
 			blue->SetLightDir(90);
@@ -617,10 +619,11 @@ void PlayScene::MakePortal()
 
 	}
 
-	if (madeblue&& blue->GetGlobalBounds().intersects(orange->GetGlobalBounds())) {
+	if (madeblue && blue->GetGlobalBounds().intersects(orange->GetGlobalBounds())) {
 		particle.emitParticles(orange->GetPos(), false);
 		orange->SetPos({ -1000,-1000 });
-	}else if (orangecollidercount == 2) {
+	}
+	else if (orangecollidercount == 2) {
 		//bottom
 		if (orangetlhit && orangetrhit) {
 			orange->SetLightDir(90);
@@ -749,7 +752,7 @@ void PlayScene::TunnelCheck()
 					if (!t->GetColor()) {
 						float x = player->GetPlayerBodyLinearVelocity().x;
 						float y = player->GetPlayerBodyLinearVelocity().y;
-						player->GetBody()->SetLinearVelocity({x,y*-1});
+						player->GetBody()->SetLinearVelocity({ x,y * -1 });
 					}
 				}
 				else if (t->GetDir() == 2) {
@@ -769,7 +772,7 @@ void PlayScene::TunnelCheck()
 					if (!t->GetColor()) {
 						float x = player->GetPlayerBodyLinearVelocity().x;
 						float y = player->GetPlayerBodyLinearVelocity().y;
-						player->GetBody()->SetLinearVelocity({ x,y*-1 });
+						player->GetBody()->SetLinearVelocity({ x,y * -1 });
 					}
 				}
 				else if (t->GetDir() == 1) {
@@ -788,7 +791,7 @@ void PlayScene::TunnelCheck()
 				}
 				else if (t->GetDir() == 3) {
 					if (!player->GetIsMoving()) {
-						float y = player->GetPos().y - player->GetSize().y/2 - t->GetTunsPos().y;
+						float y = player->GetPos().y - player->GetSize().y / 2 - t->GetTunsPos().y;
 						player->GetBody()->SetLinearVelocity({ 2,y });
 					}
 					else
@@ -799,6 +802,28 @@ void PlayScene::TunnelCheck()
 						else
 							player->GetBody()->SetLinearVelocity({ 0.2f,player->GetBody()->GetLinearVelocity().y });
 
+					}
+				}
+			}
+
+			//////////////////cube check/////////////////////////
+			for (auto c : cube) {
+				if (t->GetHitBoxGlobalbound().intersects(c->GetGlobalBounds())) {
+					if (t->GetDir() == 0) {
+						float x = c->GetPos().x - t->GetTunsPos().x;
+						c->GetBody()->SetLinearVelocity({ x * -1 / 10,-2.f });
+					}
+					else if (t->GetDir() == 2) {
+						float x = c->GetPos().x - t->GetTunsPos().x;
+						c->GetBody()->SetLinearVelocity({ x * -1 / 10,2.f });
+					}
+					else if (t->GetDir() == 1) {
+						float y = c->GetPos().y - t->GetTunsPos().y;
+						c->GetBody()->SetLinearVelocity({ -2.f,y });
+					}
+					else if (t->GetDir() == 3) {
+						float y = c->GetPos().y - t->GetTunsPos().y;
+						c->GetBody()->SetLinearVelocity({ 2.f,y });
 					}
 				}
 			}
@@ -1160,7 +1185,7 @@ void PlayScene::MoveToPortal()
 				dir = 2;
 			}
 			else if (orange->GetPortalDir() == 1) {
-				pos = { orange->GetPos().x +50,orange->GetPos().y };
+				pos = { orange->GetPos().x + 50,orange->GetPos().y };
 				dir = 3;
 			}
 			else if (orange->GetPortalDir() == 2) {
@@ -1168,7 +1193,7 @@ void PlayScene::MoveToPortal()
 				dir = 0;
 			}
 			else if (orange->GetPortalDir() == 3) {
-				pos = { orange->GetPos().x -50,orange->GetPos().y };
+				pos = { orange->GetPos().x - 50,orange->GetPos().y };
 				dir = 1;
 
 			}
