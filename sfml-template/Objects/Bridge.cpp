@@ -2,6 +2,11 @@
 
 Bridge::Bridge()
 {
+	SetResourceTexture("Graphics/temp/bridge.png");
+	id = 'l';
+
+	objSize = ObjectSize::Normal;
+	type = ObjectType::Catcher;
 }
 
 Bridge::Bridge(b2World* world, const Vector2f& position, Vector2f dimensions, int dir)
@@ -39,4 +44,5 @@ void Bridge::Update(float dt)
 
 void Bridge::Draw(RenderWindow& window)
 {
+	WireableObject::Draw(window);
 }

@@ -155,7 +155,7 @@ void Cube::Draw(RenderWindow& window)
 void Cube::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
 {
 	diffuse.draw(frontFace);
-	NormalPass(normal, frontFace, normalMap, nShader);
+	NormalPass(normal, frontFace, this->normal, nShader);
 }
 
 void Cube::SetSide(bool s)

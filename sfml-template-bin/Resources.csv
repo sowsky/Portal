@@ -2,11 +2,14 @@ id,"type(0: Texture, 1: Font, 2: Sound "
 Graphics/temp/cube.png,0
 Graphics/temp/cuben.png,0
 Graphics/temp/tunneltool.png,0
+Graphics/temp/bridge.png,0
 Graphics/grid.png,0
 Graphics/button.png,0
 Graphics/cube.png,0
 Graphics/goal.png,0
 Graphics/goaln.png,0
+Graphics/goalback.png,0
+Graphics/goalbackn.png,0
 Graphics/goalside.png,0
 Graphics/goal2.png,0
 Graphics/door.png,0
@@ -14,6 +17,7 @@ Graphics/goalopen.png,0
 Graphics/player.png,0
 Graphics/wire.png,0
 Graphics/test.png,0
+Graphics/Ui/bridge.png,0
 Graphics/Ui/wirearrow.png,0
 Graphics/Ui/numbox.png,0
 Graphics/Ui/wirebox.png,0

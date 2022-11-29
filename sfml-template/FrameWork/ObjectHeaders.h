@@ -9,3 +9,4 @@
 #include "../Objects/Blue.h"
 #include "../Objects/Wire.h"
 #include "../Objects/Tunnel.h"
+#include "../Objects/Bridge.h"

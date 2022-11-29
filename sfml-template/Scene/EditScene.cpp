@@ -1081,6 +1081,9 @@ void EditScene::FillUiToolBox()
 
 	uiTool[1][1].first = new Tunnel;
 	uiTool[1][1].first->SetResourceTexture("Graphics/Ui/tbeam.png");
+
+	uiTool[1][2].first = new Bridge;
+	uiTool[1][2].first->SetResourceTexture("Graphics/Ui/bridge.png");
 }
 
 void EditScene::SetUiToolPos(Vector2f pos)

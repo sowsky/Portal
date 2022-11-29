@@ -887,9 +887,6 @@ void PlayScene::Input()
 			return;
 		zoomCount++;
 		worldView.zoom(0.94f);
-
-		width * 0.94f;
-		height * 0.94f;
 	}
 	if (InputMgr::GetMouseWheelState() == -1)
 	{
@@ -897,10 +894,6 @@ void PlayScene::Input()
 			return;
 		zoomCount--;
 		worldView.zoom(1.06f);
-
-		width * 1.06f;
-		height * 1.06f;
-
 	}
 
 	if (InputMgr::GetMouseButton(Mouse::Middle))

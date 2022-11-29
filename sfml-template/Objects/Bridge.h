@@ -1,8 +1,8 @@
 #pragma once
-#include "SpriteObj.h"
+#include "WireableObject.h"
 #include "Button.h"
 
-class Bridge : public SpriteObj
+class Bridge : public WireableObject
 {
 public:
 	Bridge();
@@ -10,6 +10,8 @@ public:
 	virtual ~Bridge();
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);
+
+	virtual SpriteObj* NewThis() { return new Bridge; }
 protected:
 	list<Button*> button;
 	vector<int>buttonid;
