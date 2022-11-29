@@ -44,7 +44,8 @@ public:
 	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
 public:
 	void SetResourceTexture(String id);
-	
+	void SetSpriteTex(Sprite& sprite, String id);
+
 	Sprite* GetSprite();
 
 	void SetScale(Vector2f scale);
@@ -68,10 +69,11 @@ public:
 	FloatRect GetGlobalBounds();
 
 	void NormalPass
-	(RenderTexture& normalPass, Sprite& sprite, Texture* tex, Shader& nShader);
+	(RenderTexture& normalPass, Drawable& sprite, Texture* tex, Shader& nShader);
 	static void OnOffWiringState() { isWiring = !isWiring; }
 	static void OnOffWiringState(bool onoff) { isWiring = onoff; }
-	
+	static void SetIsPlayingGame(bool play) { isPlayingGame = play; }
+
 	virtual bool GetWiringState() { return isWiring; }		
 
 	void SetBoolInMapTool(bool isIn) { isInMapTool = isIn; }
@@ -94,5 +96,7 @@ protected:
 
 	static bool isWiring;	
 	bool isInMapTool;
+
+	static bool isPlayingGame;
 };
 

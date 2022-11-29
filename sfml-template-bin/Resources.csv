@@ -1,4 +1,6 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
+Graphics/obj/cube.png,0
+Graphics/obj/cuben.png,0
 Graphics/grid.png,0
 Graphics/button.png,0
 Graphics/cube.png,0
@@ -38,6 +40,12 @@ Graphics/Tile/tile2.png,0
 Graphics/Tile/tile2n.png,0
 Graphics/Tile/tile3.png,0
 Graphics/Tile/tile3n.png,0
+Graphics/Tile/64/tile1.png,0
+Graphics/Tile/64/tile1n.png,0
+Graphics/Tile/64/tile2.png,0
+Graphics/Tile/64/tile2n.png,0
+Graphics/Tile/64/tile3.png,0
+Graphics/Tile/64/tile3n.png,0
 Graphics/backgrounds/narrow.png,0
 Graphics/backgrounds/ruin.png,0
 Graphics/backgrounds/ruin2.png,0

@@ -25,12 +25,13 @@ public:
 	b2Fixture* GetFixture() { return fixture; }
 
 
-	static void SetIsPlayingGame(bool play) { isPlayingGame = play; }
+	
 	string GetRandTileTex();
+	string GetRandTileTex64();
 
 	void GetRandDiffuseAndNormal();
+	void GetRandDiffuseAndNormal64();
 	void SetActiveSideTiles(int pos, bool active);
-	void SetFrontFacePosition(RenderWindow& window);
 	void SetSideTilesPosition(RenderWindow& window);
 	void DrawSideTiles(RenderWindow& window);
 protected:
@@ -38,13 +39,12 @@ protected:
 	b2Fixture* fixture = nullptr;
 
 	RectangleShape* hitbox;
-
-	static bool isPlayingGame;
+	
 
 	Texture* normal;
 	RectangleShape backFace;
 	Sprite frontFace;
 	array<pair<bool, VertexArray>, 4> sideTiles;
-	array<Texture*, 4> tileTextures;
+	array<Texture*, 4> tileTextures;	
 };
 

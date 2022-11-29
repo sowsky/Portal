@@ -5,11 +5,9 @@
 #include "../FrameWork/InputMgr.h"
 #pragma warning(disable:4996)
 
-bool Tile::isPlayingGame = false;
-
 Tile::Tile()
 {
-	SetResourceTexture(GetRandTileTex());
+	SetResourceTexture(GetRandTileTex64());
 	id = '1';
 
 	type = ObjectType::Tile;
@@ -54,7 +52,6 @@ void Tile::Update(float dt)
 	Utils::SetOrigin(*hitbox, Origins::MC);
 	hitbox->setSize({ });
 	hitbox->setPosition(GetPos());
-
 }
 
 void Tile::Draw(RenderWindow& window)
@@ -62,17 +59,17 @@ void Tile::Draw(RenderWindow& window)
 	if (!isPlayingGame)
 		window.draw(sprite);
 
-
 	if(isPlayingGame)
 		DrawSideTiles(window);	
-
-
 }
 
 void Tile::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
 {
-	diffuse.draw(sprite);
-	NormalPass(normal, sprite, normalMap, nShader);
+	//diffuse.draw(sprite);
+	//NormalPass(normal, sprite, normalMap, nShader);
+
+	diffuse.draw(frontFace);
+	NormalPass(normal, frontFace, normalMap, nShader);
 
 
 	if (hitbox != nullptr)
@@ -90,7 +87,7 @@ void Tile::PhysicsUpdate()
 
 Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*size of bunch wall */, Vector2f box2dposition, bool isEnd)
 {
-	GetRandDiffuseAndNormal();
+	GetRandDiffuseAndNormal64();
 	id = '1';
 	SetSize({ GRIDSIZE,GRIDSIZE });
 
@@ -116,26 +113,27 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*size o
 
 
 
-	SetPos({ position.x,position.y });
+	SetPos({ position.x,position.y });	
 
 	hitbox = new RectangleShape;
 	Utils::SetOrigin(*hitbox, Origins::MC);
 	hitbox->setFillColor(Color::Red);
-	hitbox->setPosition(GetPos());
-
-
-	SetPos({ position.x,position.y });
+	hitbox->setPosition(GetPos());	
 
 	type = ObjectType::Tile;
 
-	backFace.setSize({ GRIDSIZE * DEPTH, GRIDSIZE * DEPTH });
+	float dp = DEPTH * 2 - 1.f;
+	Utils::SetSpriteSize(frontFace, { FRONTSIZE, FRONTSIZE });
+	Utils::SetOrigin(frontFace, Origins::MC);
+
+	backFace.setSize({ FRONTSIZE * dp, FRONTSIZE * dp });
 	Utils::SetOrigin(backFace, Origins::MC);
 
 	Vector2u texSize = sprite.getTexture()->getSize();
 
 	for (int i = 0; i < sideTiles.size(); i++)
 	{
-		tileTextures[i] = RESOURCEMGR->GetTexture(GetRandTileTex());
+		tileTextures[i] = RESOURCEMGR->GetTexture(GetRandTileTex64());
 		sideTiles[i].first = true;
 		sideTiles[i].second.setPrimitiveType(Quads);
 		sideTiles[i].second.resize(4);
@@ -175,6 +173,26 @@ string Tile::GetRandTileTex()
 	return str;
 }
 
+string Tile::GetRandTileTex64()
+{
+	String str;
+	int rand = Utils::RandomRange(0, 3);
+	switch (rand)
+	{
+	case 0:
+		str = "Graphics/Tile/64/tile1.png";
+		break;
+	case 1:
+		str = "Graphics/Tile/64/tile2.png";
+		break;
+	case 2:
+		str = "Graphics/Tile/64/tile3.png";
+		break;
+	}
+
+	return str;
+}
+
 void Tile::GetRandDiffuseAndNormal()
 {
 	int rand = Utils::RandomRange(0, 3);
@@ -198,30 +216,48 @@ void Tile::GetRandDiffuseAndNormal()
 	}
 }
 
+void Tile::GetRandDiffuseAndNormal64()
+{
+	int rand = Utils::RandomRange(0, 3);
+	switch (rand)
+	{
+	case 0:
+		SetResourceTexture("Graphics/Tile/64/tile1.png");
+		frontFace.setTexture(*RESOURCEMGR->GetTexture("Graphics/Tile/64/tile1.png"));
+		normalMap = RESOURCEMGR->GetTexture("Graphics/Tile/64/tile1n.png");
+		break;
+	case 1:
+		SetResourceTexture("Graphics/Tile/tile2.png");
+		frontFace.setTexture(*RESOURCEMGR->GetTexture("Graphics/Tile/64/tile2.png"));
+		normalMap = RESOURCEMGR->GetTexture("Graphics/Tile/64/tile2n.png");
+		break;
+	case 2:
+		SetResourceTexture("Graphics/Tile/64/tile3.png");
+		frontFace.setTexture(*RESOURCEMGR->GetTexture("Graphics/Tile/64/tile3.png"));
+		normalMap = RESOURCEMGR->GetTexture("Graphics/Tile/64/tile3n.png");
+		break;
+	}
+}
+
 void Tile::SetActiveSideTiles(int pos, bool active)
 {
 	sideTiles[pos].first = active;
 }
 
-void Tile::SetFrontFacePosition(RenderWindow& window)
-{
-	Vector2f vanishingPoint = window.getView().getCenter();
-
-
-}
-
 void Tile::SetSideTilesPosition(RenderWindow& window)
 {
+	Vector2f vanishingPoint = window.getView().getCenter();		
 
-	Vector2f vanishingPoint = window.getView().getCenter();
-	//Vector2f vanishingPoint = { WINDOW_WIDTH / 2,WINDOW_HEIGHT / 2 };
+	frontFace.setPosition(
+		sprite.getPosition() - (vanishingPoint - sprite.getPosition()) * (1.f - DEPTH)
+	);
 
 	backFace.setPosition(
 		sprite.getPosition() + (vanishingPoint - sprite.getPosition()) * (1.f - DEPTH)
 	);
 
 	FloatRect backRect = backFace.getGlobalBounds();
-	FloatRect frontRect = sprite.getGlobalBounds();
+	FloatRect frontRect = frontFace.getGlobalBounds();
 
 	if (sideTiles[0].first)
 	{
@@ -265,4 +301,6 @@ void Tile::DrawSideTiles(RenderWindow& window)
 		if (sideTiles[i].first)
 			window.draw(sideTiles[i].second, tileTextures[i]);
 	}
+
+	//window.draw(backFace);
 }

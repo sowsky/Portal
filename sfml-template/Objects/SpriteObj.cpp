@@ -2,6 +2,7 @@
 #include "../Manager/ResourceMgr.h"
 #pragma warning(disable:4996)
 
+bool SpriteObj::isPlayingGame = false;
 bool SpriteObj::isWiring = false;
 
 SpriteObj::SpriteObj()
@@ -41,6 +42,11 @@ void SpriteObj::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& nor
 
 void SpriteObj::SetResourceTexture(String id)
 {	
+	sprite.setTexture(*RESOURCEMGR->GetTexture(id), true);
+}
+
+void SpriteObj::SetSpriteTex(Sprite& sprite, String id)
+{
 	sprite.setTexture(*RESOURCEMGR->GetTexture(id), true);
 }
 
@@ -139,7 +145,7 @@ FloatRect SpriteObj::GetGlobalBounds()
 	return sprite.getGlobalBounds();
 }
 
-void SpriteObj::NormalPass(RenderTexture& normalPass, Sprite& sprite, Texture* tex, Shader& nShader)
+void SpriteObj::NormalPass(RenderTexture& normalPass, Drawable& sprite, Texture* tex, Shader& nShader)
 {
 	nShader.setParameter("sampler_normal", *tex);
 	normalPass.draw(sprite, &nShader);

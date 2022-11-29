@@ -1,9 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "SpriteObj.h"
+#include "WireableObject.h"
 #include "Button.h"
 
-class Tunnel :public SpriteObj
+class Tunnel : public WireableObject
 {
 public:
 	Tunnel();
@@ -21,7 +21,8 @@ public:
 	FloatRect GetHitBoxGlobalbound() { return hitbox.getGlobalBounds(); }
 
 	virtual SpriteObj* NewThis() { return new Tunnel; }
-	void SetButtonlist(vector<Button*>& button);
+	virtual void SetButtonlist(vector<Button*>& button);
+	virtual void SetButtonlist(vector<int> idList) { buttonid = idList; }
 private:
 	list<Button*> button;
 	vector<int>buttonid;

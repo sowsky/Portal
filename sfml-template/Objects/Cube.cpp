@@ -1,8 +1,10 @@
 #include "Cube.h"
 #include "../FrameWork/Const.h"
 #include "../FrameWork/stdafx.h"
+#include "../Manager/ResourceMgr.h"
 
 Cube::Cube()
+	:sideFaces(frontFace, sprite)
 {
 	SetResourceTexture("Graphics/cube.png");
 	id = 'c';
@@ -15,16 +17,19 @@ Cube::Cube()
 }
 
 Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
-{
+	:sideFaces(frontFace, sprite)
+{	
 	SetResourceTexture("Graphics/cube.png");
 	id = 'c';
+	float cubeSize = 30.f;
+	Vector2f cubeSizeV2f = { cubeSize,cubeSize };
 
 	Utils::SetSpriteSize(sprite, dimensions);
 	Utils::SetOrigin(sprite, Origins::MC);
-	Utils::SetSpriteSize(sprite, { 30,30 });
+	Utils::SetSpriteSize(sprite, cubeSizeV2f);
 	hitbox = new RectangleShape;
 	hitbox->setFillColor(Color::Red);
-	hitbox->setSize({ sprite.getGlobalBounds().width + 30,sprite.getGlobalBounds().height });
+	hitbox->setSize({ sprite.getGlobalBounds().width + cubeSize,sprite.getGlobalBounds().height });
 
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
@@ -33,7 +38,7 @@ Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
 	body = world->CreateBody(&bodyDef);
 
 	b2PolygonShape boxShape;
-	boxShape.SetAsBox(30.f/ SCALE / 2.0f, 30.f/ SCALE / 2.0f);
+	boxShape.SetAsBox(30.f/ SCALE / 2.0f, cubeSize / SCALE / 2.0f);
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
@@ -48,6 +53,18 @@ Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
 	SetPos({ tempx,tempy });
 	hitbox->setPosition(GetPos());
 
+	///////
+	Vector2f frontSize = { cubeSizeV2f.x / DEPTH, cubeSizeV2f.y / DEPTH };
+
+	SetSpriteTex(frontFace, "Graphics/obj/cube.png");
+	Utils::SetOrigin(frontFace, Origins::MC);
+	Utils::SetSpriteSize(frontFace, frontSize);
+	normal = RESOURCEMGR->GetTexture("Graphics/obj/cuben.png");
+
+	sideFaces.SetDepth(DEPTH + 0.005f);
+	sideFaces.SetAllSidesTex("Graphics/obj/cube.png");
+	sideFaces.SetBackFaceSize(frontSize);
+	sideFaces.SetBackFaceOrigin(Origins::MC);
 }
 
 Cube::~Cube()
@@ -127,9 +144,18 @@ void Cube::PhysicsUpdate()
 
 void Cube::Draw(RenderWindow& window)
 {
-
-	SpriteObj::Draw(window);
+	if (isPlayingGame)
+		sideFaces.Draw(window);
+	
+	if (!isPlayingGame)
+		SpriteObj::Draw(window);
 	//window.draw(*hitbox);
+}
+
+void Cube::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
+{
+	diffuse.draw(frontFace);
+	NormalPass(normal, frontFace, normalMap, nShader);
 }
 
 void Cube::SetSide(bool s)

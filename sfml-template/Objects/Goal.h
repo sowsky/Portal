@@ -25,7 +25,8 @@ public:
 
     bool IsFinish() { return on; }
 
-    void SetButtonlist(vector<Button*>& button);
+    virtual void SetButtonlist(vector<Button*>& button);
+    virtual void SetButtonList(vector<int> idList) { buttonid = idList; }
     
 protected:
     list<Button*> button;

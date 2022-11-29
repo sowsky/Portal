@@ -1,0 +1,123 @@
+#include "VertexArrayObj.h"
+#include "../Manager/ResourceMgr.h"
+#include "../FrameWork/Utils.h";
+#include "../FrameWork/Const.h"
+
+void VertexArrayObj::SetDepth(float dp)
+{
+	depth = dp;
+}
+
+void VertexArrayObj::SetAllSidesTex(string id)
+{
+	Vector2u texSize = RESOURCEMGR->GetTexture(id)->getSize();
+
+	for (int i = 0; i < sides.size(); i++)
+	{		
+		tileTextures[i] = RESOURCEMGR->GetTexture(id);
+		sides[i].first = true;
+		sides[i].second.setPrimitiveType(Quads);
+		sides[i].second.resize(4);
+		sides[i].second[0].texCoords = { 0.f, 0.f };
+		sides[i].second[1].texCoords = { (float)texSize.x, 0.f };
+		sides[i].second[2].texCoords = (Vector2f)texSize;
+		sides[i].second[3].texCoords = { 0.f, (float)texSize.y };
+	}
+}
+
+void VertexArrayObj::SetBackFaceOrigin(Origins origin)
+{
+	Utils::SetOrigin(backFace, origin);
+}
+
+void VertexArrayObj::SetBackFaceSize(Vector2f size)
+{
+	float dp = depth * 2 - 1.f;
+	backFace.setSize({ size.x * dp, size.y * dp });	
+}
+
+void VertexArrayObj::Update()
+{
+
+}
+
+void VertexArrayObj::Draw(RenderWindow& window)
+{
+	Vector2f vanishingPoint = window.getView().getCenter();		
+
+	frontFace.setPosition(
+		pivotSprite.getPosition() - (vanishingPoint - pivotSprite.getPosition()) * (1.f - depth)
+	);	
+
+	backFace.setPosition(
+		pivotSprite.getPosition() + (vanishingPoint - pivotSprite.getPosition()) * (1.f - depth)
+	);
+
+	frontFace.setRotation(pivotSprite.getRotation());
+	backFace.setRotation(pivotSprite.getRotation());
+
+	FloatRect backRect = backFace.getLocalBounds();
+	FloatRect frontRect = frontFace.getLocalBounds();
+	
+	Vector2f backLt = backFace.getTransform().transformPoint({ backRect.left, backRect.top });
+	Vector2f backRt = backFace.getTransform().transformPoint({ backRect.left + backRect.width, backRect.top });
+	Vector2f backRb = backFace.getTransform().transformPoint({ backRect.left + backRect.width, backRect.top + backRect.height });
+	Vector2f backLb = backFace.getTransform().transformPoint({ backRect.left, backRect.top + backRect.height });
+
+	Vector2f frontLt = frontFace.getTransform().transformPoint({ frontRect.left, frontRect.top });
+	Vector2f frontRt = frontFace.getTransform().transformPoint({ frontRect.left + frontRect.width, frontRect.top });
+	Vector2f frontRb = frontFace.getTransform().transformPoint({ frontRect.left + frontRect.width, frontRect.top + frontRect.height });
+	Vector2f frontLb = frontFace.getTransform().transformPoint({ frontRect.left, frontRect.top + frontRect.height });
+
+	if (sides[0].first)
+	{
+		sides[0].second[0].position = backLt;
+		sides[0].second[1].position = backRt;
+		sides[0].second[2].position = frontRt;
+		sides[0].second[3].position = frontLt;
+	}
+
+	if (sides[1].first)
+	{
+		sides[1].second[0].position = frontRt;
+		sides[1].second[1].position = backRt;
+		sides[1].second[2].position = backRb;
+		sides[1].second[3].position = frontRb;
+	}
+
+	if (sides[2].first)
+	{
+		sides[2].second[0].position = backLb;
+		sides[2].second[1].position = backRb;
+		sides[2].second[2].position = frontRb;
+		sides[2].second[3].position = frontLb;
+	}
+
+	if (sides[3].first)
+	{
+		sides[3].second[0].position = frontLt;
+		sides[3].second[1].position = backLt;
+		sides[3].second[2].position = backLb;
+		sides[3].second[3].position = frontLb;
+	}	
+
+	//backFace.setFillColor(Color::Red);
+	//window.draw(backFace);
+
+	//window.draw(pivotSprite);
+
+	window.draw(sides[1].second, tileTextures[1]);
+	window.draw(sides[2].second, tileTextures[3]);
+	window.draw(sides[1].second, tileTextures[0]);
+	window.draw(sides[1].second, tileTextures[2]);
+}
+
+VertexArrayObj::VertexArrayObj(Sprite& front, Sprite& pivot)
+	:frontFace(front), pivotSprite(pivot)
+{
+}
+
+void VertexArrayObj::SetRotatable(bool rot)
+{
+	rotatable = rot;
+}

@@ -188,6 +188,7 @@
     <ClCompile Include="src\RadialLight.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="Objects\Tunnel.cpp" />
+    <ClCompile Include="Objects\VertexArrayObj.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\FileData.h" />
@@ -224,6 +225,7 @@
     <ClInclude Include="Objects\WireableObject.h" />
     <ClInclude Include="Objects\WirePointArrows.h" />
     <ClInclude Include="Objects\Tunnel.h" />
+    <ClInclude Include="Objects\VertexArrayObj.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

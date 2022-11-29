@@ -5,7 +5,8 @@ Tunnel::Tunnel()
 	SetResourceTexture("Graphics/tunnel.png");
 	id = 't';
 
-	objSize = ObjectSize::Normal;	
+	objSize = ObjectSize::Normal;
+	type = ObjectType::Catcher;
 }
 
 Tunnel::Tunnel(const Vector2f& position, bool Horizon, int d,string buttonlist)
@@ -73,7 +74,7 @@ void Tunnel::Draw(RenderWindow& window)
 	if (active)
 		window.draw(tuns);
 
-	SpriteObj::Draw(window);
+	WireableObject::Draw(window);
 	//window.draw(hitbox);
 }
 

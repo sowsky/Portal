@@ -133,6 +133,6 @@ private:
 	string loadString;
 	Sprite loadScreen;
 	View loadView;
-	list<pair<RectangleShape*, Text*>> loadList;
+	list<pair<RectangleShape*, Text*>> loadList;	
 };
 

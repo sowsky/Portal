@@ -167,6 +167,12 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(window);
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
 	}
+
+	for (auto v : cube) {
+		v->Draw(window);
+		v->Draw(pass_diffuse, normals_shader, pass_normals);
+	}
+
 	DrawRenderedBuffer(window);
 
 	if (madeorange) {
@@ -189,12 +195,6 @@ void PlayScene::Draw(RenderWindow& window)
 	for (auto v : button) {
 		v->Draw(window);
 	}
-
-	for (auto v : cube) {
-		v->Draw(window);
-	}
-
-
 
 	if (particle.running())
 		window.draw(particle);
@@ -239,10 +239,8 @@ PlayScene::PlayScene(string path)
 
 	for (auto& p : loadObjInfo.buttons)
 	{
-		loadedArray[p.posY][p.posX].push_back(&p);
-		cout << p.posX << ", " << p.posY << endl;
+		loadedArray[p.posY][p.posX].push_back(&p);		
 	}
-
 	for (auto& p : loadObjInfo.cubes)
 	{
 		loadedArray[p.posY][p.posX].push_back(&p);
@@ -314,54 +312,14 @@ PlayScene::PlayScene(string path)
 	height = GRIDSIZE * colNum;
 	width = GRIDSIZE * rowNum;
 
+	//height = WINDOW_HEIGHT;
+	//width = WINDOW_WIDTH;
+
 	goal->SetButtonlist(button);
 
 	for (auto v : tunnel) {
 		v->SetButtonlist(button);
 	}
-
-
-	/*for (int i = 0; i < objInfos.size(); i++)
-	{
-		for (int j = 0; j < objInfos[i].size(); j++)
-		{
-			if (objInfos[i][j] &&
-				objInfos[i][j]->GetId() == '1')
-			{
-				if (i - 1 >= 0 &&
-					objInfos[i - 1][j] &&
-					objInfos[i - 1][j]->GetId() == '1')
-				{
-					Tile* temp = (Tile*)objInfos[i][j];
-					temp->SetActiveSideTiles(0, false);
-				}
-
-				if (j + 1 < objInfos[i].size() &&
-					objInfos[i][j + 1] &&
-					objInfos[i][j + 1]->GetId() == '1')
-				{
-					Tile* temp = (Tile*)objInfos[i][j];
-					temp->SetActiveSideTiles(1, false);
-				}
-
-				if (i + 1 < objInfos.size() &&
-					objInfos[i + 1][j] &&
-					objInfos[i + 1][j]->GetId() == '1')
-				{
-					Tile* temp = (Tile*)objInfos[i][j];
-					temp->SetActiveSideTiles(2, false);
-				}
-
-				if (j - 1 >= 0 &&
-					objInfos[i][j - 1] &&
-					objInfos[i][j - 1]->GetId() == '1')
-				{
-					Tile* temp = (Tile*)objInfos[i][j];
-					temp->SetActiveSideTiles(3, false);
-				}
-			}
-		}
-	}*/
 
 	particle.init(500);
 	worldView.setCenter(player->GetPos());
@@ -803,6 +761,9 @@ void PlayScene::Input()
 			return;
 		zoomCount++;
 		worldView.zoom(0.94f);
+
+		width * 0.94f;
+		height * 0.94f;
 	}
 	if (InputMgr::GetMouseWheelState() == -1)
 	{
@@ -810,6 +771,10 @@ void PlayScene::Input()
 			return;
 		zoomCount--;
 		worldView.zoom(1.06f);
+
+		width * 1.06f;
+		height * 1.06f;
+
 	}
 
 	if (InputMgr::GetMouseButton(Mouse::Middle))
@@ -1072,7 +1037,7 @@ void PlayScene::Enter()
 	endingView.setSize(size);
 	endingView.setCenter(size / 2.f);
 
-	Tile::SetIsPlayingGame(true);
+	SpriteObj::SetIsPlayingGame(true);
 	zoomCount = 0;
 	isMovingViewCenter = false;
 
@@ -1091,6 +1056,6 @@ void PlayScene::Enter()
 
 void PlayScene::Exit()
 {
-	Tile::SetIsPlayingGame(false);
+	SpriteObj::SetIsPlayingGame(false);
 	zoomCount = 0;
 }

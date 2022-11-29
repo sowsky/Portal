@@ -1,6 +1,7 @@
 #pragma once
 #include "SpriteObj.h"
 #include "box2d/box2d.h"
+#include "VertexArrayObj.h"
 
 class Cube : public SpriteObj
 {
@@ -18,6 +19,8 @@ public:
 	void PhysicsUpdate();
 
 	virtual void Draw(RenderWindow& window);
+	virtual void Draw
+	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
 	void SetSide(bool s);
 	bool GetSide() { return side; }
 	void SetCubeBodyPos(Vector2f pos);
@@ -50,6 +53,8 @@ protected:
 	b2Body* body = nullptr;
 	b2Fixture* fixture = nullptr;
 
-
+	VertexArrayObj sideFaces;
+	Sprite frontFace;
+	Texture* normal;
 };
 

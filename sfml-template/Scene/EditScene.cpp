@@ -150,7 +150,7 @@ void EditScene::Enter()
 {
 	cout << "Enter EditScene\n";
 
-	ofstream txt("Map/temp.txt");
+	ofstream txt("Map/temp.json");
 
 	Scene::SetWorldView();
 	Scene::SetUiView();
@@ -993,7 +993,7 @@ void EditScene::LoadMapList()
 			pos = loadList.back().first->getPosition() + Vector2f{ 0.f, 130.f };
 
 		string path_string = fs::path(entry).filename().string();
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 5; i++)
 			path_string.pop_back();
 
 		loadList.push_back({ new RectangleShape, new Text });
@@ -1304,100 +1304,83 @@ void EditScene::Load()
 
 	string mapName;
 
-	mapName += "Map/" + loadString + ".txt";
-	ifstream map(mapName);
-	string s;
+	mapName += "Map/" + loadString + ".json";
+	ifstream json(mapName);
+	Data_struct loadObjInfo = json::parse(json);
 
-	colNum = 0;
-	rowNum = 0;
+	colNum = loadObjInfo.map_size.col;
+	rowNum = loadObjInfo.map_size.row;
+	int idxI = colNum - 1;
+
+	///// ¸Ê & °ñ
+	mapTool[idxI - loadObjInfo.player.posY][loadObjInfo.player.posX].first.push_back(new Player);	
+
+	Goal* goal = new Goal;
+	goal->SetButtonList(loadObjInfo.goal.buttonList);	
+	for (auto num : loadObjInfo.goal.buttonList)
+	{
+		goal->AddNumBox(num);
+	}
+	mapTool[idxI - loadObjInfo.goal.posY][loadObjInfo.goal.posX].first.push_back(goal);
+	/////
+	for (auto& p : loadObjInfo.buttons)
+	{
+		Button* button = new Button;
+		button->SetRotation((Rotate)p.rotation);
+		button->SetButtonId(p.buttonId);
+		button->AddNumBox(p.buttonId);
+		mapTool[idxI - p.posY][p.posX].first.push_back(button);
+	}
+
+	for (auto& p : loadObjInfo.cubes)
+	{
+		Cube* cube = new Cube;
+		mapTool[idxI - p.posY][p.posX].first.push_back(cube);
+	}
+
+	for (auto& p : loadObjInfo.tiles)
+	{
+		Tile* tile = new Tile;
+		mapTool[idxI - p.posY][p.posX].first.push_back(tile);
+	}
+
+	for (auto& p : loadObjInfo.tunnels)
+	{
+		Tunnel* tunnel = new Tunnel;		
+		tunnel->SetRotation((Rotate)p.rotation);
+		tunnel->SetButtonlist(p.buttonList);
+		for (auto num : p.buttonList)
+		{
+			tunnel->AddNumBox(num);
+		}
+		mapTool[idxI - p.posY][p.posX].first.push_back(tunnel);
+	}
+
+	//////////
 
 	Vector2f fixPos{ TILE_SIZE / 2,TILE_SIZE };
 
-	//while (getline(txt, s))
-	//{		
-	//	int row = 0;
-	//	for (int i = 0; i < s.size(); i++)
-	//	{
-	//		switch (s[i])
-	//		{
-	//		case '0':
-	//			break;
-	//		case '1':
-	//			mapTool[colNum][row].first.push_front(new Tile);
-	//			break;
-	//		case '@':
-	//			mapTool[colNum][row].first.push_front(new Goal);
-	//			mapTool[colNum][row].first.front()->SetPos(mapTool[colNum][row].second->GetPos() + fixPos);
-	//			i += 2;
-	//			while (s[i] != ')')
-	//			{
-	//				WireableObject* tempObj = (WireableObject*)mapTool[colNum][row].first.front();					
-	//				string tempStr;
-	//				while (s[i] != ' ')
-	//				{
-	//					tempStr += s[i];
-	//					i++;
-	//				}
-	//				tempObj->AddNumBox(stoi(tempStr));
-	//				i++;
-	//			}				
-	//			break;
-	//		case 'b':
-	//			mapTool[colNum][row].first.push_front(new Button);
-	//			mapTool[colNum][row].first.front()->SetPos(mapTool[colNum][row].second->GetPos() + fixPos);
-	//			i += 5;
-	//			while (s[i] != ')')
-	//			{
-	//				WireableObject* tempObj = (WireableObject*)mapTool[colNum][row].first.front();
-	//				string tempStr;
-	//				while (s[i] != ' ')
-	//				{
-	//					tempStr += s[i];
-	//					i++;
-	//				}
-	//				tempObj->AddNumBox(stoi(tempStr));
-	//				i++;
-	//			}				
-	//			break;
-	//		}
-	//		if (!mapTool[colNum][row].first.empty())
-	//		{
-	//			mapTool[colNum][row].first.front()->FitScale(TILE_SIZE);
-	//			mapTool[colNum][row].first.front()->SetOrigin(Origins::BC);
-	//			mapTool[colNum][row].first.front()->SetBoolInMapTool(true);
-	//			mapTool[colNum][row].first.front()->SetPos(mapTool[colNum][row].second->GetPos() + fixPos);
-	//			mapTool[colNum][row].first.front()->Init();
-	//		}
-	//		row++;
-	//	}
-	//	++colNum;
-	//}
-
-	bool noneObj = false;
-	for (int i = 0; i < s.size(); i++)
+	for (int i = 0; i < colNum; i++)
 	{
-		++rowNum;
-		if (s[i] == '(')
+		for (int j = 0; j < rowNum; j++)
 		{
-			noneObj = true;
+			if (!mapTool[i][j].first.empty())
+			{
+				for (auto m : mapTool[i][j].first)
+				{
+					m->FitScale(TILE_SIZE);
+					m->SetOrigin(Origins::BC);
+					m->SetBoolInMapTool(true);
+					m->SetPos(mapTool[i][j].second->GetPos() + fixPos);
+					if (m->GetObjSize() == ObjectSize::Normal)
+					{
+						m->SetRotationInBox((int)m->GetRotation(), TILE_SIZE, mapTool[i][j].second->GetPos());
+					}
+					m->Init();
+				}
+			}
 		}
-		if (s[i] == ')')
-		{
-			noneObj = false;
-			--rowNum;
-		}
-		if (s[i] == '\"')
-		{
-			noneObj = !noneObj;
-			if (!noneObj)
-				--rowNum;
-		}
-
-		if (noneObj)
-			--rowNum;
 	}
-
-	cout << "¼¼·Î: " << colNum << "°¡·Î: " << rowNum << endl;
 
 	SetMapToolSize();
 }
