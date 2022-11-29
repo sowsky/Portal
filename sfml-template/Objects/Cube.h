@@ -1,7 +1,6 @@
 #pragma once
 #include "SpriteObj.h"
 #include "box2d/box2d.h"
-#include "VertexArrayObj.h"
 
 class Cube : public SpriteObj
 {
