@@ -56,13 +56,13 @@ Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
 	///////
 	Vector2f frontSize = { cubeSizeV2f.x / DEPTH, cubeSizeV2f.y / DEPTH };
 
-	SetSpriteTex(frontFace, "Graphics/obj/cube.png");
+	SetSpriteTex(frontFace, "Graphics/temp/cube.png");
 	Utils::SetOrigin(frontFace, Origins::MC);
 	Utils::SetSpriteSize(frontFace, frontSize);
-	normal = RESOURCEMGR->GetTexture("Graphics/obj/cuben.png");
+	normal = RESOURCEMGR->GetTexture("Graphics/temp/cuben.png");
 
 	sideFaces.SetDepth(DEPTH + 0.005f);
-	sideFaces.SetAllSidesTex("Graphics/obj/cube.png");
+	sideFaces.SetAllSidesTex("Graphics/temp/cube.png");
 	sideFaces.SetBackFaceSize(frontSize);
 	sideFaces.SetBackFaceOrigin(Origins::MC);
 }

@@ -1,6 +1,6 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
-Graphics/obj/cube.png,0
-Graphics/obj/cuben.png,0
+Graphics/temp/cube.png,0
+Graphics/temp/cuben.png,0
 Graphics/grid.png,0
 Graphics/button.png,0
 Graphics/cube.png,0
