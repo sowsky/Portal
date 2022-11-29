@@ -26,7 +26,6 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 		char temp = buttonlist[i];
 		buttonid.push_back(atoi(&temp));
 	}
-	active = true;
 
 	if (dir == 0 || dir == 2) {
 		if (dir == 0) {
@@ -59,8 +58,6 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 
 Tunnel::~Tunnel()
 {
-	//if (whohitwall != nullptr)
-	//	delete whohitwall;
 	for (auto v : button) {
 		delete v;
 	}
@@ -69,6 +66,15 @@ Tunnel::~Tunnel()
 
 void Tunnel::Update(float dt)
 {
+	for (auto b : button) {
+		if (!b->GetPressed()) {
+			active = false;
+			return;
+		}
+	}
+	//active door
+	active = true;
+
 	if (!active) {
 		if (dir == 0 || dir == 2) {
 			if (dir == 0) {
@@ -148,22 +154,6 @@ void Tunnel::Update(float dt)
 	hitbox.setSize(tuns.getSize());
 	hitbox.setOrigin(tuns.getOrigin());
 	hitbox.setPosition(tuns.getPosition());
-
-
-	auto pos = tuns.getPosition();
-	cout << pos.x << " " << pos.y << endl;
-
-
-	//SetDoor(dt);
-	for (auto b : button) {
-		if (!b->GetPressed()) {
-			active = false;
-			return;
-		}
-	}
-	//active door
-	active = true;
-
 }
 
 void Tunnel::Draw(RenderWindow& window)

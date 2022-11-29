@@ -44,6 +44,9 @@ void PlayScene::Update(float dt)
 	for (auto t : tunnel) {
 		t->Update(dt);
 	}
+	for (auto b : bridge) {
+		b->Update(dt);
+	}
 	blue->Update(dt);
 	orange->Update(dt);
 
@@ -61,6 +64,7 @@ void PlayScene::Update(float dt)
 
 	PushButton();
 	TunnelCheck();
+	BridgeCheck();
 
 	if (grabitem) {
 		if (grabbedcube->GetSide())
@@ -175,6 +179,10 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(window);
 	}
 
+	for (auto v : bridge) {
+		v->Draw(window);
+	}
+
 	if (particle.running())
 		window.draw(particle);
 
@@ -218,7 +226,7 @@ PlayScene::PlayScene(string path)
 
 	for (auto& p : loadObjInfo.buttons)
 	{
-		loadedArray[p.posY][p.posX].push_back(&p);		
+		loadedArray[p.posY][p.posX].push_back(&p);
 	}
 	for (auto& p : loadObjInfo.cubes)
 	{
@@ -312,6 +320,11 @@ PlayScene::PlayScene(string path)
 						}
 						currgrid.x += GRIDSIZE;
 					}
+					case 'l':
+					case 'L':
+						Bridge_sturct * tempB = (Bridge_sturct*)obj;
+						bridge.push_back(new Bridge(world.get(), { currgrid.x,currgrid.y }, { GRIDSIZE,GRIDSIZE }, tempB->buttonList, true, tempB->rotation, 0));
+
 					}
 				}
 			}
@@ -834,6 +847,18 @@ void PlayScene::TunnelCheck()
 		}
 	}
 
+}
+
+void PlayScene::BridgeCheck()
+{
+	for (auto w : wall) {
+		for (auto v : bridge) {
+			if (w->GetGlobalBounds().intersects(v->GetHitBoxGlobalbound())) {
+				v->SetHitwall(true);
+				v->Setwhohitwall(*w);
+			}
+		}
+	}
 }
 
 Vector2f PlayScene::CameraMove(Vector2f currpos, Vector2f playerpos, float alpah, float dt)
