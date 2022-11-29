@@ -63,6 +63,6 @@ public:
 
 	static void ChangePPM(b2Vec2 vec);
 
-	static float Lerp(float currpos, float playerpos, float alpha);
+	static float Lerp(float currpos, float destination, float alpha);
 };
 

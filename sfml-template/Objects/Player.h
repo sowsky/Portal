@@ -31,8 +31,11 @@ public:
 
 	Vector2f GetRecentSpeed() { return recentspeed; }
 	void SetMaxSpeed(Vector2f vec) { recentspeed = vec; }
+
+	bool GetIsMoving() { return IsMoving; }
 protected:
 	bool ground = false;
+	bool IsMoving = false;
 	float verticalspeed=0.f;
 	float speedtX = 0.f;
 	float speedtY = 0.f;

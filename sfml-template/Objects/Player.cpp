@@ -128,20 +128,19 @@ void Player::PhysicsUpdate(float dt)
 	//cout << body->GetLinearVelocity().x<<" "<< body->GetLinearVelocity().y << endl;
 	if (dir.x != 0)
 	{		
+		IsMoving = true;
 		if (body->GetLinearVelocity().x <= 2.5 && body->GetLinearVelocity().x >= -2.5) {
 			body->ApplyForce(b2Vec2({ dir.x * 10 , 0 }), body->GetWorldCenter(), true);
 		}
 	}
 	else
 	{
-		body->ApplyForce({0*dt,0}, body->GetWorldCenter(), true );
+		IsMoving = false;
 	}
 
 	if (InputMgr::GetKeyDown(Keyboard::Space) && (body->GetLinearVelocity().y > -0.1f && body->GetLinearVelocity().y < 0.1f)) {
 		body->ApplyLinearImpulse({ 0,1.5f }, GetPlayerBodyLinearVelocity(), 1);
 	}
-
-
 
 }
 
