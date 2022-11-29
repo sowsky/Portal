@@ -1,13 +1,15 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
-Graphics/obj/cube.png,0
-Graphics/obj/cuben.png,0
+Graphics/temp/cube.png,0
+Graphics/temp/cuben.png,0
+Graphics/temp/tunneltool.png,0
 Graphics/grid.png,0
 Graphics/button.png,0
 Graphics/cube.png,0
 Graphics/goal.png,0
+Graphics/goaln.png,0
+Graphics/goalside.png,0
 Graphics/goal2.png,0
 Graphics/door.png,0
-Graphics/tunnel.png,0
 Graphics/goalopen.png,0
 Graphics/player.png,0
 Graphics/wire.png,0

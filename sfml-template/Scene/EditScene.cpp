@@ -150,6 +150,8 @@ void EditScene::Enter()
 {
 	cout << "Enter EditScene\n";
 
+	SpriteObj::SetIsPlayingGame(false);
+
 	ofstream txt("Map/temp.json");
 
 	Scene::SetWorldView();

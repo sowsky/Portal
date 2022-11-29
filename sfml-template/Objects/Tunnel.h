@@ -3,6 +3,7 @@
 #include "WireableObject.h"
 #include "Button.h"
 #include "Tile.h"
+#include "../Particle/ParticleSystem.h"
 
 class Tunnel : public WireableObject
 {
@@ -50,5 +51,7 @@ private:
 	bool hitwall = false;
 	int dir = 0;
 	int connected = 0; //0==none 1==follow blue 2==follow orange
+
+	ParticleSystem particle;
 };
 

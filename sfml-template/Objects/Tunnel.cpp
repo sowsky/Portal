@@ -4,7 +4,7 @@
 
 Tunnel::Tunnel()
 {
-	SetResourceTexture("Graphics/tunnel.png");
+	SetResourceTexture("Graphics/temp/tunneltool.png");
 	id = 't';
 
 	objSize = ObjectSize::Normal;
