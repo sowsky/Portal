@@ -18,7 +18,7 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 {
 	if (Isblue)
 		tuns.setFillColor(Color(0, 255, 0, 128));
-	else{
+	else {
 		tuns.setFillColor(Color(255, 255, 0, 128));
 	}
 
@@ -161,8 +161,9 @@ void Tunnel::Draw(RenderWindow& window)
 	if (active)
 		window.draw(tuns);
 
-	WireableObject::Draw(window);
-	//window.draw(hitbox);
+	if (!isPlayingGame)
+		WireableObject::Draw(window);
+	window.draw(hitbox);
 }
 
 void Tunnel::ChangeDir()

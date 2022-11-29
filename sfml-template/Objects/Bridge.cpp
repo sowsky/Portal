@@ -9,8 +9,8 @@ Bridge::Bridge()
 	type = ObjectType::Catcher;
 }
 
-Bridge::Bridge(b2World* world, const Vector2f& position, Vector2f dimensions, vector<int> buttonlist, bool active, int dir,int connected)
-	:dir(dir), active(active),connected(connected)
+Bridge::Bridge(b2World* world, const Vector2f& position, Vector2f dimensions, vector<int> buttonlist, bool active, int dir, int connected)
+	:dir(dir), active(active), connected(connected)
 {
 
 	if (dir == 0 || dir == 2) {
@@ -128,5 +128,6 @@ void Bridge::Draw(RenderWindow& window)
 {
 	window.draw(bridge);
 	window.draw(hitbox);
-	//WireableObject::Draw(window);
+	if (!isPlayingGame)
+		WireableObject::Draw(window);
 }
