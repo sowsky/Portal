@@ -53,7 +53,7 @@ Goal::Goal(Vector2f currgrid, float size, vector<int> buttonlist)
 	normalMap = RESOURCEMGR->GetTexture("Graphics/goaln.png");
 	for (int i = 0; i < sideTiles.size(); i++)
 	{
-		tileTextures[i] = RESOURCEMGR->GetTexture("Graphics/goalside.png");
+		tileTextures[i] = RESOURCEMGR->GetTexture("Graphics/goalside.png");		
 		sideTiles[i].first = true;
 		sideTiles[i].second.setPrimitiveType(Quads);
 		sideTiles[i].second.resize(4);
@@ -62,6 +62,7 @@ Goal::Goal(Vector2f currgrid, float size, vector<int> buttonlist)
 		sideTiles[i].second[2].texCoords = (Vector2f)goalTexSize;
 		sideTiles[i].second[3].texCoords = { 0.f, (float)goalTexSize.y };
 	}
+	backFace.setTexture(RESOURCEMGR->GetTexture("Graphics/goalback.png"));
 }
 
 Goal::~Goal()
@@ -98,6 +99,7 @@ void Goal::Draw(RenderWindow& window)
 	}	
 	if (isPlayingGame)
 	{
+		window.draw(backFace);
 		DrawSides(window);
 		window.draw(door, doorTex);
 		window.draw(sprite);

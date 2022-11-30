@@ -1287,7 +1287,26 @@ void EditScene::Save()
 						tunnel.posX = j;
 						tunnel.posY = posY;
 						tunnel.rotation = (int)tool->GetRotation();
+						WireableObject* wobj = (WireableObject*)tool;
+						for (auto w : wobj->GetWireListFromMapTool())
+						{
+							tunnel.buttonList.push_back(w);
+						}
 						saveObjInfo.tunnels.push_back(tunnel);
+					}
+					case 'l':
+					{
+						Bridge_sturct bridge;
+						bridge.id = 'l';
+						bridge.posX = j;
+						bridge.posY = posY;
+						bridge.rotation = (int)tool->GetRotation();
+						WireableObject* wobj = (WireableObject*)tool;
+						for (auto w : wobj->GetWireListFromMapTool())
+						{
+							bridge.buttonList.push_back(w);
+						}
+						saveObjInfo.bridges.push_back(bridge);
 					}
 					}
 				}
