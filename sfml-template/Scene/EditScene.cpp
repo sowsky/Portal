@@ -1335,6 +1335,7 @@ void EditScene::Save()
 	isPlayable = true;
 
 	saveMsg.setString("Save succeed");
+
 	Utils::SetOrigin(saveMsg, Origins::MC);	
 	saveString.clear();
 }
@@ -1354,7 +1355,7 @@ void EditScene::Load()
 	rowNum = loadObjInfo.map_size.row;
 	int idxI = colNum - 1;
 
-	///// ¸Ê & °ñ
+	///// ï¿½ï¿½ & ï¿½ï¿½
 	mapTool[idxI - loadObjInfo.player.posY][loadObjInfo.player.posX].first.push_back(new Player);	
 
 	Goal* goal = new Goal;

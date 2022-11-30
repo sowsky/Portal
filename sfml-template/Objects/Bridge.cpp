@@ -85,12 +85,14 @@ void Bridge::Update(float dt)
 		if (dir == 0 || dir == 2) {
 			bridge.setSize({ bridge.getSize().x,bridge.getSize().y + 50 });
 			if (dir == 0) {
+
 				Utils::SetOrigin(bridge, Origins::TC);
 			}
 			else if (dir == 2) {
-				Utils::SetOrigin(bridge, Origins::BC);
 
+				Utils::SetOrigin(bridge, Origins::BC);
 			}
+
 		}
 		else {
 			bridge.setSize({ bridge.getSize().x + 50,bridge.getSize().y });
