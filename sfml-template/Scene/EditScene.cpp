@@ -108,6 +108,7 @@ void EditScene::Init()
 
 	isSaving = false;
 	isLoading = false;
+	isPlayable = false;
 
 	//Vector2u tileSize = RESOURCEMGR->GetTexture("Graphics/grid.png")->getSize();
 	Vector2u tileSize = { TILE_SIZE, TILE_SIZE };
@@ -138,6 +139,12 @@ void EditScene::Init()
 	saveText.setString(saveString);
 
 	InitUiTool();
+
+	if (SCENE_MGR->GetPrevKey() == Scenes::PLAY)
+	{
+		loadString = "temp";
+		Load();
+	}		
 }
 
 void EditScene::Release()
@@ -152,7 +159,7 @@ void EditScene::Enter()
 
 	SpriteObj::SetIsPlayingGame(false);
 
-	ofstream txt("Map/temp.json");
+	//ofstream txt("Map/temp.json");
 
 	Scene::SetWorldView();
 	Scene::SetUiView();
@@ -813,6 +820,7 @@ void EditScene::ReleaseUiTool()
 		if (list.second != nullptr)
 			delete list.second;
 	}
+	loadList.clear();
 }
 
 void EditScene::UpdateUiTool(float dt)
@@ -849,7 +857,7 @@ void EditScene::UpdateUiTool(float dt)
 					Reset();
 					break;
 				case 3:
-					//Play();
+					Play();
 					break;
 				}
 			}
@@ -976,12 +984,15 @@ void EditScene::UpdateSaveString()
 
 void EditScene::LoadMapList()
 {
-	for (auto list : loadList)
+	if (!loadList.empty())
 	{
-		if (list.first != nullptr)
-			delete list.first;
-		if (list.second != nullptr)
-			delete list.second;
+		for (auto list : loadList)
+		{
+			if (list.first != nullptr)
+				delete list.first;
+			if (list.second != nullptr)
+				delete list.second;				
+		}
 	}
 	loadList.clear();
 
@@ -1204,7 +1215,8 @@ void EditScene::Save()
 
 	if (playerNum != 1 || goalNum != 1)
 	{
-		saveMsg.setString("Save Failed : Player or Eixt must be one");
+		isPlayable = false;
+		saveMsg.setString("Failed : Player or Eixt must be one");
 		Utils::SetOrigin(saveMsg, Origins::MC);
 		return;
 	}
@@ -1293,6 +1305,7 @@ void EditScene::Save()
 							tunnel.buttonList.push_back(w);
 						}
 						saveObjInfo.tunnels.push_back(tunnel);
+						break;
 					}
 					case 'l':
 					{
@@ -1303,10 +1316,11 @@ void EditScene::Save()
 						bridge.rotation = (int)tool->GetRotation();
 						WireableObject* wobj = (WireableObject*)tool;
 						for (auto w : wobj->GetWireListFromMapTool())
-						{
+						{							
 							bridge.buttonList.push_back(w);
 						}
 						saveObjInfo.bridges.push_back(bridge);
+						break;
 					}
 					}
 				}
@@ -1318,6 +1332,7 @@ void EditScene::Save()
 	json save_js = saveObjInfo;
 	map << save_js;
 
+	isPlayable = true;
 	saveMsg.setString("Save succeed");
 	Utils::SetOrigin(saveMsg, Origins::MC);
 }
@@ -1329,6 +1344,7 @@ void EditScene::Load()
 	string mapName;
 
 	mapName += "Map/" + loadString + ".json";
+
 	ifstream json(mapName);
 	Data_struct loadObjInfo = json::parse(json);
 
@@ -1380,6 +1396,18 @@ void EditScene::Load()
 		mapTool[idxI - p.posY][p.posX].first.push_back(tunnel);
 	}
 
+	for (auto& p : loadObjInfo.bridges)
+	{
+		Bridge* bridge = new Bridge;
+		bridge->SetRotation((Rotate)p.rotation);
+		bridge->SetButtonlist(p.buttonList);
+		for (auto num : p.buttonList)
+		{
+			bridge->AddNumBox(num);
+		}
+		mapTool[idxI - p.posY][p.posX].first.push_back(bridge);
+	}
+
 	//////////
 
 	Vector2f fixPos{ TILE_SIZE / 2,TILE_SIZE };
@@ -1407,4 +1435,14 @@ void EditScene::Load()
 	}
 
 	SetMapToolSize();
+}
+
+void EditScene::Play()
+{
+	Save();
+
+	msgTime = 0.f;
+
+	SCENE_MGR->AddScene("Map/temp.json");
+	SCENE_MGR->ChangeScene(Scenes::PLAY);
 }

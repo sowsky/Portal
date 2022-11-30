@@ -890,7 +890,12 @@ void PlayScene::Input()
 {
 	LightTestInputForDev();
 	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
-		SCENE_MGR->ChangeScene(Scenes::GAMESTART);
+		if (SCENE_MGR->GetPrevKey() == Scenes::MAPEDITER)
+		{
+			SCENE_MGR->ChangeScene(Scenes::MAPEDITER);
+		}
+		else
+			SCENE_MGR->ChangeScene(Scenes::GAMESTART);
 	}
 
 	if (InputMgr::GetMouseWheelState() == 1)

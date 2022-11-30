@@ -13,3 +13,6 @@
 
 
 #define SCALE 50
+
+#define ORANGE Color(248, 147, 30)
+#define BLUE Color(37, 255, 254)

@@ -105,9 +105,9 @@ void VertexArrayObj::Draw(RenderWindow& window)
 	//window.draw(pivotSprite);
 
 	window.draw(sides[1].second, tileTextures[1]);
-	window.draw(sides[2].second, tileTextures[3]);
-	window.draw(sides[1].second, tileTextures[0]);
-	window.draw(sides[1].second, tileTextures[2]);
+	window.draw(sides[3].second, tileTextures[3]);
+	window.draw(sides[0].second, tileTextures[0]);
+	window.draw(sides[2].second, tileTextures[2]);
 }
 
 VertexArrayObj::VertexArrayObj(Sprite& front, Sprite& pivot)

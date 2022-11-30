@@ -21,6 +21,7 @@ class SceneMgr : public Singleton<SceneMgr>
 private:
 	map<Scenes, Scene*> sceneMap;
 	Scenes currScene;
+	Scenes prevScene;
 
 public:
 	bool Init();
@@ -29,6 +30,7 @@ public:
 	Scene* GetScene(Scenes scene);
 	void AddScene(string newscene);
 	Scenes GetCurrKey();
+	Scenes GetPrevKey();
 
 	void ChangeScene(Scenes scene);
 

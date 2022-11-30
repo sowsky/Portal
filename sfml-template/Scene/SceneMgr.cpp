@@ -42,8 +42,13 @@ Scenes SceneMgr::GetCurrKey()
 	return currScene;
 }
 
-void SceneMgr::ChangeScene(Scenes scene)
+Scenes SceneMgr::GetPrevKey()
 {
+	return prevScene;
+}
+
+void SceneMgr::ChangeScene(Scenes scene)
+{	
 	if (currScene == Scenes::PLAY) {
 		delete sceneMap[Scenes::PLAY];
 		sceneMap.erase(Scenes::PLAY);
@@ -52,7 +57,7 @@ void SceneMgr::ChangeScene(Scenes scene)
 	else
 		sceneMap[currScene]->Exit();
 
-
+	prevScene = currScene;
 	currScene = scene;
 	sceneMap[currScene]->Enter();
 }

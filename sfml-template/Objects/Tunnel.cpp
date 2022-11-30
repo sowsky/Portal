@@ -210,3 +210,34 @@ void Tunnel::SetButtonlist(vector<Button*>& button)
 		}
 	}
 }
+
+void Tunnel::MakeParticle()
+{
+	particles.m_Vertices.setPrimitiveType(Points);
+	float tunArea = tuns.getSize().x * tuns.getSize().y;
+	int numParticles = tunArea * 0.1f;
+	particles.m_Vertices.resize((int)numParticles);
+
+	for (int i = 0; i < numParticles; i++)
+	{
+		srand(time(0) + i);		
+		float speed = 100.f;
+		Vector2f direction;
+		switch (dir)
+		{
+		case 0:
+			direction = { 0.f, 1.f };
+			break;
+		case 1:
+			direction = { -1.f,0.f };
+			break;
+		case 2:
+			direction = { 0.f,-1.f };
+			break;
+		case 3:
+			direction = { 1.f,0.f };
+			break;
+		}
+		particles.m_Particles.push_back(Particle(direction));
+	}
+}

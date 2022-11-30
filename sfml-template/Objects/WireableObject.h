@@ -23,11 +23,12 @@ public:
 	void AddNumBox(int num);
 	void RemoveNumBox();
 
-	list<int> GetWireListFromMapTool();
+	list<int> GetWireListFromMapTool();	
 
 	//list<int>& GetWireNum() { return wireNum; }
 
 	bool IsMouseIn() { return isMouseIn; }	
+	
 protected:
 	RectangleShape wireCheckBox;
 

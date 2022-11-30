@@ -65,6 +65,7 @@ public:
 	void Reset();
 	void Save();
 	void Load();
+	void Play();
 
 private:	
 	int rowNum;
@@ -129,6 +130,7 @@ private:
 	int msgTrasp;
 
 	bool isLoading;
+	bool isPlayable;
 
 	string loadString;
 	Sprite loadScreen;
