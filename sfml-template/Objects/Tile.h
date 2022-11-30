@@ -24,7 +24,7 @@ public:
 	b2Body* GetBody() { return body; }
 	b2Fixture* GetFixture() { return fixture; }
 
-
+	void DrawHitbox(RenderWindow& window);
 	
 	string GetRandTileTex();
 	string GetRandTileTex64();

@@ -160,6 +160,10 @@ void PlayScene::Draw(RenderWindow& window)
 	}
 
 	DrawRenderedBuffer(window);
+	
+	for (auto v : wall) {
+		v->DrawHitbox(window);
+	}
 
 	if (madeorange) {
 		orange->Draw(window);
@@ -290,12 +294,14 @@ PlayScene::PlayScene(string path)
 					{
 						Button_sturct* tempB = (Button_sturct*)obj;
 						MakeButton(obj->rotation, tempB->buttonId);
+						box2dposition.x += GRIDSIZE;
 						break;
 					}
 					case'@':
 					{
 						Goal_struct* tempG = (Goal_struct*)obj;
 						MakeGoal(tempG->buttonList);
+						box2dposition.x += GRIDSIZE;
 						break;
 					}
 					case 't':
@@ -304,13 +310,16 @@ PlayScene::PlayScene(string path)
 						Tunnel_sturct* tempT = (Tunnel_sturct*)obj;
 						tunnel.push_back(new Tunnel({ currgrid.x,currgrid.y }, tempT->rotation, tempT->buttonList, 1, tempT->active, 0));
 						currgrid.x += GRIDSIZE;
+						box2dposition.x += GRIDSIZE;
 						break;
 					}
 					case 'l':
 					case 'L':
 						Bridge_sturct * tempB = (Bridge_sturct*)obj;
-						bridge.push_back(new Bridge(world.get(), { currgrid.x,currgrid.y }, { GRIDSIZE,GRIDSIZE }, tempB->buttonList, true, tempB->rotation, 0));
+						bridge.push_back(new Bridge(world.get(), currgrid,tempB->buttonList, true, tempB->rotation, 0));
 						currgrid.x += GRIDSIZE;
+						box2dposition.x += GRIDSIZE;
+						break;
 
 					}
 				}
@@ -970,6 +979,42 @@ void PlayScene::Input()
 			IsMadeTunnelFollowOrangePortal = false;
 		}
 
+		auto ite = bridge.begin();
+		if (IsMadeBridgeFollowOrangePortal) {
+			while (ite != bridge.end())
+			{
+				if ((*ite)->GetConnected() == 2)
+				{
+					auto ptr = (*ite);
+					ite = bridge.erase(ite);
+					delete ptr;
+					break;
+				}
+				else {
+					++ite;
+				}
+			}
+			IsMadeBridgeFollowOrangePortal = false;
+		}
+
+		if (IsMadeBridgeFollowBluePortal) {
+			while (ite != bridge.end())
+			{
+				if ((*ite)->GetConnected() == 2)
+				{
+					auto ptr = (*ite);
+					ite = bridge.erase(ite);
+					delete ptr;
+					break;
+				}
+				else {
+					++ite;
+				}
+			}
+			IsMadeBridgeFollowBluePortal = false;
+		}
+
+
 		blue->SetSize({ 20,20 });
 		madeblue = false;
 		blue->SetPos({ player->GetPos().x,player->GetPos().y - 25 });
@@ -1007,6 +1052,40 @@ void PlayScene::Input()
 				}
 			}
 			IsMadeTunnelFollowOrangePortal = false;
+		}
+		auto ite = bridge.begin();
+		if (IsMadeBridgeFollowOrangePortal) {
+			while (ite != bridge.end())
+			{
+				if ((*ite)->GetConnected() == 2)
+				{
+					auto ptr = (*ite);
+					ite = bridge.erase(ite);
+					delete ptr;
+					break;
+				}
+				else {
+					++ite;
+				}
+			}
+			IsMadeBridgeFollowOrangePortal = false;
+		}
+
+		if (IsMadeBridgeFollowBluePortal) {
+			while (ite != bridge.end())
+			{
+				if ((*ite)->GetConnected() == 2)
+				{
+					auto ptr = (*ite);
+					ite = bridge.erase(ite);
+					delete ptr;
+					break;
+				}
+				else {
+					++ite;
+				}
+			}
+			IsMadeBridgeFollowBluePortal = false;
 		}
 
 		orange->SetSize({ 20,20 });
@@ -1251,6 +1330,64 @@ void PlayScene::MoveToPortal()
 
 			tunnel.push_back(new Tunnel(pos, dir, temp, t->GetColor(), true, 1));
 			IsMadeTunnelFollowBluePortal = true;
+		}
+	}
+
+	////////////////////////////bridge////////////////////////
+	for (auto b : bridge) {
+		//hit blue
+		if (b->GetHitBoxGlobalbound().intersects(blue->GetGlobalBounds()) && !IsMadeBridgeFollowOrangePortal) {
+			vector<int> temp;
+			Vector2f pos;
+			int dir = 0;
+			if (orange->GetPortalDir() == 0) {
+				pos = { orange->GetPos().x,orange->GetPos().y - orange->GetGlobalBounds().height - 25 };
+				dir = 2;
+			}
+			else if (orange->GetPortalDir() == 1) {
+				pos = { orange->GetPos().x + 50,orange->GetPos().y };
+				dir = 3;
+			}
+			else if (orange->GetPortalDir() == 2) {
+				pos = { orange->GetPos().x,orange->GetPos().y + orange->GetGlobalBounds().height + 25 };
+				dir = 0;
+			}
+			else if (orange->GetPortalDir() == 3) {
+				pos = { orange->GetPos().x - 50,orange->GetPos().y };
+				dir = 1;
+
+			}
+
+			bridge.push_back(new Bridge(world.get(), pos, temp, true, dir, 2));
+
+			IsMadeBridgeFollowOrangePortal = true;
+		}
+
+		//hit orange
+		if (b->GetHitBoxGlobalbound().intersects(orange->GetGlobalBounds()) && !IsMadeBridgeFollowBluePortal) {
+			vector<int> temp;
+			Vector2f pos;
+			int dir = 0;
+			if (blue->GetPortalDir() == 0) {
+				pos = { blue->GetPos().x,blue->GetPos().y - blue->GetGlobalBounds().height - 25 };
+				dir = 2;
+			}
+			else if (blue->GetPortalDir() == 1) {
+				pos = { blue->GetPos().x + blue->GetSize().x / 2 + 1,blue->GetPos().y };
+				dir = 3;
+			}
+			else if (blue->GetPortalDir() == 2) {
+				pos = { blue->GetPos().x,blue->GetPos().y + blue->GetGlobalBounds().height + 25 };
+				dir = 0;
+			}
+			else if (blue->GetPortalDir() == 3) {
+				pos = { blue->GetPos().x - blue->GetSize().x - 1,blue->GetPos().y };
+				dir = 1;
+
+			}
+			bridge.push_back(new Bridge(world.get(), pos, temp, true, dir, 1));
+
+			IsMadeBridgeFollowBluePortal = true;
 		}
 	}
 }

@@ -7,7 +7,7 @@ class Bridge : public WireableObject
 {
 public:
 	Bridge();
-	Bridge(b2World* world, const Vector2f& position, Vector2f dimensions, vector<int> buttonlist, bool active, int dir, int connected);
+	Bridge(b2World* world, Vector2f& position,vector<int> buttonlist, bool active, int dir, int connected);
 	virtual ~Bridge();
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);
@@ -24,6 +24,9 @@ public:
 	virtual SpriteObj* NewThis() { return new Bridge; }
 
 	Vector2f Gethitboxpos() { return hitbox.getPosition(); }
+
+	int GetConnected() { return connected; }
+
 protected:
 	list<Button*> button;
 	vector<int>buttonid;

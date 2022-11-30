@@ -44,14 +44,13 @@ void Tile::Update(float dt)
 
 	if (body != nullptr)
 	{
+		Utils::SetOrigin(*hitbox, Origins::MC);
 		hitbox->setSize(GetSize());
-		hitbox->setPosition(body->GetPosition().x * SCALE, body->GetPosition().y * SCALE);
+		hitbox->setPosition(body->GetPosition().x * SCALE, body->GetPosition().y * SCALE*-1);
 	}
 
 
-	Utils::SetOrigin(*hitbox, Origins::MC);
-	hitbox->setSize({ });
-	hitbox->setPosition(GetPos());
+	
 }
 
 void Tile::Draw(RenderWindow& window)
@@ -70,14 +69,6 @@ void Tile::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
 
 	diffuse.draw(frontFace);
 	NormalPass(normal, frontFace, normalMap, nShader);
-
-
-	if (hitbox != nullptr)
-		diffuse.draw(*hitbox);
-
-	if (body != nullptr) {
-		diffuse.draw(*hitbox);
-	}
 
 }
 
@@ -151,6 +142,11 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*size o
 	hitbox->setSize(Utils::GetSpriteSize(sprite));
 	hitbox->setPosition(GetPos());
 
+}
+
+void Tile::DrawHitbox(RenderWindow& window)
+{
+	window.draw(*hitbox);
 }
 
 string Tile::GetRandTileTex()

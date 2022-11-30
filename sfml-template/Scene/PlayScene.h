@@ -94,6 +94,8 @@ private:
 
 	bool IsMadeTunnelFollowOrangePortal = false;
 	bool IsMadeTunnelFollowBluePortal = false;
+	bool IsMadeBridgeFollowOrangePortal = false;
+	bool IsMadeBridgeFollowBluePortal = false;
 
 	RectangleShape ending;
 
