@@ -73,6 +73,11 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	SetPos({ tempx,tempy });
 	hitbox->setPosition(GetPos());
 
+	SetSpriteTex(p_head, "Graphics/bendy/head.png");
+	SetSpriteTex(p_body, "Graphics/bendy/body.png"); 
+	SetSpriteTex(p_arm, "Graphics/bendy/arm.png");
+	SetSpriteTex(p_lleg, "Graphics/bendy/leg.png");
+	SetSpriteTex(p_rleg, "Graphics/bendy/leg.png");
 }
 
 Player::~Player()
