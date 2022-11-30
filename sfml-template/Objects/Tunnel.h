@@ -38,7 +38,8 @@ public:
 	int GetConnected() { return connected; }
 
 	void AddParticle();
-
+	void SetParticlePos();
+	void TransParticles(float dt);
 private:
 	list<Button*> button;
 	vector<int>buttonid;
@@ -54,6 +55,8 @@ private:
 	int connected = 0; //0==none 1==follow blue 2==follow orange
 
 	VertexArray particles;
-	int particleNum = 0;
+	int particleNum = 20;
+	Vector2f particleDir;
+	bool isPtcSetted = false;
 };
 

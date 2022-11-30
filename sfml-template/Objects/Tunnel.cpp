@@ -17,9 +17,9 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 	:IsBlue(Isblue), dir(dir), active(active), connected(connected)
 {
 	if (Isblue)
-		tuns.setFillColor(Color(0, 255, 0, 128));
+		tuns.setFillColor(Color(BLUE, 50));
 	else {
-		tuns.setFillColor(Color(255, 255, 0, 128));
+		tuns.setFillColor(Color(ORANGE, 50));
 	}
 
 	for (int i = 0; i < buttonlist.size(); i++) {
@@ -55,8 +55,22 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 		tuns.setSize({ 0,50 });
 	}
 
-	particles.setPrimitiveType(Points);	
-	particles.resize(100);
+	particles.setPrimitiveType(Points);		
+	switch (this->dir)
+	{
+	case 0:
+		particleDir = { 0.f, 1.f };
+		break;
+	case 1:
+		particleDir = { -1.f, 0.f };
+		break;
+	case 2:
+		particleDir = { 0.f, -1.f };
+		break;
+	case 3:
+		particleDir = { 1.f, 0.f };
+		break;
+	}
 }
 
 Tunnel::~Tunnel()
@@ -103,7 +117,8 @@ void Tunnel::Update(float dt)
 			tuns.setSize({ 0,50 });
 		}
 		hitbox.setSize(tuns.getSize());
-		hitwall = false;
+		hitwall = false;				
+
 		return;
 	}
 
@@ -128,8 +143,7 @@ void Tunnel::Update(float dt)
 				Utils::SetOrigin(tuns, Origins::ML);
 			}
 
-		}
-
+		}	
 		AddParticle();
 	}
 	else if (hitwall && whohitwall != nullptr) {
@@ -153,12 +167,19 @@ void Tunnel::Update(float dt)
 			tuns.setSize({(whohitwall->GetGlobalBounds().left) - tuns.getPosition().x,tuns.getSize().y });
 
 		}
+		
 	}
 
 	tuns.setPosition(startpos);
 	hitbox.setSize(tuns.getSize());
 	hitbox.setOrigin(tuns.getOrigin());
 	hitbox.setPosition(tuns.getPosition());
+
+	if (hitwall && whohitwall != nullptr && active)
+	{
+		SetParticlePos();
+		TransParticles(dt);
+	}
 }
 
 void Tunnel::Draw(RenderWindow& window)
@@ -169,6 +190,7 @@ void Tunnel::Draw(RenderWindow& window)
 	if (!isPlayingGame)
 		WireableObject::Draw(window);
 	//window.draw(hitbox);
+	window.draw(particles);
 }
 
 void Tunnel::ChangeDir()
@@ -222,6 +244,56 @@ void Tunnel::SetButtonlist(vector<Button*>& button)
 
 void Tunnel::AddParticle()
 {
-	particleNum++;
-	particles.resize(particleNum * 3);
+	particleNum += 200;	
+}
+
+void Tunnel::SetParticlePos()
+{
+	if (isPtcSetted)
+		return;
+
+	isPtcSetted = true;
+
+	particles.resize(particleNum);
+
+	for (int i = 0; i < particles.getVertexCount(); i++)
+	{
+		particles[i].color = IsBlue ? Color(BLUE) : Color(ORANGE);
+	}
+
+	FloatRect rect = tuns.getGlobalBounds();
+
+	for (int i = 0; i < particleNum; i++)
+	{
+		float xpos = Utils::RandomRange(rect.left, rect.left + rect.width);
+		float ypos = Utils::RandomRange(rect.top, rect.top + rect.height);
+
+		particles[i].position = { xpos , ypos };
+	}
+}
+
+void Tunnel::TransParticles(float dt)
+{
+	for (int i = 0; i < particleNum; i++)
+	{
+		particles[i].position = particles[i].position + dt * 10 * particleDir;
+		if (!tuns.getGlobalBounds().contains(particles[i].position))
+		{
+			switch (dir)
+			{
+			case 0:				
+				particles[i].position.y = startpos.y;
+				break;
+			case 1:
+				particles[i].position.x = startpos.x;
+				break;
+			case 2:
+				particles[i].position.y = startpos.y;
+				break;
+			case 3:
+				particles[i].position.x = startpos.x;
+				break;
+			}
+		}				
+	}
 }

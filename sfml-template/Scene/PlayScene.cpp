@@ -916,14 +916,14 @@ void PlayScene::Input()
 		if (zoomCount > 20)
 			return;
 		zoomCount++;
-		worldView.zoom(0.94f);
+		worldView.zoom(0.8f);
 	}
 	if (InputMgr::GetMouseWheelState() == -1)
 	{
 		if (zoomCount < -10)
 			return;
 		zoomCount--;
-		worldView.zoom(1.06f);
+		worldView.zoom(1.12f);
 	}
 
 	if (InputMgr::GetMouseButton(Mouse::Middle))

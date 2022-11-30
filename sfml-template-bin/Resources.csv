@@ -1,4 +1,12 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
+Graphics/bendy/arm.png,0
+Graphics/bendy/armn.png,0
+Graphics/bendy/body.png,0
+Graphics/bendy/bodyn.png,0
+Graphics/bendy/head.png,0
+Graphics/bendy/headn.png,0
+Graphics/bendy/leg.png,0
+Graphics/bendy/legn.png,0
 Graphics/temp/cube.png,0
 Graphics/temp/cuben.png,0
 Graphics/temp/tunneltool.png,0

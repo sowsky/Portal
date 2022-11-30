@@ -52,5 +52,10 @@ protected:
 	b2Body* body = nullptr;
 	b2Fixture* fixture = nullptr;
 
+	Sprite p_head;
+	Sprite p_body;
+	Sprite p_arm;
+	Sprite p_lleg;
+	Sprite p_rleg;
 };
 
