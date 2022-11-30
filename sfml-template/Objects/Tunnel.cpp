@@ -48,7 +48,7 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 		}
 		else if (dir == 3) {
 			Utils::SetOrigin(tuns, Origins::ML);
-			startpos = { position.x - GRIDSIZE / 2,position.y };
+			startpos = { position.x - GRIDSIZE / 2 ,position.y };
 			tuns.setPosition(startpos);
 
 		}
@@ -145,7 +145,7 @@ void Tunnel::Update(float dt)
 		else if (dir == 3) {
 			Utils::SetOrigin(tuns, Origins::ML);
 
-			tuns.setSize({ (whohitwall->GetGlobalBounds().left) - tuns.getPosition().x,tuns.getSize().y });
+			tuns.setSize({(whohitwall->GetGlobalBounds().left) - tuns.getPosition().x,tuns.getSize().y });
 
 		}
 	}
@@ -163,7 +163,7 @@ void Tunnel::Draw(RenderWindow& window)
 
 	if (!isPlayingGame)
 		WireableObject::Draw(window);
-	window.draw(hitbox);
+	//window.draw(hitbox);
 }
 
 void Tunnel::ChangeDir()

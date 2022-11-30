@@ -1335,6 +1335,8 @@ void EditScene::Save()
 	isPlayable = true;
 	saveMsg.setString("Save succeed");
 	Utils::SetOrigin(saveMsg, Origins::MC);
+	saveString.clear();
+
 }
 
 void EditScene::Load()
@@ -1435,6 +1437,8 @@ void EditScene::Load()
 	}
 
 	SetMapToolSize();
+	loadString.clear();
+
 }
 
 void EditScene::Play()
