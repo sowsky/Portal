@@ -46,7 +46,7 @@ public:
 	Vector2f GetTunsPos() { return tuns.getPosition(); }
 	int GetConnected() { return connected; }
 
-	void InitParticle(int num);
+	void MakeParticle();
 
 private:
 	list<Button*> button;
