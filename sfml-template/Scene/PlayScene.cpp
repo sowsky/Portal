@@ -56,8 +56,8 @@ void PlayScene::Update(float dt)
 		Vector2f currentcampos = worldView.getCenter();
 
 		worldView.setCenter(Utils::Lerp(currentcampos.x, player->GetPos().x, dt * 4), Utils::Lerp(currentcampos.y, player->GetPos().y, dt * 4));
-	}
 
+	}
 
 	MakePortal();
 	MoveToPortal();
@@ -736,102 +736,105 @@ void PlayScene::TunnelCheck()
 				t->SetHitwall(true);
 				t->Setwhohitwall(*w);
 			}
-			//////////////////////player check//////////////////////////
-			if (t->GetHitBoxGlobalbound().intersects(player->GetGlobalBounds())) {
-				if (t->GetDir() == 0) {
-					if (!player->GetIsMoving()) {
-						float x = player->GetPos().x - t->GetTunsPos().x;
-						player->GetBody()->SetLinearVelocity({ x * -1 ,-2 });
+		}
+	}
+
+	for (auto t : tunnel) {
+		//////////////////////player check//////////////////////////
+		if (t->GetHitBoxGlobalbound().intersects(player->GetGlobalBounds())) {
+			if (t->GetDir() == 0) {
+				if (!player->GetIsMoving()) {
+					float x = player->GetPos().x - t->GetTunsPos().x;
+					player->GetBody()->SetLinearVelocity({ x * -1 ,-2 });
+				}
+				else
+				{
+					if ((int)player->GetBody()->GetLinearVelocity().y == 0) {
+						player->GetBody()->SetLinearVelocity({ player->GetBody()->GetLinearVelocity().x,0.2f });
 					}
 					else
-					{
-						if ((int)player->GetBody()->GetLinearVelocity().y == 0) {
-							player->GetBody()->SetLinearVelocity({ player->GetBody()->GetLinearVelocity().x,0.2f });
-						}
-						else
-							player->GetBody()->SetLinearVelocity({ player->GetBody()->GetLinearVelocity().x,-2 });
+						player->GetBody()->SetLinearVelocity({ player->GetBody()->GetLinearVelocity().x,-2 });
 
+				}
+				if (!t->GetColor()) {
+					float x = player->GetPlayerBodyLinearVelocity().x;
+					float y = player->GetPlayerBodyLinearVelocity().y;
+					player->GetBody()->SetLinearVelocity({ x,y * -1 });
+				}
+			}
+			else if (t->GetDir() == 2) {
+				if (!player->GetIsMoving()) {
+					float x = player->GetPos().x - t->GetTunsPos().x;
+					player->GetBody()->SetLinearVelocity({ x * -1 / 10,2 });
+				}
+				else
+				{
+					if ((int)player->GetBody()->GetLinearVelocity().y == 0) {
+						player->GetBody()->SetLinearVelocity({ player->GetBody()->GetLinearVelocity().x,0.2f });
 					}
-					if (!t->GetColor()) {
-						float x = player->GetPlayerBodyLinearVelocity().x;
-						float y = player->GetPlayerBodyLinearVelocity().y;
-						player->GetBody()->SetLinearVelocity({ x,y * -1 });
+					else
+						player->GetBody()->SetLinearVelocity({ player->GetBody()->GetLinearVelocity().x,2 });
+
+				}
+				if (!t->GetColor()) {
+					float x = player->GetPlayerBodyLinearVelocity().x;
+					float y = player->GetPlayerBodyLinearVelocity().y;
+					player->GetBody()->SetLinearVelocity({ x,y * -1 });
+				}
+			}
+			else if (t->GetDir() == 1) {
+				if (!player->GetIsMoving()) {
+					float y = player->GetPos().y - player->GetSize().y / 2 - t->GetTunsPos().y;
+					player->GetBody()->SetLinearVelocity({ -2,y });
+				}
+				else
+				{
+					if ((int)player->GetBody()->GetLinearVelocity().y == 0) {
+						player->GetBody()->SetLinearVelocity({ -0.2f,player->GetBody()->GetLinearVelocity().y });
 					}
+					else
+						player->GetBody()->SetLinearVelocity({ -0.2f,player->GetBody()->GetLinearVelocity().y });
+				}
+			}
+			else if (t->GetDir() == 3) {
+				if (!player->GetIsMoving()) {
+					float y = player->GetPos().y - player->GetSize().y / 2 - t->GetTunsPos().y;
+					player->GetBody()->SetLinearVelocity({ 2,y });
+				}
+				else
+				{
+					if ((int)player->GetBody()->GetLinearVelocity().y == 0) {
+						player->GetBody()->SetLinearVelocity({ 0.2f,player->GetBody()->GetLinearVelocity().y });
+					}
+					else
+						player->GetBody()->SetLinearVelocity({ 0.2f,player->GetBody()->GetLinearVelocity().y });
+
+				}
+			}
+		}
+
+		//////////////////cube check/////////////////////////
+		for (auto c : cube) {
+			if (t->GetHitBoxGlobalbound().intersects(c->GetGlobalBounds())) {
+				if (t->GetDir() == 0) {
+					float x = c->GetPos().x - t->GetTunsPos().x;
+					c->GetBody()->SetLinearVelocity({ x * -1 / 10,-2.f });
 				}
 				else if (t->GetDir() == 2) {
-					if (!player->GetIsMoving()) {
-						float x = player->GetPos().x - t->GetTunsPos().x;
-						player->GetBody()->SetLinearVelocity({ x * -1 / 10,2 });
-					}
-					else
-					{
-						if ((int)player->GetBody()->GetLinearVelocity().y == 0) {
-							player->GetBody()->SetLinearVelocity({ player->GetBody()->GetLinearVelocity().x,0.2f });
-						}
-						else
-							player->GetBody()->SetLinearVelocity({ player->GetBody()->GetLinearVelocity().x,2 });
-
-					}
-					if (!t->GetColor()) {
-						float x = player->GetPlayerBodyLinearVelocity().x;
-						float y = player->GetPlayerBodyLinearVelocity().y;
-						player->GetBody()->SetLinearVelocity({ x,y * -1 });
-					}
+					float x = c->GetPos().x - t->GetTunsPos().x;
+					c->GetBody()->SetLinearVelocity({ x * -1 / 10,2.f });
 				}
 				else if (t->GetDir() == 1) {
-					if (!player->GetIsMoving()) {
-						float y = player->GetPos().y - player->GetSize().y / 2 - t->GetTunsPos().y;
-						player->GetBody()->SetLinearVelocity({ -2,y });
-					}
-					else
-					{
-						if ((int)player->GetBody()->GetLinearVelocity().y == 0) {
-							player->GetBody()->SetLinearVelocity({ -0.2f,player->GetBody()->GetLinearVelocity().y });
-						}
-						else
-							player->GetBody()->SetLinearVelocity({ -0.2f,player->GetBody()->GetLinearVelocity().y });
-					}
+					float y = c->GetPos().y - t->GetTunsPos().y;
+					c->GetBody()->SetLinearVelocity({ -2.f,y });
 				}
 				else if (t->GetDir() == 3) {
-					if (!player->GetIsMoving()) {
-						float y = player->GetPos().y - player->GetSize().y / 2 - t->GetTunsPos().y;
-						player->GetBody()->SetLinearVelocity({ 2,y });
-					}
-					else
-					{
-						if ((int)player->GetBody()->GetLinearVelocity().y == 0) {
-							player->GetBody()->SetLinearVelocity({ 0.2f,player->GetBody()->GetLinearVelocity().y });
-						}
-						else
-							player->GetBody()->SetLinearVelocity({ 0.2f,player->GetBody()->GetLinearVelocity().y });
-
-					}
+					float y = c->GetPos().y - t->GetTunsPos().y;
+					c->GetBody()->SetLinearVelocity({ 2.f,y });
 				}
 			}
-
-			//////////////////cube check/////////////////////////
-			for (auto c : cube) {
-				if (t->GetHitBoxGlobalbound().intersects(c->GetGlobalBounds())) {
-					if (t->GetDir() == 0) {
-						float x = c->GetPos().x - t->GetTunsPos().x;
-						c->GetBody()->SetLinearVelocity({ x * -1 / 10,-2.f });
-					}
-					else if (t->GetDir() == 2) {
-						float x = c->GetPos().x - t->GetTunsPos().x;
-						c->GetBody()->SetLinearVelocity({ x * -1 / 10,2.f });
-					}
-					else if (t->GetDir() == 1) {
-						float y = c->GetPos().y - t->GetTunsPos().y;
-						c->GetBody()->SetLinearVelocity({ -2.f,y });
-					}
-					else if (t->GetDir() == 3) {
-						float y = c->GetPos().y - t->GetTunsPos().y;
-						c->GetBody()->SetLinearVelocity({ 2.f,y });
-					}
-				}
-			}
-
 		}
+
 	}
 
 }
@@ -839,8 +842,9 @@ void PlayScene::TunnelCheck()
 void PlayScene::BridgeCheck()
 {
 	for (auto w : wall) {
+
 		for (auto v : bridge) {
-			if (w->GetGlobalBounds().intersects(v->GetHitBoxGlobalbound())) {
+			if (w->GetGlobalBounds().intersects(v->GetBridgeGlobalBound())) {
 				v->SetHitwall(true);
 				v->Setwhohitwall(*w);
 			}
