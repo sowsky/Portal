@@ -3,15 +3,6 @@
 #include "WireableObject.h"
 #include "Button.h"
 #include "Tile.h"
-#include "../Particle/Particle.h"
-
-struct Particles
-{
-	vector<Particle> m_Particles;
-	VertexArray m_Vertices;
-	float m_Duration;
-	bool m_IsRunning = false;
-};
 
 class Tunnel : public WireableObject
 {
@@ -46,7 +37,7 @@ public:
 	Vector2f GetTunsPos() { return tuns.getPosition(); }
 	int GetConnected() { return connected; }
 
-	void MakeParticle();
+	void AddParticle();
 
 private:
 	list<Button*> button;
@@ -62,6 +53,7 @@ private:
 	int dir = 0;
 	int connected = 0; //0==none 1==follow blue 2==follow orange
 
-	Particles particles;
+	VertexArray particles;
+	int particleNum = 0;
 };
 

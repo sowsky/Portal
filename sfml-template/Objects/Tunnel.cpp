@@ -54,6 +54,9 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 		}
 		tuns.setSize({ 0,50 });
 	}
+
+	particles.setPrimitiveType(Points);	
+	particles.resize(100);
 }
 
 Tunnel::~Tunnel()
@@ -126,6 +129,8 @@ void Tunnel::Update(float dt)
 			}
 
 		}
+
+		AddParticle();
 	}
 	else if (hitwall && whohitwall != nullptr) {
 		if (dir == 0) {
@@ -182,7 +187,11 @@ void Tunnel::ChangeColor()
 {
 	IsBlue = !IsBlue;
 	if (IsBlue)
+	{
 		tuns.setFillColor(Color(0, 255, 0, 128));
+		
+	}
+		
 	else {
 		tuns.setFillColor(Color(255, 255, 0, 128));
 	}
@@ -211,33 +220,8 @@ void Tunnel::SetButtonlist(vector<Button*>& button)
 	}
 }
 
-void Tunnel::MakeParticle()
+void Tunnel::AddParticle()
 {
-	particles.m_Vertices.setPrimitiveType(Points);
-	float tunArea = tuns.getSize().x * tuns.getSize().y;
-	int numParticles = tunArea * 0.1f;
-	particles.m_Vertices.resize((int)numParticles);
-
-	for (int i = 0; i < numParticles; i++)
-	{
-		srand(time(0) + i);		
-		float speed = 100.f;
-		Vector2f direction;
-		switch (dir)
-		{
-		case 0:
-			direction = { 0.f, 1.f };
-			break;
-		case 1:
-			direction = { -1.f,0.f };
-			break;
-		case 2:
-			direction = { 0.f,-1.f };
-			break;
-		case 3:
-			direction = { 1.f,0.f };
-			break;
-		}
-		particles.m_Particles.push_back(Particle(direction));
-	}
+	particleNum++;
+	particles.resize(particleNum * 3);
 }

@@ -1333,8 +1333,10 @@ void EditScene::Save()
 	map << save_js;
 
 	isPlayable = true;
+
 	saveMsg.setString("Save succeed");
-	Utils::SetOrigin(saveMsg, Origins::MC);
+	Utils::SetOrigin(saveMsg, Origins::MC);	
+	saveString.clear();
 }
 
 void EditScene::Load()
@@ -1435,11 +1437,16 @@ void EditScene::Load()
 	}
 
 	SetMapToolSize();
+	loadString.clear();
 }
 
 void EditScene::Play()
-{
+{	
+	saveString.clear();
 	Save();
+
+	if (!isPlayable)
+		return;
 
 	msgTime = 0.f;
 
