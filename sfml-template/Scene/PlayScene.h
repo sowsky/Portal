@@ -56,6 +56,7 @@ public:
 
 	void PushButton();
 	void TunnelCheck();
+	void BridgeCheck();
 	Vector2f CameraMove(Vector2f currpos, Vector2f playerpos,float, float dt);
 
 	void MoveToPortal();
@@ -74,6 +75,7 @@ private:
 	vector<Button*> button;
 	vector<Cube*> cube;
 	vector<Tunnel*> tunnel;
+	vector<Bridge*> bridge;
 	Cube* grabbedcube = nullptr;
 	Vector2f currgrid = { GRIDSIZE / 2,GRIDSIZE / 2 };
 	float wallbunchwidth = 50;
@@ -95,7 +97,6 @@ private:
 
 	RectangleShape ending;
 
-
 	////////////////////////////////////////////////////
 	unique_ptr<b2World> world;
 
@@ -104,13 +105,11 @@ private:
 	int zoomCount;
 	bool isMovingViewCenter;
 
-
 	//////
 	ParticleSystem particle;
 	
 	int width;
 	int height;
-
 
 	// Front and backbuffer as Pointer for std::swap
 	unique_ptr<RenderTexture> front, back;

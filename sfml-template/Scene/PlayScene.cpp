@@ -44,6 +44,9 @@ void PlayScene::Update(float dt)
 	for (auto t : tunnel) {
 		t->Update(dt);
 	}
+	for (auto b : bridge) {
+		b->Update(dt);
+	}
 	blue->Update(dt);
 	orange->Update(dt);
 
@@ -61,6 +64,7 @@ void PlayScene::Update(float dt)
 
 	PushButton();
 	TunnelCheck();
+	BridgeCheck();
 
 	if (grabitem) {
 		if (grabbedcube->GetSide())
@@ -178,6 +182,10 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(window);
 	}
 
+	for (auto v : bridge) {
+		v->Draw(window);
+	}
+
 	if (particle.running())
 		window.draw(particle);
 
@@ -221,7 +229,7 @@ PlayScene::PlayScene(string path)
 
 	for (auto& p : loadObjInfo.buttons)
 	{
-		loadedArray[p.posY][p.posX].push_back(&p);		
+		loadedArray[p.posY][p.posX].push_back(&p);
 	}
 	for (auto& p : loadObjInfo.cubes)
 	{
@@ -232,6 +240,10 @@ PlayScene::PlayScene(string path)
 		loadedArray[p.posY][p.posX].push_back(&p);
 	}
 	for (auto& p : loadObjInfo.tunnels)
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+	for (auto& p : loadObjInfo.bridges)
 	{
 		loadedArray[p.posY][p.posX].push_back(&p);
 	}
@@ -291,30 +303,15 @@ PlayScene::PlayScene(string path)
 					{
 						Tunnel_sturct* tempT = (Tunnel_sturct*)obj;
 						tunnel.push_back(new Tunnel({ currgrid.x,currgrid.y }, tempT->rotation, tempT->buttonList, 1, tempT->active, 0));
-
-						int rotaion = tempT->rotation;
-						if (rotaion == 0) {			//top of gird
-							tunnel.back()->SetPos({ currgrid.x,currgrid.y - GRIDSIZE / 2 });
-							tunnel.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
-
-						}
-						else if (rotaion == 1) {	//right of gird
-							tunnel.back()->SetPos({ currgrid.x + GRIDSIZE / 2,currgrid.y });
-							tunnel.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
-
-						}
-						else if (rotaion == 2) {	//bottom of gird
-							tunnel.back()->SetPos({ currgrid.x,currgrid.y + GRIDSIZE / 2 });
-							tunnel.back()->SetSize({ GRIDSIZE,GRIDSIZE / 4 });
-
-						}
-						else if (rotaion == 3) {	//left of gird
-							tunnel.back()->SetPos({ currgrid.x - GRIDSIZE / 2,currgrid.y });
-							tunnel.back()->SetSize({ GRIDSIZE ,GRIDSIZE / 4 });
-
-						}
 						currgrid.x += GRIDSIZE;
+						break;
 					}
+					case 'l':
+					case 'L':
+						Bridge_sturct * tempB = (Bridge_sturct*)obj;
+						bridge.push_back(new Bridge(world.get(), { currgrid.x,currgrid.y }, { GRIDSIZE,GRIDSIZE }, tempB->buttonList, true, tempB->rotation, 0));
+						currgrid.x += GRIDSIZE;
+
 					}
 				}
 			}
@@ -837,6 +834,18 @@ void PlayScene::TunnelCheck()
 		}
 	}
 
+}
+
+void PlayScene::BridgeCheck()
+{
+	for (auto w : wall) {
+		for (auto v : bridge) {
+			if (w->GetGlobalBounds().intersects(v->GetHitBoxGlobalbound())) {
+				v->SetHitwall(true);
+				v->Setwhohitwall(*w);
+			}
+		}
+	}
 }
 
 Vector2f PlayScene::CameraMove(Vector2f currpos, Vector2f playerpos, float alpah, float dt)
