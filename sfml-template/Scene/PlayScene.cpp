@@ -143,6 +143,9 @@ void PlayScene::PhysicsUpdate(float dt)
 void PlayScene::Draw(RenderWindow& window)
 {
 	window.setView(worldView);
+	//pass_diffuse.draw(background);	
+	//normals_shader.setParameter("sampler_normal", *bgNormal);
+	//pass_normals.draw(background, &normals_shader);
 
 	for (auto v : wall) {
 		v->Draw(window);
@@ -157,9 +160,14 @@ void PlayScene::Draw(RenderWindow& window)
 	if (goal != nullptr) {
 		goal->Draw(window);
 		//goal->Draw(pass_diffuse, normals_shader, pass_normals);
-	}
+	}	
 
 	DrawRenderedBuffer(window);
+
+	if (player != nullptr)
+	{
+		player->Draw(window);
+	}
 	
 	for (auto v : wall) {
 		v->DrawHitbox(window);
@@ -172,11 +180,6 @@ void PlayScene::Draw(RenderWindow& window)
 	if (madeblue) {
 		blue->Draw(window);
 	}
-
-
-
-	if (player != nullptr)
-		player->Draw(window);
 
 	for (auto v : button) {
 		v->Draw(window);
@@ -332,9 +335,9 @@ PlayScene::PlayScene(string path)
 
 	height = GRIDSIZE * colNum;
 	width = GRIDSIZE * rowNum;
-
-	//height = WINDOW_HEIGHT;
-	//width = WINDOW_WIDTH;
+	background.setSize({ (float)width, (float)height });
+	background.setFillColor(Color(0, 0, 0, 0));
+	bgNormal = RESOURCEMGR->GetTexture("Graphics/bg.png");
 
 	goal->SetButtonlist(button);
 
@@ -872,8 +875,7 @@ Vector2f PlayScene::CameraMove(Vector2f currpos, Vector2f playerpos, float alpah
 
 void PlayScene::DrawBackGroundView(RenderWindow& window)
 {
-	window.setView(backgroundView);
-	window.draw(background);
+	window.setView(backgroundView);	
 }
 
 void PlayScene::DrawRenderedBuffer(RenderWindow& window)
@@ -1017,7 +1019,7 @@ void PlayScene::Input()
 
 		blue->SetSize({ 20,20 });
 		madeblue = false;
-		blue->SetPos({ player->GetPos().x,player->GetPos().y - 25 });
+		blue->SetPos(player->GetIndicator());
 		blue->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
 	}
 
@@ -1090,7 +1092,7 @@ void PlayScene::Input()
 
 		orange->SetSize({ 20,20 });
 		madeorange = false;
-		orange->SetPos({ player->GetPos().x,player->GetPos().y - 25 });
+		orange->SetPos(player->GetIndicator());
 		orange->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
 	}
 
@@ -1437,9 +1439,8 @@ void PlayScene::Release()
 }
 
 void PlayScene::Enter()
-{
-	background.setTexture(*RESOURCEMGR->GetTexture("Graphics/backgrounds/ruin2.png"));
-	Utils::SetSpriteSize(background, { WINDOW_WIDTH,WINDOW_HEIGHT });
+{	
+
 	auto size = (Vector2f)FRAMEWORK->GetWindowSize();
 	worldView.setSize(size);
 	worldView.setCenter(size / 2.f);

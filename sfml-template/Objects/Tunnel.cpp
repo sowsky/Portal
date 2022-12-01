@@ -276,7 +276,7 @@ void Tunnel::TransParticles(float dt)
 {
 	for (int i = 0; i < particleNum; i++)
 	{
-		particles[i].position = particles[i].position + dt * 10 * particleDir;
+		particles[i].position = particles[i].position + dt * 130 * particleDir;
 		if (!tuns.getGlobalBounds().contains(particles[i].position))
 		{
 			switch (dir)

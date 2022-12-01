@@ -14,6 +14,8 @@ public:
 	virtual void Update(float dt);
 	virtual void PhysicsUpdate(float dt);
 	virtual void Draw(RenderWindow& window);
+	virtual void Draw
+	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
 
 	Vector2f GetPositions() { return sprite.getPosition(); }	
 
@@ -33,6 +35,13 @@ public:
 	void SetMaxSpeed(Vector2f vec) { recentspeed = vec; }
 
 	bool GetIsMoving() { return IsMoving; }
+
+	void UpdatePlayerPos(float dt);
+	void WalkAnimaton(float dt);
+	void RotateAnimation(RenderWindow& window);
+	void ShowBornForDev(RenderWindow& window);
+
+	Vector2f GetIndicator();
 protected:
 	bool ground = false;
 	bool IsMoving = false;
@@ -54,8 +63,29 @@ protected:
 
 	Sprite p_head;
 	Sprite p_body;
-	Sprite p_arm;
+	RectangleShape p_arm;	
 	Sprite p_lleg;
 	Sprite p_rleg;
+	Sprite portalGun;
+
+	Texture* head_normal;
+	Texture* body_normal;
+	Texture* arm_normal;
+	Texture* leg_normal;
+
+	RectangleShape spine1;
+	RectangleShape spine2;
+	RectangleShape pelvis;
+	RectangleShape clavicle;
+	RectangleShape armBorn;
+	RectangleShape indicator;
+
+	bool startMove;
+	float legdir = 1.f;
+	float groundTime = 0.25f;
+	float groundTimeMax = 0.25f;
+
+	bool devMod = false;
+
 };
 

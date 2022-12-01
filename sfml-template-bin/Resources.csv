@@ -1,4 +1,5 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
+Graphics/bendy/portalgun.png,0
 Graphics/bendy/arm.png,0
 Graphics/bendy/armn.png,0
 Graphics/bendy/body.png,0
@@ -14,6 +15,7 @@ Graphics/temp/bridge.png,0
 Graphics/grid.png,0
 Graphics/button.png,0
 Graphics/cube.png,0
+Graphics/bg.png,0
 Graphics/goal.png,0
 Graphics/goaln.png,0
 Graphics/goalback.png,0

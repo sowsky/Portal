@@ -83,7 +83,7 @@ private:
 
 	View backgroundView;
 	View endingView;
-	Sprite background;
+	RectangleShape background;
 
 	Blue* blue;
 	Orange* orange;
@@ -98,6 +98,7 @@ private:
 	bool IsMadeBridgeFollowBluePortal = false;
 
 	RectangleShape ending;
+	Texture* bgNormal;
 
 	////////////////////////////////////////////////////
 	unique_ptr<b2World> world;
@@ -126,6 +127,8 @@ private:
 	float ambient_intensity = 0.7;
 	Vector3f falloff;
 	/////
+
+	
 
 };
 
