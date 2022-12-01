@@ -57,6 +57,8 @@ public:
 	void PushButton();
 	void TunnelCheck();
 	void BridgeCheck();
+	void CheckStillObjectalive();
+	
 	Vector2f CameraMove(Vector2f currpos, Vector2f playerpos,float, float dt);
 
 	void MoveToPortal();
