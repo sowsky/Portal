@@ -60,7 +60,7 @@ bool Framework::Do()
 		fps += 1;
 		time += dt;
 		if (time >= 0.5) {
-			cout << fps*2 << endl;
+		//	cout << fps*2 << endl;
 			time= 0;
 			fps = 0;
 		}

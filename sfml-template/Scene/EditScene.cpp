@@ -24,7 +24,6 @@ EditScene::EditScene()
 	background.setTexture(*RESOURCEMGR->GetTexture("Graphics/backgrounds/ruin2.png"));
 	shadow.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/shadow.png"));
 
-
 	uiBackGround.setFillColor(Color(229, 232, 233, 255));
 	uiOutLine.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/uioutline.png"));
 	uiMove.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/cross.png"));

@@ -66,7 +66,6 @@ void Tile::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
 
 	diffuse.draw(frontFace);
 	NormalPass(normal, frontFace, normalMap, nShader);
-
 }
 
 void Tile::PhysicsUpdate()
