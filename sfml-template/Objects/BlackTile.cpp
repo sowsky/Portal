@@ -1,87 +1,25 @@
-#include "Tile.h"
-#include "../FrameWork/Const.h"
-#include "../FrameWork/Framework.h"
-#include "../Manager/ResourceMgr.h"
+#include "BlackTile.h"
 #include "../FrameWork/InputMgr.h"
-#pragma warning(disable:4996)
+#include "../Manager/ResourceMgr.h"
 
-Tile::Tile()
+BlackTile::BlackTile()
 {
 	SetResourceTexture(GetRandTileTex64());
-	id = '1';
+	id = '2';
 
 	type = ObjectType::Tile;
 	objSize = ObjectSize::Big;
 	attatchedPos = Rotate::Down;
 }
 
-Tile::~Tile()
-{
-	//delete fixture;
-	delete hitbox;
 
-}
-
-void Tile::SetOrigin(Origins origin)
-{
-	SpriteObj::SetOrigin(origin);
-	Utils::SetOrigin(backFace, origin);
-}
-
-SpriteObj* Tile::NewThis()
-{
-	return new Tile;
-}
-
-void Tile::Update(float dt)
-{
-
-	//Utils::SetOrigin(*hitbox, Origins::MC);
-	//if (body != nullptr)
-		//sprite.setRotation(body->GetAngle());
-	//sprite.setPosition({ body->GetPosition().x,body->GetPosition().y*-1 });
-	//SetPos({ body->GetPosition().x * SCALE,body->GetPosition().y * SCALE * -1 });
-
-	if (body != nullptr)
-	{
-		Utils::SetOrigin(*hitbox, Origins::MC);
-		hitbox->setSize(GetSize());
-		hitbox->setPosition(body->GetPosition().x * SCALE, body->GetPosition().y * SCALE*-1);
-	}	
-}
-
-void Tile::Draw(RenderWindow& window)
-{
-	if (!isPlayingGame)
-		window.draw(sprite);
-
-	if(isPlayingGame)
-		DrawSideTiles(window);	
-}
-
-void Tile::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
-{
-	//diffuse.draw(sprite);
-	//NormalPass(normal, sprite, normalMap, nShader);
-
-	diffuse.draw(frontFace);
-	NormalPass(normal, frontFace, normalMap, nShader);
-
-}
-
-void Tile::PhysicsUpdate()
-{
-}
-
-Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*size of bunch wall */, Vector2f box2dposition, bool isEnd)
+BlackTile::BlackTile(b2World* world, const Vector2f& position, Vector2f dimensions, Vector2f box2dposition, bool isEnd)
 {
 	GetRandDiffuseAndNormal64();
-	id = '1';
+	id = '2';
 	SetSize({ GRIDSIZE,GRIDSIZE });
 
 	Utils::SetOrigin(sprite, Origins::MC);
-
-
 	if (isEnd) {
 		float tilewidth = dimensions.y;
 		b2BodyDef bodyDef;
@@ -99,14 +37,12 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*size o
 		fixture = body->CreateFixture(&fixtureDef);
 	}
 
-
-
-	SetPos({ position.x,position.y });	
+	SetPos({ position.x,position.y });
 
 	hitbox = new RectangleShape;
 	Utils::SetOrigin(*hitbox, Origins::MC);
 	hitbox->setFillColor(Color::Red);
-	hitbox->setPosition(GetPos());	
+	hitbox->setPosition(GetPos());
 
 	type = ObjectType::Tile;
 
@@ -138,35 +74,81 @@ Tile::Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*size o
 	Utils::SetOrigin(*hitbox, Origins::MC);
 	hitbox->setSize(Utils::GetSpriteSize(sprite));
 	hitbox->setPosition(GetPos());
-
 }
 
-void Tile::DrawHitbox(RenderWindow& window)
+
+BlackTile::~BlackTile()
+{
+	//delete fixture;
+	delete hitbox;
+}
+
+void BlackTile::SetOrigin(Origins origin)
+{
+	SpriteObj::SetOrigin(origin);
+	Utils::SetOrigin(backFace, origin);
+}
+
+SpriteObj* BlackTile::NewThis()
+{
+	return new BlackTile;
+}
+
+void BlackTile::Update(float dt)
+{
+	if (body != nullptr)
+	{
+		Utils::SetOrigin(*hitbox, Origins::MC);
+		hitbox->setSize(GetSize());
+		hitbox->setPosition(body->GetPosition().x * SCALE, body->GetPosition().y * SCALE * -1);
+	}
+}
+
+void BlackTile::Draw(RenderWindow& window)
+{
+	if (!isPlayingGame)
+		window.draw(sprite);
+
+	if (isPlayingGame)
+		DrawSideTiles(window);
+}
+
+void BlackTile::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
+{
+	diffuse.draw(frontFace);
+	NormalPass(normal, frontFace, normalMap, nShader);
+}
+
+void BlackTile::PhysicsUpdate()
+{
+}
+
+void BlackTile::DrawHitbox(RenderWindow& window)
 {
 	window.draw(*hitbox);
 }
 
-string Tile::GetRandTileTex()
+string BlackTile::GetRandTileTex()
 {
 	String str;
 	int rand = Utils::RandomRange(0, 3);
 	switch (rand)
 	{
 	case 0:
-		str = "Graphics/Tile/tile1.png";
+		str = "Graphics/Tile/1.png";
 		break;
 	case 1:
-		str = "Graphics/Tile/tile2.png";
+		str = "Graphics/Tile/2.png";
 		break;
 	case 2:
-		str = "Graphics/Tile/tile3.png";
+		str = "Graphics/Tile/3.png";
 		break;
 	}
 
 	return str;
 }
 
-string Tile::GetRandTileTex64()
+string BlackTile::GetRandTileTex64()
 {
 	String str;
 	int rand = Utils::RandomRange(0, 3);
@@ -186,7 +168,7 @@ string Tile::GetRandTileTex64()
 	return str;
 }
 
-void Tile::GetRandDiffuseAndNormal()
+void BlackTile::GetRandDiffuseAndNormal()
 {
 	int rand = Utils::RandomRange(0, 3);
 	switch (rand)
@@ -209,7 +191,7 @@ void Tile::GetRandDiffuseAndNormal()
 	}
 }
 
-void Tile::GetRandDiffuseAndNormal64()
+void BlackTile::GetRandDiffuseAndNormal64()
 {
 	int rand = Utils::RandomRange(0, 3);
 	switch (rand)
@@ -232,14 +214,15 @@ void Tile::GetRandDiffuseAndNormal64()
 	}
 }
 
-void Tile::SetActiveSideTiles(int pos, bool active)
+void BlackTile::SetActiveSideTiles(int pos, bool active)
 {
 	sideTiles[pos].first = active;
+
 }
 
-void Tile::SetSideTilesPosition(RenderWindow& window)
+void BlackTile::SetSideTilesPosition(RenderWindow& window)
 {
-	Vector2f vanishingPoint = window.getView().getCenter();		
+	Vector2f vanishingPoint = window.getView().getCenter();
 
 	frontFace.setPosition(
 		sprite.getPosition() - (vanishingPoint - sprite.getPosition()) * (1.f - DEPTH)
@@ -283,9 +266,10 @@ void Tile::SetSideTilesPosition(RenderWindow& window)
 		sideTiles[3].second[2].position = { backRect.left, backRect.top + backRect.height };
 		sideTiles[3].second[3].position = { frontRect.left , frontRect.top + frontRect.height };
 	}
+
 }
 
-void Tile::DrawSideTiles(RenderWindow& window)
+void BlackTile::DrawSideTiles(RenderWindow& window)
 {
 	SetSideTilesPosition(window);
 

@@ -41,12 +41,15 @@ void PlayScene::Update(float dt)
 	}
 	for (auto w : wall)
 		w->Update(dt);
+	for (auto bw : blackwall)
+		bw->Update(dt);
 	for (auto t : tunnel) {
 		t->Update(dt);
 	}
 	for (auto b : bridge) {
 		b->Update(dt);
 	}
+	
 	blue->Update(dt);
 	orange->Update(dt);
 
@@ -54,7 +57,6 @@ void PlayScene::Update(float dt)
 	if (!isMovingViewCenter) {
 
 		Vector2f currentcampos = worldView.getCenter();
-
 		worldView.setCenter(Utils::Lerp(currentcampos.x, player->GetPos().x, dt * 4), Utils::Lerp(currentcampos.y, player->GetPos().y, dt * 4));
 
 	}
@@ -147,6 +149,11 @@ void PlayScene::Draw(RenderWindow& window)
 	window.setView(worldView);
 
 	for (auto v : wall) {
+		v->Draw(window);
+		v->Draw(pass_diffuse, normals_shader, pass_normals);
+	}
+
+	for (auto v : blackwall) {
 		v->Draw(window);
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
 	}
@@ -254,6 +261,11 @@ PlayScene::PlayScene(string path)
 		loadedArray[p.posY][p.posX].push_back(&p);
 	}
 
+	for (auto& p : loadObjInfo.blacktile)
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+
 	for (int i = 0; i < colNum; i++)
 	{
 		for (int j = 0; j < rowNum; j++)
@@ -279,6 +291,22 @@ PlayScene::PlayScene(string path)
 						else
 						{
 							MakeWall(true);
+							box2dposition.x += currgrid.x + GRIDSIZE;
+							wallbunchwidth = GRIDSIZE;
+						}
+						break;
+
+					case '2':
+						if (j + 1 < rowNum &&
+							!loadedArray[i][j + 1].empty() &&
+							loadedArray[i][j + 1].front()->id == '1')
+						{
+							MakeBlackWall(false);
+							wallbunchwidth += GRIDSIZE;
+						}
+						else
+						{
+							MakeBlackWall(true);
 							box2dposition.x += currgrid.x + GRIDSIZE;
 							wallbunchwidth = GRIDSIZE;
 						}
@@ -350,6 +378,15 @@ PlayScene::PlayScene(string path)
 }
 
 void PlayScene::MakeWall(bool isEnd)
+{
+	Tile* temp = new Tile(world.get(), currgrid, Vector2f({ wallbunchwidth, GRIDSIZE }), box2dposition, isEnd);
+	temp->SetOrigin(Origins::MC);
+	wall.push_back(temp);
+
+	currgrid.x += GRIDSIZE;
+}
+
+void PlayScene::MakeBlackWall(bool isEnd)
 {
 	Tile* temp = new Tile(world.get(), currgrid, Vector2f({ wallbunchwidth, GRIDSIZE }), box2dposition, isEnd);
 	temp->SetOrigin(Origins::MC);

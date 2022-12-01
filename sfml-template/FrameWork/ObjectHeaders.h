@@ -10,3 +10,4 @@
 #include "../Objects/Wire.h"
 #include "../Objects/Tunnel.h"
 #include "../Objects/Bridge.h"
+#include "../Objects/BlackTile.h"
