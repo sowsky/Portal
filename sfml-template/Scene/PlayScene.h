@@ -49,6 +49,7 @@ public:
 	void MakePlayer();
 	void MakeButton(int rotaion, int id);
 	void MakePortal();
+	void MakeBlackWall(bool isEnd);
 
 	void MakeGoal(vector<int> list);
 
@@ -57,8 +58,8 @@ public:
 	void PushButton();
 	void TunnelCheck();
 	void BridgeCheck();
-	Vector2f CameraMove(Vector2f currpos, Vector2f playerpos,float, float dt);
-
+	void CheckStillObjectalive();
+	
 	void MoveToPortal();
 	
 public:
@@ -76,6 +77,8 @@ private:
 	vector<Cube*> cube;
 	vector<Tunnel*> tunnel;
 	vector<Bridge*> bridge;
+	vector<BlackTile*> blackwall;
+
 	Cube* grabbedcube = nullptr;
 	Vector2f currgrid = { GRIDSIZE / 2,GRIDSIZE / 2 };
 	float wallbunchwidth = 50;

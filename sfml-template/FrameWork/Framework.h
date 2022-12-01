@@ -14,6 +14,8 @@ protected:
 	Clock clock;
 	Time deltaTime;
 	float timeScale;
+	int fps = 0;
+	float time = 0;
 
 public:
 	Framework();

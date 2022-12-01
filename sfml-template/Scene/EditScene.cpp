@@ -1078,23 +1078,26 @@ void EditScene::FillUiToolBox()
 	uiTool[0][0].first = new Tile;
 	uiTool[0][0].first->SetResourceTexture("Graphics/Ui/tile.png");
 
-	uiTool[0][1].first = new Cube;
-	uiTool[0][1].first->SetResourceTexture("Graphics/Ui/cube.png");
+	uiTool[0][1].first = new BlackTile;
+	uiTool[0][1].first->SetResourceTexture("Graphics/Ui/tileb.png");
 
 	uiTool[0][2].first = new Player;
 
-	uiTool[0][3].first = new Button;
-	uiTool[0][3].first->SetResourceTexture("Graphics/Ui/button.png");
+	uiTool[0][3].first = new Goal;
+	uiTool[0][3].first->SetResourceTexture("Graphics/Ui/goal.png");
+
+	uiTool[1][0].first = new Cube;
+	uiTool[1][0].first->SetResourceTexture("Graphics/Ui/cube.png");
+
+	uiTool[1][1].first = new Button;
+	uiTool[1][1].first->SetResourceTexture("Graphics/Ui/button.png");
 	Button::SetButtonNum(0);
 
-	uiTool[1][0].first = new Goal;
-	uiTool[1][0].first->SetResourceTexture("Graphics/Ui/goal.png");
+	uiTool[1][2].first = new Tunnel;
+	uiTool[1][2].first->SetResourceTexture("Graphics/Ui/tbeam.png");
 
-	uiTool[1][1].first = new Tunnel;
-	uiTool[1][1].first->SetResourceTexture("Graphics/Ui/tbeam.png");
-
-	uiTool[1][2].first = new Bridge;
-	uiTool[1][2].first->SetResourceTexture("Graphics/Ui/bridge.png");
+	uiTool[1][3].first = new Bridge;
+	uiTool[1][3].first->SetResourceTexture("Graphics/Ui/bridge.png");
 }
 
 void EditScene::SetUiToolPos(Vector2f pos)
@@ -1247,6 +1250,15 @@ void EditScene::Save()
 						saveObjInfo.tiles.push_back(tile);
 						break;
 					}
+					case '2':
+					{
+						Black_Tile_struct tile;
+						tile.id = '2';
+						tile.posX = j;
+						tile.posY = posY;
+						saveObjInfo.blacktile.push_back(tile);
+						break;
+					}
 					case '@':
 					{
 						Goal_struct goal;
@@ -1384,6 +1396,12 @@ void EditScene::Load()
 	for (auto& p : loadObjInfo.tiles)
 	{
 		Tile* tile = new Tile;
+		mapTool[idxI - p.posY][p.posX].first.push_back(tile);
+	}
+
+	for (auto& p : loadObjInfo.blacktile)
+	{
+		BlackTile* tile = new BlackTile;
 		mapTool[idxI - p.posY][p.posX].first.push_back(tile);
 	}
 

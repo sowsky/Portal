@@ -3,11 +3,11 @@
 #include <box2d/box2d.h>
 #include <array>
 
-class Tile : public SpriteObj
+class BlackTile : public SpriteObj
 {
 public:
-	Tile();
-	virtual ~Tile();
+	BlackTile();
+	virtual ~BlackTile();
 
 	void SetOrigin(Origins origin);
 
@@ -20,13 +20,12 @@ public:
 	void PhysicsUpdate();
 
 	////////////////////////////////////////////////////////////////////////////
-	Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*bunch of wall size*/, Vector2f box2dposition, bool isEnd);
+	BlackTile(b2World* world, const Vector2f& position, Vector2f dimensions/*bunch of wall size*/, Vector2f box2dposition, bool isEnd);
 	b2Body* GetBody() { return body; }
 	b2Fixture* GetFixture() { return fixture; }
 
 	void DrawHitbox(RenderWindow& window);
-	
-	string GetRandTileTex();
+		
 	string GetRandTileTex64();
 	
 	void GetRandDiffuseAndNormal64();
@@ -37,12 +36,12 @@ protected:
 	b2Body* body = nullptr;
 	b2Fixture* fixture = nullptr;
 
-	RectangleShape* hitbox;	
+	RectangleShape* hitbox;
 
 	Texture* normal;
 	RectangleShape backFace;
 	Sprite frontFace;
 	array<pair<bool, VertexArray>, 4> sideTiles;
-	array<Texture*, 4> tileTextures;	
+	array<Texture*, 4> tileTextures;
 };
 

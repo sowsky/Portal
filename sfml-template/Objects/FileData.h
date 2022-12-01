@@ -35,6 +35,11 @@ struct Tile_struct : public Object_struct
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Tile_struct, posX, posY, rotation, id);
 };
 
+struct Black_Tile_struct : public Object_struct
+{
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Black_Tile_struct, posX, posY, rotation, id);
+};
+
 struct Cube_struct : public Object_struct
 {	
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Cube_struct, posX, posY, rotation, id);
@@ -68,10 +73,11 @@ struct Data_struct
 	Player_struct player;
 	Goal_struct goal;
 	vector<Tile_struct> tiles;
+	vector<Black_Tile_struct> blacktile;
 	vector<Cube_struct> cubes;
 	vector<Button_sturct> buttons;
 	vector<Tunnel_sturct> tunnels;
 	vector<Bridge_sturct> bridges;
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Data_struct, map_size, player, goal, tiles, cubes, buttons, tunnels, bridges);
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Data_struct, map_size, player, goal, tiles, cubes, buttons, tunnels, bridges, blacktile);
 
 };

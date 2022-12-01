@@ -39,6 +39,7 @@ Graphics/Ui/cross2.png,0
 Graphics/Ui/checkbox.png,0
 Graphics/Ui/shadow.png,0
 Graphics/Ui/tile.png,0
+Graphics/Ui/tileb.png,0
 Graphics/Ui/cube.png,0
 Graphics/Ui/goal.png,0
 Graphics/Ui/button.png,0
@@ -56,12 +57,15 @@ Graphics/Tile/tile2.png,0
 Graphics/Tile/tile2n.png,0
 Graphics/Tile/tile3.png,0
 Graphics/Tile/tile3n.png,0
-Graphics/Tile/64/tile1.png,0
+Graphics/Tile/64/1.png,0
+Graphics/Tile/64/2.png,0
+Graphics/Tile/64/3.png,0
 Graphics/Tile/64/tile1n.png,0
-Graphics/Tile/64/tile2.png,0
 Graphics/Tile/64/tile2n.png,0
-Graphics/Tile/64/tile3.png,0
 Graphics/Tile/64/tile3n.png,0
+Graphics/Tile/64/tile1.png,0
+Graphics/Tile/64/tile2.png,0
+Graphics/Tile/64/tile3.png,0
 Graphics/backgrounds/narrow.png,0
 Graphics/backgrounds/ruin.png,0
 Graphics/backgrounds/ruin2.png,0

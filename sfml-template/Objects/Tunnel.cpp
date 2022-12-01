@@ -21,11 +21,10 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 	else {
 		tuns.setFillColor(Color(ORANGE, 50));
 	}
+	Utils::SetOrigin(start, Origins::MC);
+	start.setFillColor(Color(0, 255, 0, 255));
 
-	for (int i = 0; i < buttonlist.size(); i++) {
-		char temp = buttonlist[i];
-		buttonid.push_back(atoi(&temp));
-	}
+	buttonid = buttonlist;
 
 	if (dir == 0 || dir == 2) {
 		if (dir == 0) {
@@ -39,6 +38,7 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 			tuns.setPosition(startpos);
 		}
 		tuns.setSize({ 50,0 });
+		start.setSize({ 50,10 });
 	}
 	else {
 		if (dir == 1) {
@@ -53,9 +53,12 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 
 		}
 		tuns.setSize({ 0,50 });
-	}
+		start.setSize({ 10,50 });
 
-	particles.setPrimitiveType(Points);		
+	}
+	start.setPosition(startpos);
+
+	particles.setPrimitiveType(Points);
 	switch (this->dir)
 	{
 	case 0:
@@ -75,22 +78,27 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 
 Tunnel::~Tunnel()
 {
-	for (auto v : button) {
+	/*for (auto v : button) {
 		delete v;
-	}
+	}*/
 	button.clear();
 }
 
+
 void Tunnel::Update(float dt)
 {
+	Utils::SetOrigin(start, Origins::MC);
+
+	active = true;
+
 	for (auto b : button) {
 		if (!b->GetPressed()) {
 			active = false;
+			destiny.setPosition(startpos);
 			return;
 		}
 	}
 	//active door
-	active = true;
 
 	if (!active) {
 		if (dir == 0 || dir == 2) {
@@ -117,14 +125,14 @@ void Tunnel::Update(float dt)
 			tuns.setSize({ 0,50 });
 		}
 		hitbox.setSize(tuns.getSize());
-		hitwall = false;				
+		hitwall = false;
 
 		return;
 	}
 
 	if (!hitwall) {
 		if (dir == 0 || dir == 2) {
-			tuns.setSize({ tuns.getSize().x,tuns.getSize().y + 50 });
+			tuns.setSize({ tuns.getSize().x,tuns.getSize().y + 100 });
 			if (dir == 0) {
 				Utils::SetOrigin(tuns, Origins::TC);
 			}
@@ -134,7 +142,7 @@ void Tunnel::Update(float dt)
 			}
 		}
 		else {
-			tuns.setSize({ tuns.getSize().x + 50,tuns.getSize().y });
+			tuns.setSize({ tuns.getSize().x + 100,tuns.getSize().y });
 			if (dir == 1) {
 				Utils::SetOrigin(tuns, Origins::MR);
 
@@ -143,7 +151,7 @@ void Tunnel::Update(float dt)
 				Utils::SetOrigin(tuns, Origins::ML);
 			}
 
-		}	
+		}
 		AddParticle();
 	}
 	else if (hitwall && whohitwall != nullptr) {
@@ -164,18 +172,35 @@ void Tunnel::Update(float dt)
 		else if (dir == 3) {
 			Utils::SetOrigin(tuns, Origins::ML);
 
-			tuns.setSize({(whohitwall->GetGlobalBounds().left) - tuns.getPosition().x,tuns.getSize().y });
+			tuns.setSize({ (whohitwall->GetGlobalBounds().left) - tuns.getPosition().x,tuns.getSize().y });
 
 		}
-		
+
+		Utils::SetOrigin(destiny, Origins::MC);
+		if (dir == 0 || dir == 2) {
+			destiny.setSize({ tuns.getSize().x,10 });
+			if (dir == 0)
+				endpos = { tuns.getPosition().x,tuns.getPosition().y + tuns.getSize().y };
+			else if (dir == 2)
+				endpos = { tuns.getPosition().x,tuns.getPosition().y - tuns.getSize().y };
+		}
+		else if (dir == 1 || dir == 3) {
+			destiny.setSize({ 10,tuns.getSize().y });
+			if (dir == 1)
+				endpos = { tuns.getPosition().x - tuns.getSize().x ,tuns.getPosition().y, };
+			else if(dir==3)
+				endpos={ tuns.getPosition().x + tuns.getSize().x ,tuns.getPosition().y, };
+
+		}
 	}
 
+	destiny.setPosition(endpos);
 	tuns.setPosition(startpos);
 	hitbox.setSize(tuns.getSize());
 	hitbox.setOrigin(tuns.getOrigin());
 	hitbox.setPosition(tuns.getPosition());
 
-	if (hitwall && whohitwall != nullptr && active)
+	if ((hitwall && whohitwall != nullptr) && active)
 	{
 		SetParticlePos();
 		TransParticles(dt);
@@ -190,7 +215,9 @@ void Tunnel::Draw(RenderWindow& window)
 	if (!isPlayingGame)
 		WireableObject::Draw(window);
 	//window.draw(hitbox);
-	window.draw(particles);
+	window.draw(destiny);
+	if (active)
+		window.draw(particles);
 }
 
 void Tunnel::ChangeDir()
@@ -211,9 +238,7 @@ void Tunnel::ChangeColor()
 	if (IsBlue)
 	{
 		tuns.setFillColor(Color(0, 255, 0, 128));
-		
 	}
-		
 	else {
 		tuns.setFillColor(Color(255, 255, 0, 128));
 	}
@@ -244,7 +269,7 @@ void Tunnel::SetButtonlist(vector<Button*>& button)
 
 void Tunnel::AddParticle()
 {
-	particleNum += 200;	
+	particleNum += 200;
 }
 
 void Tunnel::SetParticlePos()
@@ -281,7 +306,7 @@ void Tunnel::TransParticles(float dt)
 		{
 			switch (dir)
 			{
-			case 0:				
+			case 0:
 				particles[i].position.y = startpos.y;
 				break;
 			case 1:
@@ -294,6 +319,6 @@ void Tunnel::TransParticles(float dt)
 				particles[i].position.x = startpos.x;
 				break;
 			}
-		}				
+		}
 	}
 }

@@ -57,6 +57,13 @@ bool Framework::Do()
 		float dt = GetDT();
 		InputMgr::Update(dt);
 		sf::Event ev;
+		fps += 1;
+		time += dt;
+		if (time >= 0.5) {
+			cout << fps*2 << endl;
+			time= 0;
+			fps = 0;
+		}
 
 		//window.setMouseCursorGrabbed(1);
 		while (window.pollEvent(ev))

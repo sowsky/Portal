@@ -151,6 +151,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Objects\BlackTile.cpp" />
+    <ClCompile Include="Objects\Gel.cpp" />
     <ClCompile Include="Objects\Bridge.cpp" />
     <ClCompile Include="Objects\NumBox.cpp" />
     <ClCompile Include="Objects\Blue.cpp" />
@@ -192,6 +194,8 @@
     <ClCompile Include="Objects\VertexArrayObj.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Objects\BlackTile.h" />
+    <ClInclude Include="Objects\Gel.h" />
     <ClInclude Include="Objects\Bridge.h" />
     <ClInclude Include="Objects\FileData.h" />
     <ClInclude Include="Objects\NumBox.h" />

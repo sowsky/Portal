@@ -24,14 +24,15 @@ public:
 	bool GetHitwall() { return hitwall; }
 	void SetHitwall(bool a) { hitwall = a; }
 	FloatRect GetHitBoxGlobalbound() { return hitbox.getGlobalBounds(); }
-	
+	FloatRect GetDestinyGlobalbound() { return destiny.getGlobalBounds(); }
+	FloatRect GetStartposGlobalbound() { return start.getGlobalBounds(); }
 	void Setwhohitwall(Tile& victim) { whohitwall = &victim; }
 	virtual SpriteObj* NewThis() { return new Tunnel; }
 
 	virtual void SetButtonlist(vector<Button*>& button);
 	virtual void SetButtonlist(vector<int> idList) { buttonid = idList; }
 
-	FloatRect GetHitbox() { return hitbox.getGlobalBounds(); }
+	RectangleShape* GetHitbox() { return &hitbox; }
 
 	int GetDir() { return dir; }
 	Vector2f GetTunsPos() { return tuns.getPosition(); }
@@ -40,6 +41,8 @@ public:
 	void AddParticle();
 	void SetParticlePos();
 	void TransParticles(float dt);
+
+	vector<int> GetButtonid() { return buttonid; }
 private:
 	list<Button*> button;
 	vector<int>buttonid;
@@ -47,7 +50,10 @@ private:
 	Tile* whohitwall = nullptr;
 	RectangleShape tuns;
 	RectangleShape hitbox;
+	RectangleShape destiny;
+	RectangleShape start;
 	Vector2f startpos;
+	Vector2f endpos;
 	bool IsBlue;
 	bool active;
 	bool hitwall = false;

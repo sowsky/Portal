@@ -40,6 +40,8 @@
     <ClCompile Include="Objects\Tunnel.cpp" />
     <ClCompile Include="Objects\VertexArrayObj.cpp" />
     <ClCompile Include="Objects\Bridge.cpp" />
+    <ClCompile Include="Objects\Gel.cpp" />
+    <ClCompile Include="Objects\BlackTile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Manager\Animator.h" />
@@ -77,6 +79,8 @@
     <ClInclude Include="Objects\FileData.h" />
     <ClInclude Include="Objects\VertexArrayObj.h" />
     <ClInclude Include="Objects\Bridge.h" />
+    <ClInclude Include="Objects\Gel.h" />
+    <ClInclude Include="Objects\BlackTile.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
