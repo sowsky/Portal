@@ -152,7 +152,7 @@ void Player::PhysicsUpdate(float dt)
 void Player::Draw(RenderWindow& window)
 {
 	SpriteObj::Draw(window);
-	window.draw(*hitbox);
+	//window.draw(*hitbox);
 
 }
 

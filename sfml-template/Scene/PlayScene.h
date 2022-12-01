@@ -77,7 +77,7 @@ private:
 	vector<Cube*> cube;
 	vector<Tunnel*> tunnel;
 	vector<Bridge*> bridge;
-	vector<BlackTile*> blackwall;
+	//vector<BlackTile*> blackwall;
 
 	Cube* grabbedcube = nullptr;
 	Vector2f currgrid = { GRIDSIZE / 2,GRIDSIZE / 2 };

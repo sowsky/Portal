@@ -41,15 +41,15 @@ void PlayScene::Update(float dt)
 	}
 	for (auto w : wall)
 		w->Update(dt);
-	for (auto bw : blackwall)
-		bw->Update(dt);
+	/*for (auto bw : blackwall)
+		bw->Update(dt);*/
 	for (auto t : tunnel) {
 		t->Update(dt);
 	}
 	for (auto b : bridge) {
 		b->Update(dt);
 	}
-	
+
 	blue->Update(dt);
 	orange->Update(dt);
 
@@ -67,6 +67,7 @@ void PlayScene::Update(float dt)
 	PushButton();
 	TunnelCheck();
 	BridgeCheck();
+
 	if (IsMadeTunnelFollowOrangePortal || IsMadeTunnelFollowBluePortal)
 		CheckStillObjectalive();
 
@@ -121,6 +122,7 @@ void PlayScene::Update(float dt)
 		particle.update(dt);
 
 	Input();
+
 }
 
 void PlayScene::PhysicsUpdate(float dt)
@@ -153,10 +155,10 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
 	}
 
-	for (auto v : blackwall) {
+	/*for (auto v : blackwall) {
 		v->Draw(window);
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
-	}
+	}*/
 
 	for (auto v : cube) {
 		v->Draw(window);
@@ -181,8 +183,6 @@ void PlayScene::Draw(RenderWindow& window)
 	if (madeblue) {
 		blue->Draw(window);
 	}
-
-
 
 	if (player != nullptr)
 		player->Draw(window);
@@ -283,7 +283,7 @@ PlayScene::PlayScene(string path)
 					case '1':
 						if (j + 1 < rowNum &&
 							!loadedArray[i][j + 1].empty() &&
-							loadedArray[i][j + 1].front()->id == '1')
+							(loadedArray[i][j + 1].front()->id == '1'|| loadedArray[i][j + 1].front()->id == '2'))
 						{
 							MakeWall(false);
 							wallbunchwidth += GRIDSIZE;
@@ -299,7 +299,7 @@ PlayScene::PlayScene(string path)
 					case '2':
 						if (j + 1 < rowNum &&
 							!loadedArray[i][j + 1].empty() &&
-							loadedArray[i][j + 1].front()->id == '1')
+							(loadedArray[i][j + 1].front()->id == '1' || loadedArray[i][j + 1].front()->id == '2'))
 						{
 							MakeBlackWall(false);
 							wallbunchwidth += GRIDSIZE;
@@ -932,7 +932,7 @@ void PlayScene::BridgeCheck()
 void PlayScene::CheckStillObjectalive()
 {
 	if (IsMadeTunnelFollowOrangePortal) {
-		bool on=false;
+		bool on = false;
 		for (auto t : tunnel)
 		{
 			if (t->GetDestinyGlobalbound().intersects(blue->GetGlobalBounds())) {
@@ -1212,6 +1212,15 @@ void PlayScene::Input()
 		orange->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
 	}
 
+	if (grabbedcube != nullptr) {
+		Vector2f dir = Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - grabbedcube->GetPos());
+		dir.x *= 50;
+		dir.y *= 50;
+		Vector2f real(dir.x + player->GetPos().x, dir.y + player->GetPos().y);
+		grabbedcube->GetBody()->SetTransform({real.x/SCALE,real.y/SCALE*-1},grabbedcube->GetBody()->GetAngle());
+		cout << grabbedcube->GetPos().x << " " << grabbedcube->GetPos().y << endl;
+	}
+
 }
 
 void PlayScene::LightTestInputForDev()
@@ -1423,7 +1432,7 @@ void PlayScene::MoveToPortal()
 
 			}
 
-			tunnel.push_back(new Tunnel(pos, dir, temp,t->GetColor(), true, 2));
+			tunnel.push_back(new Tunnel(pos, dir, temp, t->GetColor(), true, 2));
 			IsMadeTunnelFollowOrangePortal = true;
 
 			if (t->GetDir() == 0 || t->GetDir() == 2)
@@ -1462,7 +1471,7 @@ void PlayScene::MoveToPortal()
 			else if (t->GetDir() == 1 || t->GetDir() == 3)
 				orange->SetPos({ orange->GetPos().x,t->GetHitbox()->getPosition().y });
 
-			
+
 		}
 	}
 
