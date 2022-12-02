@@ -7,7 +7,7 @@
 #include "../Objects/WireableObject.h"
 #include "../Objects/WirePointArrows.h"
 #include "../Objects/Wire.h"
-#include "../Objects/NumBox.h"
+//#include "../Objects/NumBox.h"
 
 class SpriteObj;
 //class WireableObject;
@@ -41,7 +41,7 @@ public:
 
 	void InitWireMod();
 	void UpdateWireMod(float dt);
-	void FillNumBox();
+	//void FillNumBox();
 	void DrawWireMod(RenderWindow& window);
 	void DrawWireModMouseBox(RenderWindow& window);
 	void LoadDataToWireableList();
@@ -76,7 +76,7 @@ private:
 
 	array<array<pair<list<SpriteObj*>, SpriteObj*>, 100>, 100> mapTool;
 	list<WireableObject*> wireableList;
-	list<NumBox*> numBox;
+	/*list<NumBox*> numBox;*/
 
 	RectangleShape topLine;
 	RectangleShape leftLine;

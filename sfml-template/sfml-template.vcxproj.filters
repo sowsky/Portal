@@ -25,7 +25,6 @@
     <ClCompile Include="Objects\Wire.cpp" />
     <ClCompile Include="Objects\WireableObject.cpp" />
     <ClCompile Include="Objects\WirePointArrows.cpp" />
-    <ClCompile Include="Objects\NumBox.cpp" />
     <ClCompile Include="Particle\Particle.cpp" />
     <ClCompile Include="Particle\ParticleSystem.cpp" />
     <ClCompile Include="src\Color.cpp" />
@@ -73,7 +72,6 @@
     <ClInclude Include="Objects\Wire.h" />
     <ClInclude Include="Objects\WireableObject.h" />
     <ClInclude Include="Objects\WirePointArrows.h" />
-    <ClInclude Include="Objects\NumBox.h" />
     <ClInclude Include="Particle\Particle.h" />
     <ClInclude Include="Particle\ParticleSystem.h" />
     <ClInclude Include="Objects\FileData.h" />

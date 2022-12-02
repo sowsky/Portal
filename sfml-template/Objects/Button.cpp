@@ -1,9 +1,8 @@
 #include "Button.h"
 #include "../Manager/ResourceMgr.h"
 #include "../FrameWork/Utils.h"
-#include "NumBox.h"
+//#include "NumBox.h"
 
-int Button::buttonNum = 0;
 bool Button::isEditMap = false;
 
 Button::Button()
@@ -11,12 +10,7 @@ Button::Button()
 	SetResourceTexture("Graphics/button.png");
 	id = 'b';	
 
-	type = ObjectType::Trigger;
-	buttonNum++;
-	buttonId = buttonNum;
-	
-
-	buttonId++;
+	type = ObjectType::Trigger;	
 
 	hitbox = new RectangleShape;
 	hitbox->setFillColor(Color::Red);
@@ -29,7 +23,7 @@ Button::Button()
 
 Button::~Button()
 {
-	buttonNum--;
+	
 }
 
 SpriteObj* Button::NewThis()

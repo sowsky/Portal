@@ -494,7 +494,7 @@ void EditScene::FillMapTool()
 				if (mapTool[i][j].first.front()->GetObjType() == ObjectType::Trigger)
 				{
 					Button* temp = (Button*)mapTool[i][j].first.front();
-					temp->AddNumBox(Button::GetButtonNum() - 1);
+					//temp->AddNumBox(Button::GetButtonNum() - 1);
 				}
 				mapTool[i][j].first.front()->Init();
 
@@ -651,19 +651,19 @@ void EditScene::Input(float dt)
 		SpriteObj::OnOffWiringState(isWiring = !isWiring);
 		isWiring ? LoadDataToWireableList() : RelaseWireableList();
 	}
-	if (InputMgr::GetKeyDown(Keyboard::A) &&
-		isWiring &&
-		numBox.front()->GetNum() > 1)
-	{
-		numBox.front()->SetNum(numBox.front()->GetNum() - 1);
-	}
+	//if (InputMgr::GetKeyDown(Keyboard::A) &&
+	//	isWiring &&
+	//	numBox.front()->GetNum() > 1)
+	//{
+	//	numBox.front()->SetNum(numBox.front()->GetNum() - 1);
+	//}
 
-	if (InputMgr::GetKeyDown(Keyboard::D) &&
-		isWiring &&
-		numBox.front()->GetNum() < Button::GetButtonNum())
-	{
-		numBox.front()->SetNum(numBox.front()->GetNum() + 1);
-	}
+	//if (InputMgr::GetKeyDown(Keyboard::D) &&
+	//	isWiring &&
+	//	numBox.front()->GetNum() < Button::GetButtonNum())
+	//{
+	//	numBox.front()->SetNum(numBox.front()->GetNum() + 1);
+	//}
 }
 
 void EditScene::DrawOutLine(RenderWindow& window)
@@ -676,8 +676,8 @@ void EditScene::DrawOutLine(RenderWindow& window)
 
 void EditScene::InitWireMod()
 {
-	numBox.push_back(new NumBox);
-	numBox.back()->SetNum(1);
+	//numBox.push_back(new NumBox);
+	//numBox.back()->SetNum(1);
 }
 
 void EditScene::UpdateWireMod(float dt)
@@ -685,34 +685,34 @@ void EditScene::UpdateWireMod(float dt)
 	if (!isWiring || !isScenePlay)
 		return;
 
-	numBox.front()->SetPos(GetMouseWorldPos());
-	FillNumBox();
+	//numBox.front()->SetPos(GetMouseWorldPos());
+	//FillNumBox();
 }
 
-void EditScene::FillNumBox()
-{
-	if (wireableList.empty())
-		return;
-
-	for (auto wlist : wireableList)
-	{
-		if (wlist->IsMouseIn()
-			&& InputMgr::GetMouseButtonDown(Mouse::Left))
-		{
-			wlist->AddNumBox(numBox.front());
-		}
-	}
-}
+//void EditScene::FillNumBox()
+//{
+//	if (wireableList.empty())
+//		return;
+//
+//	for (auto wlist : wireableList)
+//	{
+//		if (wlist->IsMouseIn()
+//			&& InputMgr::GetMouseButtonDown(Mouse::Left))
+//		{
+//			wlist->AddNumBox(numBox.front());
+//		}
+//	}
+//}
 
 void EditScene::DrawWireMod(RenderWindow& window)
 {
 	if (!isWiring)
 		return;
 
-	for (auto i : numBox)
-	{
-		i->Draw(window);
-	}
+	//for (auto i : numBox)
+	//{
+	//	i->Draw(window);
+	//}
 }
 
 void EditScene::DrawWireModMouseBox(RenderWindow& window)
@@ -1126,8 +1126,7 @@ void EditScene::FillUiToolBox()
 	uiTool[1][0].first->SetResourceTexture("Graphics/Ui/cube.png");
 
 	uiTool[1][1].first = new Button;
-	uiTool[1][1].first->SetResourceTexture("Graphics/Ui/button.png");
-	Button::SetButtonNum(0);
+	uiTool[1][1].first->SetResourceTexture("Graphics/Ui/button.png");	
 
 	uiTool[1][2].first = new Tunnel;
 	uiTool[1][2].first->SetResourceTexture("Graphics/Ui/tbeam.png");	
@@ -1410,10 +1409,10 @@ void EditScene::Load()
 
 	Goal* goal = new Goal;
 	goal->SetButtonList(loadObjInfo.goal.buttonList);	
-	for (auto num : loadObjInfo.goal.buttonList)
-	{
-		goal->AddNumBox(num);
-	}
+	//for (auto num : loadObjInfo.goal.buttonList)
+	//{
+	//	goal->AddNumBox(num);
+	//}
 	mapTool[idxI - loadObjInfo.goal.posY][loadObjInfo.goal.posX].first.push_back(goal);
 	/////
 	for (auto& p : loadObjInfo.buttons)
@@ -1421,7 +1420,7 @@ void EditScene::Load()
 		Button* button = new Button;
 		button->SetRotation((Rotate)p.rotation);
 		button->SetButtonId(p.buttonId);
-		button->AddNumBox(p.buttonId);
+		//button->AddNumBox(p.buttonId);
 		mapTool[idxI - p.posY][p.posX].first.push_back(button);
 	}
 
@@ -1448,10 +1447,10 @@ void EditScene::Load()
 		Tunnel* tunnel = new Tunnel;		
 		tunnel->SetRotation((Rotate)p.rotation);
 		tunnel->SetButtonlist(p.buttonList);
-		for (auto num : p.buttonList)
-		{
-			tunnel->AddNumBox(num);
-		}
+		//for (auto num : p.buttonList)
+		//{
+		//	tunnel->AddNumBox(num);
+		//}
 		mapTool[idxI - p.posY][p.posX].first.push_back(tunnel);
 	}
 
@@ -1460,10 +1459,10 @@ void EditScene::Load()
 		Bridge* bridge = new Bridge;
 		bridge->SetRotation((Rotate)p.rotation);
 		bridge->SetButtonlist(p.buttonList);
-		for (auto num : p.buttonList)
-		{
-			bridge->AddNumBox(num);
-		}
+		//for (auto num : p.buttonList)
+		//{
+		//	bridge->AddNumBox(num);
+		//}
 		mapTool[idxI - p.posY][p.posX].first.push_back(bridge);
 	}
 
