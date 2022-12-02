@@ -53,6 +53,9 @@ void PlayScene::Update(float dt)
 	for (auto b : bridge) {
 		b->Update(dt);
 	}
+	for (auto r : redwall) {
+		r->Update(dt);
+	}
 
 	blue->Update(dt);
 	orange->Update(dt);
@@ -70,6 +73,7 @@ void PlayScene::Update(float dt)
 	PushButton();
 	TunnelCheck();
 	BridgeCheck();
+	RedwallCheck();
 
 	if (IsMadeTunnelFollowOrangePortal || IsMadeTunnelFollowBluePortal)
 		CheckStillObjectalive();
@@ -202,6 +206,9 @@ void PlayScene::Draw(RenderWindow& window)
 		blue->Draw(window);
 	}
 
+	for (auto v : redwall) {
+		v->Draw(window);
+	}
 
 	if (player != nullptr)
 		player->Draw(window);
@@ -284,6 +291,11 @@ PlayScene::PlayScene(string path)
 	}
 
 	for (auto& p : loadObjInfo.blacktile)
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+
+	for (auto& p : loadObjInfo.redwalls)
 	{
 		loadedArray[p.posY][p.posX].push_back(&p);
 	}
@@ -373,13 +385,22 @@ PlayScene::PlayScene(string path)
 						break;
 					}
 					case 'l':
-					case 'L':
+					case 'L':{
 						Bridge_sturct * tempB = (Bridge_sturct*)obj;
 						bridge.push_back(new Bridge(world.get(), currgrid, tempB->buttonList, true, tempB->rotation, 0));
 						currgrid.x += GRIDSIZE;
 						box2dposition.x += GRIDSIZE;
 						break;
-
+					}
+					case 'r':
+					case 'R':
+					{
+						Redwall_struct* tempR = (Redwall_struct*)obj;
+						redwall.push_back(new Redwall(currgrid, tempR->buttonList, tempR->on, tempR->rotation));
+						currgrid.x += GRIDSIZE;
+						box2dposition.x += GRIDSIZE;
+						break;
+					}
 					}
 				}
 			}
@@ -406,6 +427,11 @@ PlayScene::PlayScene(string path)
 	}
 	if (!bridge.empty()) {
 		for (auto t : bridge) {
+			t->SetButtonlist(button);
+		}
+	}
+	if (!redwall.empty()) {
+		for (auto t : redwall) {
 			t->SetButtonlist(button);
 		}
 	}
@@ -1095,6 +1121,25 @@ void PlayScene::BridgeCheck()
 
 }
 
+void PlayScene::RedwallCheck()
+{
+	for (auto r : redwall) {
+		if (r->GetGlobalBounds().intersects(player->GethitboxGlobalBounds())) {
+			madeblue = false;
+			madeorange = false;
+			blue->SetPos({-1000,-1000});
+			orange->SetPos({ -1000,-1000 });
+			blue->SetDir({ 0,0 });
+			orange->SetDir({ 0,0 });
+		}
+		for (auto c : cube) {
+			if (r->GetGlobalBounds().intersects(c->GetGlobalBounds())) {
+				c->MovetoStartpos();
+			}
+		}
+	}
+}
+
 void PlayScene::CheckStillObjectalive()
 {
 	if (!IsMadeTunnelFollowOrangePortal) {
@@ -1367,7 +1412,6 @@ void PlayScene::Input()
 			IsMadeBridgeFollowBluePortal = false;
 		}
 
-
 		blue->SetSize({ 20,20 });
 		madeblue = false;
 		blue->SetPos(player->GetIndicator());
@@ -1589,7 +1633,7 @@ void PlayScene::MoveToPortal()
 		}
 		else if (blue->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ blue->GetPos().x ,blue->GetPos().y + player->GetGlobalBounds().height });
-			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyLinearVelocity().x,-1.f });
+			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyLinearVelocity().x,player->GetRecentSpeed().y - 1 });
 
 		}
 		else if (blue->GetPortalDir() == 3) {
@@ -1774,7 +1818,7 @@ void PlayScene::MoveToPortal()
 				dir = 2;
 			}
 			else if (blue->GetPortalDir() == 1) {
-				pos = { blue->GetPos().x + blue->GetSize().x / 2 + 1,blue->GetPos().y };
+				pos = { blue->GetPos().x + 50,blue->GetPos().y };
 				dir = 3;
 			}
 			else if (blue->GetPortalDir() == 2) {
@@ -1782,7 +1826,7 @@ void PlayScene::MoveToPortal()
 				dir = 0;
 			}
 			else if (blue->GetPortalDir() == 3) {
-				pos = { blue->GetPos().x - blue->GetSize().x - 1,blue->GetPos().y };
+				pos = { blue->GetPos().x - 50,blue->GetPos().y };
 				dir = 1;
 
 			}

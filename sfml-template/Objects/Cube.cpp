@@ -17,7 +17,7 @@ Cube::Cube()
 }
 
 Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
-	:sideFaces(frontFace, sprite)
+	:sideFaces(frontFace, sprite),startpos(position)
 {	
 	SetResourceTexture("Graphics/cube.png");
 	id = 'c';
@@ -167,5 +167,10 @@ void Cube::SetCubeBodyForce(b2Vec2 force)
 {
 	body->ApplyLinearImpulse(force, body->GetWorldCenter(), true);
 
+}
+
+void Cube::MovetoStartpos()
+{
+	body->SetTransform({ startpos.x / SCALE,startpos.y / SCALE * -1 },0);
 }
 
