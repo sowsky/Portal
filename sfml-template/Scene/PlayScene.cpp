@@ -79,24 +79,24 @@ void PlayScene::Update(float dt)
 		CheckStillObjectalive();
 
 	if (grabitem) {
-	/*	if (grabbedcube->GetSide())
-			grabbedcube->SetCubeBodyPos({ player->GetPos().x + 40,player->GetPos().y - 40 });
-		else
-			grabbedcube->SetCubeBodyPos({ player->GetPos().x - 40,player->GetPos().y - 40 });
+		/*	if (grabbedcube->GetSide())
+				grabbedcube->SetCubeBodyPos({ player->GetPos().x + 40,player->GetPos().y - 40 });
+			else
+				grabbedcube->SetCubeBodyPos({ player->GetPos().x - 40,player->GetPos().y - 40 });
 
-		if (InputMgr::GetKeyDown(Keyboard::A)) {
-			grabbedcube->SetSide(false);
-		}
-		else if (InputMgr::GetKeyDown(Keyboard::D)) {
-			grabbedcube->SetSide(true);
-		}*/
+			if (InputMgr::GetKeyDown(Keyboard::A)) {
+				grabbedcube->SetSide(false);
+			}
+			else if (InputMgr::GetKeyDown(Keyboard::D)) {
+				grabbedcube->SetSide(true);
+			}*/
 
 		if (InputMgr::GetKeyDown(Keyboard::E)) {
 			cout << "drop" << endl;
 			grabitem = false;
 
 			grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
-		//	delete grabbedcube;
+			//	delete grabbedcube;
 			grabbedcube = nullptr;
 		}
 
@@ -133,7 +133,7 @@ void PlayScene::Update(float dt)
 
 	light.position.x = 0;
 	light.position.y = height;
-	
+
 }
 
 void PlayScene::PhysicsUpdate(float dt)
@@ -322,17 +322,19 @@ PlayScene::PlayScene(string path)
 						{
 							MakeWall(false);
 							wallbunchwidth += GRIDSIZE;
+							cout << i << " " << j << endl;
+
 						}
 						else
 						{
 							MakeWall(true);
 							box2dposition.x += currgrid.x + GRIDSIZE;
 							wallbunchwidth = GRIDSIZE;
+							cout << i << "-" << j << endl;
 						}
 						Tile_struct* t = (Tile_struct*)loadedArray[i][j].front();
 						wall.back()->SetActiveSideTiles(t->sideBool);
 						break;
-						cout << box2dposition.x << " " << box2dposition.y << endl;
 					}
 					case '2':
 					{
@@ -374,6 +376,7 @@ PlayScene::PlayScene(string path)
 						Goal_struct* tempG = (Goal_struct*)obj;
 						MakeGoal(tempG->buttonList);
 						box2dposition.x += GRIDSIZE;
+						
 						break;
 					}
 					case 't':
@@ -386,8 +389,8 @@ PlayScene::PlayScene(string path)
 						break;
 					}
 					case 'l':
-					case 'L':{
-						Bridge_sturct * tempB = (Bridge_sturct*)obj;
+					case 'L': {
+						Bridge_sturct* tempB = (Bridge_sturct*)obj;
 						bridge.push_back(new Bridge(world.get(), currgrid, tempB->buttonList, true, tempB->rotation, 0));
 						currgrid.x += GRIDSIZE;
 						box2dposition.x += GRIDSIZE;
@@ -416,7 +419,7 @@ PlayScene::PlayScene(string path)
 
 	bgNormal = RESOURCEMGR->GetTexture("Graphics/bg.png");
 	SetTex(crosshair, "Graphics/crosshair/alloff.png");
-	crosshair.setScale(0.3f,0.3f);
+	crosshair.setScale(0.3f, 0.3f);
 	Utils::SetOrigin(crosshair, Origins::MC);
 
 	goal->SetButtonlist(button);
@@ -1082,7 +1085,7 @@ void PlayScene::BridgeCheck()
 		}
 	}
 
-	if (!madeorange|| !madeblue) {
+	if (!madeorange || !madeblue) {
 
 		auto ite = bridge.begin();
 		while (ite != bridge.end())
@@ -1101,7 +1104,7 @@ void PlayScene::BridgeCheck()
 		IsMadeBridgeFollowOrangePortal = false;
 	}
 
-	if (!madeblue|| !madeorange) {
+	if (!madeblue || !madeorange) {
 
 		auto ite = bridge.begin();
 		while (ite != bridge.end())
@@ -1128,7 +1131,7 @@ void PlayScene::RedwallCheck()
 		if (r->GetGlobalBounds().intersects(player->GethitboxGlobalBounds())) {
 			madeblue = false;
 			madeorange = false;
-			blue->SetPos({-1000,-1000});
+			blue->SetPos({ -1000,-1000 });
 			orange->SetPos({ -1000,-1000 });
 			blue->SetDir({ 0,0 });
 			orange->SetDir({ 0,0 });
@@ -1147,7 +1150,7 @@ void PlayScene::CheckStillObjectalive()
 		//check blue hit
 		for (auto b : bridge) {
 			if (b->GetDestinyGlobalbound().intersects(blue->GetGlobalBounds())) {
-				
+
 			}
 		}
 	}
@@ -1311,18 +1314,18 @@ void PlayScene::Input()
 	}
 
 	if (InputMgr::GetMouseWheelState() == 1)
-	{	
+	{
 		if (worldView.getSize().x < 60.f || openingTime > 0.f)
 			return;
 
-		worldView.zoom(0.8f);				
+		worldView.zoom(0.8f);
 	}
 	if (InputMgr::GetMouseWheelState() == -1)
-	{		
+	{
 		if (worldView.getSize().x > 1400.f || openingTime > 0.f)
 			return;
 
-		worldView.zoom(1.12f);					
+		worldView.zoom(1.12f);
 	}
 
 	if (InputMgr::GetMouseButton(Mouse::Middle))
@@ -1496,17 +1499,17 @@ void PlayScene::Input()
 		Vector2f dir = Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - grabbedcube->GetPos());
 		dir.x *= 50;
 		dir.y *= 50;
-		
+
 		if (player->IsMouseRight())
 			dir.x = 45.f;
-	
+
 
 		if (!player->IsMouseRight())
 			dir.x = -45.f;
-	
 
-		
-		Vector2f real(dir.x + player->GetPos().x, player->GetPos().y-25);
+
+
+		Vector2f real(dir.x + player->GetPos().x, player->GetPos().y - 25);
 		grabbedcube->GetBody()->SetTransform({ real.x / SCALE,real.y / SCALE * -1 }, grabbedcube->GetBody()->GetAngle());
 		//cout << real.x <<" "<< real.y << endl;
 	}
@@ -1570,7 +1573,7 @@ void PlayScene::OpenStage(float dt)
 {
 	if (openingTime < 0.f)
 		return;
-	openingTime -= dt;	
+	openingTime -= dt;
 	worldView.zoom(0.995f);
 }
 
@@ -1597,7 +1600,7 @@ void PlayScene::MoveToPortal()
 		else if (orange->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ orange->GetPos().x + 30,orange->GetPos().y });
 			float force = (abs(player->GetRecentSpeed().y)) + (abs(player->GetRecentSpeed().x));
-			player->GetBody()->SetLinearVelocity({ force ,1});
+			player->GetBody()->SetLinearVelocity({ force ,1 });
 		}
 		else if (orange->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ orange->GetPos().x ,orange->GetPos().y + player->GetGlobalBounds().height });
@@ -1708,7 +1711,7 @@ void PlayScene::MoveToPortal()
 
 	for (int i = 0; i < (int)tunnel.size(); i++)
 	{
-		if ((IsMadeTunnelFollowOrangePortal||IsMadeBridgeFollowBluePortal) && i == tunnel.size())
+		if ((IsMadeTunnelFollowOrangePortal || IsMadeBridgeFollowBluePortal) && i == tunnel.size())
 			break;
 		//hit blue
 		if (tunnel[i]->GetDestinyGlobalbound().intersects(blue->GetGlobalBounds()) && !IsMadeTunnelFollowOrangePortal) {
@@ -1733,7 +1736,7 @@ void PlayScene::MoveToPortal()
 
 			}
 
-			
+
 			tunnel.push_back(new Tunnel(pos, dir, temp, tunnel[i]->GetColor(), true, 2));
 			IsMadeTunnelFollowOrangePortal = true;
 
@@ -1779,7 +1782,7 @@ void PlayScene::MoveToPortal()
 	}
 
 	////////////////////////////bridge////////////////////////
-	for (int i = 0; i < (int)bridge.size() ; i++){
+	for (int i = 0; i < (int)bridge.size(); i++) {
 
 		//hit blue
 		if (bridge[i]->GetHitBoxGlobalbound().intersects(blue->GetGlobalBounds()) && !IsMadeBridgeFollowOrangePortal) {
@@ -1891,7 +1894,7 @@ void PlayScene::Release()
 }
 
 void PlayScene::Enter()
-{	
+{
 	FRAMEWORK->GetWindow().setMouseCursorVisible(false);
 
 	auto size = (Vector2f)FRAMEWORK->GetWindowSize();
@@ -1909,7 +1912,7 @@ void PlayScene::Enter()
 	endingView.setSize(size);
 	endingView.setCenter(size / 2.f);
 
-	SpriteObj::SetIsPlayingGame(true);	
+	SpriteObj::SetIsPlayingGame(true);
 	isMovingViewCenter = false;
 
 	front = unique_ptr<RenderTexture>(new RenderTexture());
@@ -1928,5 +1931,5 @@ void PlayScene::Enter()
 void PlayScene::Exit()
 {
 	FRAMEWORK->GetWindow().setMouseCursorVisible(true);
-	SpriteObj::SetIsPlayingGame(false);	
+	SpriteObj::SetIsPlayingGame(false);
 }
