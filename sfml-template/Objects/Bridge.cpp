@@ -163,7 +163,7 @@ void Bridge::Update(float dt)
 		float y;
 
 		if (dir == 0) {
-			
+
 
 			Utils::SetOrigin(bridge, Origins::TC);
 			bridge.setSize({ bridge.getSize().x,whohitwall->GetGlobalBounds().top - bridge.getPosition().y });
@@ -176,7 +176,7 @@ void Bridge::Update(float dt)
 		else if (dir == 2) {
 
 			Utils::SetOrigin(bridge, Origins::BC);
-			
+
 			x = bridge.getPosition().x / SCALE;
 			y = (bridge.getPosition().y + (bridge.getSize().y / 2) - bridge.getSize().y) / SCALE * -1;
 			endpos = { bridge.getPosition().x,bridge.getPosition().y - bridge.getSize().y };

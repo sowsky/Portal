@@ -50,9 +50,9 @@ Scenes SceneMgr::GetPrevKey()
 void SceneMgr::ChangeScene(Scenes scene)
 {	
 	if (currScene == Scenes::PLAY) {
+		sceneMap[currScene]->Exit();
 		delete sceneMap[Scenes::PLAY];
-		sceneMap.erase(Scenes::PLAY);
-		
+		sceneMap.erase(Scenes::PLAY);		
 	}
 	else
 		sceneMap[currScene]->Exit();

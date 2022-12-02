@@ -13,6 +13,10 @@ using json = nlohmann::json;
 
 void PlayScene::Update(float dt)
 {
+	crosshair.setPosition(InputMgr::GetMousePos());
+
+	OpenStage(dt);
+
 	ClearRenderBuffer();
 	//////////////////////////////////////////////////////
 	if (goal->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
@@ -151,7 +155,6 @@ void PlayScene::Draw(RenderWindow& window)
 {
 	window.setView(worldView);
 
-
 	for (auto v : wall) {
 		v->Draw(window);
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
@@ -179,9 +182,11 @@ void PlayScene::Draw(RenderWindow& window)
 		player->Draw(window);
 	}
 
+
 	/*for (auto v : wall) {
 		v->DrawHitbox(window);
 	}*/
+
 
 	if (madeorange) {
 		orange->Draw(window);
@@ -209,6 +214,9 @@ void PlayScene::Draw(RenderWindow& window)
 
 	if (particle.running())
 		window.draw(particle);
+
+	window.setView(uiView);
+	window.draw(crosshair);
 
 	window.setView(endingView);
 	if (dark != 0)
@@ -368,11 +376,14 @@ PlayScene::PlayScene(string path)
 		wallbunchwidth = GRIDSIZE;
 	}
 
-	height = GRIDSIZE * colNum;
-	width = GRIDSIZE * rowNum;
+	height = WINDOW_WIDTH * 3.f;
+	width = WINDOW_HEIGHT * 3.f;
 	background.setSize({ (float)width, (float)height });
 	background.setFillColor(Color(0, 0, 0, 0));
 	bgNormal = RESOURCEMGR->GetTexture("Graphics/bg.png");
+	SetTex(crosshair, "Graphics/crosshair/alloff.png");
+	crosshair.setScale(0.3f,0.3f);
+	Utils::SetOrigin(crosshair, Origins::MC);
 
 	goal->SetButtonlist(button);
 
@@ -771,6 +782,23 @@ void PlayScene::MakePortal()
 		}
 	}
 
+	if (madeblue && madeorange)
+	{
+		SetTex(crosshair, "Graphics/crosshair/allon.png");
+	}
+	if (!madeblue && madeorange)
+	{
+		SetTex(crosshair, "Graphics/crosshair/orgon.png");
+	}
+	if (madeblue && !madeorange)
+	{
+		SetTex(crosshair, "Graphics/crosshair/blueon.png");
+	}
+	if (!madeblue && !madeorange)
+	{
+		SetTex(crosshair, "Graphics/crosshair/alloff.png");
+	}
+
 
 }
 
@@ -1140,22 +1168,25 @@ void PlayScene::Input()
 	}
 
 	if (InputMgr::GetMouseWheelState() == 1)
-	{
-		if (zoomCount > 20)
+	{	
+		if (worldView.getSize().x < 60.f || openingTime > 0.f)
 			return;
-		zoomCount++;
-		worldView.zoom(0.8f);
+
+		worldView.zoom(0.8f);				
 	}
 	if (InputMgr::GetMouseWheelState() == -1)
-	{
-		if (zoomCount < -10)
+	{		
+		if (worldView.getSize().x > 1400.f || openingTime > 0.f)
 			return;
-		zoomCount--;
-		worldView.zoom(1.12f);
+
+		worldView.zoom(1.12f);					
 	}
 
 	if (InputMgr::GetMouseButton(Mouse::Middle))
 	{
+		if (openingTime > 0.f)
+			return;
+
 		isMovingViewCenter = true;
 		Vector2f pos = InputMgr::GetMousePosDisplacement();
 		worldView.setCenter(worldView.getCenter() + pos);
@@ -1171,8 +1202,8 @@ void PlayScene::Input()
 		SpriteObj::OnOffWiringState();
 	}
 
-	light.position.x = GetMouseWorldPos().x;
-	light.position.y = height - GetMouseWorldPos().y;
+	light.position.x = width * 0.5f;
+	light.position.y = height * 0.5f;
 
 	//blue
 	if (InputMgr::GetMouseButtonDown(Mouse::Left) && !grabitem) {
@@ -1384,6 +1415,14 @@ void PlayScene::ClearRenderBuffer()
 	pass_diffuse.clear(Color::Transparent);
 	// Set normals buffer to neutral color
 	pass_normals.clear(Color(128, 128, 255));
+}
+
+void PlayScene::OpenStage(float dt)
+{
+	if (openingTime < 0.f)
+		return;
+	openingTime -= dt;	
+	worldView.zoom(0.995f);
 }
 
 
@@ -1696,12 +1735,15 @@ void PlayScene::Release()
 }
 
 void PlayScene::Enter()
-{
+{	
+	FRAMEWORK->GetWindow().setMouseCursorVisible(false);
 
 	auto size = (Vector2f)FRAMEWORK->GetWindowSize();
 	worldView.setSize(size);
 	worldView.setCenter(size / 2.f);
 	FRAMEWORK->GetWindow().setView(worldView);
+
+	SetUiView();
 
 	backgroundView.setSize(size);
 	backgroundView.setCenter(size / 2.f);
@@ -1711,8 +1753,7 @@ void PlayScene::Enter()
 	endingView.setSize(size);
 	endingView.setCenter(size / 2.f);
 
-	SpriteObj::SetIsPlayingGame(true);
-	zoomCount = 0;
+	SpriteObj::SetIsPlayingGame(true);	
 	isMovingViewCenter = false;
 
 	front = unique_ptr<RenderTexture>(new RenderTexture());
@@ -1730,6 +1771,6 @@ void PlayScene::Enter()
 
 void PlayScene::Exit()
 {
-	SpriteObj::SetIsPlayingGame(false);
-	zoomCount = 0;
+	FRAMEWORK->GetWindow().setMouseCursorVisible(true);
+	SpriteObj::SetIsPlayingGame(false);	
 }

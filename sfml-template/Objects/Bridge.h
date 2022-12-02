@@ -29,6 +29,7 @@ public:
 
 	int GetConnected() { return connected; }
 
+	void UpdateBridgeDraw(RenderWindow& window);
 protected:
 	list<Button*> button;
 	vector<int>buttonid;
@@ -40,9 +41,11 @@ protected:
 	int connected = 0; //0==none 1==follow blue 2==follow orange
 
 	RectangleShape bridge;
+
 	RectangleShape hitbox;
 	RectangleShape destiny;
 	RectangleShape start;
+
 	Vector2f startpos;
 	Vector2f endpos;
 
@@ -50,5 +53,6 @@ protected:
 	b2Body* body = nullptr;
 	b2World* world = nullptr;
 	b2Fixture* fixture = nullptr;
+	float backDp;
 };
 
