@@ -68,7 +68,7 @@ public:
 	void Input();
 	void LightTestInputForDev();
 	void ClearRenderBuffer();
-	
+	void OpenStage(float dt);
 private:
 	Player* player;
 	Goal* goal;
@@ -107,8 +107,7 @@ private:
 	unique_ptr<b2World> world;
 
 	float dtstack = 0.f;
-	int dark = 0;
-	int zoomCount;
+	int dark = 0;	
 	bool isMovingViewCenter;
 
 	//////
@@ -130,8 +129,8 @@ private:
 	float ambient_intensity = 0.7;
 	Vector3f falloff;
 	/////
+	Sprite crosshair;
 
-	
-
+	float openingTime = 1.5f;
 };
 

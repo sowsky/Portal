@@ -169,6 +169,7 @@ void EditScene::Enter()
 
 void EditScene::Exit()
 {
+	SpriteObj::OnOffWiringState(false);
 	cout << "Exit EditScene\n";
 	isScenePlay = false;
 	Release();

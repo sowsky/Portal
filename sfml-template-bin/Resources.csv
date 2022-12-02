@@ -1,4 +1,10 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
+Graphics/bridge/back.png,0
+Graphics/bridge/front.png,0
+Graphics/crosshair/alloff.png,0
+Graphics/crosshair/allon.png,0
+Graphics/crosshair/blueon.png,0
+Graphics/crosshair/orgon.png,0
 Graphics/bendy/portalgun.png,0
 Graphics/bendy/arm.png,0
 Graphics/bendy/armn.png,0
@@ -72,6 +78,7 @@ Graphics/backgrounds/ruin2.png,0
 Graphics/backgrounds/tiles.png,0
 Graphics/blue.png,0
 Graphics/orange.png,0
+Graphics/crosshair.png,0
 Fonts/NanumGothic.otf,1
 Fonts/times.ttf,1
 Fonts/D-DINCondensed-Bold.otf,1
