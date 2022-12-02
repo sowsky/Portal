@@ -1446,9 +1446,19 @@ void PlayScene::Input()
 		Vector2f dir = Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - grabbedcube->GetPos());
 		dir.x *= 50;
 		dir.y *= 50;
-		Vector2f real(dir.x + player->GetPos().x, dir.y + player->GetPos().y);
+		
+		if (player->IsMouseRight())
+			dir.x = 45.f;
+	
+
+		if (!player->IsMouseRight())
+			dir.x = 45.f;
+	
+
+		cout << dir.x << endl;
+		Vector2f real(dir.x + player->GetPos().x, player->GetPos().y-25);
 		grabbedcube->GetBody()->SetTransform({ real.x / SCALE,real.y / SCALE * -1 }, grabbedcube->GetBody()->GetAngle());
-		cout << real.x <<" "<< real.y << endl;
+		//cout << real.x <<" "<< real.y << endl;
 	}
 
 }

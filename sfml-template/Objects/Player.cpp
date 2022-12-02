@@ -330,7 +330,7 @@ void Player::RotateAnimation(RenderWindow& window)
 	Vector2f mousePos =
 		window.mapPixelToCoords((Vector2i)InputMgr::GetMousePos(), window.getView());
 
-	bool right = mousePos.x > pelvis.getPosition().x;
+	right = mousePos.x > pelvis.getPosition().x;
 	Vector2f armPos = right ? clavicle.getPoint(1) : clavicle.getPoint(0);
 
 	p_arm.setPosition(clavicle.getTransform().transformPoint(armPos));
@@ -400,4 +400,9 @@ void Player::ShowBornForDev(RenderWindow& window)
 Vector2f Player::GetIndicator()
 {
 	return indicator.getTransform().transformPoint(p_arm.getPoint(1));
+}
+
+bool Player::IsMouseRight()
+{
+	return right;
 }

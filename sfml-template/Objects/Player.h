@@ -42,6 +42,7 @@ public:
 	void ShowBornForDev(RenderWindow& window);
 
 	Vector2f GetIndicator();
+	bool IsMouseRight();
 protected:
 	bool ground = false;
 	bool IsMoving = false;
@@ -87,6 +88,6 @@ protected:
 	float groundTimeMax = 0.0f;
 
 	bool devMod = false;
-
+	bool right;
 };
 
