@@ -992,7 +992,7 @@ void PlayScene::TunnelCheck()
 					player->GetBody()->SetLinearVelocity({ x,y * -1 });
 				}
 			}
-			else if (t->GetDir() == 2) {
+			if (t->GetDir() == 2) {
 				if (!player->GetIsMoving()) {
 					float x = player->GetPos().x - t->GetTunsPos().x;
 					player->GetBody()->SetLinearVelocity({ x * -1 / 10,2 });
@@ -1012,7 +1012,7 @@ void PlayScene::TunnelCheck()
 					player->GetBody()->SetLinearVelocity({ x,y * -1 });
 				}
 			}
-			else if (t->GetDir() == 1) {
+			if (t->GetDir() == 1) {
 				if (!player->GetIsMoving()) {
 					float y = player->GetPos().y - player->GetSize().y / 2 - t->GetTunsPos().y;
 					player->GetBody()->SetLinearVelocity({ -2,y });
@@ -1026,7 +1026,7 @@ void PlayScene::TunnelCheck()
 						player->GetBody()->SetLinearVelocity({ -0.2f,player->GetBody()->GetLinearVelocity().y });
 				}
 			}
-			else if (t->GetDir() == 3) {
+			if (t->GetDir() == 3) {
 				if (!player->GetIsMoving()) {
 					float y = player->GetPos().y - player->GetSize().y / 2 - t->GetTunsPos().y;
 					player->GetBody()->SetLinearVelocity({ 2,y });
@@ -1050,15 +1050,15 @@ void PlayScene::TunnelCheck()
 					float x = c->GetPos().x - t->GetTunsPos().x;
 					c->GetBody()->SetLinearVelocity({ x * -1 / 10,-2.f });
 				}
-				else if (t->GetDir() == 2) {
+				if (t->GetDir() == 2) {
 					float x = c->GetPos().x - t->GetTunsPos().x;
 					c->GetBody()->SetLinearVelocity({ x * -1 / 10,2.f });
 				}
-				else if (t->GetDir() == 1) {
+				if (t->GetDir() == 1) {
 					float y = c->GetPos().y - t->GetTunsPos().y;
 					c->GetBody()->SetLinearVelocity({ -2.f,y });
 				}
-				else if (t->GetDir() == 3) {
+				if (t->GetDir() == 3) {
 					float y = c->GetPos().y - t->GetTunsPos().y;
 					c->GetBody()->SetLinearVelocity({ 2.f,y });
 				}
