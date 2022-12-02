@@ -20,6 +20,8 @@ public:
 	virtual void SetButtonlist(vector<int> idList) { buttonid = idList; }
 
 	FloatRect GetBridgeGlobalBound() { return bridge.getGlobalBounds(); }
+	FloatRect GetDestinyGlobalbound() { return destiny.getGlobalBounds(); }
+	FloatRect GetStartposGlobalbound() { return start.getGlobalBounds(); }
 
 	virtual SpriteObj* NewThis() { return new Bridge; }
 
@@ -39,8 +41,10 @@ protected:
 
 	RectangleShape bridge;
 	RectangleShape hitbox;
-
+	RectangleShape destiny;
+	RectangleShape start;
 	Vector2f startpos;
+	Vector2f endpos;
 
 	int dir = 0;
 	b2Body* body = nullptr;

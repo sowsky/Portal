@@ -55,7 +55,6 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 
 	body->SetFixedRotation(true);
 
-
 	b2CircleShape circleShape;
 	circleShape.m_radius = radius / SCALE;
 	circleShape.m_p.Set(0, -(bound.height / 2 - radius) / SCALE); //position, relative to body position
@@ -75,7 +74,7 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	hitbox->setPosition(GetPos());
 
 	SetSpriteTex(p_head, "Graphics/bendy/head.png");
-	SetSpriteTex(p_body, "Graphics/bendy/body.png"); 	
+	SetSpriteTex(p_body, "Graphics/bendy/body.png");
 	SetSpriteTex(p_lleg, "Graphics/bendy/leg.png");
 	SetSpriteTex(p_rleg, "Graphics/bendy/leg.png");
 	SetSpriteTex(portalGun, "Graphics/bendy/portalgun.png");
@@ -85,8 +84,6 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	arm_normal = RESOURCEMGR->GetTexture("Graphics/bendy/armn.png");
 	leg_normal = RESOURCEMGR->GetTexture("Graphics/bendy/legn.png");
 
-	
-
 	p_head.setScale(0.3f, 0.3f);
 	Utils::SetOrigin(p_head, Origins::MC);
 	p_body.setScale(0.3f, 0.3f);
@@ -94,7 +91,7 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	p_arm.setSize({ 10.f, 4.5f });
 	p_arm.setFillColor(Color::Black);
 	Utils::SetOrigin(p_arm, Origins::ML);
-	
+
 	p_lleg.setScale(0.3f, 0.3f);
 	p_rleg.setScale(0.3f, 0.3f);
 
@@ -107,7 +104,7 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	spine1.setFillColor(Color::Blue);
 	Utils::SetOrigin(spine1, Origins::BL);
 
-	spine2.setSize({ 1.f, spineHeight - spine1.getSize().y});
+	spine2.setSize({ 1.f, spineHeight - spine1.getSize().y });
 	spine2.setFillColor(Color::Blue);
 	Utils::SetOrigin(spine2, Origins::BL);
 
@@ -127,6 +124,8 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 
 	Utils::SetOrigin(portalGun, Origins::ML);
 	portalGun.setScale(0.3f, 0.3f);
+
+
 }
 
 Player::~Player()
@@ -135,7 +134,7 @@ Player::~Player()
 }
 
 SpriteObj* Player::NewThis()
-{	
+{
 	return new Player;
 }
 
@@ -148,24 +147,24 @@ void Player::Update(float dt)
 	Utils::ChangeBCSpriteSFMLPosToBox2dPos(*this, *body, dt);
 
 	Utils::SetOrigin(*hitbox, Origins::BC);
-	hitbox->setSize({ GetSize()});
+	hitbox->setSize({ GetSize() });
 	hitbox->setPosition(GetPos());
 
 	if (body->GetLinearVelocity().x != 0) {
-		if (abs(recentspeed.x)<= maximumspeed)
+		if (abs(recentspeed.x) <= maximumspeed)
 			recentspeed.x = body->GetLinearVelocity().x;
 		speedtX = 0;
 	}
 
-	if (body->GetLinearVelocity().y != 0 ) {
-		if ( abs(recentspeed.y) <= maximumspeed)
+	if (body->GetLinearVelocity().y != 0) {
+		if (abs(recentspeed.y) <= maximumspeed)
 			recentspeed.y = body->GetLinearVelocity().y;
 		speedtY = 0;
 	}
 
 	speedtX += dt;
 	speedtY += dt;
-	if (speedtX >= 0.2f ) {
+	if (speedtX >= 0.2f) {
 		recentspeed.x = 0;
 		speedtX = 0;
 
@@ -182,37 +181,52 @@ void Player::Update(float dt)
 }
 
 void Player::PhysicsUpdate(float dt)
-{ 
-	//cout << body->GetLinearVelocity().x<<" "<< body->GetLinearVelocity().y << endl;
+{
+	if ((InputMgr::GetKey(Keyboard::A) || InputMgr::GetKey(Keyboard::D)) && body->GetLinearVelocity().y == 0) {
+		body->ApplyLinearImpulse({ 0,0.5f }, GetPlayerBodyLinearVelocity(), 1);
+		cout << body->GetLinearVelocity().x << endl;
+		if ((int)body->GetLinearVelocity().x == 0 && (int)recentspeed.y > 0) {
+			body->SetLinearVelocity({ body->GetLinearVelocity().x,0 });
+		}
+	}
 	if (dir.x != 0)
-	{		
+	{
 		IsMoving = true;
 		if (body->GetLinearVelocity().x <= 2.5 && body->GetLinearVelocity().x >= -2.5) {
-			body->ApplyForce(b2Vec2({ dir.x * 10 , 0 }), body->GetWorldCenter(), true);
+			body->ApplyForce(b2Vec2({ dir.x * 10 ,0.f }), body->GetWorldCenter(), true);
 		}
+
 	}
 	else
 	{
 		IsMoving = false;
 	}
+	
+	
 
-	if (InputMgr::GetKeyDown(Keyboard::Space) && (body->GetLinearVelocity().y > -0.1f && body->GetLinearVelocity().y < 0.1f)) {
-		body->ApplyLinearImpulse({ 0,1.5f }, GetPlayerBodyLinearVelocity(), 1);
+	jumpcooltime += dt;
+	if ((int)recentspeed.y >= 4) {
+		jumpcooltime = 0;
 	}
+	if (jumpcooltime >= 0.8) {
+		if (InputMgr::GetKeyDown(Keyboard::Space) && (int)abs(recentspeed.y) <= 1) {
+			body->ApplyLinearImpulse({ 0,3.f }, GetPlayerBodyLinearVelocity(), 1);
+			jumpcooltime = 0;
+		}
+	}
+
 
 }
 
 void Player::Draw(RenderWindow& window)
 {
 
-	if(!isPlayingGame)
+	if (!isPlayingGame)
 		SpriteObj::Draw(window);
-	
+
 	RotateAnimation(window);
 
-
 	//window.draw(*hitbox);
-
 
 	//window.draw(*hitbox);	
 
@@ -222,8 +236,8 @@ void Player::Draw(RenderWindow& window)
 	window.draw(p_head);
 	window.draw(p_arm);
 	window.draw(portalGun);
-	if(devMod)
-		ShowBornForDev(window);	
+	if (devMod)
+		ShowBornForDev(window);
 
 }
 
@@ -260,26 +274,26 @@ void Player::UpdatePlayerPos(float dt)
 	pelvis.setPosition(pos.x, pos.y - 11.f);
 	p_body.setPosition(pelvis.getPosition().x, pelvis.getPosition().y + 3.5f);
 	p_lleg.setPosition(pelvis.getTransform().transformPoint(pelvis.getPoint(3)));
-	p_rleg.setPosition(pelvis.getTransform().transformPoint(pelvis.getPoint(2)));	
+	p_rleg.setPosition(pelvis.getTransform().transformPoint(pelvis.getPoint(2)));
 
 	spine1.setPosition(pelvis.getPosition());
 	spine2.setPosition(spine1.getTransform().transformPoint(spine1.getPoint(0)));
 
-	clavicle.setPosition(spine2.getPosition());		
+	clavicle.setPosition(spine2.getPosition());
 	p_head.setPosition(spine2.getTransform().transformPoint(spine2.getPoint(0)));
-		
+
 	WalkAnimaton(dt);
 }
 
 void Player::WalkAnimaton(float dt)
 {
-	if (!IsMoving || recentspeed.y)
+	if (!IsMoving /*|| recentspeed.y*/)
 	{
 		startMove = false;
 		p_rleg.setScale(0.3f, 0.3f);
 		p_lleg.setScale(0.3f, 0.3f);
 		return;
-	}	
+	}
 
 	if (!startMove)
 	{
@@ -287,39 +301,39 @@ void Player::WalkAnimaton(float dt)
 			p_rleg.setScale(0.3f, 0.25f);
 		if (dir.x < 0)
 			p_lleg.setScale(0.3f, 0.25f);
-		startMove = true;		
+		startMove = true;
 	}
-	
+
 	groundTime -= dt;
-	if(groundTime < 0)
-		p_rleg.setScale(0.3f, p_rleg.getScale().y + legdir * 0.3f * dt);	
+	if (groundTime < 0)
+		p_rleg.setScale(0.3f, p_rleg.getScale().y + legdir * 0.3f * dt);
 
 	if (p_rleg.getScale().y > 0.3f)
 	{
 		p_rleg.setScale(0.3f, 0.3f);
-		legdir *= -1;		
+		legdir *= -1;
 		groundTime = groundTimeMax;
-	}	
-		
+	}
+
 	if (p_rleg.getScale().y < 0.25f)
 	{
 		p_rleg.setScale(0.3f, 0.25f);
-		legdir *= -1;		
+		legdir *= -1;
 		groundTime = groundTimeMax;
-	}		
+	}
 
 	p_lleg.setScale(0.3f, 0.55f - p_rleg.getScale().y);
 }
 
 void Player::RotateAnimation(RenderWindow& window)
-{	
+{
 	Vector2f mousePos =
-	window.mapPixelToCoords((Vector2i)InputMgr::GetMousePos(), window.getView());	
+		window.mapPixelToCoords((Vector2i)InputMgr::GetMousePos(), window.getView());
 
 	bool right = mousePos.x > pelvis.getPosition().x;
-	Vector2f armPos = right ? clavicle.getPoint(1) : clavicle.getPoint(0);	
+	Vector2f armPos = right ? clavicle.getPoint(1) : clavicle.getPoint(0);
 
-	p_arm.setPosition(clavicle.getTransform().transformPoint(armPos));	
+	p_arm.setPosition(clavicle.getTransform().transformPoint(armPos));
 	p_arm.setRotation(Utils::Angle(p_arm.getPosition(), mousePos));
 
 	armBorn.setPosition(p_arm.getPosition());
@@ -331,7 +345,7 @@ void Player::RotateAnimation(RenderWindow& window)
 	indicator.setPosition(armBorn.getTransform().transformPoint(armBorn.getPoint(1)));
 	indicator.setRotation(armBorn.getRotation());
 
-	float spineRotation = Utils::Angle(spine1.getPosition(), mousePos);	
+	float spineRotation = Utils::Angle(spine1.getPosition(), mousePos);
 	float interpolation = 0.25f;
 	if (right)
 	{
@@ -345,8 +359,8 @@ void Player::RotateAnimation(RenderWindow& window)
 	}
 	else
 	{
-		spineRotation += 180;	
-		if(spineRotation > 0.f && spineRotation < 180.f)
+		spineRotation += 180;
+		if (spineRotation > 0.f && spineRotation < 180.f)
 			spineRotation *= interpolation;
 		if (spineRotation > 20.f && spineRotation < 180.f)
 			spineRotation = 20.f;
@@ -359,13 +373,13 @@ void Player::RotateAnimation(RenderWindow& window)
 		}
 
 		if (spineRotation > 180.f && spineRotation < 340.f)
-			spineRotation = 340.f;		
+			spineRotation = 340.f;
 
 		portalGun.setScale(0.3f, -0.3f);
 	}
 
-	spine1.setRotation(spineRotation);	
-	
+	spine1.setRotation(spineRotation);
+
 	p_body.setRotation(spine1.getRotation());
 	clavicle.setRotation(spine1.getRotation());
 	spine2.setRotation(spine1.getRotation() * 3.f);
@@ -378,12 +392,12 @@ void Player::ShowBornForDev(RenderWindow& window)
 	window.draw(pelvis);
 	window.draw(spine1);
 	window.draw(spine2);
-	window.draw(clavicle);	
+	window.draw(clavicle);
 	window.draw(armBorn);
 	window.draw(indicator);
 }
 
 Vector2f Player::GetIndicator()
-{	
+{
 	return indicator.getTransform().transformPoint(p_arm.getPoint(1));
 }

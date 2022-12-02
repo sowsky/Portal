@@ -80,10 +80,11 @@ protected:
 	RectangleShape armBorn;
 	RectangleShape indicator;
 
+	float jumpcooltime = 0;
 	bool startMove;
 	float legdir = 1.f;
 	float groundTime = 0.25f;
-	float groundTimeMax = 0.25f;
+	float groundTimeMax = 0.0f;
 
 	bool devMod = false;
 

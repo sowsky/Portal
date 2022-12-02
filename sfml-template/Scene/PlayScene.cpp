@@ -72,7 +72,7 @@ void PlayScene::Update(float dt)
 		CheckStillObjectalive();
 
 	if (grabitem) {
-		if (grabbedcube->GetSide())
+	/*	if (grabbedcube->GetSide())
 			grabbedcube->SetCubeBodyPos({ player->GetPos().x + 40,player->GetPos().y - 40 });
 		else
 			grabbedcube->SetCubeBodyPos({ player->GetPos().x - 40,player->GetPos().y - 40 });
@@ -82,13 +82,14 @@ void PlayScene::Update(float dt)
 		}
 		else if (InputMgr::GetKeyDown(Keyboard::D)) {
 			grabbedcube->SetSide(true);
-		}
+		}*/
 
 		if (InputMgr::GetKeyDown(Keyboard::E)) {
 			cout << "drop" << endl;
 			grabitem = false;
 
 			grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
+		//	delete grabbedcube;
 			grabbedcube = nullptr;
 		}
 
@@ -149,7 +150,7 @@ void PlayScene::PhysicsUpdate(float dt)
 void PlayScene::Draw(RenderWindow& window)
 {
 	window.setView(worldView);
-	
+
 
 	for (auto v : wall) {
 		v->Draw(window);
@@ -169,7 +170,7 @@ void PlayScene::Draw(RenderWindow& window)
 	if (goal != nullptr) {
 		goal->Draw(window);
 		//goal->Draw(pass_diffuse, normals_shader, pass_normals);
-	}	
+	}
 
 	DrawRenderedBuffer(window);
 
@@ -177,10 +178,10 @@ void PlayScene::Draw(RenderWindow& window)
 	{
 		player->Draw(window);
 	}
-	
-	for (auto v : wall) {
+
+	/*for (auto v : wall) {
 		v->DrawHitbox(window);
-	}
+	}*/
 
 	if (madeorange) {
 		orange->Draw(window);
@@ -290,7 +291,7 @@ PlayScene::PlayScene(string path)
 					case '1':
 						if (j + 1 < rowNum &&
 							!loadedArray[i][j + 1].empty() &&
-							(loadedArray[i][j + 1].front()->id == '1'|| loadedArray[i][j + 1].front()->id == '2'))
+							(loadedArray[i][j + 1].front()->id == '1' || loadedArray[i][j + 1].front()->id == '2'))
 						{
 							MakeWall(false);
 							wallbunchwidth += GRIDSIZE;
@@ -472,6 +473,36 @@ void PlayScene::MakePortal()
 	bool bluebrhit = false;
 	float bluey;
 	float bluex;
+
+	for (auto w : blackwall) {
+		if (w->GetGlobalBounds().intersects(blue->GetGlobalBounds())) {
+			particle.emitParticles(blue->GetPos(), false);
+			blue->SetPos({ -1000,-1000 });
+			blue->SetDir({ 0,0 });
+		}
+		if (w->GetGlobalBounds().intersects(orange->GetGlobalBounds())) {
+			particle.emitParticles(orange->GetPos(), false);
+			orange->SetPos({ -1000,-1000 });
+			blue->SetDir({ 0,0 });
+
+		}
+	}
+
+	for (auto b : bridge)
+	{
+		if (b->GetStartposGlobalbound().intersects(blue->GetGlobalBounds())) {
+			particle.emitParticles(blue->GetPos(), false);
+			blue->SetPos({ -1000,-1000 });
+			blue->SetDir({ 0,0 });
+
+		}
+		if (b->GetStartposGlobalbound().intersects(orange->GetGlobalBounds())) {
+			particle.emitParticles(orange->GetPos(), false);
+			orange->SetPos({ -1000,-1000 });
+			blue->SetDir({ 0,0 });
+
+		}
+	}
 
 	for (auto w : wall) {
 		if (!madeblue && w->GetGlobalBounds().intersects(blue->GetGlobalBounds())) {
@@ -928,9 +959,10 @@ void PlayScene::BridgeCheck()
 {
 	for (auto w : wall) {
 		for (auto v : bridge) {
-			if (w->GetGlobalBounds().intersects(v->GetBridgeGlobalBound())) {
+			if (w->GetGlobalBounds().intersects(v->GetHitBoxGlobalbound())) {
 				v->SetHitwall(true);
 				v->Setwhohitwall(*w);
+
 			}
 		}
 	}
@@ -993,11 +1025,68 @@ void PlayScene::CheckStillObjectalive()
 			IsMadeTunnelFollowBluePortal = false;
 		}
 	}
+
+
+	if (IsMadeBridgeFollowOrangePortal) {
+		bool on = false;
+		for (auto t : bridge)
+		{
+			if (t->GetDestinyGlobalbound().intersects(blue->GetGlobalBounds())) {
+				on = true;
+			}
+		}
+		if (!on)
+		{
+			auto ite = tunnel.begin();
+			while (ite != tunnel.end())
+			{
+				if ((*ite)->GetConnected() == 2)
+				{
+					auto ptr = (*ite);
+					ite = tunnel.erase(ite);
+					delete ptr;
+					break;
+				}
+				else {
+					++ite;
+				}
+			}
+			IsMadeBridgeFollowOrangePortal = false;
+		}
+	}
+
+	if (IsMadeBridgeFollowBluePortal) {
+		bool on = false;
+		for (auto t : bridge)
+		{
+			if (t->GetDestinyGlobalbound().intersects(orange->GetGlobalBounds())) {
+				on = true;
+			}
+		}
+		if (!on)
+		{
+			auto ite = tunnel.begin();
+			while (ite != tunnel.end())
+			{
+				if ((*ite)->GetConnected() == 1)
+				{
+					auto ptr = (*ite);
+					ite = tunnel.erase(ite);
+					delete ptr;
+					break;
+				}
+				else {
+					++ite;
+				}
+			}
+			IsMadeBridgeFollowBluePortal = false;
+		}
+	}
 }
 
 void PlayScene::DrawBackGroundView(RenderWindow& window)
 {
-	window.setView(backgroundView);	
+	window.setView(backgroundView);
 }
 
 void PlayScene::DrawRenderedBuffer(RenderWindow& window)
@@ -1033,6 +1122,7 @@ void PlayScene::Input()
 		}
 		else
 			SCENE_MGR->ChangeScene(Scenes::GAMESTART);
+		return;
 	}
 
 	if (InputMgr::GetMouseWheelState() == 1)
@@ -1087,7 +1177,7 @@ void PlayScene::Input()
 			}
 			IsMadeTunnelFollowBluePortal = false;
 		}
-
+		it = tunnel.begin();
 		if (IsMadeTunnelFollowOrangePortal) {
 			while (it != tunnel.end())
 			{
@@ -1120,11 +1210,11 @@ void PlayScene::Input()
 			}
 			IsMadeBridgeFollowOrangePortal = false;
 		}
-
+		ite = bridge.begin();
 		if (IsMadeBridgeFollowBluePortal) {
 			while (ite != bridge.end())
 			{
-				if ((*ite)->GetConnected() == 2)
+				if ((*ite)->GetConnected() == 1)
 				{
 					auto ptr = (*ite);
 					ite = bridge.erase(ite);
@@ -1218,13 +1308,13 @@ void PlayScene::Input()
 		orange->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
 	}
 
-	if (grabbedcube != nullptr) {
+	if (grabitem) {
 		Vector2f dir = Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - grabbedcube->GetPos());
 		dir.x *= 50;
 		dir.y *= 50;
 		Vector2f real(dir.x + player->GetPos().x, dir.y + player->GetPos().y);
-		grabbedcube->GetBody()->SetTransform({real.x/SCALE,real.y/SCALE*-1},grabbedcube->GetBody()->GetAngle());
-		cout << grabbedcube->GetPos().x << " " << grabbedcube->GetPos().y << endl;
+		grabbedcube->GetBody()->SetTransform({ real.x / SCALE,real.y / SCALE * -1 }, grabbedcube->GetBody()->GetAngle());
+		cout << real.x <<" "<< real.y << endl;
 	}
 
 }
@@ -1305,7 +1395,7 @@ void PlayScene::MoveToPortal()
 		else if (orange->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ orange->GetPos().x + 30,orange->GetPos().y });
 			float force = (abs(player->GetRecentSpeed().y)) + (abs(player->GetRecentSpeed().x));
-			player->GetBody()->SetLinearVelocity({ force ,0 });
+			player->GetBody()->SetLinearVelocity({ force ,1});
 		}
 		else if (orange->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ orange->GetPos().x ,orange->GetPos().y + player->GetGlobalBounds().height });
@@ -1315,7 +1405,7 @@ void PlayScene::MoveToPortal()
 		else if (orange->GetPortalDir() == 3) {
 			player->SetPlayerBodyPos({ orange->GetPos().x - 30 ,orange->GetPos().y });
 			float force = (abs(player->GetRecentSpeed().y)) + (abs(player->GetRecentSpeed().x));
-			player->GetBody()->SetLinearVelocity({ force * -1,0 });
+			player->GetBody()->SetLinearVelocity({ force * -1,1 });
 		}
 	}
 
@@ -1338,7 +1428,7 @@ void PlayScene::MoveToPortal()
 		else if (blue->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ blue->GetPos().x + 30,blue->GetPos().y });
 			float force = (abs(player->GetRecentSpeed().y)) + (abs(player->GetRecentSpeed().x));
-			player->GetBody()->SetLinearVelocity({ force ,0 });
+			player->GetBody()->SetLinearVelocity({ force ,1 });
 		}
 		else if (blue->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ blue->GetPos().x ,blue->GetPos().y + player->GetGlobalBounds().height });
@@ -1348,7 +1438,7 @@ void PlayScene::MoveToPortal()
 		else if (blue->GetPortalDir() == 3) {
 			player->SetPlayerBodyPos({ blue->GetPos().x - 30 ,blue->GetPos().y });
 			float force = (abs(player->GetRecentSpeed().y)) + (abs(player->GetRecentSpeed().x));
-			player->GetBody()->SetLinearVelocity({ force * -1 ,0 });
+			player->GetBody()->SetLinearVelocity({ force * -1 ,1 });
 		}
 	}
 
@@ -1369,7 +1459,7 @@ void PlayScene::MoveToPortal()
 			else if (orange->GetPortalDir() == 1) {
 				c->SetCubeBodyPos({ orange->GetPos().x + c->GetGlobalBounds().width,orange->GetPos().y });
 				float force = (abs(c->GetRecentSpeed().y)) + (abs(c->GetRecentSpeed().x));
-				c->GetBody()->SetLinearVelocity({ force ,0 });
+				c->GetBody()->SetLinearVelocity({ force ,1 });
 			}
 			else if (orange->GetPortalDir() == 2) {
 				c->SetCubeBodyPos({ orange->GetPos().x ,orange->GetPos().y + c->GetGlobalBounds().height });
@@ -1378,7 +1468,7 @@ void PlayScene::MoveToPortal()
 			else if (orange->GetPortalDir() == 3) {
 				c->SetCubeBodyPos({ orange->GetPos().x - c->GetGlobalBounds().width ,orange->GetPos().y });
 				float force = (abs(c->GetRecentSpeed().y)) + (abs(c->GetRecentSpeed().x));
-				c->GetBody()->SetLinearVelocity({ force * -1  ,0 });
+				c->GetBody()->SetLinearVelocity({ force * -1  ,1 });
 			}
 		}
 
@@ -1397,7 +1487,7 @@ void PlayScene::MoveToPortal()
 			else if (blue->GetPortalDir() == 1) {
 				c->SetCubeBodyPos({ blue->GetPos().x + c->GetGlobalBounds().width,blue->GetPos().y });
 				float force = (abs(c->GetRecentSpeed().y)) + (abs(c->GetRecentSpeed().x));
-				c->GetBody()->SetLinearVelocity({ force  ,0 });
+				c->GetBody()->SetLinearVelocity({ force  ,1 });
 
 			}
 			else if (blue->GetPortalDir() == 2) {
@@ -1407,7 +1497,7 @@ void PlayScene::MoveToPortal()
 			else if (blue->GetPortalDir() == 3) {
 				c->SetCubeBodyPos({ blue->GetPos().x - c->GetGlobalBounds().width ,blue->GetPos().y });
 				float force = (abs(c->GetRecentSpeed().y)) + (abs(c->GetRecentSpeed().x));
-				c->GetBody()->SetLinearVelocity({ force * -1 ,0 });
+				c->GetBody()->SetLinearVelocity({ force * -1 ,1 });
 			}
 		}
 	}
@@ -1546,6 +1636,7 @@ void PlayScene::MoveToPortal()
 PlayScene::~PlayScene()
 {
 	Release();
+
 }
 
 void PlayScene::Init()
@@ -1578,14 +1669,20 @@ void PlayScene::Release()
 	}
 	tunnel.clear();
 
-	delete orange;
-	delete blue;
-	delete goal;
+	if (orange != nullptr)
+		delete orange;
+	if (blue != nullptr)
+		delete blue;
+	if (goal != nullptr)
+		delete goal;
+
+	/*if (grabbedcube != nullptr)
+		delete grabbedcube;*/
 
 }
 
 void PlayScene::Enter()
-{	
+{
 
 	auto size = (Vector2f)FRAMEWORK->GetWindowSize();
 	worldView.setSize(size);

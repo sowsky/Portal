@@ -81,13 +81,13 @@ private:
 
 	Cube* grabbedcube = nullptr;
 	Vector2f currgrid = { GRIDSIZE / 2,GRIDSIZE / 2 };
-	float wallbunchwidth = 50;
+	float wallbunchwidth = GRIDSIZE;
 	Vector2f box2dposition={ GRIDSIZE / 2,GRIDSIZE / 2 };
 
 	View backgroundView;
 	View endingView;
 	RectangleShape background;
-
+	
 	Blue* blue;
 	Orange* orange;
 	bool madeblue = false;
