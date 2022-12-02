@@ -404,6 +404,11 @@ PlayScene::PlayScene(string path)
 			t->SetButtonlist(button);
 		}
 	}
+	if (!bridge.empty()) {
+		for (auto t : bridge) {
+			t->SetButtonlist(button);
+		}
+	}
 
 	particle.init(500);
 }
@@ -1646,8 +1651,10 @@ void PlayScene::MoveToPortal()
 
 	//////////////////////////////////////////////////////tunnel//////////////////////////////////
 
-	for (int i = 0; i < (int)tunnel.size() - 1; i++)
+	for (int i = 0; i < (int)tunnel.size(); i++)
 	{
+		if ((IsMadeTunnelFollowOrangePortal||IsMadeBridgeFollowBluePortal) && i == tunnel.size())
+			break;
 		//hit blue
 		if (tunnel[i]->GetDestinyGlobalbound().intersects(blue->GetGlobalBounds()) && !IsMadeTunnelFollowOrangePortal) {
 			vector<int> temp;
@@ -1671,6 +1678,7 @@ void PlayScene::MoveToPortal()
 
 			}
 
+			
 			tunnel.push_back(new Tunnel(pos, dir, temp, tunnel[i]->GetColor(), true, 2));
 			IsMadeTunnelFollowOrangePortal = true;
 
@@ -1682,6 +1690,7 @@ void PlayScene::MoveToPortal()
 
 		//hit orange
 		if (tunnel[i]->GetDestinyGlobalbound().intersects(orange->GetGlobalBounds()) && !IsMadeTunnelFollowBluePortal) {
+
 			vector<int> temp;
 			Vector2f pos;
 			int dir = 0;
@@ -1715,7 +1724,7 @@ void PlayScene::MoveToPortal()
 	}
 
 	////////////////////////////bridge////////////////////////
-	for (int i = 0; i < (int)bridge.size() - 1 ; i++){
+	for (int i = 0; i < (int)bridge.size() ; i++){
 
 		//hit blue
 		if (bridge[i]->GetHitBoxGlobalbound().intersects(blue->GetGlobalBounds()) && !IsMadeBridgeFollowOrangePortal) {
