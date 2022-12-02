@@ -970,6 +970,18 @@ void PlayScene::BridgeCheck()
 
 void PlayScene::CheckStillObjectalive()
 {
+	if (!IsMadeTunnelFollowOrangePortal) {
+		//check blue hit
+		for (auto b : bridge) {
+			if (b->GetDestinyGlobalbound().intersects(blue->GetGlobalBounds())) {
+				
+			}
+		}
+	}
+
+
+
+	////////////////////////////////////////////////////////////////////
 	if (IsMadeTunnelFollowOrangePortal) {
 		bool on = false;
 		for (auto t : tunnel)
@@ -1082,6 +1094,8 @@ void PlayScene::CheckStillObjectalive()
 			IsMadeBridgeFollowBluePortal = false;
 		}
 	}
+
+
 }
 
 void PlayScene::DrawBackGroundView(RenderWindow& window)
