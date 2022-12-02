@@ -31,6 +31,7 @@ public:
 	
 	void GetRandDiffuseAndNormal64();
 	void SetActiveSideTiles(int pos, bool active);
+	void SetActiveSideTiles(array<bool, 4> array);
 	void SetSideTilesPosition(RenderWindow& window);
 	void DrawSideTiles(RenderWindow& window);
 protected:

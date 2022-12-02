@@ -1,6 +1,7 @@
 #include "Bridge.h"
 #include"../FrameWork/InputMgr.h"
 #include "../FrameWork/stdafx.h"
+#include "../Manager/ResourceMgr.h"
 Bridge::Bridge()
 {
 	SetResourceTexture("Graphics/temp/bridge.png");
@@ -13,20 +14,48 @@ Bridge::Bridge()
 Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool active, int dir, int connected)
 	:dir(dir), active(active), connected(connected)
 {
+	///////////
+
+	SetSpriteTex(frontEmitter, "Graphics/bridge/front.png");
+	SetSpriteTex(backEmitter, "Graphics/bridge/back.png");
+	bridge_color = RESOURCEMGR->GetTexture("Graphics/bridge/color.png");
+	frontEmitter.setScale(0.3, 0.3);
+	backDp = DEPTH * 2 - 1.f;
+	backEmitter.setScale(frontEmitter.getScale() * backDp);
+
+	Utils::SetOrigin(frontEmitter, Origins::ML);
+	Utils::SetOrigin(backEmitter, Origins::ML);
+
 	start.setFillColor(Color(0, 255, 0, 255));
+
+	bridge_rect.setPrimitiveType(Quads);
+	bridge_rect.resize(4);	
+
+	bridge_rect[0].texCoords = { 0.f ,0.f };
+	bridge_rect[1].texCoords = { 32.f ,0.f };
+	bridge_rect[2].texCoords = { 32.f ,32.f };
+	bridge_rect[3].texCoords = { 0.f ,32.f };
+
+	///////////
+
+	float bridgeThickness = 5.f;
 
 	if (dir == 0 || dir == 2) {
 		if (dir == 0) {
 			Utils::SetOrigin(bridge, Origins::TC);
 			startpos = { position.x, position.y - GRIDSIZE / 2 };
 			bridge.setPosition(startpos);
+			frontEmitter.setRotation(90.f);
+			backEmitter.setRotation(90.f);
 		}
 		else if (dir == 2) {
 			Utils::SetOrigin(bridge, Origins::BC);
 			startpos = { position.x,position.y + GRIDSIZE / 2 };
 			bridge.setPosition(startpos);
+			frontEmitter.setRotation(270.f);
+			backEmitter.setRotation(270.f);
 		}
-		bridge.setSize({ 10,0 });
+		bridge.setSize({ bridgeThickness,0 });
 		start.setSize({ 50,5 });
 
 	}
@@ -35,6 +64,8 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 			Utils::SetOrigin(bridge, Origins::MR);
 			startpos = { position.x + GRIDSIZE / 2,position.y };
 			bridge.setPosition(startpos);
+			frontEmitter.setRotation(180.f);
+			backEmitter.setRotation(180.f);
 		}
 		else if (dir == 3) {
 			Utils::SetOrigin(bridge, Origins::ML);
@@ -42,7 +73,7 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 			bridge.setPosition(startpos);
 
 		}
-		bridge.setSize({ 0,10 });
+		bridge.setSize({ 0, bridgeThickness });
 		start.setSize({ 5,50 });
 	}
 	start.setPosition(startpos);
@@ -63,6 +94,13 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 	fixtureDef.density = 1.0f;
 	fixtureDef.friction = 0.2f;
 	fixture = body->CreateFixture(&fixtureDef);
+
+	///////////
+
+	frontEmitter.setPosition(startpos);
+	backEmitter.setPosition(startpos);
+
+	///////////
 }
 
 Bridge::~Bridge()
@@ -166,7 +204,7 @@ void Bridge::Update(float dt)
 
 
 			Utils::SetOrigin(bridge, Origins::TC);
-			bridge.setSize({ bridge.getSize().x,whohitwall->GetGlobalBounds().top - bridge.getPosition().y });
+			bridge.setSize({ bridge.getSize().x ,whohitwall->GetGlobalBounds().top - bridge.getPosition().y });
 			x = bridge.getPosition().x / SCALE;
 			y = (bridge.getPosition().y + (bridge.getSize().y / 2)) / SCALE * -1;
 			endpos = { bridge.getPosition().x,bridge.getPosition().y + bridge.getSize().y };
@@ -224,12 +262,51 @@ void Bridge::Update(float dt)
 
 void Bridge::Draw(RenderWindow& window)
 {
-	if (active)
-		window.draw(bridge);
-	//	window.draw(hitbox);
+	if (isPlayingGame)
+	{
+		UpdateBridgeDraw(window);		
+
+		if (active)
+		{
+			window.draw(bridge_rect, bridge_color);
+		}			
+			window.draw(bridge);
+			//window.draw(hitbox);
+			//window.draw(start);
+		    //window.draw(destiny);		
+		window.draw(frontEmitter);
+	}
+
 	if (!isPlayingGame)
 		WireableObject::Draw(window);
-	//window.draw(start);
-	//window.draw(destiny);
+}
 
+void Bridge::UpdateBridgeDraw(RenderWindow& window)
+{
+	Vector2f vanishingPoint = window.getView().getCenter();
+
+	frontEmitter.setPosition(
+		startpos - (vanishingPoint - startpos) * (1.f - DEPTH)
+	);	
+
+	backEmitter.setPosition(
+		startpos + (vanishingPoint - startpos) * (1.f - DEPTH)
+	);	
+
+	front_des_pos = endpos - (vanishingPoint - endpos) * (1.f - DEPTH);
+	back_des_pos = endpos + (vanishingPoint - endpos) * (1.f - DEPTH);
+	
+	if (active)
+	{
+		bridge_rect[0].position = backEmitter.getPosition();
+		bridge_rect[1].position = frontEmitter.getPosition();
+		bridge_rect[2].position = front_des_pos;
+		bridge_rect[3].position = back_des_pos;
+	}
+	
+}
+
+void Bridge::DrawBackEmmiter(RenderWindow& window)
+{
+	window.draw(backEmitter);
 }

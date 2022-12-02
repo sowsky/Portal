@@ -30,6 +30,7 @@ public:
 	int GetConnected() { return connected; }
 
 	void UpdateBridgeDraw(RenderWindow& window);
+	void DrawBackEmmiter(RenderWindow& window);
 protected:
 	list<Button*> button;
 	vector<int>buttonid;
@@ -52,7 +53,20 @@ protected:
 	int dir = 0;
 	b2Body* body = nullptr;
 	b2World* world = nullptr;
-	b2Fixture* fixture = nullptr;
+	b2Fixture* fixture = nullptr;	
+
+	//////////////////
+
+	Vector2f front_des_pos;
+	Vector2f back_des_pos;
+
+	Sprite frontEmitter;
+	Sprite backEmitter;	
+	
+	VertexArray bridge_rect;
+
+	Texture* bridge_color;
+
 	float backDp;
 };
 

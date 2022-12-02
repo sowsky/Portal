@@ -22,6 +22,7 @@ EditScene::EditScene()
 	bottomLine.setFillColor(Color::Black);
 
 	background.setTexture(*RESOURCEMGR->GetTexture("Graphics/backgrounds/ruin2.png"));
+	background.setColor(Color::White);
 	shadow.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/shadow.png"));
 
 	uiBackGround.setFillColor(Color(229, 232, 233, 255));
@@ -1073,6 +1074,41 @@ void EditScene::DrawMapList(RenderWindow& window)
 	}
 }
 
+array<bool, 4>& EditScene::SetOnSideTiles(int col, int row)
+{
+	array<bool, 4> sideBool;
+	for(int i = 0; i < sideBool.size(); i++)
+	{
+		sideBool[i] = true;
+	}
+
+	if ((col + 1) < colNum &&
+		!mapTool[col + 1][row].first.empty() &&
+		(mapTool[col + 1][row].first.front()->GetId() == '1' ||
+			mapTool[col + 1][row].first.front()->GetId() == '2'))
+		sideBool[0] = false;
+
+	if ((row + 1) < rowNum &&
+		!mapTool[col][row + 1].first.empty() &&
+		(mapTool[col][row + 1].first.front()->GetId() == '1' ||
+			mapTool[col][row + 1].first.front()->GetId() == '2'))
+		sideBool[1] = false;
+
+	if ((col - 1) >= 0 &&
+		!mapTool[col - 1][row].first.empty() &&
+		(mapTool[col - 1][row].first.front()->GetId() == '1' ||
+			mapTool[col - 1][row].first.front()->GetId() == '2'))
+		sideBool[2] = false;
+
+	if ((row - 1) >= 0 &&
+		!mapTool[col][row - 1].first.empty() &&
+		(mapTool[col][row - 1].first.front()->GetId() == '1' ||
+			mapTool[col][row - 1].first.front()->GetId() == '2'))
+		sideBool[3] = false;
+
+	return sideBool;
+}
+
 void EditScene::FillUiToolBox()
 {
 	uiTool[0][0].first = new Tile;
@@ -1094,7 +1130,7 @@ void EditScene::FillUiToolBox()
 	Button::SetButtonNum(0);
 
 	uiTool[1][2].first = new Tunnel;
-	uiTool[1][2].first->SetResourceTexture("Graphics/Ui/tbeam.png");
+	uiTool[1][2].first->SetResourceTexture("Graphics/Ui/tbeam.png");	
 
 	uiTool[1][3].first = new Bridge;
 	uiTool[1][3].first->SetResourceTexture("Graphics/Ui/bridge.png");
@@ -1247,6 +1283,7 @@ void EditScene::Save()
 						tile.id = '1';
 						tile.posX = j;
 						tile.posY = posY;
+						tile.sideBool = SetOnSideTiles(i,j);
 						saveObjInfo.tiles.push_back(tile);
 						break;
 					}
@@ -1256,6 +1293,7 @@ void EditScene::Save()
 						tile.id = '2';
 						tile.posX = j;
 						tile.posY = posY;
+						tile.sideBool = SetOnSideTiles(i, j);
 						saveObjInfo.blacktile.push_back(tile);
 						break;
 					}

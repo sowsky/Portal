@@ -65,7 +65,7 @@ bool Framework::Do()
 			fps = 0;
 		}
 
-		window.setMouseCursorGrabbed(1);
+	//	window.setMouseCursorGrabbed(1);
 		while (window.pollEvent(ev))
 		{
 			if (ev.type == sf::Event::Closed)

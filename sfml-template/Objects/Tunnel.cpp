@@ -58,20 +58,28 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 	}
 	start.setPosition(startpos);
 
+	SetSpriteTex(emitter, "Graphics/tunnel/tunnel.png");
+	emitter.setScale(1.55f, 1.0f);
+	Utils::SetOrigin(emitter, Origins::BC);
+	emitter.setPosition(startpos);
+
 	particles.setPrimitiveType(Points);
 	switch (this->dir)
 	{
 	case 0:
 		particleDir = { 0.f, 1.f };
+		emitter.setRotation(180.f);
 		break;
 	case 1:
 		particleDir = { -1.f, 0.f };
+		emitter.setRotation(270.f);
 		break;
 	case 2:
-		particleDir = { 0.f, -1.f };
+		particleDir = { 0.f, -1.f };		
 		break;
 	case 3:
 		particleDir = { 1.f, 0.f };
+		emitter.setRotation(90.f);
 		break;
 	}
 }
@@ -209,15 +217,19 @@ void Tunnel::Update(float dt)
 
 void Tunnel::Draw(RenderWindow& window)
 {
-	if (active)
-		window.draw(tuns);
-
 	if (!isPlayingGame)
 		WireableObject::Draw(window);
-	//window.draw(hitbox);
-	window.draw(destiny);
-	if (active)
-		window.draw(particles);
+	else
+	{
+		if (active)
+		{
+			window.draw(tuns);
+			window.draw(particles);
+		}		
+		//window.draw(destiny);
+		//window.draw(hitbox);			
+		window.draw(emitter);
+	}
 }
 
 void Tunnel::ChangeDir()

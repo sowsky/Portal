@@ -177,6 +177,14 @@ void BlackTile::SetActiveSideTiles(int pos, bool active)
 
 }
 
+void BlackTile::SetActiveSideTiles(array<bool, 4> array)
+{
+	for (int i = 0; i < sideTiles.size(); i++)
+	{
+		sideTiles[i].first = array[i];
+	}
+}
+
 void BlackTile::SetSideTilesPosition(RenderWindow& window)
 {
 	Vector2f vanishingPoint = window.getView().getCenter();

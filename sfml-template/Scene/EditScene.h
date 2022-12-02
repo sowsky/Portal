@@ -62,6 +62,8 @@ public:
 	void LoadMapList();
 	void DrawMapList(RenderWindow& window);
 
+	array<bool,4>& SetOnSideTiles(int col, int row);
+
 	void Reset();
 	void Save();
 	void Load();

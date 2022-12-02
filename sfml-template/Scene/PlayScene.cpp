@@ -128,6 +128,9 @@ void PlayScene::Update(float dt)
 
 	Input();
 
+	light.position.x = 0;
+	light.position.y = height;
+	
 }
 
 void PlayScene::PhysicsUpdate(float dt)
@@ -154,6 +157,10 @@ void PlayScene::PhysicsUpdate(float dt)
 void PlayScene::Draw(RenderWindow& window)
 {
 	window.setView(worldView);
+
+	for (auto v : bridge) {
+		v->DrawBackEmmiter(window);
+	}
 
 	for (auto v : wall) {
 		v->Draw(window);
@@ -225,7 +232,7 @@ void PlayScene::Draw(RenderWindow& window)
 
 PlayScene::PlayScene(string path)
 	:light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
-		sf::Vector3f(0, 0, 0.02),
+		sf::Vector3f(0, 0, 0.08),
 		sf::Vector3f(0.5, 0.5, 0.5)),
 	falloff(0.5, 0.5, 0.5)
 {
@@ -297,6 +304,7 @@ PlayScene::PlayScene(string path)
 					switch (obj->id)
 					{
 					case '1':
+					{
 						if (j + 1 < rowNum &&
 							!loadedArray[i][j + 1].empty() &&
 							(loadedArray[i][j + 1].front()->id == '1' || loadedArray[i][j + 1].front()->id == '2'))
@@ -310,9 +318,12 @@ PlayScene::PlayScene(string path)
 							box2dposition.x += currgrid.x + GRIDSIZE;
 							wallbunchwidth = GRIDSIZE;
 						}
+						Tile_struct* t = (Tile_struct*)loadedArray[i][j].front();
+						wall.back()->SetActiveSideTiles(t->sideBool);
 						break;
-
+					}
 					case '2':
+					{
 						if (j + 1 < rowNum &&
 							!loadedArray[i][j + 1].empty() &&
 							(loadedArray[i][j + 1].front()->id == '1' || loadedArray[i][j + 1].front()->id == '2'))
@@ -326,7 +337,10 @@ PlayScene::PlayScene(string path)
 							box2dposition.x += currgrid.x + GRIDSIZE;
 							wallbunchwidth = GRIDSIZE;
 						}
+						Black_Tile_struct* t = (Black_Tile_struct*)loadedArray[i][j].front();
+						blackwall.back()->SetActiveSideTiles(t->sideBool);
 						break;
+					}
 					case 'p':
 					case 'P':
 						MakePlayer();
@@ -376,10 +390,9 @@ PlayScene::PlayScene(string path)
 		wallbunchwidth = GRIDSIZE;
 	}
 
-	height = WINDOW_WIDTH * 3.f;
-	width = WINDOW_HEIGHT * 3.f;
-	background.setSize({ (float)width, (float)height });
-	background.setFillColor(Color(0, 0, 0, 0));
+	height = colNum * GRIDSIZE;
+	width = rowNum * GRIDSIZE;
+
 	bgNormal = RESOURCEMGR->GetTexture("Graphics/bg.png");
 	SetTex(crosshair, "Graphics/crosshair/alloff.png");
 	crosshair.setScale(0.3f,0.3f);
@@ -1202,9 +1215,6 @@ void PlayScene::Input()
 		SpriteObj::OnOffWiringState();
 	}
 
-	light.position.x = width * 0.5f;
-	light.position.y = height * 0.5f;
-
 	//blue
 	if (InputMgr::GetMouseButtonDown(Mouse::Left) && !grabitem) {
 		auto it = tunnel.begin();
@@ -1700,6 +1710,7 @@ void PlayScene::Release()
 {
 	FRAMEWORK->GetWindow().setView(FRAMEWORK->GetWindow().getDefaultView());
 	delete player;
+	player = nullptr;
 
 	for (auto v : wall) {
 		delete v;

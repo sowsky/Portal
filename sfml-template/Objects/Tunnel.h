@@ -64,5 +64,7 @@ private:
 	int particleNum = 20;
 	Vector2f particleDir;
 	bool isPtcSetted = false;
+
+	Sprite emitter;
 };
 

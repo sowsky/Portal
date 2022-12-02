@@ -213,6 +213,14 @@ void Tile::SetActiveSideTiles(int pos, bool active)
 	sideTiles[pos].first = active;
 }
 
+void Tile::SetActiveSideTiles(array<bool, 4> array)
+{
+	for (int i = 0; i < sideTiles.size(); i++)
+	{
+		sideTiles[i].first = array[i];
+	}
+}
+
 void Tile::SetSideTilesPosition(RenderWindow& window)
 {
 	Vector2f vanishingPoint = window.getView().getCenter();		

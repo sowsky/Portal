@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <nlohmann/json.hpp>
+#include <array>
 
 struct Map_Size_Struct
 {
@@ -31,13 +32,15 @@ struct Goal_struct : public Object_struct
 };
 
 struct Tile_struct : public Object_struct
-{	
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Tile_struct, posX, posY, rotation, id);
+{		
+	array<bool, 4> sideBool;
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Tile_struct, posX, posY, rotation, id, sideBool);
 };
 
 struct Black_Tile_struct : public Object_struct
 {
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Black_Tile_struct, posX, posY, rotation, id);
+	array<bool, 4> sideBool;
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Black_Tile_struct, posX, posY, rotation, id, sideBool);
 };
 
 struct Cube_struct : public Object_struct

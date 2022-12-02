@@ -1,6 +1,8 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
+Graphics/tunnel/tunnel.png,0
 Graphics/bridge/back.png,0
 Graphics/bridge/front.png,0
+Graphics/bridge/color.png,0
 Graphics/crosshair/alloff.png,0
 Graphics/crosshair/allon.png,0
 Graphics/crosshair/blueon.png,0
