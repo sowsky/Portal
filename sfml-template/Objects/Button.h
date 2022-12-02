@@ -11,8 +11,6 @@ public:
 
 	virtual SpriteObj* NewThis();
 public:
-	static int GetButtonNum() { return buttonNum; }
-	static void SetButtonNum(int num) { buttonNum = num; }
 	virtual void Draw(RenderWindow& window);
 
 	RectangleShape* GetHitbox() { return hitbox; }
@@ -25,8 +23,7 @@ public:
 
 protected:
 	bool isPress = false;
-	int buttonId;
-	static int buttonNum;
+	int buttonId;	
 	static bool isEditMap;
 	RectangleShape* hitbox;
 

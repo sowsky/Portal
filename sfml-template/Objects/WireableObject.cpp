@@ -2,8 +2,8 @@
 #include "../Manager/ResourceMgr.h"
 #include "../FrameWork/InputMgr.h"
 #include "../FrameWork/Utils.h"
-#include "../Objects/NumBox.h"
 #include "../FrameWork/Const.h"
+//#include "../Objects/NumBox.h"
 
 WireableObject::WireableObject()
 {
@@ -12,14 +12,14 @@ WireableObject::WireableObject()
 
 WireableObject::~WireableObject()
 {
-	if (!numbox.empty())
-	{
-		for (auto i : numbox)
-		{
-			delete i;
-		}
-	}
-	numbox.clear();
+	//if (!numbox.empty())
+	//{
+	//	for (auto i : numbox)
+	//	{
+	//		delete i;
+	//	}
+	//}
+	//numbox.clear();
 }
 
 void WireableObject::Init()
@@ -69,57 +69,57 @@ void WireableObject::WireModDraw(RenderWindow& window)
 		window.draw(wireCheckBox);
 	}
 
-	if (!numbox.empty() && isWiring)
-	{
-		for (auto i : numbox)
-		{
-			i->Draw(window);
-		}
-	}
+	//if (!numbox.empty() && isWiring)
+	//{
+	//	for (auto i : numbox)
+	//	{
+	//		i->Draw(window);
+	//	}
+	//}
 }
 
-void WireableObject::AddNumBox(NumBox* nb)
-{	
-	if (numbox.empty())
-	{
-		numbox.push_back(new NumBox);
-		numbox.back()->SetNum(nb->GetNum());
-		numbox.back()->SetPos(GetPos());
-	}
-	else
-	{
-		Vector2f pos = numbox.back()->GetPos();
-		Vector2f fixPos{ NUMBOX_SIZE, 0 };
-		numbox.push_back(new NumBox);
-		numbox.back()->SetNum(nb->GetNum());
-		numbox.back()->SetPos(pos + fixPos);
-	}
-}
-
-void WireableObject::AddNumBox(int num)
-{
-	numbox.push_back(new NumBox);
-	numbox.back()->SetNum(num);
-	numbox.back()->SetPos(sprite.getPosition());
-}
-
-void WireableObject::RemoveNumBox()
-{
-	if (numbox.empty())
-		return;
-
-	delete numbox.back();
-	numbox.pop_back();
-}
+//void WireableObject::AddNumBox(NumBox* nb)
+//{	
+//	if (numbox.empty())
+//	{
+//		numbox.push_back(new NumBox);
+//		numbox.back()->SetNum(nb->GetNum());
+//		numbox.back()->SetPos(GetPos());
+//	}
+//	else
+//	{
+//		Vector2f pos = numbox.back()->GetPos();
+//		Vector2f fixPos{ NUMBOX_SIZE, 0 };
+//		numbox.push_back(new NumBox);
+//		numbox.back()->SetNum(nb->GetNum());
+//		numbox.back()->SetPos(pos + fixPos);
+//	}
+//}
+//
+//void WireableObject::AddNumBox(int num)
+//{
+//	numbox.push_back(new NumBox);
+//	numbox.back()->SetNum(num);
+//	numbox.back()->SetPos(sprite.getPosition());
+//}
+//
+//void WireableObject::RemoveNumBox()
+//{
+//	if (numbox.empty())
+//		return;
+//
+//	delete numbox.back();
+//	numbox.pop_back();
+//}
 
 list<int> WireableObject::GetWireListFromMapTool()
 {
 	list<int> temp;
 	
-	for (auto boxnum : numbox)
-	{
-		temp.push_back(boxnum->GetNum());
-	}
+	//for (auto boxnum : numbox)
+	//{
+	//	temp.push_back(boxnum->GetNum());
+	//}
 
 	return temp;
 }

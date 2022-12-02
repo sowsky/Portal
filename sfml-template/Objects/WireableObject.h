@@ -3,7 +3,7 @@
 #include <list>
 using namespace std;
 
-class NumBox;
+//class NumBox;
 class WireableObject : public SpriteObj
 {
 public:	
@@ -19,9 +19,9 @@ public:
 	virtual void SetWireCheckBox();
 	virtual void WireModDraw(RenderWindow& window);
 
-	void AddNumBox(NumBox* nb);
-	void AddNumBox(int num);
-	void RemoveNumBox();
+	//void AddNumBox(NumBox* nb);
+	//void AddNumBox(int num);
+	//void RemoveNumBox();
 
 	list<int> GetWireListFromMapTool();	
 
@@ -33,7 +33,7 @@ protected:
 	RectangleShape wireCheckBox;
 
 	bool isMouseIn;
-	list<NumBox*> numbox;
+	//list<NumBox*> numbox;
 	//list<int> wireNum;
 };
 
