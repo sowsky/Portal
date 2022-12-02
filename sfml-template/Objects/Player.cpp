@@ -164,12 +164,12 @@ void Player::Update(float dt)
 
 	speedtX += dt;
 	speedtY += dt;
-	if (speedtX >= 0.2f) {
+	if (speedtX >= 0.1f) {
 		recentspeed.x = 0;
 		speedtX = 0;
 
 	}
-	if (speedtY >= 0.2f) {
+	if (speedtY >= 0.1f) {
 		recentspeed.y = 0;
 		speedtY = 0;
 	}
@@ -184,9 +184,9 @@ void Player::PhysicsUpdate(float dt)
 {
 	if ((InputMgr::GetKey(Keyboard::A) || InputMgr::GetKey(Keyboard::D)) && body->GetLinearVelocity().y == 0) {
 		body->ApplyLinearImpulse({ 0,0.5f }, GetPlayerBodyLinearVelocity(), 1);
-		cout << body->GetLinearVelocity().x << endl;
-		if ((int)body->GetLinearVelocity().x == 0 && (int)recentspeed.y > 0) {
-			body->SetLinearVelocity({ body->GetLinearVelocity().x,0 });
+		cout << body->GetLinearVelocity().y << endl;
+		if ((int)body->GetLinearVelocity().x == 0 && body->GetLinearVelocity().y > 0) {
+			body->SetLinearVelocity({ body->GetLinearVelocity().x,-0.1f });
 		}
 	}
 	if (dir.x != 0)

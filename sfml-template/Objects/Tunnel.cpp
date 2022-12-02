@@ -223,12 +223,12 @@ void Tunnel::Draw(RenderWindow& window)
 	{
 		if (active)
 		{
-			window.draw(tuns);
+		//	window.draw(tuns);
 			window.draw(particles);
 		}		
 		//window.draw(destiny);
 		//window.draw(hitbox);			
-		window.draw(emitter);
+		//window.draw(emitter);
 	}
 }
 

@@ -76,6 +76,9 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 		bridge.setSize({ 0, bridgeThickness });
 		start.setSize({ 5,50 });
 	}
+	if (connected != 0) {
+		startpos.y += 25;
+	}
 	start.setPosition(startpos);
 
 	bridge.setFillColor(Color(80, 188, 233, 255));
