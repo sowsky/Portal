@@ -332,6 +332,7 @@ PlayScene::PlayScene(string path)
 						Tile_struct* t = (Tile_struct*)loadedArray[i][j].front();
 						wall.back()->SetActiveSideTiles(t->sideBool);
 						break;
+						cout << box2dposition.x << " " << box2dposition.y << endl;
 					}
 					case '2':
 					{

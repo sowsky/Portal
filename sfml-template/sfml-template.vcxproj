@@ -160,6 +160,7 @@
     <ClCompile Include="Objects\Cube.cpp" />
     <ClCompile Include="Manager\Animator.cpp" />
     <ClCompile Include="FrameWork\InputMgr.cpp" />
+    <ClCompile Include="Objects\NumBox.cpp" />
     <ClCompile Include="Objects\Object.cpp" />
     <ClCompile Include="Objects\SpriteObj.cpp" />
     <ClCompile Include="Objects\Player.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="Objects\Cube.h" />
     <ClInclude Include="Manager\Animator.h" />
     <ClInclude Include="FrameWork\InputMgr.h" />
+    <ClInclude Include="Objects\NumBox.h" />
     <ClInclude Include="Objects\Object.h" />
     <ClInclude Include="FrameWork\ObjectHeaders.h" />
     <ClInclude Include="Objects\SpriteObj.h" />
