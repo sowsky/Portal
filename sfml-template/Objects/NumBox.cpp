@@ -17,7 +17,7 @@ NumBox::NumBox()
 
 NumBox::~NumBox()
 {
-	
+	//¡÷ºÆ
 }
 
 void NumBox::SetPos(Vector2f pos)
