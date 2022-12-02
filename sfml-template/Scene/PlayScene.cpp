@@ -1457,10 +1457,10 @@ void PlayScene::Input()
 	
 
 		if (!player->IsMouseRight())
-			dir.x = 45.f;
+			dir.x = -45.f;
 	
 
-		cout << dir.x << endl;
+		
 		Vector2f real(dir.x + player->GetPos().x, player->GetPos().y-25);
 		grabbedcube->GetBody()->SetTransform({ real.x / SCALE,real.y / SCALE * -1 }, grabbedcube->GetBody()->GetAngle());
 		//cout << real.x <<" "<< real.y << endl;
@@ -1539,7 +1539,7 @@ void PlayScene::MoveToPortal()
 		if (orange->GetPortalDir() == 0) {
 
 			player->SetPlayerBodyPos({ orange->GetPos().x,orange->GetPos().y - player->GetGlobalBounds().height });
-			if (abs(player->GetPlayerBodyLinearVelocity().y) <= 0.5f) {
+			if (abs(player->GetRecentSpeed().y) <= 0.5f) {
 				player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,1.f });
 			}
 			else {
@@ -1570,7 +1570,7 @@ void PlayScene::MoveToPortal()
 	if (madeorange && orange->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (blue->GetPortalDir() == 0) {
 			player->SetPlayerBodyPos({ blue->GetPos().x,blue->GetPos().y - player->GetGlobalBounds().height });
-			if (abs(player->GetPlayerBodyLinearVelocity().y) <= 0.5f) {
+			if (abs(player->GetRecentSpeed().y) <= 0.5f) {
 				player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,1.f });
 				cout << "�߰�" << endl;
 
@@ -1589,7 +1589,7 @@ void PlayScene::MoveToPortal()
 		}
 		else if (blue->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ blue->GetPos().x ,blue->GetPos().y + player->GetGlobalBounds().height });
-			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyLinearVelocity().x,player->GetRecentSpeed().y });
+			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyLinearVelocity().x,-1.f });
 
 		}
 		else if (blue->GetPortalDir() == 3) {
