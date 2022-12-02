@@ -26,6 +26,7 @@ public:
 	virtual SpriteObj* NewThis() { return new Bridge; }
 
 	Vector2f Gethitboxpos() { return hitbox.getPosition(); }
+	virtual void SetButtonlist(vector<Button*>& button);
 
 	int GetConnected() { return connected; }
 

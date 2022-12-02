@@ -15,7 +15,7 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 	:dir(dir), active(active), connected(connected)
 {
 	///////////
-
+	buttonid = buttonlist;
 	SetSpriteTex(frontEmitter, "Graphics/bridge/front.png");
 	SetSpriteTex(backEmitter, "Graphics/bridge/back.png");
 	bridge_color = RESOURCEMGR->GetTexture("Graphics/bridge/color.png");
@@ -29,7 +29,7 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 	start.setFillColor(Color(0, 255, 0, 255));
 
 	bridge_rect.setPrimitiveType(Quads);
-	bridge_rect.resize(4);	
+	bridge_rect.resize(4);
 
 	bridge_rect[0].texCoords = { 0.f ,0.f };
 	bridge_rect[1].texCoords = { 32.f ,0.f };
@@ -118,10 +118,10 @@ void Bridge::Update(float dt)
 {
 	Utils::SetOrigin(start, Origins::MC);
 
-	if (InputMgr::GetKeyDown(Keyboard::R))
-		active = !active;
+	/*if (InputMgr::GetKeyDown(Keyboard::R))
+		active = !active;*/
 
-	//active = true;
+	active = true;
 
 	for (auto b : button) {
 		if (!b->GetPressed()) {
@@ -232,6 +232,8 @@ void Bridge::Update(float dt)
 			endpos = { bridge.getPosition().x - bridge.getSize().x ,bridge.getPosition().y, };
 
 		}
+
+
 		else if (dir == 3) {
 			Utils::SetOrigin(bridge, Origins::ML);
 
@@ -264,21 +266,35 @@ void Bridge::Draw(RenderWindow& window)
 {
 	if (isPlayingGame)
 	{
-		UpdateBridgeDraw(window);		
 
 		if (active)
 		{
-			window.draw(bridge_rect, bridge_color);
-		}			
 			window.draw(bridge);
-			//window.draw(hitbox);
-			//window.draw(start);
-		    //window.draw(destiny);		
-		window.draw(frontEmitter);
-	}
+			if (setedpos) {
+				UpdateBridgeDraw(window);
+				window.draw(bridge_rect, bridge_color);
+				window.draw(frontEmitter);
+			}
+		}
 
+		//window.draw(hitbox);
+		//window.draw(start);
+		//window.draw(destiny);		
+	}
 	if (!isPlayingGame)
 		WireableObject::Draw(window);
+}
+
+
+void Bridge::SetButtonlist(vector<Button*>& button)
+{
+	for (auto b : button) {
+		for (int i = 0; i < buttonid.size(); i++) {
+			if (b->GetButtonId() == buttonid[i]) {
+				this->button.push_back(b);
+			}
+		}
+	}
 }
 
 void Bridge::UpdateBridgeDraw(RenderWindow& window)
@@ -287,15 +303,15 @@ void Bridge::UpdateBridgeDraw(RenderWindow& window)
 
 	frontEmitter.setPosition(
 		startpos - (vanishingPoint - startpos) * (1.f - DEPTH)
-	);	
+	);
 
 	backEmitter.setPosition(
 		startpos + (vanishingPoint - startpos) * (1.f - DEPTH)
-	);	
+	);
 
 	front_des_pos = endpos - (vanishingPoint - endpos) * (1.f - DEPTH);
 	back_des_pos = endpos + (vanishingPoint - endpos) * (1.f - DEPTH);
-	
+
 	if (active)
 	{
 		bridge_rect[0].position = backEmitter.getPosition();
@@ -303,7 +319,7 @@ void Bridge::UpdateBridgeDraw(RenderWindow& window)
 		bridge_rect[2].position = front_des_pos;
 		bridge_rect[3].position = back_des_pos;
 	}
-	
+
 }
 
 void Bridge::DrawBackEmmiter(RenderWindow& window)
