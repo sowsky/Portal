@@ -42,6 +42,7 @@
     <ClCompile Include="Objects\Bridge.cpp" />
     <ClCompile Include="Objects\Gel.cpp" />
     <ClCompile Include="Objects\BlackTile.cpp" />
+    <ClCompile Include="Objects\Redwall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Manager\Animator.h" />
@@ -81,6 +82,7 @@
     <ClInclude Include="Objects\Bridge.h" />
     <ClInclude Include="Objects\Gel.h" />
     <ClInclude Include="Objects\BlackTile.h" />
+    <ClInclude Include="Objects\Redwall.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

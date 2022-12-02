@@ -24,13 +24,14 @@ public:
 	bool GetSide() { return side; }
 	void SetCubeBodyPos(Vector2f pos);
 	void SetCubeBodyForce(b2Vec2 force);
+	void MovetoStartpos();
 	b2Vec2 GetCubeBodyForce() { return body->GetLinearVelocity(); }
 
 	/////////////////////////////////////////////////////////////////////////
 	Cube(b2World* world, const Vector2f& position, Vector2f dimensions);
 	b2Body* GetBody() { return body; }
 	b2Fixture* GetFixture() { return fixture; }	
-
+	
 	Vector2f GetRecentSpeed() { return maxspeed; }
 
 	void SetGravity(int g) { body->SetGravityScale(g); }
@@ -42,6 +43,7 @@ protected:
 	float addspeed = 50;
 	bool side=false; //false=left true=right
 	bool grab = false;
+	Vector2f startpos;
 
 	float speedtX = 0.f;
 	float speedtY = 0.f;

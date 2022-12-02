@@ -11,3 +11,4 @@
 #include "../Objects/Tunnel.h"
 #include "../Objects/Bridge.h"
 #include "../Objects/BlackTile.h"
+#include "../Objects/Redwall.h"
