@@ -6,6 +6,7 @@
 class Redwall : public SpriteObj
 {
 public:
+	Redwall();
 	Redwall(Vector2f& position, vector<int> buttonlist, bool active, int dir);
 	virtual ~Redwall();
 
@@ -13,6 +14,8 @@ public:
 	virtual void Draw(RenderWindow& window);
 
 	void SetButtonlist(vector<Button*>& button);
+	virtual void SetButtonlist(vector<int> idList) { buttonid = idList; }
+	virtual SpriteObj* NewThis();
 private:
 	RectangleShape redwall;
 	list<Button*> button;

@@ -1133,6 +1133,9 @@ void EditScene::FillUiToolBox()
 
 	uiTool[1][3].first = new Bridge;
 	uiTool[1][3].first->SetResourceTexture("Graphics/Ui/bridge.png");
+
+	uiTool[2][0].first = new Redwall;
+	uiTool[2][0].first->SetResourceTexture("Graphics/Ui/fizzler.png");
 }
 
 void EditScene::SetUiToolPos(Vector2f pos)
@@ -1371,6 +1374,21 @@ void EditScene::Save()
 						saveObjInfo.bridges.push_back(bridge);
 						break;
 					}
+					case 'r':
+					{
+						Redwall_struct red;
+						red.id = 'r';
+						red.posX = j;
+						red.posY = posY;
+						red.rotation = (int)tool->GetRotation();
+						WireableObject* wobj = (WireableObject*)tool;
+						for (auto w : wobj->GetWireListFromMapTool())
+						{
+							red.buttonList.push_back(w);
+						}
+						saveObjInfo.redwalls.push_back(red);
+						break;
+					}
 					}
 				}
 			}
@@ -1464,6 +1482,18 @@ void EditScene::Load()
 		//	bridge->AddNumBox(num);
 		//}
 		mapTool[idxI - p.posY][p.posX].first.push_back(bridge);
+	}
+
+	for (auto& p : loadObjInfo.redwalls)
+	{
+		Redwall* red = new Redwall;
+		red->SetRotation((Rotate)p.rotation);
+		red->SetButtonlist(p.buttonList);
+		//for (auto num : p.buttonList)
+		//{
+		//	bridge->AddNumBox(num);
+		//}
+		mapTool[idxI - p.posY][p.posX].first.push_back(red);
 	}
 
 	//////////

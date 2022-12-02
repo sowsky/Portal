@@ -30,7 +30,7 @@ public:
 	void DrawWorldView(RenderWindow& window);
 	void DrawUiView(RenderWindow& window);
 
-	void InitMapTool();	
+	void InitMapTool();
 	void ReleaseMapTool();
 
 	void SetMapToolPos();
@@ -49,7 +49,7 @@ public:
 
 	void Input(float dt);
 
-	void InitUiTool();	
+	void InitUiTool();
 	void ReleaseUiTool();
 	void UpdateUiTool(float dt);
 	

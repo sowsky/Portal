@@ -1,5 +1,16 @@
 #include "Redwall.h"
 
+Redwall::Redwall()
+{
+	SetResourceTexture("Graphics/Ui/fizzlertool.png");
+	id = 'r';
+
+	type = ObjectType::Catcher;
+
+	objSize = ObjectSize::Normal;
+	attatchedPos = Rotate::Down;
+}
+
 Redwall::Redwall(Vector2f& position, vector<int> buttonlist, bool active, int dir)
 	:active(active), dir(dir), buttonid(buttonlist)
 {
@@ -138,8 +149,15 @@ void Redwall::Update(float dt)
 
 void Redwall::Draw(RenderWindow& window)
 {
-	if (active)
-		window.draw(redwall);
+	if (!isPlayingGame)
+	{
+		SpriteObj::Draw(window);
+	}
+	else
+	{
+		if (active)
+			window.draw(redwall);
+	}
 }
 
 
@@ -152,4 +170,9 @@ void Redwall::SetButtonlist(vector<Button*>& button)
 			}
 		}
 	}
+}
+
+SpriteObj* Redwall::NewThis()
+{
+	return new Redwall;
 }
