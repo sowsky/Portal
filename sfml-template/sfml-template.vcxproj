@@ -179,7 +179,6 @@
     <ClCompile Include="FrameWork\Utils.cpp" />
     <ClCompile Include="Scene\StartMenu.cpp" />
     <ClCompile Include="Objects\Tile.cpp" />
-    <ClCompile Include="Objects\Wire.cpp" />
     <ClCompile Include="Objects\WireableObject.cpp" />
     <ClCompile Include="Objects\WirePointArrows.cpp" />
     <ClCompile Include="src\Color.cpp" />
@@ -229,7 +228,6 @@
     <ClInclude Include="Scene\SceneMgr.h" />
     <ClInclude Include="Scene\StartMenu.h" />
     <ClInclude Include="Objects\Tile.h" />
-    <ClInclude Include="Objects\Wire.h" />
     <ClInclude Include="Objects\WireableObject.h" />
     <ClInclude Include="Objects\WirePointArrows.h" />
     <ClInclude Include="Objects\Tunnel.h" />
