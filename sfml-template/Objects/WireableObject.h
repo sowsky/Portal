@@ -52,14 +52,18 @@ protected:
 
 	bool isMouseIn;
 	//list<NumBox*> numbox;
-	//list<int> wireNum;
+	list<int> wireNum;
 
-	static Phase phase;
 
 	list<Wire*> wires;
 
 	Texture* orange;
 	Texture* blue;
+
+	static Phase phase;
+	static int currButtonNumInMouse;
+	static Vector2f currCatcherPosSave;
+	static bool isGetCatcherTarget;
 
 };
 

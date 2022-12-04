@@ -7,6 +7,9 @@
 //#include "../Objects/NumBox.h"
 
 Phase WireableObject::phase = Phase::None;
+int WireableObject::currButtonNumInMouse;
+Vector2f WireableObject::currCatcherPosSave;
+bool WireableObject::isGetCatcherTarget = false;
 
 WireableObject::WireableObject()
 {
@@ -110,6 +113,7 @@ void WireableObject::DrawWire(RenderWindow& window)
 		Button* temp = (Button*)this;
 		wires.push_back(new Wire);
 		wires.back()->buttonNum = temp->GetButtonId();
+		currButtonNumInMouse = wires.back()->buttonNum;
 		wires.back()->isConnected = false;
 		wires.back()->wire.setPrimitiveType(Lines);
 		wires.back()->wire.resize(2);
@@ -123,17 +127,38 @@ void WireableObject::DrawWire(RenderWindow& window)
 		wires.pop_back();
 	}
 
+	if (phase == Phase::CatcherSelect
+		&& InputMgr::GetMouseButton(Mouse::Left)
+		&& type == ObjectType::Catcher
+		&& isMouseIn)
+	{
+		currCatcherPosSave = position;
+		isGetCatcherTarget = true;
+		wireNum.push_back(currButtonNumInMouse);
+	}
+
 	if (wires.empty())
 		return;
 
 	wires.back()->wire[0].position = position;
-	wires.back()->wire[1].position
-		= window.mapPixelToCoords((Vector2i)InputMgr::GetMousePos(), window.getView());
+	if (!wires.back()->isConnected)
+	{
+		if(!isGetCatcherTarget)
+			wires.back()->wire[1].position
+			= window.mapPixelToCoords((Vector2i)InputMgr::GetMousePos(), window.getView());
+		else
+		{
+			wires.back()->wire[1].position = currCatcherPosSave;
+			isGetCatcherTarget = false;
+			wires.back()->isConnected = true;
+			phase = Phase::TriggerSelect;
+		}		
+	}
 
 
 	for (auto w : wires)
 	{
-		window.draw(w->wire, w->isConnected ? orange : blue);			
+		window.draw(w->wire, blue);		
 	}
 
 }
