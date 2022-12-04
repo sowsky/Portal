@@ -1099,6 +1099,27 @@ void PlayScene::BridgeCheck()
 		}
 	}
 
+	for (auto w : wall) {
+		for (auto v : bridge) {
+			if (w->GetGlobalBounds().intersects(v->GetHitBoxGlobalbound())) {
+				v->SetHitwall(true);
+				v->Setwhohitwall(*w);
+
+			}
+		}
+	}
+
+	for (auto w : blackwall) {
+		for (auto v : bridge) {
+			if (w->GetGlobalBounds().intersects(v->GetHitBoxGlobalbound())) {
+				v->SetHitwall(true);
+				v->Setwhohitwall(*w);
+
+			}
+		}
+	}
+
+
 	if (!madeorange || !madeblue) {
 
 		auto ite = bridge.begin();
