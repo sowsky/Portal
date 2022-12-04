@@ -131,8 +131,8 @@ void PlayScene::Update(float dt)
 
 	Input();
 
-	light.position.x = 0;
-	light.position.y = height;
+	/*light.position.x = 0;
+	light.position.y = height;*/
 
 }
 
@@ -304,6 +304,7 @@ PlayScene::PlayScene(string path)
 	{
 		for (int j = 0; j < rowNum; j++)
 		{
+
 			if (loadedArray[i][j].empty())
 			{
 				currgrid.x += GRIDSIZE;
@@ -312,6 +313,8 @@ PlayScene::PlayScene(string path)
 			else {
 				for (auto obj : loadedArray[i][j])  //load all object on 1grid
 				{
+					cout << box2dposition.x << "!" << box2dposition.y << endl;
+
 					switch (obj->id)
 					{
 					case '1':
@@ -322,15 +325,15 @@ PlayScene::PlayScene(string path)
 						{
 							MakeWall(false);
 							wallbunchwidth += GRIDSIZE;
-							cout << i << " " << j << endl;
 
 						}
 						else
 						{
 							MakeWall(true);
-							box2dposition.x += currgrid.x + GRIDSIZE;
+							box2dposition.x = currgrid.x ;
 							wallbunchwidth = GRIDSIZE;
-							cout << i << "-" << j << endl;
+							cout << box2dposition.x << "@" << box2dposition.y << endl;
+
 						}
 						Tile_struct* t = (Tile_struct*)loadedArray[i][j].front();
 						wall.back()->SetActiveSideTiles(t->sideBool);
@@ -348,8 +351,10 @@ PlayScene::PlayScene(string path)
 						else
 						{
 							MakeBlackWall(true);
-							box2dposition.x += currgrid.x + GRIDSIZE;
+							box2dposition.x = currgrid.x + GRIDSIZE;
 							wallbunchwidth = GRIDSIZE;
+						
+
 						}
 						Black_Tile_struct* t = (Black_Tile_struct*)loadedArray[i][j].front();
 						blackwall.back()->SetActiveSideTiles(t->sideBool);
@@ -376,7 +381,7 @@ PlayScene::PlayScene(string path)
 						Goal_struct* tempG = (Goal_struct*)obj;
 						MakeGoal(tempG->buttonList);
 						box2dposition.x += GRIDSIZE;
-						
+
 						break;
 					}
 					case 't':
