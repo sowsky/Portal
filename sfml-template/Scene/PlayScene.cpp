@@ -96,7 +96,6 @@ void PlayScene::Update(float dt)
 			grabitem = false;
 
 			grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
-			//	delete grabbedcube;
 			grabbedcube = nullptr;
 		}
 
@@ -330,7 +329,7 @@ PlayScene::PlayScene(string path)
 						else
 						{
 							MakeWall(true);
-							box2dposition.x = currgrid.x ;
+							box2dposition.x = currgrid.x;
 							wallbunchwidth = GRIDSIZE;
 							cout << box2dposition.x << "@" << box2dposition.y << endl;
 
@@ -353,7 +352,7 @@ PlayScene::PlayScene(string path)
 							MakeBlackWall(true);
 							box2dposition.x = currgrid.x;
 							wallbunchwidth = GRIDSIZE;
-						
+
 
 						}
 						Black_Tile_struct* t = (Black_Tile_struct*)loadedArray[i][j].front();
@@ -563,6 +562,24 @@ void PlayScene::MakePortal()
 
 		}
 		if (b->GetStartposGlobalbound().intersects(orange->GetGlobalBounds())) {
+			particle.emitParticles(orange->GetPos(), false);
+			orange->SetPos({ -1000,-1000 });
+			blue->SetDir({ 0,0 });
+			madeorange = false;
+
+		}
+	}
+
+	for (auto b : redwall)
+	{
+		if (b->GetredwallGlobalBound().intersects(blue->GetGlobalBounds())) {
+			particle.emitParticles(blue->GetPos(), false);
+			blue->SetPos({ -1000,-1000 });
+			blue->SetDir({ 0,0 });
+			madeblue = false;
+
+		}
+		if (b->GetredwallGlobalBound().intersects(orange->GetGlobalBounds())) {
 			particle.emitParticles(orange->GetPos(), false);
 			orange->SetPos({ -1000,-1000 });
 			blue->SetDir({ 0,0 });
@@ -1099,15 +1116,6 @@ void PlayScene::BridgeCheck()
 		}
 	}
 
-	for (auto w : wall) {
-		for (auto v : bridge) {
-			if (w->GetGlobalBounds().intersects(v->GetHitBoxGlobalbound())) {
-				v->SetHitwall(true);
-				v->Setwhohitwall(*w);
-
-			}
-		}
-	}
 
 	for (auto w : blackwall) {
 		for (auto v : bridge) {
@@ -1163,7 +1171,24 @@ void PlayScene::BridgeCheck()
 void PlayScene::RedwallCheck()
 {
 	for (auto r : redwall) {
-		if (r->GetGlobalBounds().intersects(player->GethitboxGlobalBounds())) {
+		if (!r->Gethitwall()) {
+			for (auto w : wall) {
+				if (w->GetGlobalBounds().intersects(r->GetredwallGlobalBound())) {
+					r->Sethitwall(true);
+					r->Setwhohitwall(w);
+				}
+			}
+
+			for (auto w : blackwall) {
+				if (w->GetGlobalBounds().intersects(r->GetredwallGlobalBound())) {
+					r->Sethitwall(true);
+					r->Setwhohitwall(w);
+				}
+			}
+		}
+
+
+		if (r->GetredwallGlobalBound().intersects(player->GethitboxGlobalBounds())) {
 			madeblue = false;
 			madeorange = false;
 			blue->SetPos({ -1000,-1000 });
@@ -1172,7 +1197,13 @@ void PlayScene::RedwallCheck()
 			orange->SetDir({ 0,0 });
 		}
 		for (auto c : cube) {
-			if (r->GetGlobalBounds().intersects(c->GetGlobalBounds())) {
+			if (r->GetredwallGlobalBound().intersects(c->GethitboxGlobalBounds())) {
+				if (grabitem) {
+					grabbedcube = nullptr;
+					grabitem = false;
+
+					grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
+				}
 				c->MovetoStartpos();
 			}
 		}

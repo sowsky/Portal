@@ -16,6 +16,13 @@ public:
 	void SetButtonlist(vector<Button*>& button);
 	virtual void SetButtonlist(vector<int> idList) { buttonid = idList; }
 	virtual SpriteObj* NewThis();
+
+	bool Gethitwall() { return hitwall; }
+	void Sethitwall(bool a) { hitwall = a; }
+
+	FloatRect GetredwallGlobalBound() { return redwall.getGlobalBounds(); }
+
+	void Setwhohitwall(SpriteObj* wall) { whohitwall = wall; }
 private:
 	RectangleShape redwall;
 	list<Button*> button;
@@ -26,7 +33,7 @@ private:
 	const float thickness = 10;;
 	int dir;
 
-	Tile* whohitwall = nullptr;
+	SpriteObj* whohitwall = nullptr;
 
 };
 
