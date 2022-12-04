@@ -939,6 +939,15 @@ void PlayScene::TunnelCheck()
 		}
 	}
 
+	for (auto w : blackwall) {
+		for (auto t : tunnel) {
+			if (w->GetGlobalBounds().intersects(t->GetHitBoxGlobalbound())) {
+				t->SetHitwall(true);
+				t->Setwhohitwall(*w);
+			}
+		}
+	}
+
 	/*if (!madeorange || !madeblue) {
 
 		auto ite = tunnel.begin();
