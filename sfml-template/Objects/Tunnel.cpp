@@ -48,7 +48,7 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 		}
 		else if (dir == 3) {
 			Utils::SetOrigin(tuns, Origins::ML);
-			startpos = { position.x - GRIDSIZE / 2 ,position.y };
+			startpos = { position.x - GRIDSIZE / 2+2 ,position.y };
 			tuns.setPosition(startpos);
 
 		}
@@ -86,10 +86,11 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 
 Tunnel::~Tunnel()
 {
-	/*for (auto v : button) {
+	for (auto v : button) {
 		delete v;
-	}*/
+	}
 	button.clear();
+
 }
 
 
@@ -163,43 +164,49 @@ void Tunnel::Update(float dt)
 		AddParticle();
 	}
 	else if (hitwall && whohitwall != nullptr) {
+
+		Utils::SetOrigin(destiny, Origins::MC);
+
 		if (dir == 0) {
+			destiny.setSize({ tuns.getSize().x,10 });
 			tuns.setSize({ tuns.getSize().x,whohitwall->GetGlobalBounds().top - tuns.getPosition().y });
+
+			endpos = { tuns.getPosition().x,tuns.getPosition().y + tuns.getSize().y };
+
 		}
 		else if (dir == 2) {
+			destiny.setSize({ tuns.getSize().x,10 });
+
 			Utils::SetOrigin(tuns, Origins::BC);
 			tuns.setSize({ tuns.getSize().x,tuns.getPosition().y - (whohitwall->GetGlobalBounds().top + whohitwall->GetGlobalBounds().height) });
 
+			endpos = { tuns.getPosition().x,tuns.getPosition().y - tuns.getSize().y };
+
+
 		}
 		else if (dir == 1) {
+			destiny.setSize({ 10,tuns.getSize().y });
+
 			Utils::SetOrigin(tuns, Origins::MR);
 
 			tuns.setSize({ tuns.getPosition().x - (whohitwall->GetGlobalBounds().left + whohitwall->GetGlobalBounds().width),tuns.getSize().y });
 
+			endpos = { tuns.getPosition().x - tuns.getSize().x ,tuns.getPosition().y, };
+
+
 		}
 		else if (dir == 3) {
+			destiny.setSize({ 10,tuns.getSize().y });
+
 			Utils::SetOrigin(tuns, Origins::ML);
 
 			tuns.setSize({ (whohitwall->GetGlobalBounds().left) - tuns.getPosition().x,tuns.getSize().y });
 
-		}
+			endpos = { tuns.getPosition().x + tuns.getSize().x ,tuns.getPosition().y, };
 
-		Utils::SetOrigin(destiny, Origins::MC);
-		if (dir == 0 || dir == 2) {
-			destiny.setSize({ tuns.getSize().x,10 });
-			if (dir == 0)
-				endpos = { tuns.getPosition().x,tuns.getPosition().y + tuns.getSize().y };
-			else if (dir == 2)
-				endpos = { tuns.getPosition().x,tuns.getPosition().y - tuns.getSize().y };
-		}
-		else if (dir == 1 || dir == 3) {
-			destiny.setSize({ 10,tuns.getSize().y });
-			if (dir == 1)
-				endpos = { tuns.getPosition().x - tuns.getSize().x ,tuns.getPosition().y, };
-			else if(dir==3)
-				endpos={ tuns.getPosition().x + tuns.getSize().x ,tuns.getPosition().y, };
 
 		}
+
 	}
 
 	destiny.setPosition(endpos);

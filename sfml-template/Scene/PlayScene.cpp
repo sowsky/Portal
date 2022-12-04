@@ -351,7 +351,7 @@ PlayScene::PlayScene(string path)
 						else
 						{
 							MakeBlackWall(true);
-							box2dposition.x = currgrid.x + GRIDSIZE;
+							box2dposition.x = currgrid.x;
 							wallbunchwidth = GRIDSIZE;
 						
 

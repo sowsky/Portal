@@ -66,7 +66,6 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 			bridge.setPosition(startpos);
 			frontEmitter.setRotation(180.f);
 			backEmitter.setRotation(180.f);
-			cout << startpos.x<<" "<<startpos.y << endl;
 		}
 		else if (dir == 3) {
 			Utils::SetOrigin(bridge, Origins::ML);
