@@ -4,6 +4,7 @@
 #include "../FrameWork/stdafx.h"
 #include "../FrameWork/Const.h"
 #include "../Manager/ResourceMgr.h"
+#include "../Scene/SceneMgr.h"
 
 Player::Player()
 {
@@ -219,8 +220,9 @@ void Player::PhysicsUpdate(float dt)
 
 void Player::Draw(RenderWindow& window)
 {
+	if (SCENE_MGR->GetCurrKey() == Scenes::MAPEDITER || SCENE_MGR->GetCurrKey() == Scenes::PLAY)
 
-	if (!isPlayingGame)
+	if (!isPlayingGame&&!(SCENE_MGR->GetCurrKey() == Scenes::GAMESTART))
 		SpriteObj::Draw(window);
 
 	RotateAnimation(window);
@@ -252,6 +254,18 @@ void Player::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal
 	//NormalPass(normal, p_head, head_normal, nShader);
 	//diffuse.draw(p_arm);
 	//NormalPass(normal, p_arm, arm_normal, nShader);
+}
+
+void Player::BodySetDoubleScale()
+{
+	p_body.setScale(2, 2);
+	p_lleg.setScale(2, 2);
+	p_rleg.setScale(2, 2);
+	p_head.setScale(2, 2);
+	p_arm.setScale(2, 2);
+	portalGun.setScale(2, 2);
+	
+
 }
 
 void Player::SetPlayerBodyPos(Vector2f pos)

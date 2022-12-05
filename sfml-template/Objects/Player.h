@@ -22,6 +22,7 @@ public:
 	bool GetGround() { return ground; }
 	void SetGround(bool a) { ground = a; }
 	
+	void BodySetDoubleScale();
 
 	FloatRect GethitboxGlobalBounds() { return hitbox->getGlobalBounds(); }
 	void SetPlayerBodyPos(Vector2f pos);

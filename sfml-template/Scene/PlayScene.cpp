@@ -312,7 +312,6 @@ PlayScene::PlayScene(string path)
 			else {
 				for (auto obj : loadedArray[i][j])  //load all object on 1grid
 				{
-					cout << box2dposition.x << "!" << box2dposition.y << endl;
 
 					switch (obj->id)
 					{
@@ -331,7 +330,6 @@ PlayScene::PlayScene(string path)
 							MakeWall(true);
 							box2dposition.x = currgrid.x;
 							wallbunchwidth = GRIDSIZE;
-							cout << box2dposition.x << "@" << box2dposition.y << endl;
 
 						}
 						Tile_struct* t = (Tile_struct*)loadedArray[i][j].front();
@@ -1502,6 +1500,7 @@ void PlayScene::Input()
 		blue->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
 	}
 
+	
 	//orange
 	if (InputMgr::GetMouseButtonDown(Mouse::Right) && !grabitem) {
 		auto it = tunnel.begin();
@@ -1686,7 +1685,6 @@ void PlayScene::MoveToPortal()
 			else {
 				player->GetBody()->SetLinearVelocity({ 0,0 });
 				player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,player->GetRecentSpeed().y * -1 });
-				cout << "�߰�" << endl;
 			}
 
 		}
@@ -1713,7 +1711,6 @@ void PlayScene::MoveToPortal()
 			player->SetPlayerBodyPos({ blue->GetPos().x,blue->GetPos().y - player->GetGlobalBounds().height });
 			if (abs(player->GetRecentSpeed().y) <= 0.5f) {
 				player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,1.f });
-				cout << "�߰�" << endl;
 
 			}
 			else {

@@ -81,10 +81,8 @@ bool Framework::Do()
 		}
 		
 		//SOUND_MGR->Update();
-		if (SCENE_MGR->GetCurrKey() == Scenes::MAPEDITER||SCENE_MGR->GetCurrKey()==Scenes::PLAY)
-			window.clear(Color::White);
-		else
-			window.clear();
+		window.clear(Color::White);
+		
 
 		SCENE_MGR->Update(dt);
 		SCENE_MGR->PhysicsUpdate(dt);
