@@ -79,24 +79,13 @@ void PlayScene::Update(float dt)
 		CheckStillObjectalive();
 
 	if (grabitem) {
-		/*	if (grabbedcube->GetSide())
-				grabbedcube->SetCubeBodyPos({ player->GetPos().x + 40,player->GetPos().y - 40 });
-			else
-				grabbedcube->SetCubeBodyPos({ player->GetPos().x - 40,player->GetPos().y - 40 });
-
-			if (InputMgr::GetKeyDown(Keyboard::A)) {
-				grabbedcube->SetSide(false);
-			}
-			else if (InputMgr::GetKeyDown(Keyboard::D)) {
-				grabbedcube->SetSide(true);
-			}*/
-
 		if (InputMgr::GetKeyDown(Keyboard::E)) {
 			cout << "drop" << endl;
 			grabitem = false;
 
-			grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
 			grabbedcube = nullptr;
+
+			
 		}
 
 	}
@@ -106,17 +95,23 @@ void PlayScene::Update(float dt)
 				if (!grabitem) {
 					cout << "pickup" << endl;
 
+					b2DistanceJointDef dDef;
+					dDef.bodyA = player->GetBody();
+					dDef.bodyB = c->GetBody();
+					dDef.length = 10 / SCALE;
+					world.get()->CreateJoint(&dDef);
+
 					grabitem = true;
 					grabbedcube = c;
 					float cposX = c->GetGlobalBounds().left + (c->GetGlobalBounds().width / 2);
 					if (player->GetPositions().x <= cposX)
 					{
-						c->SetSide(true);
-						c->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
+					//	c->SetSide(true);
+						//c->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
 					}
 					else if (player->GetPos().x > cposX) {
-						c->SetSide(false);
-						c->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
+						//c->SetSide(false);
+						//c->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
 					}
 					c->SetGround(false);
 				}
@@ -241,7 +236,6 @@ PlayScene::PlayScene(string path)
 		sf::Vector3f(0.5, 0.5, 0.5)),
 	falloff(0.5, 0.5, 0.5)
 {
-
 	b2Vec2 g(0.0f, -10);
 	world = make_unique<b2World>(g);
 
@@ -1524,21 +1518,18 @@ void PlayScene::Input()
 	}
 
 	if (grabitem) {
-		Vector2f dir = Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - grabbedcube->GetPos());
+		/*Vector2f dir = Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - grabbedcube->GetPos());
 		dir.x *= 50;
 		dir.y *= 50;
 
 		if (player->IsMouseRight())
 			dir.x = 45.f;
 
-
 		if (!player->IsMouseRight())
 			dir.x = -45.f;
 
-
-
 		Vector2f real(dir.x + player->GetPos().x, player->GetPos().y - 25);
-		grabbedcube->GetBody()->SetTransform({ real.x / SCALE,real.y / SCALE * -1 }, grabbedcube->GetBody()->GetAngle());
+		grabbedcube->GetBody()->SetTransform({ real.x / SCALE,real.y / SCALE * -1 }, grabbedcube->GetBody()->GetAngle());*/
 		//cout << real.x <<" "<< real.y << endl;
 	}
 

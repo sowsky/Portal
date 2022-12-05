@@ -70,6 +70,7 @@ public:
 	void ClearRenderBuffer();
 	void OpenStage(float dt);
 private:
+
 	Player* player;
 	Goal* goal;
 	vector<Tile*> wall;

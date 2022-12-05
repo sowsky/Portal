@@ -273,9 +273,9 @@ void Bridge::Draw(RenderWindow& window)
 		{
 			window.draw(bridge);
 			if (setedpos) {
-				UpdateBridgeDraw(window);
-				window.draw(bridge_rect, bridge_color);
-				window.draw(frontEmitter);
+			//	UpdateBridgeDraw(window);
+			//	window.draw(bridge_rect, bridge_color);
+			//	window.draw(frontEmitter);
 			}
 		}
 
