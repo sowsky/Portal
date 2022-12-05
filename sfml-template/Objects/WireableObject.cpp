@@ -7,9 +7,8 @@
 //#include "../Objects/NumBox.h"
 
 Phase WireableObject::phase = Phase::None;
-int WireableObject::currButtonNumInMouse;
-Vector2f WireableObject::currCatcherPosSave;
-bool WireableObject::isGetCatcherTarget = false;
+WireableObject* WireableObject::targetCatcherPtr = nullptr;
+Wire* WireableObject::currWire = nullptr;
 
 WireableObject::WireableObject()
 {
@@ -27,11 +26,27 @@ WireableObject::~WireableObject()
 	//}
 	//numbox.clear();
 
-	if (!wires.empty())
+	if (type == ObjectType::Trigger
+		&& !wires.empty())
 	{
 		for (auto w : wires)
+		{
+			if (w->isActive)
+			{
+				auto ptrIt = w->targetPtr->GetWireList().begin();
+				{
+					while (ptrIt != w->targetPtr->GetWireList().end())
+					{
+						if ((*ptrIt)->buttonNum == w->buttonNum)
+						{
+							ptrIt = w->targetPtr->GetWireList().erase(ptrIt);
+						}
+						else ptrIt++;
+					}						
+				}
+			}
 			delete w;
-
+		}	
 		wires.clear();
 	}
 }
@@ -55,7 +70,7 @@ void WireableObject::Update(float dt, Vector2f mouse)
 }
 
 void WireableObject::Draw(RenderWindow& window)
-{
+{	
 	SpriteObj::Draw(window);
 	WireModDraw(window);
 }
@@ -81,7 +96,7 @@ void WireableObject::WireModDraw(RenderWindow& window)
 	wireCheckBox.setFillColor(isMouseIn ? Color(248, 147, 30) : Color(37, 255, 254));
 
 	if(isWiring)
-		DrawWire(window);	
+		DrawWire(window);
 
 	if (isWiring && isInMapTool)
 	{
@@ -101,6 +116,7 @@ void WireableObject::WireModDraw(RenderWindow& window)
 	//		i->Draw(window);
 	//	}
 	//}
+	
 }
 
 void WireableObject::DrawWire(RenderWindow& window)
@@ -112,19 +128,21 @@ void WireableObject::DrawWire(RenderWindow& window)
 		SetPhase(Phase::CatcherSelect);
 		Button* temp = (Button*)this;
 		wires.push_back(new Wire);
-		wires.back()->buttonNum = temp->GetButtonId();
-		currButtonNumInMouse = wires.back()->buttonNum;
+		currWire = wires.back();
+		wires.back()->buttonNum = temp->GetButtonId();		
 		wires.back()->isConnected = false;
+		wires.back()->isActive = true;
 		wires.back()->wire.setPrimitiveType(Lines);
 		wires.back()->wire.resize(2);
 	}
 
 	if (phase == Phase::CatcherSelect
-		&& InputMgr::GetMouseButtonDown(Mouse::Right))
+		&& InputMgr::GetMouseButtonDown(Mouse::Right)
+		&& !wires.back()->isConnected)
 	{
-		SetPhase(Phase::TriggerSelect);
-		delete wires.back();
+		delete wires.back();		
 		wires.pop_back();
+		SetPhase(Phase::TriggerSelect);
 	}
 
 	if (phase == Phase::CatcherSelect
@@ -132,35 +150,50 @@ void WireableObject::DrawWire(RenderWindow& window)
 		&& type == ObjectType::Catcher
 		&& isMouseIn)
 	{
-		currCatcherPosSave = position;
-		isGetCatcherTarget = true;
-		wireNum.push_back(currButtonNumInMouse);
+		targetCatcherPtr = this;		
+		wires.push_back(currWire);
 	}
 
 	if (wires.empty())
 		return;
 
-	wires.back()->wire[0].position = position;
+	if (type == ObjectType::Trigger)
+		wires.back()->wire[0].position = sprite.getPosition();
+	
 	if (!wires.back()->isConnected)
 	{
-		if(!isGetCatcherTarget)
+		if(!targetCatcherPtr)
 			wires.back()->wire[1].position
 			= window.mapPixelToCoords((Vector2i)InputMgr::GetMousePos(), window.getView());
 		else
-		{
-			wires.back()->wire[1].position = currCatcherPosSave;
-			isGetCatcherTarget = false;
+		{			
+			wires.back()->targetPtr = targetCatcherPtr;
+			wires.back()->wire[1].position = targetCatcherPtr->GetSpritePos();
 			wires.back()->isConnected = true;
-			phase = Phase::TriggerSelect;
-		}		
+			targetCatcherPtr = nullptr;
+			currWire = nullptr;
+			phase = Phase::TriggerSelect;			
+		}
 	}
 
-
-	for (auto w : wires)
-	{
-		window.draw(w->wire, blue);		
-	}
-
+	if(type == ObjectType::Trigger)
+		for (auto w : wires)
+		{
+			if (w->isActive)
+			{
+				//cout
+				//	<< "시작점 : "
+				//	<< w->wire[0].position.x
+				//	<< ", "
+				//	<< w->wire[0].position.y
+				//	<< "도착점 : "
+				//	<< w->wire[1].position.x
+				//	<< ", "
+				//	<< w->wire[1].position.y
+				//	<< endl << endl;
+				window.draw(w->wire, blue);
+			}
+		}
 }
 
 //void WireableObject::AddNumBox(NumBox* nb)

@@ -79,17 +79,7 @@ void PlayScene::Update(float dt)
 		CheckStillObjectalive();
 
 	if (grabitem) {
-		/*	if (grabbedcube->GetSide())
-				grabbedcube->SetCubeBodyPos({ player->GetPos().x + 40,player->GetPos().y - 40 });
-			else
-				grabbedcube->SetCubeBodyPos({ player->GetPos().x - 40,player->GetPos().y - 40 });
-
-			if (InputMgr::GetKeyDown(Keyboard::A)) {
-				grabbedcube->SetSide(false);
-			}
-			else if (InputMgr::GetKeyDown(Keyboard::D)) {
-				grabbedcube->SetSide(true);
-			}*/
+		
 
 		if (InputMgr::GetKeyDown(Keyboard::E)) {
 			cout << "drop" << endl;
@@ -198,13 +188,13 @@ void PlayScene::Draw(RenderWindow& window)
 	}*/
 
 
-	if (madeorange) {
+	//if (madeorange) {
 		orange->Draw(window);
-	}
+//	}
 
-	if (madeblue) {
+	//if (madeblue) {
 		blue->Draw(window);
-	}
+//	}
 
 	for (auto v : redwall) {
 		v->Draw(window);
@@ -1418,7 +1408,7 @@ void PlayScene::Input()
 
 		blue->SetSize({ 20,20 });
 		madeblue = false;
-		blue->SetPos(player->GetIndicator());
+		blue->SetPos(player->GetClaviclePos());
 		blue->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
 	}
 
@@ -1491,7 +1481,7 @@ void PlayScene::Input()
 
 		orange->SetSize({ 20,20 });
 		madeorange = false;
-		orange->SetPos(player->GetIndicator());
+		orange->SetPos(player->GetClaviclePos());
 		orange->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
 	}
 

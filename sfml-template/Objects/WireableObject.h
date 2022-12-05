@@ -5,11 +5,14 @@ using namespace std;
 
 //class NumBox;
 
+class WireableObject;
 struct Wire
 {
 	VertexArray wire;
 	int buttonNum;
 	bool isConnected;
+	bool isActive;
+	WireableObject* targetPtr;
 };
 
 enum class Phase
@@ -39,10 +42,11 @@ public:
 	//void AddNumBox(int num);
 	//void RemoveNumBox();
 
-	list<int> GetWireListFromMapTool();
+	list<int> GetWireListFromMapTool();	
 
 	//list<int>& GetWireNum() { return wireNum; }
 
+	list<Wire*>& GetWireList() { return wires; }
 	bool IsMouseIn() { return isMouseIn; }
 	static void SetPhase(Phase p) { phase = p; }
 	static Phase GetPhase() { return phase; }
@@ -53,17 +57,15 @@ protected:
 	bool isMouseIn;
 	//list<NumBox*> numbox;
 	list<int> wireNum;
-
-
+	
 	list<Wire*> wires;
 
 	Texture* orange;
 	Texture* blue;
 
-	static Phase phase;
-	static int currButtonNumInMouse;
-	static Vector2f currCatcherPosSave;
-	static bool isGetCatcherTarget;
+	static Phase phase;	
+	static WireableObject* targetCatcherPtr;
+	static Wire* currWire;
 
 };
 

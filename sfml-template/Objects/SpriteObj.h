@@ -83,6 +83,7 @@ public:
 	ObjectType GetObjType() { return type; }
 	ObjectSize GetObjSize() { return objSize; }
 	void SetObjSize(ObjectSize size) { objSize = size; }
+	Vector2f GetSpritePos() { return sprite.getPosition(); }
 protected:
 	Sprite sprite;
 	Texture* normalMap;

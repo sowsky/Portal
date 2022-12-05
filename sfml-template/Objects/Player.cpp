@@ -397,6 +397,14 @@ void Player::ShowBornForDev(RenderWindow& window)
 	window.draw(indicator);
 }
 
+Vector2f Player::GetClaviclePos()
+{
+	return right ?
+		clavicle.getTransform().transformPoint(clavicle.getPoint(1))
+		:
+		clavicle.getTransform().transformPoint(clavicle.getPoint(0));	
+}
+
 Vector2f Player::GetIndicator()
 {
 	return indicator.getTransform().transformPoint(p_arm.getPoint(1));

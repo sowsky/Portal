@@ -3,7 +3,7 @@
 #include "../Objects/Button.h"
 #include "../Objects/Tile.h"
 
-class Redwall : public SpriteObj
+class Redwall : public WireableObject
 {
 public:
 	Redwall();

@@ -491,11 +491,11 @@ void EditScene::FillMapTool()
 					mapTool[i][j].first.front()->SetRotationInBox(rotNum, TILE_SIZE, mapTool[i][j].second->GetPos());
 				}
 
-				if (mapTool[i][j].first.front()->GetObjType() == ObjectType::Trigger)
+		/*		if (mapTool[i][j].first.front()->GetObjType() == ObjectType::Trigger)
 				{
 					Button* temp = (Button*)mapTool[i][j].first.front();
-					//temp->AddNumBox(Button::GetButtonNum() - 1);
-				}
+					temp->AddNumBox(Button::GetButtonNum() - 1);
+				}*/
 				mapTool[i][j].first.front()->Init();
 
 				break;
@@ -507,7 +507,20 @@ void EditScene::FillMapTool()
 				!mapTool[i][j].first.empty())
 			{
 				for (auto tool : mapTool[i][j].first)
-				{
+				{					
+					if (tool->GetObjType() == ObjectType::Catcher)
+					{
+						WireableObject* temp
+							= (WireableObject*)tool;
+
+						if (!temp->GetWireList().empty())
+						{
+							for (auto w : temp->GetWireList())
+							{
+								w->isActive = false;
+							}
+						}
+					}
 					delete tool;
 				}
 				mapTool[i][j].first.clear();
@@ -1308,9 +1321,9 @@ void EditScene::Save()
 						goal.posX = j;
 						goal.posY = posY;
 						WireableObject* wobj = (WireableObject*)tool;
-						for (auto w : wobj->GetWireListFromMapTool())
+						for (auto w : wobj->GetWireList())
 						{
-							goal.buttonList.push_back(w);
+							goal.buttonList.push_back(w->buttonNum);
 						}
 						saveObjInfo.goal = goal;
 						break;
@@ -1341,8 +1354,8 @@ void EditScene::Save()
 						button.posX = j;
 						button.posY = posY;
 						button.rotation = (int)tool->GetRotation();
-						WireableObject* wobj = (WireableObject*)tool;
-						button.buttonId = wobj->GetWireListFromMapTool().front();
+						Button* tempButton = (Button*)tool;
+						button.buttonId = tempButton->GetButtonId();		
 						saveObjInfo.buttons.push_back(button);
 						break;
 					}
@@ -1353,10 +1366,10 @@ void EditScene::Save()
 						tunnel.posX = j;
 						tunnel.posY = posY;
 						tunnel.rotation = (int)tool->GetRotation();
-						WireableObject* wobj = (WireableObject*)tool;
-						for (auto w : wobj->GetWireListFromMapTool())
+						WireableObject* wobj = (WireableObject*)tool;					
+						for (auto w : wobj->GetWireList())
 						{
-							tunnel.buttonList.push_back(w);
+							tunnel.buttonList.push_back(w->buttonNum);
 						}
 						saveObjInfo.tunnels.push_back(tunnel);
 						break;
@@ -1368,10 +1381,10 @@ void EditScene::Save()
 						bridge.posX = j;
 						bridge.posY = posY;
 						bridge.rotation = (int)tool->GetRotation();
-						WireableObject* wobj = (WireableObject*)tool;
-						for (auto w : wobj->GetWireListFromMapTool())
+						WireableObject* wobj = (WireableObject*)tool;					
+						for (auto w : wobj->GetWireList())
 						{
-							bridge.buttonList.push_back(w);
+							bridge.buttonList.push_back(w->buttonNum);
 						}
 						saveObjInfo.bridges.push_back(bridge);
 						break;
@@ -1383,10 +1396,10 @@ void EditScene::Save()
 						red.posX = j;
 						red.posY = posY;
 						red.rotation = (int)tool->GetRotation();
-						WireableObject* wobj = (WireableObject*)tool;
-						for (auto w : wobj->GetWireListFromMapTool())
+						WireableObject* wobj = (WireableObject*)tool;					
+						for (auto w : wobj->GetWireList())
 						{
-							red.buttonList.push_back(w);
+							red.buttonList.push_back(w->buttonNum);
 						}
 						saveObjInfo.redwalls.push_back(red);
 						break;

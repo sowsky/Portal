@@ -151,7 +151,7 @@ void Redwall::Draw(RenderWindow& window)
 {
 	if (!isPlayingGame)
 	{
-		SpriteObj::Draw(window);
+		WireableObject::Draw(window);
 	}
 	else
 	{

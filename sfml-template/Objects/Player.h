@@ -41,6 +41,7 @@ public:
 	void RotateAnimation(RenderWindow& window);
 	void ShowBornForDev(RenderWindow& window);
 
+	Vector2f GetClaviclePos();
 	Vector2f GetIndicator();
 	bool IsMouseRight();
 protected:
