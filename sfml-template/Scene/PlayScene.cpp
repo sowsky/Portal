@@ -193,13 +193,13 @@ void PlayScene::Draw(RenderWindow& window)
 	}*/
 
 
-	//if (madeorange) {
+	if (madeorange) {
 		orange->Draw(window);
-//	}
+	}
 
-	//if (madeblue) {
+	if (madeblue) {
 		blue->Draw(window);
-//	}
+	}
 
 	for (auto v : redwall) {
 		v->Draw(window);
