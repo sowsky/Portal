@@ -26,7 +26,9 @@ public:
 	FloatRect GetHitBoxGlobalbound() { return hitbox.getGlobalBounds(); }
 	FloatRect GetDestinyGlobalbound() { return destiny.getGlobalBounds(); }
 	FloatRect GetStartposGlobalbound() { return start.getGlobalBounds(); }
-	void Setwhohitwall(Tile& victim) { whohitwall = &victim; }
+
+	void Setwhohitwall(SpriteObj& victim) { whohitwall = &victim; }
+
 	virtual SpriteObj* NewThis() { return new Tunnel; }
 
 	virtual void SetButtonlist(vector<Button*>& button);
@@ -47,7 +49,7 @@ private:
 	list<Button*> button;
 	vector<int>buttonid;
 
-	Tile* whohitwall = nullptr;
+	SpriteObj* whohitwall;
 	RectangleShape tuns;
 	RectangleShape hitbox;
 	RectangleShape destiny;

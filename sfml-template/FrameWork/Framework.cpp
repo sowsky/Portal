@@ -90,6 +90,7 @@ bool Framework::Do()
 		SCENE_MGR->PhysicsUpdate(dt);
 		SCENE_MGR->Draw(window);
 		window.display();
+		
 	}	
 	return true;
 }

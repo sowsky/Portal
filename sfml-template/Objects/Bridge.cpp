@@ -66,7 +66,6 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 			bridge.setPosition(startpos);
 			frontEmitter.setRotation(180.f);
 			backEmitter.setRotation(180.f);
-			cout << startpos.x<<" "<<startpos.y << endl;
 		}
 		else if (dir == 3) {
 			Utils::SetOrigin(bridge, Origins::ML);
@@ -276,7 +275,8 @@ void Bridge::Draw(RenderWindow& window)
 			if (setedpos) {
 				UpdateBridgeDraw(window);
 				window.draw(bridge_rect, bridge_color);
-				window.draw(frontEmitter);
+				if (connected == 0)
+					window.draw(frontEmitter);
 			}
 		}
 
@@ -327,5 +327,6 @@ void Bridge::UpdateBridgeDraw(RenderWindow& window)
 
 void Bridge::DrawBackEmmiter(RenderWindow& window)
 {
-	window.draw(backEmitter);
+	if (connected == 0)
+		window.draw(backEmitter);
 }

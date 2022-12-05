@@ -184,7 +184,6 @@ void Player::PhysicsUpdate(float dt)
 {
 	if ((InputMgr::GetKey(Keyboard::A) || InputMgr::GetKey(Keyboard::D)) && body->GetLinearVelocity().y == 0) {
 		body->ApplyLinearImpulse({ 0,0.5f }, GetPlayerBodyLinearVelocity(), 1);
-		cout << body->GetLinearVelocity().y << endl;
 		if ((int)body->GetLinearVelocity().x == 0 && body->GetLinearVelocity().y > 0) {
 			body->SetLinearVelocity({ body->GetLinearVelocity().x,-0.1f });
 		}

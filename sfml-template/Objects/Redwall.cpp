@@ -38,7 +38,7 @@ Redwall::Redwall(Vector2f& position, vector<int> buttonlist, bool active, int di
 		}
 		else if (dir == 3) {
 			Utils::SetOrigin(redwall, Origins::ML);
-			startpos = { position.x - GRIDSIZE / 2 ,position.y };
+			startpos = { position.x - GRIDSIZE / 2+2 ,position.y };
 			redwall.setPosition(startpos);
 
 		}
@@ -119,7 +119,7 @@ void Redwall::Update(float dt)
 		}
 	//	AddParticle();
 	}
-	else if (hitwall && whohitwall != nullptr) {
+	else if (hitwall ) {
 		if (dir == 0) {
 			redwall.setSize({ redwall.getSize().x,whohitwall->GetGlobalBounds().top - redwall.getPosition().y });
 		}
