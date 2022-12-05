@@ -141,7 +141,8 @@ private:
 
 	Light light;
 
-	float ambient_intensity = 0.7;
+	float ambient_intensity = 0.0;
+	//float ambient_intensity = 0.7;
 	Vector3f falloff;
 	/////
 	Sprite crosshair;

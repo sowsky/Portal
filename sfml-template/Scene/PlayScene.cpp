@@ -151,9 +151,7 @@ void PlayScene::Draw(RenderWindow& window)
 {
 	window.setView(worldView);
 
-	for (auto v : bridge) {
-		v->DrawBackEmmiter(window);
-	}
+
 
 	for (auto v : wall) {
 		v->Draw(window);
@@ -168,6 +166,10 @@ void PlayScene::Draw(RenderWindow& window)
 	for (auto v : cube) {
 		v->Draw(window);
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
+	}
+
+	for (auto v : bridge) {
+		v->DrawBackSide(window);
 	}
 
 	if (goal != nullptr) {
@@ -236,10 +238,14 @@ void PlayScene::Draw(RenderWindow& window)
 }
 
 PlayScene::PlayScene(string path)
-	:light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
+	:/*light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
 		sf::Vector3f(0, 0, 0.08),
 		sf::Vector3f(0.5, 0.5, 0.5)),
-	falloff(0.5, 0.5, 0.5)
+	falloff(0.5, 0.5, 0.5)*/
+	light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
+		sf::Vector3f(0, 0, 0),
+		sf::Vector3f(0.5, 0.5, 0.5)),
+	falloff(4, 4, 4)
 {
 
 	b2Vec2 g(0.0f, -10);

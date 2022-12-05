@@ -31,7 +31,7 @@ public:
 	int GetConnected() { return connected; }
 
 	void UpdateBridgeDraw(RenderWindow& window);
-	void DrawBackEmmiter(RenderWindow& window);
+	void DrawBackSide(RenderWindow& window);
 	Vector2f GetStartPos() { return startpos; }
 protected:
 	list<Button*> button;
