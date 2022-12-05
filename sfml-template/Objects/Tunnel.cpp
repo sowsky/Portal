@@ -86,10 +86,6 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 
 Tunnel::~Tunnel()
 {
-	for (auto v : button) {
-		delete v;
-	}
-	button.clear();
 
 }
 

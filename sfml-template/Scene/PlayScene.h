@@ -26,6 +26,18 @@ struct Light
 	sf::Vector3f attenuation;
 };
 
+struct PsceneWire
+{
+	PsceneWire(bool& o)
+		:isOn(o)
+	{
+		wire.resize(2);
+		wire.setPrimitiveType(Lines);
+	}
+	VertexArray wire;
+	bool& isOn;
+};
+
 class PlayScene : public Scene
 {
 public:
@@ -133,6 +145,13 @@ private:
 	/////
 	Sprite crosshair;
 
-	float openingTime = 1.5f;
+	float openingTime = 1.5f;	
+	map<int, list<Vector2f>> wireList;
+	list<PsceneWire*> wires;
+
+	Texture* orangeWire;
+	Texture* blueWire;
+
+	bool showWire;
 };
 

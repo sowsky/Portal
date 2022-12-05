@@ -51,6 +51,7 @@ Redwall::Redwall(Vector2f& position, vector<int> buttonlist, bool active, int di
 
 Redwall::~Redwall()
 {
+
 }
 
 void Redwall::Update(float dt)

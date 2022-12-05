@@ -1,4 +1,5 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
+Graphics/title.png,0
 Graphics/tunnel/tunnel.png,0
 Graphics/bridge/back.png,0
 Graphics/bridge/front.png,0

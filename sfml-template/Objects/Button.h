@@ -15,6 +15,7 @@ public:
 
 	RectangleShape* GetHitbox() { return hitbox; }
 	bool GetPressed() { return isPress; }
+	bool& GetIsPressRef() { return isPress; }
 	void SetPressed(bool a) { isPress = a; }
 
 	int GetButtonId() { return buttonId; }

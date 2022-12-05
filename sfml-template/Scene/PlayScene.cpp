@@ -223,6 +223,15 @@ void PlayScene::Draw(RenderWindow& window)
 	if (particle.running())
 		window.draw(particle);
 
+	if (showWire)
+	{
+		for (auto w : wires)
+		{
+			window.draw(w->wire,
+				w->isOn ? orangeWire : blueWire);
+		}
+	}	
+
 	window.setView(uiView);
 	window.draw(crosshair);
 
@@ -237,6 +246,7 @@ PlayScene::PlayScene(string path)
 		sf::Vector3f(0.5, 0.5, 0.5)),
 	falloff(0.5, 0.5, 0.5)
 {
+
 	b2Vec2 g(0.0f, -10);
 	world = make_unique<b2World>(g);
 
@@ -375,7 +385,17 @@ PlayScene::PlayScene(string path)
 						Goal_struct* tempG = (Goal_struct*)obj;
 						MakeGoal(tempG->buttonList);
 						box2dposition.x += GRIDSIZE;
-
+						//if (m.find("Alice") != m.end())
+						for (auto b : tempG->buttonList)
+						{
+							if (wireList.find(b) == wireList.end())
+							{
+								list<Vector2f> templ;
+								templ.clear();
+								wireList.insert({ b, templ });								
+							}
+							wireList[b].push_back(goal->GetSpritePos());							
+						}
 						break;
 					}
 					case 't':
@@ -385,6 +405,18 @@ PlayScene::PlayScene(string path)
 						tunnel.push_back(new Tunnel({ currgrid.x,currgrid.y }, tempT->rotation, tempT->buttonList, 1, false, 0));
 						currgrid.x += GRIDSIZE;
 						box2dposition.x += GRIDSIZE;
+
+						for (auto b : tempT->buttonList)
+						{
+							if (wireList.find(b) == wireList.end())
+							{
+								list<Vector2f> templ;
+								templ.clear();
+								wireList.insert({ b, templ });
+							}
+							wireList[b].push_back(tunnel.back()->GetSpritePos());
+						}
+
 						break;
 					}
 					case 'l':
@@ -393,6 +425,17 @@ PlayScene::PlayScene(string path)
 						bridge.push_back(new Bridge(world.get(), currgrid, tempB->buttonList, true, tempB->rotation, 0));
 						currgrid.x += GRIDSIZE;
 						box2dposition.x += GRIDSIZE;
+
+						for (auto b : tempB->buttonList)
+						{
+							if (wireList.find(b) == wireList.end())
+							{
+								list<Vector2f> templ;
+								templ.clear();
+								wireList.insert({ b, templ });
+							}
+							wireList[b].push_back(bridge.back()->GetSpritePos());
+						}
 						break;
 					}
 					case 'r':
@@ -402,6 +445,17 @@ PlayScene::PlayScene(string path)
 						redwall.push_back(new Redwall(currgrid, tempR->buttonList, tempR->on, tempR->rotation));
 						currgrid.x += GRIDSIZE;
 						box2dposition.x += GRIDSIZE;
+
+						for (auto b : tempR->buttonList)
+						{
+							if (wireList.find(b) == wireList.end())
+							{
+								list<Vector2f> templ;
+								templ.clear();
+								wireList.insert({ b, templ });
+							}
+							wireList[b].push_back(redwall.back()->GetSpritePos());
+						}
 						break;
 					}
 					}
@@ -440,6 +494,23 @@ PlayScene::PlayScene(string path)
 	}
 
 	particle.init(500);
+
+	//////////////
+	if (!button.empty())
+	{
+		for (auto b : button)
+		{
+			for (auto w : wireList[b->GetButtonId()])
+			{
+				wires.push_back(new PsceneWire(b->GetIsPressRef()));
+				wires.back()->wire[0].position = b->GetSpritePos();
+				wires.back()->wire[1].position = w;
+			}
+		}
+	}
+
+	orangeWire = RESOURCEMGR->GetTexture("Graphics/orange.png");
+	blueWire = RESOURCEMGR->GetTexture("Graphics/blue.png");
 }
 
 void PlayScene::MakeWall(bool isEnd)
@@ -1326,15 +1397,6 @@ void PlayScene::DrawRenderedBuffer(RenderWindow& window)
 void PlayScene::Input()
 {
 	LightTestInputForDev();
-	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
-		if (SCENE_MGR->GetPrevKey() == Scenes::MAPEDITER)
-		{
-			SCENE_MGR->ChangeScene(Scenes::MAPEDITER);
-		}
-		else
-			SCENE_MGR->ChangeScene(Scenes::GAMESTART);
-		return;
-	}
 
 	if (InputMgr::GetMouseWheelState() == 1)
 	{
@@ -1532,6 +1594,23 @@ void PlayScene::Input()
 		Vector2f real(dir.x + player->GetPos().x, player->GetPos().y - 25);
 		grabbedcube->GetBody()->SetTransform({ real.x / SCALE,real.y / SCALE * -1 }, grabbedcube->GetBody()->GetAngle());*/
 		//cout << real.x <<" "<< real.y << endl;
+	}
+
+	///////////////////////
+
+	if (InputMgr::GetKeyDown(Keyboard::T))
+	{
+		showWire = !showWire;
+	}
+
+	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
+		if (SCENE_MGR->GetPrevKey() == Scenes::MAPEDITER)
+		{
+			SCENE_MGR->ChangeScene(Scenes::MAPEDITER);
+		}
+		else
+			SCENE_MGR->ChangeScene(Scenes::GAMESTART);
+		return;
 	}
 
 }
@@ -1911,6 +1990,11 @@ void PlayScene::Release()
 	/*if (grabbedcube != nullptr)
 		delete grabbedcube;*/
 
+	for (auto v : wires)
+	{
+		delete v;
+	}
+	wires.clear();
 }
 
 void PlayScene::Enter()
@@ -1934,6 +2018,7 @@ void PlayScene::Enter()
 
 	SpriteObj::SetIsPlayingGame(true);
 	isMovingViewCenter = false;
+	showWire = false;
 
 	front = unique_ptr<RenderTexture>(new RenderTexture());
 	back = unique_ptr<RenderTexture>(new RenderTexture());
@@ -1945,7 +2030,7 @@ void PlayScene::Enter()
 	pass_diffuse.create(width, height);
 
 	lights_shader.loadFromFile("Shader/light.frag", Shader::Fragment);
-	normals_shader.loadFromFile("Shader/normals.frag", Shader::Fragment);
+	normals_shader.loadFromFile("Shader/normals.frag", Shader::Fragment);	
 }
 
 void PlayScene::Exit()

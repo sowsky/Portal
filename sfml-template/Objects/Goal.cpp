@@ -67,9 +67,7 @@ Goal::Goal(Vector2f currgrid, float size, vector<int> buttonlist)
 
 Goal::~Goal()
 {	
-	/*for (auto b : button)
-		delete b;
-	button.clear();*/
+
 }
 
 SpriteObj* Goal::NewThis()

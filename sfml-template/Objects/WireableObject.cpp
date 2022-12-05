@@ -33,16 +33,17 @@ WireableObject::~WireableObject()
 		{
 			if (w->isActive)
 			{
-				auto ptrIt = w->targetPtr->GetWireList().begin();
+				list<Wire*>& targetWires = w->targetPtr->GetWireList();
+				auto targetIt = targetWires.begin();
 				{
-					while (ptrIt != w->targetPtr->GetWireList().end())
+					while (targetIt != targetWires.end())
 					{
-						if ((*ptrIt)->buttonNum == w->buttonNum)
+						if ((*targetIt)->buttonNum == w->buttonNum)
 						{
-							ptrIt = w->targetPtr->GetWireList().erase(ptrIt);
+							targetIt = targetWires.erase(targetIt);
 						}
-						else ptrIt++;
-					}						
+						else ++targetIt;
+					}
 				}
 			}
 			delete w;

@@ -211,7 +211,7 @@ void EditScene::DrawWorldView(RenderWindow& window)
 {
 	window.setView(worldView);
 	window.draw(shadow);
-	window.draw(background);
+	window.draw(background);	
 
 	for (int i = 0; i < colNum; i++)
 	{
@@ -221,8 +221,33 @@ void EditScene::DrawWorldView(RenderWindow& window)
 			{
 				for (auto array : mapTool[i][j].first)
 				{
-					if (array->GetActive() && array != nullptr)
+					if (array->GetActive() && 
+						array != nullptr &&
+						!(array->GetObjType() == ObjectType::Trigger ||
+							array->GetObjType() == ObjectType::Catcher))
+					{
 						array->Draw(window);
+					}	
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < colNum; i++)
+	{
+		for (int j = 0; j < rowNum; j++)
+		{
+			if (!mapTool[i][j].first.empty())
+			{
+				for (auto array : mapTool[i][j].first)
+				{
+					if (array->GetActive() &&
+						array != nullptr &&
+						(array->GetObjType() == ObjectType::Trigger ||
+							array->GetObjType() == ObjectType::Catcher))
+					{
+						array->Draw(window);
+					}
 				}
 			}
 

@@ -108,11 +108,6 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 
 Bridge::~Bridge()
 {
-	for (auto v : button) {
-		delete v;
-	}
-	button.clear();
-
 	if (body != nullptr)
 		world->DestroyBody(body);
 }
