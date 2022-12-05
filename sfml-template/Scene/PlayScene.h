@@ -70,7 +70,8 @@ public:
 	void ClearRenderBuffer();
 	void OpenStage(float dt);
 private:
-
+	b2DistanceJoint* joint;
+	b2Vec2 mouseWorld;
 	Player* player;
 	Goal* goal;
 	vector<Tile*> wall;

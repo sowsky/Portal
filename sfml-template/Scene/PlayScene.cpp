@@ -84,9 +84,9 @@ void PlayScene::Update(float dt)
 			cout << "drop" << endl;
 			grabitem = false;
 
+			grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
 			grabbedcube = nullptr;
 
-			
 		}
 
 	}
@@ -95,24 +95,19 @@ void PlayScene::Update(float dt)
 			if (c->GethitboxGlobalBounds().intersects(player->GetGlobalBounds()) && InputMgr::GetKeyDown(Keyboard::E)) {
 				if (!grabitem) {
 					cout << "pickup" << endl;
-
-					b2DistanceJointDef dDef;
-					dDef.bodyA = player->GetBody();
-					dDef.bodyB = c->GetBody();
-					dDef.length = 10 / SCALE;
-					world.get()->CreateJoint(&dDef);
+	
 
 					grabitem = true;
 					grabbedcube = c;
 					float cposX = c->GetGlobalBounds().left + (c->GetGlobalBounds().width / 2);
 					if (player->GetPositions().x <= cposX)
 					{
-					//	c->SetSide(true);
-						//c->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
+						//	c->SetSide(true);
+							c->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
 					}
 					else if (player->GetPos().x > cposX) {
 						//c->SetSide(false);
-						//c->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
+						c->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
 					}
 					c->SetGround(false);
 				}
@@ -1519,19 +1514,18 @@ void PlayScene::Input()
 	}
 
 	if (grabitem) {
-		/*Vector2f dir = Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - grabbedcube->GetPos());
+		Vector2f dir = Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - grabbedcube->GetPos());
 		dir.x *= 50;
 		dir.y *= 50;
-
 		if (player->IsMouseRight())
-			dir.x = 45.f;
-
+			dir.x = 50;
 		if (!player->IsMouseRight())
-			dir.x = -45.f;
+			dir.x = -50;
+			float x = Utils::Lerp(grabbedcube->GetPos().x, dir.x + player->GetPos().x, 0.5f);
 
 		Vector2f real(dir.x + player->GetPos().x, player->GetPos().y - 25);
-		grabbedcube->GetBody()->SetTransform({ real.x / SCALE,real.y / SCALE * -1 }, grabbedcube->GetBody()->GetAngle());*/
-		//cout << real.x <<" "<< real.y << endl;
+		grabbedcube->GetBody()->SetTransform({ real.x / SCALE,real.y / SCALE * -1 }, grabbedcube->GetBody()->GetAngle());
+		//grabbedcube->GetBody()->ApplyForce({ x / SCALE,0 }, grabbedcube->GetBody()->GetWorldCenter(), 1);
 	}
 
 }
@@ -1680,6 +1674,7 @@ void PlayScene::MoveToPortal()
 					c->GetBody()->SetLinearVelocity({ 0,0 });
 					c->GetBody()->SetLinearVelocity({ c->GetRecentSpeed().x ,c->GetRecentSpeed().y * -1 });
 				}
+
 			}
 			else if (orange->GetPortalDir() == 1) {
 				c->SetCubeBodyPos({ orange->GetPos().x + c->GetGlobalBounds().width,orange->GetPos().y });
@@ -1688,7 +1683,9 @@ void PlayScene::MoveToPortal()
 			}
 			else if (orange->GetPortalDir() == 2) {
 				c->SetCubeBodyPos({ orange->GetPos().x ,orange->GetPos().y + c->GetGlobalBounds().height });
-				c->GetBody()->SetLinearVelocity({ c->GetCubeBodyForce().x,c->GetRecentSpeed().y });
+				c->GetBody()->SetLinearVelocity({ c->GetCubeBodyForce().x,c->GetRecentSpeed().y-1 });
+
+				
 			}
 			else if (orange->GetPortalDir() == 3) {
 				c->SetCubeBodyPos({ orange->GetPos().x - c->GetGlobalBounds().width ,orange->GetPos().y });
@@ -1717,7 +1714,7 @@ void PlayScene::MoveToPortal()
 			}
 			else if (blue->GetPortalDir() == 2) {
 				c->SetCubeBodyPos({ blue->GetPos().x ,blue->GetPos().y + c->GetGlobalBounds().height });
-				c->GetBody()->SetLinearVelocity({ c->GetCubeBodyForce().x,c->GetRecentSpeed().y });
+				c->GetBody()->SetLinearVelocity({ c->GetCubeBodyForce().x,c->GetRecentSpeed().y-1});
 			}
 			else if (blue->GetPortalDir() == 3) {
 				c->SetCubeBodyPos({ blue->GetPos().x - c->GetGlobalBounds().width ,blue->GetPos().y });
