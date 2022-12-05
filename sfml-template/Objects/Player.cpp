@@ -125,6 +125,8 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	Utils::SetOrigin(portalGun, Origins::ML);
 	portalGun.setScale(0.3f, 0.3f);
 
+	footstepBuffer.loadFromFile("Sound/footstep.wav");
+	footstep.setBuffer(footstepBuffer);
 
 }
 
@@ -312,6 +314,7 @@ void Player::WalkAnimaton(float dt)
 		p_rleg.setScale(0.3f, 0.3f);
 		legdir *= -1;
 		groundTime = groundTimeMax;
+		//footstep.play();
 	}
 
 	if (p_rleg.getScale().y < 0.25f)
@@ -319,9 +322,11 @@ void Player::WalkAnimaton(float dt)
 		p_rleg.setScale(0.3f, 0.25f);
 		legdir *= -1;
 		groundTime = groundTimeMax;
+		//footstep.play();
 	}
 
 	p_lleg.setScale(0.3f, 0.55f - p_rleg.getScale().y);
+	
 }
 
 void Player::RotateAnimation(RenderWindow& window)

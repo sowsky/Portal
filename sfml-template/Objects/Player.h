@@ -1,5 +1,6 @@
 #pragma once
 #include "SpriteObj.h"
+#include <SFML/Audio.hpp>
 class Player : public SpriteObj
 {
 public:
@@ -90,5 +91,9 @@ protected:
 
 	bool devMod = false;
 	bool right;
+
+	SoundBuffer footstepBuffer;
+	Sound footstep;
+
 };
 

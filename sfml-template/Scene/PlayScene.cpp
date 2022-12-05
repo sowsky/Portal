@@ -121,9 +121,11 @@ void PlayScene::Update(float dt)
 
 	Input();
 
-	/*light.position.x = 0;
-	light.position.y = height;*/
+	light.position.x = 0;
+	light.position.y = height;
 
+	//light.position.x = GetMouseWorldPos().x;
+	//light.position.y = height - GetMouseWorldPos().y;
 }
 
 void PlayScene::PhysicsUpdate(float dt)
@@ -151,10 +153,21 @@ void PlayScene::Draw(RenderWindow& window)
 {
 	window.setView(worldView);
 
-
+	window.draw(backtemp);
 
 	for (auto v : wall) {
 		v->Draw(window);
+	}
+
+	if (madeorange) {
+		orange->Draw(window);
+	}
+
+	if (madeblue) {
+		blue->Draw(window);
+	}
+
+	for (auto v : wall) {
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
 	}
 
@@ -189,14 +202,6 @@ void PlayScene::Draw(RenderWindow& window)
 		v->DrawHitbox(window);
 	}*/
 
-
-	if (madeorange) {
-		orange->Draw(window);
-	}
-
-	if (madeblue) {
-		blue->Draw(window);
-	}
 
 	for (auto v : redwall) {
 		v->Draw(window);
@@ -238,14 +243,14 @@ void PlayScene::Draw(RenderWindow& window)
 }
 
 PlayScene::PlayScene(string path)
-	:/*light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
+	:light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
 		sf::Vector3f(0, 0, 0.08),
 		sf::Vector3f(0.5, 0.5, 0.5)),
-	falloff(0.5, 0.5, 0.5)*/
-	light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
-		sf::Vector3f(0, 0, 0),
-		sf::Vector3f(0.5, 0.5, 0.5)),
-	falloff(4, 4, 4)
+	falloff(0.5, 0.5, 0.5)
+	//light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
+	//	sf::Vector3f(0, 0, 0),
+	//	sf::Vector3f(0.5, 0.5, 0.5)),
+	//falloff(4, 4, 4)
 {
 
 	b2Vec2 g(0.0f, -10);
@@ -512,6 +517,16 @@ PlayScene::PlayScene(string path)
 
 	orangeWire = RESOURCEMGR->GetTexture("Graphics/orange.png");
 	blueWire = RESOURCEMGR->GetTexture("Graphics/blue.png");
+
+	fireBlueBuffer.loadFromFile("Sound/fireblue.wav");
+	fireOrangeBuffer.loadFromFile("Sound/fireorange.wav");
+
+	fireBlue.setBuffer(fireBlueBuffer);
+	fireOrange.setBuffer(fireOrangeBuffer);
+
+	backtemp.setTexture(*RESOURCEMGR->GetTexture("Graphics/tempback.png"));
+	backtemp.setPosition(200.f, 200.f);
+	
 }
 
 void PlayScene::MakeWall(bool isEnd)
@@ -1408,7 +1423,7 @@ void PlayScene::Input()
 	}
 	if (InputMgr::GetMouseWheelState() == -1)
 	{
-		if (worldView.getSize().x > 1400.f || openingTime > 0.f)
+		if (worldView.getSize().x > 2800.f || openingTime > 0.f)
 			return;
 
 		worldView.zoom(1.12f);
@@ -1506,6 +1521,8 @@ void PlayScene::Input()
 		madeblue = false;
 		blue->SetPos(player->GetClaviclePos());
 		blue->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
+		////////////////////
+		fireBlue.play();
 	}
 
 	//orange
@@ -1579,6 +1596,8 @@ void PlayScene::Input()
 		madeorange = false;
 		orange->SetPos(player->GetClaviclePos());
 		orange->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
+		/////////////////////
+		fireOrange.play();
 	}
 
 	if (grabitem) {
@@ -1663,8 +1682,10 @@ void PlayScene::ClearRenderBuffer()
 {
 	back->clear();
 	front->clear();
+	//pass_diffuse.clear(Color::White);
 	pass_diffuse.clear(Color::Transparent);
 	// Set normals buffer to neutral color
+	//pass_normals.clear(Color::White);
 	pass_normals.clear(Color(128, 128, 255));
 }
 

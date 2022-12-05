@@ -267,10 +267,10 @@ void Bridge::Draw(RenderWindow& window)
 		{			
 			if (setedpos) {
 				UpdateBridgeDraw(window);				
-				if (connected == 0)
-					window.draw(frontEmitter);
 			}
 		}
+		if (connected == 0)
+			window.draw(frontEmitter);
 		//window.draw(hitbox);
 		//window.draw(start);
 		//window.draw(destiny);		

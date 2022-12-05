@@ -96,6 +96,9 @@ void Tunnel::Update(float dt)
 
 	active = true;
 
+	//if (InputMgr::GetKeyDown(Keyboard::R))
+	//	active = !active;
+
 	for (auto b : button) {
 		if (!b->GetPressed()) {
 			active = false;

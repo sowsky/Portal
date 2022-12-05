@@ -1,6 +1,7 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
 Graphics/orangeportal.png,0
 Graphics/blueportal.png,0
+Graphics/tempback.png,0
 Graphics/title.png,0
 Graphics/tunnel/tunnel.png,0
 Graphics/bridge/back.png,0
