@@ -106,7 +106,7 @@ void Cube::Update(float dt)
 	sprite.setRotation(180.0 * body->GetAngle()*-1 / M_PI);
 
 	hitbox->setSize({ GetSize().x+10,GetSize().y});
-	hitbox->setPosition(GetPos() );
+	hitbox->setPosition(temp );
 
 	if (body->GetLinearVelocity().x != 0) {
 		if (maxspeed.x > body->GetLinearVelocity().x && abs(maxspeed.x) <= maximumspeed)
