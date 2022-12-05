@@ -1159,11 +1159,12 @@ void PlayScene::RedwallCheck()
 		}
 		for (auto c : cube) {
 			if (r->GetredwallGlobalBound().intersects(c->GethitboxGlobalBounds())) {
-				if (grabitem) {
+				if (grabitem) {			
+
+					grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(false);
+
 					grabbedcube = nullptr;
 					grabitem = false;
-
-					grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
 				}
 				c->MovetoStartpos();
 			}

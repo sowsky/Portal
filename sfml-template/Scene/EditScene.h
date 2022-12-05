@@ -6,7 +6,7 @@
 #include <array>
 #include "../Objects/WireableObject.h"
 #include "../Objects/WirePointArrows.h"
-#include "../Objects/Wire.h"
+
 //#include "../Objects/NumBox.h"
 
 class SpriteObj;
@@ -40,7 +40,7 @@ public:
 	void DrawOutLine(RenderWindow& window);
 
 	void InitWireMod();
-	void UpdateWireMod(float dt);
+	void UpdateWireMod();
 	//void FillNumBox();
 	void DrawWireMod(RenderWindow& window);
 	void DrawWireModMouseBox(RenderWindow& window);
@@ -52,7 +52,7 @@ public:
 	void InitUiTool();
 	void ReleaseUiTool();
 	void UpdateUiTool(float dt);
-	
+
 	void FillUiToolBox();
 	void SetUiToolPos(Vector2f pos);
 
@@ -62,17 +62,17 @@ public:
 	void LoadMapList();
 	void DrawMapList(RenderWindow& window);
 
-	array<bool,4>& SetOnSideTiles(int col, int row);
+	array<bool, 4>& SetOnSideTiles(int col, int row);
 
 	void Reset();
 	void Save();
 	void Load();
 	void Play();
 
-private:	
+private:
 	int rowNum;
 	int colNum;
-	Vector2f startPos;	
+	Vector2f startPos;
 
 	array<array<pair<list<SpriteObj*>, SpriteObj*>, 100>, 100> mapTool;
 	list<WireableObject*> wireableList;
@@ -85,9 +85,9 @@ private:
 
 	Sprite background;
 	Sprite shadow;
-	
+
 	array<array<pair<SpriteObj*, Sprite>, 4>, 8> uiTool;
-	
+
 	Sprite uiOutLine;
 	RectangleShape uiBackGround;
 	Sprite uiMove;
@@ -95,11 +95,11 @@ private:
 	RectangleShape wiringModGui;
 
 	Sprite uiTool2;
-	
+
 	Sprite saveMap;
 	Sprite loadMap;
 	Sprite resetMap;
-	Sprite playMap;	
+	Sprite playMap;
 	vector<Sprite*> uiTool2List;
 
 
@@ -118,10 +118,10 @@ private:
 	bool isGridOn;
 	bool isUiMoving;
 	bool isUiOpen;
-	bool mouseOnUi;	
+	bool mouseOnUi;
 	bool isWiring;
 
-	bool isSaving;	
+	bool isSaving;
 
 	String saveString;
 	Text saveText;
@@ -137,6 +137,6 @@ private:
 	string loadString;
 	Sprite loadScreen;
 	View loadView;
-	list<pair<RectangleShape*, Text*>> loadList;	
+	list<pair<RectangleShape*, Text*>> loadList;
 };
 

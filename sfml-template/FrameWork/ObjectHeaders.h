@@ -7,7 +7,6 @@
 #include "../Objects/Goal.h"
 #include "../Objects/Orange.h"
 #include "../Objects/Blue.h"
-#include "../Objects/Wire.h"
 #include "../Objects/Tunnel.h"
 #include "../Objects/Bridge.h"
 #include "../Objects/BlackTile.h"

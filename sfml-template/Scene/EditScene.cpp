@@ -144,7 +144,7 @@ void EditScene::Init()
 	{
 		loadString = "temp";
 		Load();
-	}		
+	}
 }
 
 void EditScene::Release()
@@ -183,7 +183,7 @@ void EditScene::Update(float dt)
 
 	Input(dt);
 	UpdateMapTool(dt);
-	UpdateWireMod(dt);
+	UpdateWireMod();
 	UpdateUiTool(dt);
 	UpdateSaveString();
 
@@ -649,6 +649,7 @@ void EditScene::Input(float dt)
 	if (InputMgr::GetKeyDown(Keyboard::Num2))
 	{
 		SpriteObj::OnOffWiringState(isWiring = !isWiring);
+		WireableObject::SetPhase(isWiring ? Phase::TriggerSelect : Phase::None);
 		isWiring ? LoadDataToWireableList() : RelaseWireableList();
 	}
 	//if (InputMgr::GetKeyDown(Keyboard::A) &&
@@ -680,10 +681,11 @@ void EditScene::InitWireMod()
 	//numBox.back()->SetNum(1);
 }
 
-void EditScene::UpdateWireMod(float dt)
+void EditScene::UpdateWireMod()
 {
 	if (!isWiring || !isScenePlay)
 		return;
+
 
 	//numBox.front()->SetPos(GetMouseWorldPos());
 	//FillNumBox();
@@ -992,7 +994,7 @@ void EditScene::LoadMapList()
 			if (list.first != nullptr)
 				delete list.first;
 			if (list.second != nullptr)
-				delete list.second;				
+				delete list.second;
 		}
 	}
 	loadList.clear();
@@ -1077,7 +1079,7 @@ void EditScene::DrawMapList(RenderWindow& window)
 array<bool, 4>& EditScene::SetOnSideTiles(int col, int row)
 {
 	array<bool, 4> sideBool;
-	for(int i = 0; i < sideBool.size(); i++)
+	for (int i = 0; i < sideBool.size(); i++)
 	{
 		sideBool[i] = true;
 	}
@@ -1126,10 +1128,10 @@ void EditScene::FillUiToolBox()
 	uiTool[1][0].first->SetResourceTexture("Graphics/Ui/cube.png");
 
 	uiTool[1][1].first = new Button;
-	uiTool[1][1].first->SetResourceTexture("Graphics/Ui/button.png");	
+	uiTool[1][1].first->SetResourceTexture("Graphics/Ui/button.png");
 
 	uiTool[1][2].first = new Tunnel;
-	uiTool[1][2].first->SetResourceTexture("Graphics/Ui/tbeam.png");	
+	uiTool[1][2].first->SetResourceTexture("Graphics/Ui/tbeam.png");
 
 	uiTool[1][3].first = new Bridge;
 	uiTool[1][3].first->SetResourceTexture("Graphics/Ui/bridge.png");
@@ -1285,7 +1287,7 @@ void EditScene::Save()
 						tile.id = '1';
 						tile.posX = j;
 						tile.posY = posY;
-						tile.sideBool = SetOnSideTiles(i,j);
+						tile.sideBool = SetOnSideTiles(i, j);
 						saveObjInfo.tiles.push_back(tile);
 						break;
 					}
@@ -1309,7 +1311,7 @@ void EditScene::Save()
 						for (auto w : wobj->GetWireListFromMapTool())
 						{
 							goal.buttonList.push_back(w);
-						}												
+						}
 						saveObjInfo.goal = goal;
 						break;
 					}
@@ -1368,7 +1370,7 @@ void EditScene::Save()
 						bridge.rotation = (int)tool->GetRotation();
 						WireableObject* wobj = (WireableObject*)tool;
 						for (auto w : wobj->GetWireListFromMapTool())
-						{							
+						{
 							bridge.buttonList.push_back(w);
 						}
 						saveObjInfo.bridges.push_back(bridge);
@@ -1403,7 +1405,7 @@ void EditScene::Save()
 
 	saveMsg.setString("Save succeed");
 
-	Utils::SetOrigin(saveMsg, Origins::MC);	
+	Utils::SetOrigin(saveMsg, Origins::MC);
 	saveString.clear();
 }
 
@@ -1423,10 +1425,10 @@ void EditScene::Load()
 	int idxI = colNum - 1;
 
 	///// �� & ��
-	mapTool[idxI - loadObjInfo.player.posY][loadObjInfo.player.posX].first.push_back(new Player);	
+	mapTool[idxI - loadObjInfo.player.posY][loadObjInfo.player.posX].first.push_back(new Player);
 
 	Goal* goal = new Goal;
-	goal->SetButtonList(loadObjInfo.goal.buttonList);	
+	goal->SetButtonList(loadObjInfo.goal.buttonList);
 	//for (auto num : loadObjInfo.goal.buttonList)
 	//{
 	//	goal->AddNumBox(num);
@@ -1462,7 +1464,7 @@ void EditScene::Load()
 
 	for (auto& p : loadObjInfo.tunnels)
 	{
-		Tunnel* tunnel = new Tunnel;		
+		Tunnel* tunnel = new Tunnel;
 		tunnel->SetRotation((Rotate)p.rotation);
 		tunnel->SetButtonlist(p.buttonList);
 		//for (auto num : p.buttonList)
@@ -1527,7 +1529,7 @@ void EditScene::Load()
 }
 
 void EditScene::Play()
-{	
+{
 	saveString.clear();
 	Save();
 

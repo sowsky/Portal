@@ -4,10 +4,10 @@
 #include "SpriteObj.h"
 #include "Goal.h"
 
-class Button : public WireableObject{
+class Button : public WireableObject {
 public:
 	Button();
-	virtual ~Button();	
+	virtual ~Button();
 
 	virtual SpriteObj* NewThis();
 public:
@@ -23,7 +23,8 @@ public:
 
 protected:
 	bool isPress = false;
-	int buttonId;	
+	static int buttonNum;
+	int buttonId;
 	static bool isEditMap;
 	RectangleShape* hitbox;
 

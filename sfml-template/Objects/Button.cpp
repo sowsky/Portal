@@ -4,13 +4,14 @@
 //#include "NumBox.h"
 
 bool Button::isEditMap = false;
+int Button::buttonNum = 0;
 
 Button::Button()
 {
 	SetResourceTexture("Graphics/button.png");
-	id = 'b';	
+	id = 'b';
 
-	type = ObjectType::Trigger;	
+	type = ObjectType::Trigger;
 
 	hitbox = new RectangleShape;
 	hitbox->setFillColor(Color::Red);
@@ -19,11 +20,14 @@ Button::Button()
 
 	objSize = ObjectSize::Normal;
 	attatchedPos = Rotate::Down;
+
+	buttonNum++;
+	buttonId = buttonNum;
 }
 
 Button::~Button()
 {
-	
+
 }
 
 SpriteObj* Button::NewThis()
@@ -35,10 +39,10 @@ void Button::Draw(RenderWindow& window)
 {
 	WireableObject::Draw(window);
 	Utils::SetOrigin(*hitbox, Origins::MC);
-	hitbox->setSize({Utils::GetSpriteSize(sprite).x-20,Utils::GetSpriteSize(sprite).y});
+	hitbox->setSize({ Utils::GetSpriteSize(sprite).x - 20,Utils::GetSpriteSize(sprite).y });
 	hitbox->setPosition(sprite.getPosition());
 	if (hitbox != nullptr
 		&& !isEditMap) {
-	//	window.draw(*hitbox);
+		//	window.draw(*hitbox);
 	}
 }
