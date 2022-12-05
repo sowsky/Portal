@@ -273,9 +273,10 @@ void Bridge::Draw(RenderWindow& window)
 		{
 			window.draw(bridge);
 			if (setedpos) {
-			//	UpdateBridgeDraw(window);
-			//	window.draw(bridge_rect, bridge_color);
-			//	window.draw(frontEmitter);
+				UpdateBridgeDraw(window);
+				window.draw(bridge_rect, bridge_color);
+				if (connected == 0)
+					window.draw(frontEmitter);
 			}
 		}
 
@@ -326,5 +327,6 @@ void Bridge::UpdateBridgeDraw(RenderWindow& window)
 
 void Bridge::DrawBackEmmiter(RenderWindow& window)
 {
-	window.draw(backEmitter);
+	if (connected == 0)
+		window.draw(backEmitter);
 }
