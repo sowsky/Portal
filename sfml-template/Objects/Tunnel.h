@@ -45,6 +45,7 @@ public:
 	void TransParticles(float dt);
 
 	vector<int> GetButtonid() { return buttonid; }
+	Vector2f GetStartPos() { return startpos; }
 private:
 	list<Button*> button;
 	vector<int>buttonid;

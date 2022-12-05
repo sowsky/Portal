@@ -32,6 +32,7 @@ public:
 
 	void UpdateBridgeDraw(RenderWindow& window);
 	void DrawBackEmmiter(RenderWindow& window);
+	Vector2f GetStartPos() { return startpos; }
 protected:
 	list<Button*> button;
 	vector<int>buttonid;

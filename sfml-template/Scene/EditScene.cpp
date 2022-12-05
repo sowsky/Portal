@@ -363,6 +363,16 @@ void EditScene::ReleaseMapTool()
 
 			for (auto array : mapTool[i][j].first)
 			{
+				if (array->GetObjType() == ObjectType::Trigger
+					&& array != nullptr)
+				{
+					WireableObject* tempw = (WireableObject*)array;
+					for (auto w : tempw->GetWireList())
+					{
+						w->isActive = false;
+					}
+				}
+
 				if (array != nullptr)
 				{
 					delete array;

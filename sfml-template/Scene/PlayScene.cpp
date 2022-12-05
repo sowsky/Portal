@@ -409,7 +409,7 @@ PlayScene::PlayScene(string path)
 								templ.clear();
 								wireList.insert({ b, templ });
 							}
-							wireList[b].push_back(tunnel.back()->GetSpritePos());
+							wireList[b].push_back(tunnel.back()->GetStartPos());
 						}
 
 						break;
@@ -429,7 +429,7 @@ PlayScene::PlayScene(string path)
 								templ.clear();
 								wireList.insert({ b, templ });
 							}
-							wireList[b].push_back(bridge.back()->GetSpritePos());
+							wireList[b].push_back(bridge.back()->GetStartPos());
 						}
 						break;
 					}
@@ -449,7 +449,7 @@ PlayScene::PlayScene(string path)
 								templ.clear();
 								wireList.insert({ b, templ });
 							}
-							wireList[b].push_back(redwall.back()->GetSpritePos());
+							wireList[b].push_back(redwall.back()->GetStartPos());
 						}
 						break;
 					}

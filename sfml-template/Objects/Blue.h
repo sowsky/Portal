@@ -15,13 +15,20 @@ public:
 	void SetPortalDir(int side) { dir = side; }
 	int GetPortalDir() { return dir; }
 	void SetLightDir(int side);
+
+	void DrawPortalArray(RenderWindow& window);
+	virtual void SetSize(Vector2f size);
 protected:
 	RectangleShape* hitbox;
 	float projectilespeed=2000.f;
-	int dir;
-	RadialLight light;
+	int dir;	
+	//RadialLight light;
+	DirectedLight light;
 	EdgeVector edges;
 
-	
+	VertexArray portalArray;
+	Texture* blueTex;
+	RectangleShape backFace;
+	RectangleShape frontFace;
 };
 
