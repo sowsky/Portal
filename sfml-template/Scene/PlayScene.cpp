@@ -725,7 +725,7 @@ void PlayScene::MakePortal()
 	else if (bluecollidercount == 2) {
 		//bottom
 		if (bluetlhit && bluetrhit) {
-			blue->SetLightDir(90);
+			blue->SetLightDir(90, false);
 			blue->SetSize({ 50,20 });
 			blue->SetPos({ blue->GetPos().x,sety });
 			blue->SetPortalDir(2);
@@ -733,7 +733,7 @@ void PlayScene::MakePortal()
 		}
 		//left
 		else if (bluetrhit && bluebrhit) {
-			blue->SetLightDir(180);
+			blue->SetLightDir(180, true);
 			blue->SetSize({ 20,50 });
 			blue->SetPos({ setx,blue->GetPos().y });
 			blue->SetPortalDir(3);
@@ -741,7 +741,7 @@ void PlayScene::MakePortal()
 		}
 		//top
 		else if (blueblhit && bluebrhit) {
-			blue->SetLightDir(270);
+			blue->SetLightDir(270, false);
 			blue->SetSize({ 50,20 });
 			blue->SetPos({ blue->GetPos().x,sety });
 			blue->SetPortalDir(0);
@@ -750,7 +750,7 @@ void PlayScene::MakePortal()
 		}
 		//right
 		else if (bluetlhit && blueblhit) {
-			blue->SetLightDir(0);
+			blue->SetLightDir(0, true);
 			blue->SetSize({ 20,50 });
 			blue->SetPos({ setx,bluey });
 			blue->SetPortalDir(1);
@@ -869,7 +869,7 @@ void PlayScene::MakePortal()
 	else if (orangecollidercount == 2) {
 		//bottom
 		if (orangetlhit && orangetrhit) {
-			orange->SetLightDir(90);
+			orange->SetLightDir(90, false);
 			orange->SetSize({ 50,20 });
 			orange->SetPos({ orange->GetPos().x,orangesety });
 			orange->SetPortalDir(2);
@@ -877,7 +877,7 @@ void PlayScene::MakePortal()
 		}
 		//left
 		else if (orangetrhit && orangebrhit) {
-			orange->SetLightDir(180);
+			orange->SetLightDir(180, true);
 			orange->SetSize({ 20,50 });
 			orange->SetPos({ orangesetx,orange->GetPos().y });
 			orange->SetPortalDir(3);
@@ -885,7 +885,7 @@ void PlayScene::MakePortal()
 		}
 		//top
 		else if (orangeblhit && orangebrhit) {
-			orange->SetLightDir(270);
+			orange->SetLightDir(270, false);
 			orange->SetSize({ 50,20 });
 			orange->SetPos({ orange->GetPos().x,orangesety });
 			orange->SetPortalDir(0);
@@ -894,7 +894,7 @@ void PlayScene::MakePortal()
 		}
 		//right
 		else if (orangetlhit && orangeblhit) {
-			orange->SetLightDir(0);
+			orange->SetLightDir(0, true);
 			orange->SetSize({ 20,50 });
 			orange->SetPos({ orangesetx,orangey });
 

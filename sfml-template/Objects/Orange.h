@@ -14,7 +14,7 @@ public:
 	virtual void Draw(RenderWindow& window);
 	void SetPortalDir(int side) { dir = side; }
 	int GetPortalDir() { return dir; }
-	void SetLightDir(int side);
+	void SetLightDir(int side, bool texdir);
 
 	void DrawPortalArray(RenderWindow& window);
 	virtual void SetSize(Vector2f size);
@@ -30,5 +30,6 @@ protected:
 	Texture* orangeTex;
 	RectangleShape backFace;
 	RectangleShape frontFace;
+	bool texStand;
 };
 

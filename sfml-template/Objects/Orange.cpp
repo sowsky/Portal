@@ -62,9 +62,10 @@ void Orange::Draw(RenderWindow& window)
 	window.draw(light);
 }
 
-void Orange::SetLightDir(int side)
+void Orange::SetLightDir(int side, bool texdir)
 {
 	light.setRotation(side);
+	texStand = texdir;
 }
 
 void Orange::DrawPortalArray(RenderWindow& window)
@@ -96,6 +97,8 @@ void Orange::DrawPortalArray(RenderWindow& window)
 	}
 
 	window.draw(portalArray, orangeTex);
+	//window.draw(backFace);
+	//window.draw(frontFace);
 }
 
 void Orange::SetSize(Vector2f size)
@@ -103,19 +106,16 @@ void Orange::SetSize(Vector2f size)
 	SpriteObj::SetSize(size);
 
 	float dp = DEPTH * 2 - 1.f;
-	if (dir == 1 || dir == 3)
+	if (texStand)
 	{
 		frontFace.setSize({0.1f, size.y / DEPTH});
 		backFace.setSize({ 0.1f, size.y * dp });
 	}
-
-	if (dir == 0 || dir == 2)
+	else
 	{
 		frontFace.setSize({ size.x / DEPTH, 0.1f, });
 		backFace.setSize({ size.x * dp, 0.1f,  });
-	}	
-	
-	backFace.setSize(size * dp);
+	}		
 
 	Utils::SetOrigin(frontFace, Origins::MC);
 	Utils::SetOrigin(backFace, Origins::MC);

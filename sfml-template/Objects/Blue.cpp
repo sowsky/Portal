@@ -62,11 +62,11 @@ void Blue::Draw(RenderWindow& window)
 	window.draw(light);	
 }
 
-void Blue::SetLightDir(int side)
+void Blue::SetLightDir(int side, bool texdir)
 {
 	light.setRotation(side);
+	texStand = texdir;
 }
-
 void Blue::DrawPortalArray(RenderWindow& window)
 {
 	Vector2f vanishingPoint = window.getView().getCenter();
@@ -96,15 +96,25 @@ void Blue::DrawPortalArray(RenderWindow& window)
 	}	
 
 	window.draw(portalArray, blueTex);
+	//window.draw(backFace);
+	//window.draw(frontFace);
 }
 
 void Blue::SetSize(Vector2f size)
 {
 	SpriteObj::SetSize(size);
 
-	frontFace.setSize(size / DEPTH);
 	float dp = DEPTH * 2 - 1.f;
-	backFace.setSize(size * dp);
+	if (texStand)
+	{
+		frontFace.setSize({ 0.1f, size.y / DEPTH });
+		backFace.setSize({ 0.1f, size.y * dp });
+	}
+	else
+	{
+		frontFace.setSize({ size.x / DEPTH, 0.1f, });
+		backFace.setSize({ size.x * dp, 0.1f, });
+	}
 
 	Utils::SetOrigin(frontFace, Origins::MC);
 	Utils::SetOrigin(backFace, Origins::MC);
