@@ -18,7 +18,6 @@ StartMenu::~StartMenu()
 void StartMenu::Init()
 {
 	SetUiView();
-	uiView.zoom(0.5f);
 
 	b2Vec2 g(0.0f, -10);
 	world = make_unique<b2World>(g);
@@ -57,7 +56,7 @@ void StartMenu::Init()
 
 	title.SetResourceTexture("Graphics/title.png");
 	title.SetPos({ title.GetPos().x+100,title.GetPos().y + 140 });
-	player = new Player(world.get(), Vector2f{ FRAMEWORK->GetWindowSize().x-400.f,FRAMEWORK->GetWindowSize().y-250.f}, Vector2f({20, 50}));
+	player = new Player(world.get(), Vector2f{ FRAMEWORK->GetWindowSize().x-450.f,FRAMEWORK->GetWindowSize().y-280.f}, Vector2f({20, 50}));
 
 	player->GetBody()->SetType(b2_staticBody);
 	
@@ -75,7 +74,7 @@ void StartMenu::Enter()
 
 	Scene::SetWorldView();
 	SetUiView();
-	uiView.zoom(0.5f);
+	uiView.zoom(0.44f);
 }
 
 void StartMenu::Update(float dt)
@@ -101,7 +100,7 @@ void StartMenu::Update(float dt)
 void StartMenu::Exit()
 {
 	SetUiView();
-
+	FRAMEWORK->GetWindow().setView(worldView);
 }
 
 void StartMenu::Draw(RenderWindow& window)

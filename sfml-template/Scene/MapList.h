@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include"Scene.h"
 #include <vector>
+#include "../Objects/Player.h"
 
 class MapList :public Scene
 {
@@ -22,5 +23,7 @@ private:
 	RectangleShape selectbox;
 	bool selected = false;
 	int y;
+	Player* player;
+	unique_ptr<b2World> world;
 };
 

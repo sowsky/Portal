@@ -22,6 +22,7 @@ MapList::~MapList()
 void MapList::Init()
 {
 
+
 }
 
 void MapList::Release()
@@ -31,10 +32,18 @@ void MapList::Release()
 	}
 	stagelist.clear();
 	delete mousepos;
+	delete player;
 }
 
 void MapList::Enter()
 {
+	SetUiView();
+	SetWorldView();
+	uiView.zoom(0.44f);
+
+	b2Vec2 g(0.0f, -10);
+	world = make_unique<b2World>(g);
+
 	mousepos = new RectangleShape();
 	Utils::SetOrigin(*mousepos, Origins::MC);
 	mousepos->setSize({ 5,5 });
@@ -64,6 +73,10 @@ void MapList::Enter()
 	}
 	////////////////////////////////////////////////////////////////////////
 
+
+	player = new Player(world.get(), Vector2f{ FRAMEWORK->GetWindowSize().x - 450.f,FRAMEWORK->GetWindowSize().y - 280.f }, Vector2f({ 20, 50 }));
+
+	player->GetBody()->SetType(b2_staticBody);
 }
 
 void MapList::Update(float dt)
@@ -114,6 +127,8 @@ void MapList::Update(float dt)
 			}
 		}
 	}
+
+	player->Update(dt);
 }
 
 void MapList::Exit()
@@ -123,10 +138,15 @@ void MapList::Exit()
 
 void MapList::Draw(RenderWindow& window)
 {
+	window.setView(worldView);
 	if (selected)
 		window.draw(selectbox);
 
 	for (auto v : stagelist) {
 		window.draw(*v);
 	}
+
+	window.setView(uiView);
+	player->Draw(window);
+
 }

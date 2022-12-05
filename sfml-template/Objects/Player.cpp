@@ -220,9 +220,8 @@ void Player::PhysicsUpdate(float dt)
 
 void Player::Draw(RenderWindow& window)
 {
-	if (SCENE_MGR->GetCurrKey() == Scenes::MAPEDITER || SCENE_MGR->GetCurrKey() == Scenes::PLAY)
 
-	if (!isPlayingGame&&!(SCENE_MGR->GetCurrKey() == Scenes::GAMESTART))
+	if ((!isPlayingGame&&!(SCENE_MGR->GetCurrKey() == Scenes::GAMESTART))&&!(SCENE_MGR->GetCurrKey() == Scenes::MAPLIST))
 		SpriteObj::Draw(window);
 
 	RotateAnimation(window);
