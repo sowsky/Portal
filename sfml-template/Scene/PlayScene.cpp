@@ -68,6 +68,15 @@ void PlayScene::Update(float dt)
 
 	}
 
+	if (player->GetPos().y >= height + 200) {
+		player->Respawn();
+	}
+	for (auto c : cube) {
+		if (c->GetPos().y >= height + 200) {
+			c->Respawn();
+		}
+	}
+
 	MakePortal();
 	MoveToPortal();
 	PushButton();
@@ -121,8 +130,8 @@ void PlayScene::Update(float dt)
 
 	Input();
 
-	light.position.x = 0;
-	light.position.y = height;
+	//light.position.x = 0;
+	//light.position.y = height;
 
 	//light.position.x = GetMouseWorldPos().x;
 	//light.position.y = height - GetMouseWorldPos().y;
@@ -371,10 +380,14 @@ PlayScene::PlayScene(string path)
 					case 'p':
 					case 'P':
 						MakePlayer();
+						box2dposition.x = currgrid.x;
+
 						break;
 					case 'C':
 					case 'c':
 						MakeCube();
+						box2dposition.x = currgrid.x;
+
 						break;
 					case 'b':
 					case 'B':

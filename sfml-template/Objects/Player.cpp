@@ -129,6 +129,7 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	footstepBuffer.loadFromFile("Sound/footstep.wav");
 	footstep.setBuffer(footstepBuffer);
 
+	checkpointpos = position;
 }
 
 Player::~Player()
