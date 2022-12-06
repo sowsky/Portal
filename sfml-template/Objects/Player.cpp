@@ -328,7 +328,7 @@ void Player::WalkAnimaton(float dt)
 		p_rleg.setScale(0.3f, 0.3f);
 		legdir *= -1;
 		groundTime = groundTimeMax;
-		//footstep.play();
+		footstep.play();
 	}
 
 	if (p_rleg.getScale().y < 0.25f)

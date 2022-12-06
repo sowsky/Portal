@@ -125,8 +125,19 @@ void Bridge::Update(float dt)
 		if (!b->GetPressed()) {
 			active = false;
 			destiny.setPosition(startpos);
-			return;
+			hitbox.setPosition(startpos);
+			if (dir == 1 || dir == 3)
+				hitbox.setSize({ 5,50 });
+			else
+				hitbox.setSize({ 50,5 });
+			
 		}
+		
+	}
+	if (!active)
+	{
+		body->SetTransform({ -50,-50 }, 0);
+		return;
 	}
 
 	if (!active) {
@@ -198,8 +209,6 @@ void Bridge::Update(float dt)
 		float y;
 
 		if (dir == 0) {
-
-
 			Utils::SetOrigin(bridge, Origins::TC);
 			bridge.setSize({ bridge.getSize().x ,whohitwall->GetGlobalBounds().top - bridge.getPosition().y });
 			x = bridge.getPosition().x / SCALE;
@@ -242,7 +251,8 @@ void Bridge::Update(float dt)
 			endpos = { bridge.getPosition().x + bridge.getSize().x ,bridge.getPosition().y, };
 		}
 
-		body->SetTransform({ x,y }, 0);
+		bodypos = {x,y};
+		body->SetTransform(bodypos, 0);
 		setedpos = true;
 	}
 
@@ -264,9 +274,9 @@ void Bridge::Draw(RenderWindow& window)
 	if (isPlayingGame)
 	{
 		if (active)
-		{			
+		{
 			if (setedpos) {
-				UpdateBridgeDraw(window);				
+				UpdateBridgeDraw(window);
 			}
 		}
 		if (connected == 0)
@@ -322,11 +332,11 @@ void Bridge::DrawBackSide(RenderWindow& window)
 	{
 		if (active)
 		{
-			if (setedpos) {				
+			if (setedpos) {
 				if (connected == 0)
 					window.draw(backEmitter);
 				window.draw(bridge_rect, bridge_color);
-					
+
 			}
 			window.draw(bridge);
 		}

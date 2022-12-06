@@ -64,6 +64,8 @@ protected:
 
 	Sprite frontEmitter;
 	Sprite backEmitter;	
+
+	b2Vec2 bodypos;
 	
 	VertexArray bridge_rect;
 
