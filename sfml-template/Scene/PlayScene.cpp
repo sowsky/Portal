@@ -121,9 +121,11 @@ void PlayScene::Update(float dt)
 
 	Input();
 
-	/*light.position.x = 0;
-	light.position.y = height;*/
+	light.position.x = 0;
+	light.position.y = height;
 
+	//light.position.x = GetMouseWorldPos().x;
+	//light.position.y = height - GetMouseWorldPos().y;
 }
 
 void PlayScene::PhysicsUpdate(float dt)
@@ -151,12 +153,21 @@ void PlayScene::Draw(RenderWindow& window)
 {
 	window.setView(worldView);
 
-	for (auto v : bridge) {
-		v->DrawBackEmmiter(window);
-	}
+	window.draw(backtemp);
 
 	for (auto v : wall) {
 		v->Draw(window);
+	}
+
+	if (madeorange) {
+		orange->Draw(window);
+	}
+
+	if (madeblue) {
+		blue->Draw(window);
+	}
+
+	for (auto v : wall) {
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
 	}
 
@@ -168,6 +179,10 @@ void PlayScene::Draw(RenderWindow& window)
 	for (auto v : cube) {
 		v->Draw(window);
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
+	}
+
+	for (auto v : bridge) {
+		v->DrawBackSide(window);
 	}
 
 	if (goal != nullptr) {
@@ -187,14 +202,6 @@ void PlayScene::Draw(RenderWindow& window)
 		v->DrawHitbox(window);
 	}*/
 
-
-	if (madeorange) {
-		orange->Draw(window);
-	}
-
-	if (madeblue) {
-		blue->Draw(window);
-	}
 
 	for (auto v : redwall) {
 		v->Draw(window);
@@ -240,6 +247,10 @@ PlayScene::PlayScene(string path)
 		sf::Vector3f(0, 0, 0.08),
 		sf::Vector3f(0.5, 0.5, 0.5)),
 	falloff(0.5, 0.5, 0.5)
+	//light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
+	//	sf::Vector3f(0, 0, 0),
+	//	sf::Vector3f(0.5, 0.5, 0.5)),
+	//falloff(4, 4, 4)
 {
 
 	b2Vec2 g(0.0f, -10);
@@ -407,7 +418,7 @@ PlayScene::PlayScene(string path)
 								templ.clear();
 								wireList.insert({ b, templ });
 							}
-							wireList[b].push_back(tunnel.back()->GetSpritePos());
+							wireList[b].push_back(tunnel.back()->GetStartPos());
 						}
 
 						break;
@@ -427,7 +438,7 @@ PlayScene::PlayScene(string path)
 								templ.clear();
 								wireList.insert({ b, templ });
 							}
-							wireList[b].push_back(bridge.back()->GetSpritePos());
+							wireList[b].push_back(bridge.back()->GetStartPos());
 						}
 						break;
 					}
@@ -447,7 +458,7 @@ PlayScene::PlayScene(string path)
 								templ.clear();
 								wireList.insert({ b, templ });
 							}
-							wireList[b].push_back(redwall.back()->GetSpritePos());
+							wireList[b].push_back(redwall.back()->GetStartPos());
 						}
 						break;
 					}
@@ -504,6 +515,16 @@ PlayScene::PlayScene(string path)
 
 	orangeWire = RESOURCEMGR->GetTexture("Graphics/orange.png");
 	blueWire = RESOURCEMGR->GetTexture("Graphics/blue.png");
+
+	fireBlueBuffer.loadFromFile("Sound/fireblue.wav");
+	fireOrangeBuffer.loadFromFile("Sound/fireorange.wav");
+
+	fireBlue.setBuffer(fireBlueBuffer);
+	fireOrange.setBuffer(fireOrangeBuffer);
+
+	backtemp.setTexture(*RESOURCEMGR->GetTexture("Graphics/tempback.png"));
+	backtemp.setPosition(200.f, 200.f);
+	
 }
 
 void PlayScene::MakeWall(bool isEnd)
@@ -723,7 +744,7 @@ void PlayScene::MakePortal()
 	else if (bluecollidercount == 2) {
 		//bottom
 		if (bluetlhit && bluetrhit) {
-			blue->SetLightDir(90);
+			blue->SetLightDir(90, false);
 			blue->SetSize({ 50,20 });
 			blue->SetPos({ blue->GetPos().x,sety });
 			blue->SetPortalDir(2);
@@ -731,7 +752,7 @@ void PlayScene::MakePortal()
 		}
 		//left
 		else if (bluetrhit && bluebrhit) {
-			blue->SetLightDir(180);
+			blue->SetLightDir(180, true);
 			blue->SetSize({ 20,50 });
 			blue->SetPos({ setx,blue->GetPos().y });
 			blue->SetPortalDir(3);
@@ -739,7 +760,7 @@ void PlayScene::MakePortal()
 		}
 		//top
 		else if (blueblhit && bluebrhit) {
-			blue->SetLightDir(270);
+			blue->SetLightDir(270, false);
 			blue->SetSize({ 50,20 });
 			blue->SetPos({ blue->GetPos().x,sety });
 			blue->SetPortalDir(0);
@@ -748,7 +769,7 @@ void PlayScene::MakePortal()
 		}
 		//right
 		else if (bluetlhit && blueblhit) {
-			blue->SetLightDir(0);
+			blue->SetLightDir(0, true);
 			blue->SetSize({ 20,50 });
 			blue->SetPos({ setx,bluey });
 			blue->SetPortalDir(1);
@@ -867,7 +888,7 @@ void PlayScene::MakePortal()
 	else if (orangecollidercount == 2) {
 		//bottom
 		if (orangetlhit && orangetrhit) {
-			orange->SetLightDir(90);
+			orange->SetLightDir(90, false);
 			orange->SetSize({ 50,20 });
 			orange->SetPos({ orange->GetPos().x,orangesety });
 			orange->SetPortalDir(2);
@@ -875,7 +896,7 @@ void PlayScene::MakePortal()
 		}
 		//left
 		else if (orangetrhit && orangebrhit) {
-			orange->SetLightDir(180);
+			orange->SetLightDir(180, true);
 			orange->SetSize({ 20,50 });
 			orange->SetPos({ orangesetx,orange->GetPos().y });
 			orange->SetPortalDir(3);
@@ -883,7 +904,7 @@ void PlayScene::MakePortal()
 		}
 		//top
 		else if (orangeblhit && orangebrhit) {
-			orange->SetLightDir(270);
+			orange->SetLightDir(270, false);
 			orange->SetSize({ 50,20 });
 			orange->SetPos({ orange->GetPos().x,orangesety });
 			orange->SetPortalDir(0);
@@ -892,7 +913,7 @@ void PlayScene::MakePortal()
 		}
 		//right
 		else if (orangetlhit && orangeblhit) {
-			orange->SetLightDir(0);
+			orange->SetLightDir(0, true);
 			orange->SetSize({ 20,50 });
 			orange->SetPos({ orangesetx,orangey });
 
@@ -1400,7 +1421,7 @@ void PlayScene::Input()
 	}
 	if (InputMgr::GetMouseWheelState() == -1)
 	{
-		if (worldView.getSize().x > 1400.f || openingTime > 0.f)
+		if (worldView.getSize().x > 2800.f || openingTime > 0.f)
 			return;
 
 		worldView.zoom(1.12f);
@@ -1498,6 +1519,8 @@ void PlayScene::Input()
 		madeblue = false;
 		blue->SetPos(player->GetClaviclePos());
 		blue->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
+		////////////////////
+		fireBlue.play();
 	}
 
 	
@@ -1572,6 +1595,8 @@ void PlayScene::Input()
 		madeorange = false;
 		orange->SetPos(player->GetClaviclePos());
 		orange->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
+		/////////////////////
+		fireOrange.play();
 	}
 
 	if (grabitem) {
@@ -1656,8 +1681,10 @@ void PlayScene::ClearRenderBuffer()
 {
 	back->clear();
 	front->clear();
+	//pass_diffuse.clear(Color::White);
 	pass_diffuse.clear(Color::Transparent);
 	// Set normals buffer to neutral color
+	//pass_normals.clear(Color::White);
 	pass_normals.clear(Color(128, 128, 255));
 }
 

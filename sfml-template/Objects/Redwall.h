@@ -23,6 +23,8 @@ public:
 	FloatRect GetredwallGlobalBound() { return redwall.getGlobalBounds(); }
 
 	void Setwhohitwall(SpriteObj* wall) { whohitwall = wall; }
+
+	Vector2f GetStartPos() { return startpos; }
 private:
 	RectangleShape redwall;
 	list<Button*> button;

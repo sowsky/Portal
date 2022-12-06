@@ -14,12 +14,22 @@ public:
 	virtual void Draw(RenderWindow& window);
 	void SetPortalDir(int side) { dir = side; }
 	int GetPortalDir() { return dir; }
-	void SetLightDir(int side);
+	void SetLightDir(int side, bool texdir);
+
+	void DrawPortalArray(RenderWindow& window);
+	virtual void SetSize(Vector2f size);
 protected:
 	RectangleShape* hitbox;
 	float projectilespeed = 2000.f;
 	int dir;
-	RadialLight light;
+	//RadialLight light;
+	DirectedLight light;
 	EdgeVector edges;
+
+	VertexArray portalArray;
+	Texture* orangeTex;
+	RectangleShape backFace;
+	RectangleShape frontFace;
+	bool texStand;
 };
 

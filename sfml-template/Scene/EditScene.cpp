@@ -363,6 +363,16 @@ void EditScene::ReleaseMapTool()
 
 			for (auto array : mapTool[i][j].first)
 			{
+				if (array->GetObjType() == ObjectType::Trigger
+					&& array != nullptr)
+				{
+					WireableObject* tempw = (WireableObject*)array;
+					for (auto w : tempw->GetWireList())
+					{
+						w->isActive = false;
+					}
+				}
+
 				if (array != nullptr)
 				{
 					delete array;
@@ -611,6 +621,9 @@ void EditScene::Input(float dt)
 	if (InputMgr::GetKeyDown(Keyboard::Numpad6) ||
 		InputMgr::GetKeyDown(Keyboard::Right))
 	{
+		if (rowNum > mapTool.size() -1)
+			return;
+
 		rowNum++;
 		SetMapToolSize();
 	}
@@ -625,6 +638,9 @@ void EditScene::Input(float dt)
 	if (InputMgr::GetKeyDown(Keyboard::Numpad8) ||
 		InputMgr::GetKeyDown(Keyboard::Up))
 	{
+		if (colNum > mapTool.size() -1)
+			return;
+
 		colNum++;
 		SetMapToolSize();
 	}

@@ -7,6 +7,7 @@
 #include "../Objects/Goal.h"
 #include <box2d/box2d.h>
 #include "../Particle/ParticleSystem.h"
+#include <SFML/Audio.hpp>
 
 //////////////////////////
 #include <Candle/Candle.hpp>
@@ -141,12 +142,14 @@ private:
 
 	Light light;
 
+	//float ambient_intensity = 0.0;
 	float ambient_intensity = 0.7;
 	Vector3f falloff;
 	/////
 	Sprite crosshair;
 
-	float openingTime = 1.5f;	
+	//float openingTime = 1.5f;	
+	float openingTime = 0.f;	
 	map<int, list<Vector2f>> wireList;
 	list<PsceneWire*> wires;
 
@@ -154,5 +157,14 @@ private:
 	Texture* blueWire;
 
 	bool showWire;
+
+	SoundBuffer fireBlueBuffer;
+	SoundBuffer fireOrangeBuffer;
+
+	Sound fireBlue;
+	Sound fireOrange;
+
+	Sprite backtemp;	
+	
 };
 

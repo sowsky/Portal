@@ -17,15 +17,6 @@ WireableObject::WireableObject()
 
 WireableObject::~WireableObject()
 {
-	//if (!numbox.empty())
-	//{
-	//	for (auto i : numbox)
-	//	{
-	//		delete i;
-	//	}
-	//}
-	//numbox.clear();
-
 	if (type == ObjectType::Trigger
 		&& !wires.empty())
 	{
@@ -108,16 +99,7 @@ void WireableObject::WireModDraw(RenderWindow& window)
 		if (phase == Phase::CatcherSelect
 			&& type == ObjectType::Catcher)
 			window.draw(wireCheckBox);
-	}
-
-	//if (!numbox.empty() && isWiring)
-	//{
-	//	for (auto i : numbox)
-	//	{
-	//		i->Draw(window);
-	//	}
-	//}
-	
+	}	
 }
 
 void WireableObject::DrawWire(RenderWindow& window)
@@ -173,7 +155,7 @@ void WireableObject::DrawWire(RenderWindow& window)
 			wires.back()->isConnected = true;
 			targetCatcherPtr = nullptr;
 			currWire = nullptr;
-			phase = Phase::TriggerSelect;			
+			phase = Phase::TriggerSelect;	
 		}
 	}
 
@@ -182,16 +164,6 @@ void WireableObject::DrawWire(RenderWindow& window)
 		{
 			if (w->isActive)
 			{
-				//cout
-				//	<< "시작점 : "
-				//	<< w->wire[0].position.x
-				//	<< ", "
-				//	<< w->wire[0].position.y
-				//	<< "도착점 : "
-				//	<< w->wire[1].position.x
-				//	<< ", "
-				//	<< w->wire[1].position.y
-				//	<< endl << endl;
 				window.draw(w->wire, blue);
 			}
 		}

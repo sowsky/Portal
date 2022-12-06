@@ -116,8 +116,8 @@ void Bridge::Update(float dt)
 {
 	Utils::SetOrigin(start, Origins::MC);
 
-	/*if (InputMgr::GetKeyDown(Keyboard::R))
-		active = !active;*/
+	//if (InputMgr::GetKeyDown(Keyboard::R))
+	//	active = !active;
 
 	active = true;
 
@@ -263,18 +263,14 @@ void Bridge::Draw(RenderWindow& window)
 {
 	if (isPlayingGame)
 	{
-
 		if (active)
-		{
-			window.draw(bridge);
+		{			
 			if (setedpos) {
-				UpdateBridgeDraw(window);
-				window.draw(bridge_rect, bridge_color);
-				if (connected == 0)
-					window.draw(frontEmitter);
+				UpdateBridgeDraw(window);				
 			}
 		}
-
+		if (connected == 0)
+			window.draw(frontEmitter);
 		//window.draw(hitbox);
 		//window.draw(start);
 		//window.draw(destiny);		
@@ -320,8 +316,22 @@ void Bridge::UpdateBridgeDraw(RenderWindow& window)
 
 }
 
-void Bridge::DrawBackEmmiter(RenderWindow& window)
+void Bridge::DrawBackSide(RenderWindow& window)
 {
-	if (connected == 0)
-		window.draw(backEmitter);
+	if (isPlayingGame)
+	{
+		if (active)
+		{
+			if (setedpos) {				
+				if (connected == 0)
+					window.draw(backEmitter);
+				window.draw(bridge_rect, bridge_color);
+					
+			}
+			window.draw(bridge);
+		}
+		//window.draw(hitbox);
+		//window.draw(start);
+		//window.draw(destiny);		
+	}
 }
