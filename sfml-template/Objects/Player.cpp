@@ -415,6 +415,12 @@ void Player::ShowBornForDev(RenderWindow& window)
 	window.draw(indicator);
 }
 
+void Player::Respawn()
+{
+	body->SetTransform({ checkpointpos.x / SCALE,checkpointpos.y / SCALE * -1 }, 0);
+	body->SetLinearVelocity({ 0,0 });
+}
+
 Vector2f Player::GetClaviclePos()
 {
 	return right ?
