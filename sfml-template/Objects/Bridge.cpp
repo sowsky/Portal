@@ -76,12 +76,13 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 		bridge.setSize({ 0, bridgeThickness });
 		start.setSize({ 5,50 });
 	}
-	if (connected != 0&&(dir==1||dir==3)) {
+	if (connected != 0) {
 		startpos.y += 25;
 	}
 	start.setPosition(startpos);
 
 	bridge.setFillColor(Color(80, 188, 233, 255));
+	
 
 	this->world = world;
 	b2BodyDef bodyDef;
@@ -124,14 +125,8 @@ void Bridge::Update(float dt)
 	for (auto b : button) {
 		if (!b->GetPressed()) {
 			active = false;
-			destiny.setPosition(startpos);
-			hitbox.setPosition(startpos);
-			if (dir == 1 || dir == 3)
-				hitbox.setSize({ 5,50 });
-			else
-				hitbox.setSize({ 50,5 });
-			body->SetTransform({ -50,-50 }, 0);
-			return;
+			destiny.setPosition(startpos);			
+			
 		}
 	}
 
@@ -145,7 +140,7 @@ void Bridge::Update(float dt)
 				Utils::SetOrigin(bridge, Origins::BC);
 				bridge.setPosition(startpos);
 			}
-			bridge.setSize({ 50,0 });
+			bridge.setSize({ 10,0 });
 		}
 		else {
 			if (dir == 1) {
@@ -157,10 +152,23 @@ void Bridge::Update(float dt)
 				bridge.setPosition(startpos);
 
 			}
-			bridge.setSize({ 0,50 });
+			bridge.setSize({ 0,10 });
 		}
 		hitbox.setSize(bridge.getSize());
 		hitwall = false;
+
+		if (fixture != nullptr) {
+			body->DestroyFixture(body->GetFixtureList());
+		}
+
+		b2PolygonShape boxShape;
+		boxShape.SetAsBox(-1, -1);
+
+		b2FixtureDef fixtureDef;
+		fixtureDef.shape = &boxShape;
+		fixtureDef.density = 1;
+		fixtureDef.friction = 0.3f;
+		fixture = body->CreateFixture(&fixtureDef);
 
 		return;
 	}
@@ -204,6 +212,8 @@ void Bridge::Update(float dt)
 		float y;
 
 		if (dir == 0) {
+
+
 			Utils::SetOrigin(bridge, Origins::TC);
 			bridge.setSize({ bridge.getSize().x ,whohitwall->GetGlobalBounds().top - bridge.getPosition().y });
 			x = bridge.getPosition().x / SCALE;
@@ -246,8 +256,7 @@ void Bridge::Update(float dt)
 			endpos = { bridge.getPosition().x + bridge.getSize().x ,bridge.getPosition().y, };
 		}
 
-		bodypos = {x,y};
-		body->SetTransform(bodypos, 0);
+		body->SetTransform({ x,y }, 0);
 		setedpos = true;
 	}
 
@@ -267,10 +276,15 @@ void Bridge::Update(float dt)
 void Bridge::Draw(RenderWindow& window)
 {
 	if (isPlayingGame)
-	{		
+	{
+		if (active)
+		{
+			if (setedpos) {
+				UpdateBridgeDraw(window);
+			}
+		}
 		if (connected == 0)
 			window.draw(frontEmitter);
-
 		//window.draw(hitbox);
 		//window.draw(start);
 		//window.draw(destiny);		
@@ -291,9 +305,9 @@ void Bridge::SetButtonlist(vector<Button*>& button)
 	}
 }
 
-void Bridge::UpdateEmitter(RenderWindow& window)
+void Bridge::UpdateBridgeDraw(RenderWindow& window)
 {
-	vanishingPoint = window.getView().getCenter();
+	Vector2f vanishingPoint = window.getView().getCenter();
 
 	frontEmitter.setPosition(
 		startpos - (vanishingPoint - startpos) * (1.f - DEPTH)
@@ -302,10 +316,7 @@ void Bridge::UpdateEmitter(RenderWindow& window)
 	backEmitter.setPosition(
 		startpos + (vanishingPoint - startpos) * (1.f - DEPTH)
 	);
-}
 
-void Bridge::UpdateBridgeDraw(RenderWindow& window)
-{
 	front_des_pos = endpos - (vanishingPoint - endpos) * (1.f - DEPTH);
 	back_des_pos = endpos + (vanishingPoint - endpos) * (1.f - DEPTH);
 
@@ -323,16 +334,15 @@ void Bridge::DrawBackSide(RenderWindow& window)
 {
 	if (isPlayingGame)
 	{
-		UpdateEmitter(window);
-		if (connected == 0)
-			window.draw(backEmitter);
 		if (active)
 		{
-			UpdateBridgeDraw(window);
 			if (setedpos) {
+				if (connected == 0)
+					window.draw(backEmitter);
 				window.draw(bridge_rect, bridge_color);
-				window.draw(bridge);
+
 			}
+			window.draw(bridge);
 		}
 		//window.draw(hitbox);
 		//window.draw(start);

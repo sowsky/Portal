@@ -103,10 +103,8 @@ void Tunnel::Update(float dt)
 		if (!b->GetPressed()) {
 			active = false;
 			destiny.setPosition(startpos);
-			return;
 		}
 	}
-	//active door
 
 	if (!active) {
 		if (dir == 0 || dir == 2) {
@@ -133,7 +131,10 @@ void Tunnel::Update(float dt)
 			tuns.setSize({ 0,50 });
 		}
 		hitbox.setSize(tuns.getSize());
+		hitbox.setPosition({ -100,-100 });
 		hitwall = false;
+
+		particleNum = 0;
 
 		return;
 	}

@@ -97,11 +97,14 @@ protected:
 
 	bool devMod = false;
 	bool right;
+	bool isJumping = false;
 
 	bool showIndicator = false;
 
 	SoundBuffer footstepBuffer;
 	Sound footstep;
+
+	float pressdt = 0.0f;
 
 };
 
