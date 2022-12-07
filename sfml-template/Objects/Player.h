@@ -45,6 +45,7 @@ public:
 	void ShowIndicator(RenderWindow& window);
 	void Respawn();
 
+	void SetFlying(bool a) { isFlying = a; }
 
 	Vector2f GetClaviclePos();
 	Vector2f GetIndicator();
@@ -91,6 +92,7 @@ protected:
 
 	float jumpcooltime = 0;
 	bool startMove;
+	bool isFlying;
 	float legdir = 1.f;
 	float groundTime = 0.25f;
 	float groundTimeMax = 0.0f;
