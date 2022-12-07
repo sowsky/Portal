@@ -29,12 +29,12 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 	if (dir == 0 || dir == 2) {
 		if (dir == 0) {
 			Utils::SetOrigin(tuns, Origins::TC);
-			startpos = { position.x, position.y - GRIDSIZE / 2 };
+			startpos = { position.x, position.y+1 - GRIDSIZE / 2 };
 			tuns.setPosition(startpos);
 		}
 		else if (dir == 2) {
 			Utils::SetOrigin(tuns, Origins::BC);
-			startpos = { position.x,position.y + GRIDSIZE / 2 };
+			startpos = { position.x,position.y-1 + GRIDSIZE / 2 };
 			tuns.setPosition(startpos);
 		}
 		tuns.setSize({ 50,0 });
@@ -43,12 +43,12 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 	else {
 		if (dir == 1) {
 			Utils::SetOrigin(tuns, Origins::MR);
-			startpos = { position.x + GRIDSIZE / 2,position.y };
+			startpos = { position.x-1 + GRIDSIZE / 2,position.y };
 			tuns.setPosition(startpos);
 		}
 		else if (dir == 3) {
 			Utils::SetOrigin(tuns, Origins::ML);
-			startpos = { position.x - GRIDSIZE / 2+2 ,position.y };
+			startpos = { position.x+1 - GRIDSIZE / 2+2 ,position.y };
 			tuns.setPosition(startpos);
 
 		}

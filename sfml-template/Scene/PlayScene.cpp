@@ -21,7 +21,7 @@ void PlayScene::Update(float dt)
 	//////////////////////////////////////////////////////
 	if (goal->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (goal->IsFinish()) {
-			dark += dt * 200;
+			dark += dt * 400;
 			ending.setFillColor(Color(0, 0, 0, dark));
 		}
 		if (dark >= 255) {
@@ -31,7 +31,7 @@ void PlayScene::Update(float dt)
 	}
 	else {
 		if (dark > 0) {
-			dark -= dt * 200;
+			dark -= dt * 100;
 			ending.setFillColor(Color(0, 0, 0, dark));
 			if (dark < 0)
 				dark = 0;
@@ -56,16 +56,20 @@ void PlayScene::Update(float dt)
 	for (auto r : redwall) {
 		r->Update(dt);
 	}
-
+	for (auto w : water) {
+		w->Update(dt);
+	}
 	blue->Update(dt);
 	orange->Update(dt);
+
+
 
 
 	if (!isMovingViewCenter) {
 
 		Vector2f currentcampos = worldView.getCenter();
 		worldView.setCenter(Utils::Lerp(currentcampos.x, player->GetPos().x, dt * 4), Utils::Lerp(currentcampos.y, player->GetPos().y, dt * 4));
-
+		//worldView.setCenter(water[0]->GetWater().left, water[0]->GetWater().top);
 	}
 
 	if (player->GetPos().y >= height + 200) {
@@ -83,7 +87,8 @@ void PlayScene::Update(float dt)
 	TunnelCheck();
 	BridgeCheck();
 	RedwallCheck();
-
+	WaterCheck(dt);
+	 
 	if (IsMadeTunnelFollowOrangePortal || IsMadeTunnelFollowBluePortal)
 		CheckStillObjectalive();
 
@@ -185,6 +190,9 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
 	}
 
+	for (auto v : water)
+		v->Draw(window);
+
 	for (auto v : cube) {
 		v->Draw(window);
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
@@ -243,7 +251,6 @@ void PlayScene::Draw(RenderWindow& window)
 			else
 				w->SetColor(Color(BLUE));
 			window.draw(w->wire);
-			
 		}
 	}
 
@@ -482,6 +489,16 @@ PlayScene::PlayScene(string path)
 							}
 							wireList[b].push_back(redwall.back()->GetStartPos());
 						}
+						break;
+					}
+					case 'w':
+					case 'W':
+					{
+						Water_struct* tempW = (Water_struct*)obj;
+						water.push_back(new Water(currgrid));
+
+						currgrid.x += GRIDSIZE;
+						box2dposition.x += GRIDSIZE;
 						break;
 					}
 					}
@@ -971,7 +988,6 @@ void PlayScene::MakePortal()
 		SetTex(crosshair, "Graphics/crosshair/alloff.png");
 	}
 
-
 }
 
 void PlayScene::MakeGoal(vector<int> list)
@@ -991,26 +1007,43 @@ void PlayScene::MakeTunnel(string dir, string id)
 	//tunnel.push_back(new Tunnel(currgrid, d, dir));
 }
 
+void PlayScene::Respawn()
+{
+	player->Respawn();
+	madeblue = false;
+	madeorange = false;
+	blue->SetPos({ -100,-100 });
+	orange->SetPos({ -100,-100 });
+	blue->SetDir({ 0,0 });
+	orange->SetDir({ 0,0 });
+	for (auto c : cube) {
+		c->Respawn();
+	}
+	if (grabitem) {
+		grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(false);
+		grabbedcube = nullptr;
+		grabitem = false;
+
+	}
+
+	dark = 0;
+}
+
 void PlayScene::PushButton()
 {
-	//for (auto b : button) {
-	//	if (b->GetPressed())
-	//		continue;
+	///////////not push
+	for (auto b : button) {
+		if (b->GetPressed())
+			continue;
 
-	//	if (b->GetGlobalBounds().intersects(player->GethitboxGlobalBounds())) {
-	//		b->SetPressed(true);
-	//		break;
-	//	}
+		if (player->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
+			b->SetPressed(true);
+			break;
+		}
 
-	//}
+	}
 
-	//for (auto b : button) {
-	//	if (!b->GetPressed())
-	//		continue;
-	//	if (b->GetGlobalBounds().intersects(player->GethitboxGlobalBounds())) {
-	//		b->SetPressed(false);
-	//	}
-	//}
+	///////////////////////////button////////////////////////////////////
 
 	for (auto b : button) {
 		if (b->GetPressed())
@@ -1037,9 +1070,26 @@ void PlayScene::PushButton()
 		}
 		if (off)
 			b->SetPressed(false);
-
 	}
 
+	for (auto b : button) {
+		if (!b->GetPressed())
+			continue;
+
+		for (auto c : cube) {
+			if (b->GetHitbox()->getGlobalBounds().intersects(c->GetGlobalBounds())) {
+				continue;
+			}
+			b->SetPressed(false);
+			break;
+		}
+		if (!b->GetPressed())
+			break;
+
+		if (!player->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds()))
+			b->SetPressed(false);
+
+	}
 
 }
 
@@ -1138,7 +1188,7 @@ void PlayScene::TunnelCheck()
 			}
 		}
 
-		//////////////////cube check/////////////////////////
+		/////////////////////////////////cube check//////////////////////////////////
 		for (auto c : cube) {
 			if (t->GetHitBoxGlobalbound().intersects(c->GetGlobalBounds())) {
 				if (t->GetDir() == 0) {
@@ -1269,6 +1319,29 @@ void PlayScene::RedwallCheck()
 			}
 		}
 	}
+}
+
+void PlayScene::WaterCheck(float dt)
+{
+	for (auto w : water) {
+		if (w->GetWaterGlobalBounds().intersects(player->GethitboxGlobalBounds())) {
+			dark += dt * 400;
+			cout << dark << endl;
+			ending.setFillColor(Color(0, 0, 0, dark));
+			if (dark >= 255) {
+				Respawn();
+			}
+
+		}
+
+		for (auto c : cube) {
+			if (c->GetGlobalBounds().intersects(w->GetWaterGlobalBounds())) {
+				c->Respawn();
+			}
+		}
+	}
+
+
 }
 
 void PlayScene::CheckStillObjectalive()
@@ -1538,7 +1611,7 @@ void PlayScene::Input()
 		madeblue = false;
 		blue->SetPos(player->GetClaviclePos());
 		blue->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetClaviclePos()));
-		
+
 		////////////////////
 		fireBlue.play();
 	}
@@ -1651,25 +1724,6 @@ void PlayScene::Input()
 		return;
 	}
 
-
-	if (InputMgr::GetKeyDown(Keyboard::R))
-	{
-		player->Respawn();
-		madeblue = false;
-		madeorange = false;
-		blue->SetPos({ -100,-100 });
-		orange->SetPos({ -100,-100 });
-		for (auto c : cube) {
-			c->Respawn();
-		}
-		if (grabitem) {
-			grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(false);
-			grabbedcube = nullptr;
-			grabitem = false;
-
-		}
-	}
-
 }
 
 void PlayScene::LightTestInputForDev()
@@ -1742,8 +1796,9 @@ void PlayScene::MoveToPortal()
 		return;
 	}
 	if (madeblue && blue->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
+		player->SetFlying(true);
 		cout << player->GetRecentSpeed().y << endl;
-		float recent = player->GetPlayerBodyLinearVelocity().y*-1;
+		float recent = player->GetPlayerBodyLinearVelocity().y * -1;
 		if ((int)recent <= 2)
 			recent = 1;
 
@@ -1773,6 +1828,7 @@ void PlayScene::MoveToPortal()
 
 	//////////////////////////////move to blue//////////////////////////////////////
 	if (madeorange && orange->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
+		player->SetFlying(true);
 		cout << player->GetRecentSpeed().y << endl;
 
 		float recent = player->GetRecentSpeed().y * -1;
@@ -1940,7 +1996,7 @@ void PlayScene::MoveToPortal()
 		}
 	}
 
-	////////////////////////////bridge////////////////////////
+	////////////////////////////////////////////bridge/////////////////////////////////////////
 	for (int i = 0; i < (int)bridge.size(); i++) {
 
 		//hit blue
@@ -2040,12 +2096,18 @@ void PlayScene::Release()
 	}
 	tunnel.clear();
 
+	for (auto v : water) {
+		delete v;
+	}
+	water.clear();
+
 	if (orange != nullptr)
 		delete orange;
 	if (blue != nullptr)
 		delete blue;
 	if (goal != nullptr)
 		delete goal;
+
 
 	/*if (grabbedcube != nullptr)
 		delete grabbedcube;*/
