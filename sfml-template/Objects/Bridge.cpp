@@ -82,6 +82,7 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 	start.setPosition(startpos);
 
 	bridge.setFillColor(Color(80, 188, 233, 255));
+	
 
 	this->world = world;
 	b2BodyDef bodyDef;
@@ -124,8 +125,8 @@ void Bridge::Update(float dt)
 	for (auto b : button) {
 		if (!b->GetPressed()) {
 			active = false;
-			destiny.setPosition(startpos);
-			return;
+			destiny.setPosition(startpos);			
+			
 		}
 	}
 
@@ -139,7 +140,7 @@ void Bridge::Update(float dt)
 				Utils::SetOrigin(bridge, Origins::BC);
 				bridge.setPosition(startpos);
 			}
-			bridge.setSize({ 50,0 });
+			bridge.setSize({ 10,0 });
 		}
 		else {
 			if (dir == 1) {
@@ -151,10 +152,23 @@ void Bridge::Update(float dt)
 				bridge.setPosition(startpos);
 
 			}
-			bridge.setSize({ 0,50 });
+			bridge.setSize({ 0,10 });
 		}
 		hitbox.setSize(bridge.getSize());
 		hitwall = false;
+
+		if (fixture != nullptr) {
+			body->DestroyFixture(body->GetFixtureList());
+		}
+
+		b2PolygonShape boxShape;
+		boxShape.SetAsBox(-1, -1);
+
+		b2FixtureDef fixtureDef;
+		fixtureDef.shape = &boxShape;
+		fixtureDef.density = 1;
+		fixtureDef.friction = 0.3f;
+		fixture = body->CreateFixture(&fixtureDef);
 
 		return;
 	}

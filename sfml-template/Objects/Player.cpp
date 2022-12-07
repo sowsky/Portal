@@ -186,14 +186,18 @@ void Player::Update(float dt)
 
 void Player::PhysicsUpdate(float dt)
 {
+
 	if ((InputMgr::GetKey(Keyboard::A) || InputMgr::GetKey(Keyboard::D)) && body->GetLinearVelocity().y == 0) {
-		body->ApplyLinearImpulse({ 0,0.5f }, GetPlayerBodyLinearVelocity(), 1);
-		if ((int)body->GetLinearVelocity().x == 0 && body->GetLinearVelocity().y > 0) {
-			body->SetLinearVelocity({ body->GetLinearVelocity().x,-0.1f });
+		if (pressdt >= 0.5) {
+			body->ApplyLinearImpulse({ 0,0.5f }, GetPlayerBodyLinearVelocity(), 1);
+			if ((int)body->GetLinearVelocity().x == 0 && body->GetLinearVelocity().y > 0) {
+				body->SetLinearVelocity({ body->GetLinearVelocity().x,-0.1f });
+			}
 		}
 	}
 	if (dir.x != 0)
 	{
+		pressdt += dt;
 		IsMoving = true;
 		if (body->GetLinearVelocity().x <= 2.5 && body->GetLinearVelocity().x >= -2.5) {
 			body->ApplyForce(b2Vec2({ dir.x * 10 ,0.f }), body->GetWorldCenter(), true);
@@ -202,29 +206,24 @@ void Player::PhysicsUpdate(float dt)
 	}
 	else
 	{
+		pressdt = 0;
 		IsMoving = false;
+		//if (!isJumping)
+			body->SetLinearVelocity({ 0,body->GetLinearVelocity().y });
 	}
-	
-	
 
-	jumpcooltime += dt;
-	if ((int)recentspeed.y >= 4) {
+	if (InputMgr::GetKeyDown(Keyboard::Space)&&abs(GetRecentSpeed().y)==0) {
+		isJumping = true;
+		body->ApplyLinearImpulse({ 0,3.f }, GetPlayerBodyLinearVelocity(), 1);
 		jumpcooltime = 0;
 	}
-	if (jumpcooltime >= 0.8) {
-		if (InputMgr::GetKeyDown(Keyboard::Space) && (int)abs(recentspeed.y) <= 1) {
-			body->ApplyLinearImpulse({ 0,3.f }, GetPlayerBodyLinearVelocity(), 1);
-			jumpcooltime = 0;
-		}
-	}
-
 
 }
 
 void Player::Draw(RenderWindow& window)
 {
 
-	if ((!isPlayingGame&&!(SCENE_MGR->GetCurrKey() == Scenes::GAMESTART))&&!(SCENE_MGR->GetCurrKey() == Scenes::MAPLIST))
+	if ((!isPlayingGame && !(SCENE_MGR->GetCurrKey() == Scenes::GAMESTART)) && !(SCENE_MGR->GetCurrKey() == Scenes::MAPLIST))
 		SpriteObj::Draw(window);
 
 	RotateAnimation(window);
@@ -266,7 +265,7 @@ void Player::BodySetDoubleScale()
 	p_head.setScale(2, 2);
 	p_arm.setScale(2, 2);
 	portalGun.setScale(2, 2);
-	
+
 
 }
 
@@ -340,7 +339,7 @@ void Player::WalkAnimaton(float dt)
 	}
 
 	p_lleg.setScale(0.3f, 0.55f - p_rleg.getScale().y);
-	
+
 }
 
 void Player::RotateAnimation(RenderWindow& window)
@@ -426,7 +425,7 @@ Vector2f Player::GetClaviclePos()
 	return right ?
 		clavicle.getTransform().transformPoint(clavicle.getPoint(1))
 		:
-		clavicle.getTransform().transformPoint(clavicle.getPoint(0));	
+		clavicle.getTransform().transformPoint(clavicle.getPoint(0));
 }
 
 Vector2f Player::GetIndicator()
