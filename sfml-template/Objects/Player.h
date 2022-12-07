@@ -42,7 +42,7 @@ public:
 	void WalkAnimaton(float dt);
 	void RotateAnimation(RenderWindow& window);
 	void ShowBornForDev(RenderWindow& window);
-	void Respawn() { body->SetTransform({ checkpointpos.x / SCALE,checkpointpos.y / SCALE * -1 }, 0); }
+	void Respawn();
 
 	Vector2f GetClaviclePos();
 	Vector2f GetIndicator();

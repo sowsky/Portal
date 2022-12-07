@@ -104,7 +104,7 @@ void PlayScene::Update(float dt)
 			if (c->GethitboxGlobalBounds().intersects(player->GetGlobalBounds()) && InputMgr::GetKeyDown(Keyboard::E)) {
 				if (!grabitem) {
 					cout << "pickup" << endl;
-	
+
 
 					grabitem = true;
 					grabbedcube = c;
@@ -112,7 +112,7 @@ void PlayScene::Update(float dt)
 					if (player->GetPositions().x <= cposX)
 					{
 						//	c->SetSide(true);
-							c->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
+						c->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
 					}
 					else if (player->GetPos().x > cposX) {
 						//c->SetSide(false);
@@ -241,7 +241,7 @@ void PlayScene::Draw(RenderWindow& window)
 			window.draw(w->wire,
 				w->isOn ? orangeWire : blueWire);
 		}
-	}	
+	}
 
 	window.setView(uiView);
 	window.draw(crosshair);
@@ -409,9 +409,9 @@ PlayScene::PlayScene(string path)
 							{
 								list<Vector2f> templ;
 								templ.clear();
-								wireList.insert({ b, templ });								
+								wireList.insert({ b, templ });
 							}
-							wireList[b].push_back(goal->GetSpritePos());							
+							wireList[b].push_back(goal->GetSpritePos());
 						}
 						break;
 					}
@@ -537,7 +537,7 @@ PlayScene::PlayScene(string path)
 
 	backtemp.setTexture(*RESOURCEMGR->GetTexture("Graphics/tempback.png"));
 	backtemp.setPosition(200.f, 200.f);
-	
+
 }
 
 void PlayScene::MakeWall(bool isEnd)
@@ -1056,7 +1056,7 @@ void PlayScene::TunnelCheck()
 				t->Setwhohitwall(*w);
 			}
 		}
-	}	
+	}
 
 	for (auto t : tunnel) {
 		//////////////////////player check//////////////////////////
@@ -1252,7 +1252,7 @@ void PlayScene::RedwallCheck()
 		}
 		for (auto c : cube) {
 			if (r->GetredwallGlobalBound().intersects(c->GethitboxGlobalBounds())) {
-				if (grabitem) {			
+				if (grabitem) {
 
 					grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(false);
 
@@ -1536,7 +1536,7 @@ void PlayScene::Input()
 		fireBlue.play();
 	}
 
-	
+
 	//orange
 	if (InputMgr::GetMouseButtonDown(Mouse::Right) && !grabitem) {
 		auto it = tunnel.begin();
@@ -1620,7 +1620,7 @@ void PlayScene::Input()
 			dir.x = 50;
 		if (!player->IsMouseRight())
 			dir.x = -50;
-			float x = Utils::Lerp(grabbedcube->GetPos().x, dir.x + player->GetPos().x, 0.5f);
+		float x = Utils::Lerp(grabbedcube->GetPos().x, dir.x + player->GetPos().x, 0.5f);
 
 		Vector2f real(dir.x + player->GetPos().x, player->GetPos().y - 25);
 		grabbedcube->GetBody()->SetTransform({ real.x / SCALE,real.y / SCALE * -1 }, grabbedcube->GetBody()->GetAngle());
@@ -1642,6 +1642,25 @@ void PlayScene::Input()
 		else
 			SCENE_MGR->ChangeScene(Scenes::GAMESTART);
 		return;
+	}
+
+
+	if (InputMgr::GetKeyDown(Keyboard::R))
+	{
+		player->Respawn();
+		madeblue = false;
+		madeorange = false;
+		blue->SetPos({ -100,-100 });
+		orange->SetPos({ -100,-100 });
+		for (auto c : cube) {
+			c->Respawn();
+		}
+		if (grabitem) {
+			grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(false);
+			grabbedcube = nullptr;
+			grabitem = false;
+
+		}
 	}
 
 }
@@ -1716,16 +1735,16 @@ void PlayScene::MoveToPortal()
 		return;
 	}
 	if (madeblue && blue->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
-		if (orange->GetPortalDir() == 0) {
+		cout << player->GetRecentSpeed().y << endl;
+		float recent = player->GetPlayerBodyLinearVelocity().y*-1;
+		if ((int)recent <= 2)
+			recent = 1;
 
+		if (orange->GetPortalDir() == 0) {
 			player->SetPlayerBodyPos({ orange->GetPos().x,orange->GetPos().y - player->GetGlobalBounds().height });
-			if (abs(player->GetRecentSpeed().y) <= 0.5f) {
-				player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,1.f });
-			}
-			else {
-				player->GetBody()->SetLinearVelocity({ 0,0 });
-				player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,player->GetRecentSpeed().y * -1 });
-			}
+			player->GetBody()->SetLinearVelocity({ 0,0 });
+			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,recent });
+			cout << player->GetRecentSpeed().y * -1 << endl;
 
 		}
 		else if (orange->GetPortalDir() == 1) {
@@ -1747,17 +1766,17 @@ void PlayScene::MoveToPortal()
 
 	//////////////////////////////move to blue//////////////////////////////////////
 	if (madeorange && orange->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
+		cout << player->GetRecentSpeed().y << endl;
+
+		float recent = player->GetRecentSpeed().y * -1;
+		if ((int)recent <= 2)
+			recent = 1;
+
 		if (blue->GetPortalDir() == 0) {
 			player->SetPlayerBodyPos({ blue->GetPos().x,blue->GetPos().y - player->GetGlobalBounds().height });
-			if (abs(player->GetRecentSpeed().y) <= 0.5f) {
-				player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,1.f });
-
-			}
-			else {
-				player->GetBody()->SetLinearVelocity({ 0,0 });
-				player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,player->GetRecentSpeed().y * -1 });
-
-			}
+			player->GetBody()->SetLinearVelocity({ 0,0 });
+			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,recent });
+			cout << player->GetRecentSpeed().y * -1 << endl;
 
 		}
 		else if (blue->GetPortalDir() == 1) {
@@ -1799,9 +1818,9 @@ void PlayScene::MoveToPortal()
 			}
 			else if (orange->GetPortalDir() == 2) {
 				c->SetCubeBodyPos({ orange->GetPos().x ,orange->GetPos().y + c->GetGlobalBounds().height });
-				c->GetBody()->SetLinearVelocity({ c->GetCubeBodyForce().x,c->GetRecentSpeed().y-1 });
+				c->GetBody()->SetLinearVelocity({ c->GetCubeBodyForce().x,c->GetRecentSpeed().y - 1 });
 
-				
+
 			}
 			else if (orange->GetPortalDir() == 3) {
 				c->SetCubeBodyPos({ orange->GetPos().x - c->GetGlobalBounds().width ,orange->GetPos().y });
@@ -1830,7 +1849,7 @@ void PlayScene::MoveToPortal()
 			}
 			else if (blue->GetPortalDir() == 2) {
 				c->SetCubeBodyPos({ blue->GetPos().x ,blue->GetPos().y + c->GetGlobalBounds().height });
-				c->GetBody()->SetLinearVelocity({ c->GetCubeBodyForce().x,c->GetRecentSpeed().y-1});
+				c->GetBody()->SetLinearVelocity({ c->GetCubeBodyForce().x,c->GetRecentSpeed().y - 1 });
 			}
 			else if (blue->GetPortalDir() == 3) {
 				c->SetCubeBodyPos({ blue->GetPos().x - c->GetGlobalBounds().width ,blue->GetPos().y });
@@ -2064,7 +2083,7 @@ void PlayScene::Enter()
 	pass_diffuse.create(width, height);
 
 	lights_shader.loadFromFile("Shader/light.frag", Shader::Fragment);
-	normals_shader.loadFromFile("Shader/normals.frag", Shader::Fragment);	
+	normals_shader.loadFromFile("Shader/normals.frag", Shader::Fragment);
 }
 
 void PlayScene::Exit()

@@ -76,7 +76,7 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 		bridge.setSize({ 0, bridgeThickness });
 		start.setSize({ 5,50 });
 	}
-	if (connected != 0) {
+	if (connected != 0&&(dir==1||dir==3)) {
 		startpos.y += 25;
 	}
 	start.setPosition(startpos);
@@ -130,14 +130,9 @@ void Bridge::Update(float dt)
 				hitbox.setSize({ 5,50 });
 			else
 				hitbox.setSize({ 50,5 });
-			
+			body->SetTransform({ -50,-50 }, 0);
+			return;
 		}
-		
-	}
-	if (!active)
-	{
-		body->SetTransform({ -50,-50 }, 0);
-		return;
 	}
 
 	if (!active) {
