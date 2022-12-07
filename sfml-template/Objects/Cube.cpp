@@ -70,7 +70,7 @@ Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
 void Cube::Respawn()
 {
 	body->SetTransform({ startpos.x / SCALE,(startpos.y-10) / SCALE * -1 }, 0);
-	body->SetLinearVelocity({ 0,0 });
+	body->SetLinearVelocity({ 0,-1 });
 }
 
 Cube::~Cube()

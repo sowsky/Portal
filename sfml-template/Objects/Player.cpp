@@ -188,16 +188,26 @@ void Player::Update(float dt)
 void Player::PhysicsUpdate(float dt)
 {
 
+
 	if ((InputMgr::GetKey(Keyboard::A) || InputMgr::GetKey(Keyboard::D)) && body->GetLinearVelocity().y == 0) {
 		if (pressdt >= 0.5) {
-			body->ApplyLinearImpulse({ 0,0.5f }, GetPlayerBodyLinearVelocity(), 1);
-			if ((int)body->GetLinearVelocity().x == 0 && body->GetLinearVelocity().y > 0) {
-				body->SetLinearVelocity({ body->GetLinearVelocity().x,-0.1f });
-			}
+			////body->ApplyLinearImpulse({ 0,0.5f }, GetPlayerBodyLinearVelocity(), 1);
+			//if ((int)body->GetLinearVelocity().x == 0 && body->GetLinearVelocity().y > 0) {
+			//	body->SetLinearVelocity({ body->GetLinearVelocity().x,-0.1f });
+			//}
 		}
 	}
 	if (dir.x != 0)
 	{
+		if (!isFlying) {
+			if (body->GetLinearVelocity().x > 0 && dir.x < 0) {
+				body->SetLinearVelocity({ 0,body->GetLinearVelocity().y });
+			}
+			if (body->GetLinearVelocity().x < 0 && dir.x > 0)
+				body->SetLinearVelocity({ 0,body->GetLinearVelocity().y });
+			cout << body->GetLinearVelocity().x << endl;
+
+		}
 		pressdt += dt;
 		IsMoving = true;
 		if (body->GetLinearVelocity().x <= 2.5 && body->GetLinearVelocity().x >= -2.5) {
@@ -209,15 +219,25 @@ void Player::PhysicsUpdate(float dt)
 	{
 		pressdt = 0;
 		IsMoving = false;
-		//if (!isJumping)
+		if (!isJumping&&!isFlying)
 			body->SetLinearVelocity({ 0,body->GetLinearVelocity().y });
 	}
 
-	if (InputMgr::GetKeyDown(Keyboard::Space)&&abs(GetRecentSpeed().y)==0) {
+	if ((InputMgr::GetKeyDown(Keyboard::Space) && !isJumping) && !isFlying) {
 		isJumping = true;
 		body->ApplyLinearImpulse({ 0,3.f }, GetPlayerBodyLinearVelocity(), 1);
 		jumpcooltime = 0;
 	}
+
+	isFlying = true;
+
+	if ((int)GetRecentSpeed().y >= 0 && body->GetLinearVelocity().y == 0) {
+		isJumping = false;
+
+		if (isFlying)
+			isFlying = false;
+	}
+
 
 }
 
@@ -424,7 +444,7 @@ void Player::ShowIndicator(RenderWindow& window)
 void Player::Respawn()
 {
 	body->SetTransform({ checkpointpos.x / SCALE,checkpointpos.y / SCALE * -1 }, 0);
-	body->SetLinearVelocity({ 0,0 });
+	body->SetLinearVelocity({ 0,-1 });
 }
 
 Vector2f Player::GetClaviclePos()

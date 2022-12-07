@@ -19,30 +19,30 @@ Redwall::Redwall(Vector2f& position, vector<int> buttonlist, bool active, int di
 	if (dir == 0 || dir == 2) {
 		if (dir == 0) {
 			Utils::SetOrigin(redwall, Origins::TC);
-			startpos = { position.x, position.y - GRIDSIZE / 2 };
+			startpos = { position.x, position.y  };
 			redwall.setPosition(startpos);
 		}
 		else if (dir == 2) {
 			Utils::SetOrigin(redwall, Origins::BC);
-			startpos = { position.x,position.y + GRIDSIZE / 2 };
+			startpos = { position.x,position.y  };
 			redwall.setPosition(startpos);
 		}
-		redwall.setSize({ thickness,0 });
+		redwall.setSize({ thickness,10 });
 		//start.setSize({ 50,10 });
 	}
 	else {
 		if (dir == 1) {
 			Utils::SetOrigin(redwall, Origins::MR);
-			startpos = { position.x + GRIDSIZE / 2,position.y };
+			startpos = { position.x ,position.y };
 			redwall.setPosition(startpos);
 		}
 		else if (dir == 3) {
 			Utils::SetOrigin(redwall, Origins::ML);
-			startpos = { position.x - GRIDSIZE / 2+2 ,position.y };
+			startpos = { position.x  ,position.y };
 			redwall.setPosition(startpos);
 
 		}
-		redwall.setSize({ 0,thickness });
+		redwall.setSize({ 10,thickness });
 		//start.setSize({ 10,50 });
 
 	}
@@ -69,26 +69,26 @@ void Redwall::Update(float dt)
 	if (!active) {
 		if (dir == 0 || dir == 2) {
 			if (dir == 0) {
-				Utils::SetOrigin(redwall, Origins::TC);
+				Utils::SetOrigin(redwall, Origins::MC);
 				redwall.setPosition(startpos);
 			}
 			else if (dir == 2) {
-				Utils::SetOrigin(redwall, Origins::BC);
+				Utils::SetOrigin(redwall, Origins::MC);
 				redwall.setPosition(startpos);
 			}
-			redwall.setSize({ thickness,0 });
+			redwall.setSize({ thickness,50 });
 		}
 		else {
 			if (dir == 1) {
-				Utils::SetOrigin(redwall, Origins::MR);
+				Utils::SetOrigin(redwall, Origins::MC);
 				redwall.setPosition(startpos);
 			}
 			else if (dir == 3) {
-				Utils::SetOrigin(redwall, Origins::ML);
+				Utils::SetOrigin(redwall, Origins::MC);
 				redwall.setPosition(startpos);
 
 			}
-			redwall.setSize({ 0,thickness });
+			redwall.setSize({ 50,thickness });
 		}
 		//hitbox.setSize(redwall.getSize());
 		hitwall = false;
@@ -96,52 +96,60 @@ void Redwall::Update(float dt)
 		return;
 	}
 
+	Utils::SetOrigin(redwall, Origins::MC);
+
 	if (!hitwall) {
-		if (dir == 0 || dir == 2) {
-			redwall.setSize({ redwall.getSize().x,redwall.getSize().y + 100 });
-			if (dir == 0) {
-				Utils::SetOrigin(redwall, Origins::TC);
-			}
-			else if (dir == 2) {
-				Utils::SetOrigin(redwall, Origins::BC);
+	//	if (dir == 0 || dir == 2) {
+	//		redwall.setSize({ redwall.getSize().x,redwall.getSize().y + 100 });
+	//		if (dir == 0) {
+	//			Utils::SetOrigin(redwall, Origins::TC);
+	//		}
+	//		else if (dir == 2) {
+	//			Utils::SetOrigin(redwall, Origins::BC);
 
-			}
-		}
-		else {
-			redwall.setSize({ redwall.getSize().x + 100,redwall.getSize().y });
-			if (dir == 1) {
-				Utils::SetOrigin(redwall, Origins::MR);
+	//		}
+	//	}
+	//	else {
+	//		redwall.setSize({ redwall.getSize().x + 100,redwall.getSize().y });
+	//		if (dir == 1) {
+	//			Utils::SetOrigin(redwall, Origins::MR);
 
-			}
-			else if (dir == 3) {
-				Utils::SetOrigin(redwall, Origins::ML);
-			}
+	//		}
+	//		else if (dir == 3) {
+	//			Utils::SetOrigin(redwall, Origins::ML);
+	//		}
 
-		}
-	//	AddParticle();
+	//	}
+	////	AddParticle();
+	//}
+	//else if (hitwall ) {
+	//	if (dir == 0) {
+	//		redwall.setSize({ redwall.getSize().x,whohitwall->GetGlobalBounds().top - redwall.getPosition().y });
+	//	}
+	//	else if (dir == 2) {
+	//		Utils::SetOrigin(redwall, Origins::BC);
+	//		redwall.setSize({ redwall.getSize().x,redwall.getPosition().y - (whohitwall->GetGlobalBounds().top + whohitwall->GetGlobalBounds().height) });
+
+	//	}
+	//	else if (dir == 1) {
+	//		Utils::SetOrigin(redwall, Origins::MR);
+
+	//		redwall.setSize({ redwall.getPosition().x - (whohitwall->GetGlobalBounds().left + whohitwall->GetGlobalBounds().width),redwall.getSize().y });
+
+	//	}
+	//	else if (dir == 3) {
+	//		Utils::SetOrigin(redwall, Origins::ML);
+
+	//		redwall.setSize({ (whohitwall->GetGlobalBounds().left) - redwall.getPosition().x,redwall.getSize().y });
+
+	//	}
 	}
-	else if (hitwall ) {
-		if (dir == 0) {
-			redwall.setSize({ redwall.getSize().x,whohitwall->GetGlobalBounds().top - redwall.getPosition().y });
-		}
-		else if (dir == 2) {
-			Utils::SetOrigin(redwall, Origins::BC);
-			redwall.setSize({ redwall.getSize().x,redwall.getPosition().y - (whohitwall->GetGlobalBounds().top + whohitwall->GetGlobalBounds().height) });
 
-		}
-		else if (dir == 1) {
-			Utils::SetOrigin(redwall, Origins::MR);
+	if (dir == 0 || dir == 2) {
+		redwall.setSize({ GRIDSIZE,thickness });
+	}else
+		redwall.setSize({ thickness,GRIDSIZE });
 
-			redwall.setSize({ redwall.getPosition().x - (whohitwall->GetGlobalBounds().left + whohitwall->GetGlobalBounds().width),redwall.getSize().y });
-
-		}
-		else if (dir == 3) {
-			Utils::SetOrigin(redwall, Origins::ML);
-
-			redwall.setSize({ (whohitwall->GetGlobalBounds().left) - redwall.getPosition().x,redwall.getSize().y });
-
-		}
-	}
 	redwall.setPosition(startpos);
 
 	//	Utils::SetOrigin(destiny, Origins::MC);

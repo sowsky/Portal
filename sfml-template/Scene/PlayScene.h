@@ -68,15 +68,18 @@ public:
 	void MakeButton(int rotaion, int id);
 	void MakePortal();
 	void MakeBlackWall(bool isEnd);
-	
+
 	void MakeGoal(vector<int> list);
 
 	void MakeTunnel(string dir, string id);
+
+	void Respawn();
 
 	void PushButton();
 	void TunnelCheck();
 	void BridgeCheck();
 	void RedwallCheck();
+	void WaterCheck(float );
 	void CheckStillObjectalive();
 	void MoveToPortal();
 	
@@ -99,6 +102,7 @@ private:
 	vector<Bridge*> bridge;
 	vector<BlackTile*> blackwall;
 	vector<Redwall*> redwall;
+	vector<Water*> water;
 
 	Cube* grabbedcube = nullptr;
 	Vector2f currgrid = { GRIDSIZE / 2,GRIDSIZE / 2 };

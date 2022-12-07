@@ -10,8 +10,18 @@ Water::Water()
     objSize = ObjectSize::Big;
     attatchedPos = Rotate::Down;
 
-    Utils::SetOrigin(water, Origins::BC);
+    Utils::SetOrigin(water, Origins::MC);
     water.setFillColor(Color::Blue);
+}
+
+Water::Water(Vector2f position)
+{
+    Utils::SetOrigin(water, Origins::MC);
+
+    water.setSize({ GRIDSIZE, GRIDSIZE });
+    pos= position;
+    water.setFillColor(Color::Blue);
+
 }
 
 SpriteObj* Water::NewThis()
@@ -21,6 +31,10 @@ SpriteObj* Water::NewThis()
 
 void Water::Update(float dt)
 {
+    Utils::SetOrigin(water, Origins::MC);
+
+    water.setSize({ GRIDSIZE, GRIDSIZE });
+    water.setPosition(pos);
 }
 
 void Water::Draw(RenderWindow& window)
@@ -31,4 +45,5 @@ void Water::Draw(RenderWindow& window)
     }
     else
         window.draw(sprite);
+
 }
