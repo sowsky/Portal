@@ -211,14 +211,27 @@ void Player::PhysicsUpdate(float dt)
 	{
 		pressdt = 0;
 		IsMoving = false;
-		//if (!isJumping)
+		if (!isJumping)
 			body->SetLinearVelocity({ 0,body->GetLinearVelocity().y });
 	}
 
-	if (InputMgr::GetKeyDown(Keyboard::Space)&&abs(GetRecentSpeed().y)==0) {
+	if (InputMgr::GetKeyDown(Keyboard::Space)&&!isJumping) {
 		isJumping = true;
 		body->ApplyLinearImpulse({ 0,3.f }, GetPlayerBodyLinearVelocity(), 1);
 		jumpcooltime = 0;
+	}
+
+	if (isJumping && body->GetLinearVelocity().y == 0) {
+		jumpcooltime += dt;
+	}
+
+	if (abs(body->GetLinearVelocity().y>=0&&!abs(body->GetLinearVelocity().x)!=0)){
+		isJumping = true;
+		jumpcooltime = 0;
+	}
+
+	if (jumpcooltime >= 0.4f) {
+		isJumping = false;
 	}
 
 }
