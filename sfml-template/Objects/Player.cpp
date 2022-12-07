@@ -153,14 +153,12 @@ void Player::Update(float dt)
 	hitbox->setPosition(GetPos());
 
 	if (body->GetLinearVelocity().x != 0) {
-		if (abs(recentspeed.x) <= maximumspeed)
-			recentspeed.x = body->GetLinearVelocity().x;
+		recentspeed.x = body->GetLinearVelocity().x;
 		speedtX = 0;
 	}
 
 	if (body->GetLinearVelocity().y != 0) {
-		if (abs(recentspeed.y) <= maximumspeed)
-			recentspeed.y = body->GetLinearVelocity().y;
+		recentspeed.y = body->GetLinearVelocity().y;
 		speedtY = 0;
 	}
 
@@ -187,16 +185,6 @@ void Player::Update(float dt)
 
 void Player::PhysicsUpdate(float dt)
 {
-
-
-	if ((InputMgr::GetKey(Keyboard::A) || InputMgr::GetKey(Keyboard::D)) && body->GetLinearVelocity().y == 0) {
-		if (pressdt >= 0.5) {
-			////body->ApplyLinearImpulse({ 0,0.5f }, GetPlayerBodyLinearVelocity(), 1);
-			//if ((int)body->GetLinearVelocity().x == 0 && body->GetLinearVelocity().y > 0) {
-			//	body->SetLinearVelocity({ body->GetLinearVelocity().x,-0.1f });
-			//}
-		}
-	}
 	if (dir.x != 0)
 	{
 		if (!isFlying) {
@@ -205,7 +193,6 @@ void Player::PhysicsUpdate(float dt)
 			}
 			if (body->GetLinearVelocity().x < 0 && dir.x > 0)
 				body->SetLinearVelocity({ 0,body->GetLinearVelocity().y });
-			cout << body->GetLinearVelocity().x << endl;
 
 		}
 		pressdt += dt;
@@ -219,8 +206,31 @@ void Player::PhysicsUpdate(float dt)
 	{
 		pressdt = 0;
 		IsMoving = false;
-		if (!isJumping&&!isFlying)
+		if (!isJumping && !isFlying)
 			body->SetLinearVelocity({ 0,body->GetLinearVelocity().y });
+	}
+
+	if ((InputMgr::GetKey(Keyboard::A) || InputMgr::GetKey(Keyboard::D)) && body->GetLinearVelocity().y == 0) {
+		/*if (pressdt >= 0.5) {
+			body->ApplyLinearImpulse({ 0,0.5f }, GetPlayerBodyLinearVelocity(), 1);
+			if ((int)body->GetLinearVelocity().x == 0 && body->GetLinearVelocity().y > 0) {
+				body->SetLinearVelocity({ body->GetLinearVelocity().x,-0.1f });
+			}
+		}*/
+	}
+
+	
+
+	if (isFlying || isJumping) {
+		if (abs(GetRecentSpeed().y) < 0.1f && abs(body->GetLinearVelocity().y) <= 0.01f) {
+			isJumping = false;
+			cout << "isjumping false" << endl;
+			if (isFlying) {
+				isFlying = false;
+				cout << "isFlying false" << endl;
+
+			}
+		}
 	}
 
 	if ((InputMgr::GetKeyDown(Keyboard::Space) && !isJumping) && !isFlying) {
@@ -228,16 +238,6 @@ void Player::PhysicsUpdate(float dt)
 		body->ApplyLinearImpulse({ 0,3.f }, GetPlayerBodyLinearVelocity(), 1);
 		jumpcooltime = 0;
 	}
-
-	isFlying = true;
-
-	if ((int)GetRecentSpeed().y >= 0 && body->GetLinearVelocity().y == 0) {
-		isJumping = false;
-
-		if (isFlying)
-			isFlying = false;
-	}
-
 
 }
 
@@ -349,7 +349,8 @@ void Player::WalkAnimaton(float dt)
 		p_rleg.setScale(0.3f, 0.3f);
 		legdir *= -1;
 		groundTime = groundTimeMax;
-		SOUNDMGR->SoundPlay(SoundChoice::WalkSound);
+		if (!isJumping && !isFlying)
+			SOUNDMGR->SoundPlay(SoundChoice::WalkSound);
 	}
 
 	if (p_rleg.getScale().y < 0.25f)
@@ -357,7 +358,7 @@ void Player::WalkAnimaton(float dt)
 		p_rleg.setScale(0.3f, 0.25f);
 		legdir *= -1;
 		groundTime = groundTimeMax;
-		
+
 	}
 
 	p_lleg.setScale(0.3f, 0.55f - p_rleg.getScale().y);

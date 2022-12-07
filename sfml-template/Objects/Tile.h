@@ -21,7 +21,7 @@ public:
 
 	////////////////////////////////////////////////////////////////////////////
 	Tile(b2World* world, const Vector2f& position, Vector2f dimensions/*bunch of wall size*/, Vector2f box2dposition, bool isEnd);
-	b2Body* GetBody() { return body; }
+	b2Body* GetBody() {return body != nullptr ? body : nullptr; }
 	b2Fixture* GetFixture() { return fixture; }
 
 	void DrawHitbox(RenderWindow& window);
@@ -33,6 +33,7 @@ public:
 	void SetActiveSideTiles(array<bool, 4> array);
 	void SetSideTilesPosition(RenderWindow& window);
 	void DrawSideTiles(RenderWindow& window);
+
 protected:
 	b2Body* body = nullptr;
 	b2Fixture* fixture = nullptr;

@@ -104,6 +104,8 @@ private:
 	vector<Redwall*> redwall;
 	vector<Water*> water;
 
+	Vector2f temp = { 0,0 };
+
 	Cube* grabbedcube = nullptr;
 	Vector2f currgrid = { GRIDSIZE / 2,GRIDSIZE / 2 };
 	float wallbunchwidth = GRIDSIZE;

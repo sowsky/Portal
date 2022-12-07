@@ -70,8 +70,16 @@ void PlayScene::Update(float dt)
 
 		Vector2f currentcampos = worldView.getCenter();
 		worldView.setCenter(Utils::Lerp(currentcampos.x, player->GetPos().x, dt * 4), Utils::Lerp(currentcampos.y, player->GetPos().y, dt * 4));
-		//worldView.setCenter(water[0]->GetWater().left, water[0]->GetWater().top);
+		//worldView.setCenter({ temp.x/SCALE,temp.y/SCALE });
+		/*float x;
+		float y;
+		for (auto f : wall) {
+			if (f->GetBody() != nullptr) {
+				worldView.setCenter(f->GetBody()->GetPosition().x*SCALE,f->GetBody()->GetPosition().y*SCALE);
+			}
+		}*/
 	}
+
 
 	if (player->GetPos().y >= height + 200) {
 		player->Respawn();
@@ -82,6 +90,7 @@ void PlayScene::Update(float dt)
 		}
 	}
 
+	
 	MakePortal();
 	MoveToPortal();
 	PushButton();
@@ -365,6 +374,10 @@ PlayScene::PlayScene(string path)
 						else
 						{
 							MakeWall(true);
+
+							if (temp.x == 0) {
+								temp = box2dposition;
+							}
 							box2dposition.x = currgrid.x;
 							wallbunchwidth = GRIDSIZE;
 
@@ -504,15 +517,16 @@ PlayScene::PlayScene(string path)
 					}
 					}
 				}
+				cout << box2dposition.x << " " << box2dposition.y << endl;
 			}
 		}
 		currgrid = { GRIDSIZE / 2, currgrid.y + GRIDSIZE };
-		box2dposition = { GRIDSIZE / 2, currgrid.y + GRIDSIZE };
+		box2dposition = { GRIDSIZE / 2, currgrid.y+GRIDSIZE };
 		wallbunchwidth = GRIDSIZE;
 	}
 
-	height = colNum * GRIDSIZE;
-	width = rowNum * GRIDSIZE;
+	height = colNum * GRIDSIZE*2;
+	width = rowNum * GRIDSIZE*2;
 
 	bgNormal = RESOURCEMGR->GetTexture("Graphics/bg.png");
 	SetTex(crosshair, "Graphics/crosshair/alloff.png");

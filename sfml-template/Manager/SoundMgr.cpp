@@ -47,9 +47,12 @@ void SoundMgr::SoundPlay(SoundChoice soundchoice)
 	switch (soundchoice)
 	{
 	case SoundChoice::FireBlueSound:
+		sounds[0].setVolume(30);
 		sounds[0].play();
+		
 		break;
 	case SoundChoice::FireOrangeSound:
+		sounds[1].setVolume(30);
 		sounds[1].play();
 		break;
 	case SoundChoice::WalkSound:

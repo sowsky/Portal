@@ -25,6 +25,8 @@ public:
 	
 	void BodySetDoubleScale();
 
+	FloatRect GetIndicatorGlobalBounds() { return indicator.getGlobalBounds(); }
+
 	FloatRect GethitboxGlobalBounds() { return hitbox->getGlobalBounds(); }
 	void SetPlayerBodyPos(Vector2f pos);
 	b2Vec2 GetPlayerBodyPos() { return body->GetPosition(); }
