@@ -1,4 +1,11 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
+Graphics/Ui/goo.png,0
+Graphics/Ui/tile1.png,0
+Graphics/Ui/tile2.png,0
+Graphics/Ui/tile3.png,0
+Graphics/Ui/tileb1.png,0
+Graphics/Ui/tileb2.png,0
+Graphics/Ui/tileb3.png,0
 Graphics/orangeportal.png,0
 Graphics/blueportal.png,0
 Graphics/tempback.png,0

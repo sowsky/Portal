@@ -323,6 +323,11 @@ PlayScene::PlayScene(string path)
 		loadedArray[p.posY][p.posX].push_back(&p);
 	}
 
+	for (auto& p : loadObjInfo.waters)
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+
 	for (int i = 0; i < colNum; i++)
 	{
 		for (int j = 0; j < rowNum; j++)

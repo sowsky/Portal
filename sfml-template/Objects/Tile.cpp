@@ -145,30 +145,10 @@ void Tile::DrawHitbox(RenderWindow& window)
 	window.draw(*hitbox);
 }
 
-string Tile::GetRandTileTex()
-{
-	String str;
-	int rand = Utils::RandomRange(0, 3);
-	switch (rand)
-	{
-	case 0:
-		str = "Graphics/Tile/tile1.png";
-		break;
-	case 1:
-		str = "Graphics/Tile/tile2.png";
-		break;
-	case 2:
-		str = "Graphics/Tile/tile3.png";
-		break;
-	}
-
-	return str;
-}
-
 string Tile::GetRandTileTex64()
 {
 	String str;
-	int rand = Utils::RandomRange(0, 3);
+	int rand = Utils::RandomRange(0, 1);
 	switch (rand)
 	{
 	case 0:
@@ -187,7 +167,7 @@ string Tile::GetRandTileTex64()
 
 void Tile::GetRandDiffuseAndNormal64()
 {
-	int rand = Utils::RandomRange(0, 3);
+	int rand = Utils::RandomRange(0, 1);
 	switch (rand)
 	{
 	case 0:

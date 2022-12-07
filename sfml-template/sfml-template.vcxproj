@@ -192,6 +192,7 @@
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="Objects\Tunnel.cpp" />
     <ClCompile Include="Objects\VertexArrayObj.cpp" />
+    <ClCompile Include="Objects\Water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BlackTile.h" />
@@ -232,6 +233,7 @@
     <ClInclude Include="Objects\WirePointArrows.h" />
     <ClInclude Include="Objects\Tunnel.h" />
     <ClInclude Include="Objects\VertexArrayObj.h" />
+    <ClInclude Include="Objects\Water.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

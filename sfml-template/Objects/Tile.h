@@ -25,8 +25,7 @@ public:
 	b2Fixture* GetFixture() { return fixture; }
 
 	void DrawHitbox(RenderWindow& window);
-	
-	string GetRandTileTex();
+		
 	string GetRandTileTex64();
 	
 	void GetRandDiffuseAndNormal64();
@@ -39,6 +38,8 @@ protected:
 	b2Fixture* fixture = nullptr;
 
 	RectangleShape* hitbox;	
+
+	int style;
 
 	Texture* normal;
 	RectangleShape backFace;

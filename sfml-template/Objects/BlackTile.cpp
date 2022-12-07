@@ -131,7 +131,7 @@ void BlackTile::DrawHitbox(RenderWindow& window)
 string BlackTile::GetRandTileTex64()
 {
 	String str;
-	int rand = Utils::RandomRange(0, 3);
+	int rand = Utils::RandomRange(0, 1);
 	switch (rand)
 	{
 	case 0:
@@ -150,7 +150,7 @@ string BlackTile::GetRandTileTex64()
 
 void BlackTile::GetRandDiffuseAndNormal64()
 {
-	int rand = Utils::RandomRange(0, 3);
+	int rand = Utils::RandomRange(0, 1);
 	switch (rand)
 	{
 	case 0:

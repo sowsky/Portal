@@ -77,6 +77,11 @@ struct Redwall_struct : public Object_struct
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Redwall_struct, posX, posY, rotation, id, buttonList, on);
 };
 
+struct Water_struct : public Object_struct
+{
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Water_struct, posX, posY, rotation, id);
+};
+
 struct Data_struct
 {
 	Map_Size_Struct map_size;
@@ -89,7 +94,8 @@ struct Data_struct
 	vector<Tunnel_sturct> tunnels;
 	vector<Bridge_sturct> bridges;
 	vector<Redwall_struct> redwalls;
+	vector<Water_struct> waters;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Data_struct, map_size, player, goal, tiles, cubes, buttons, tunnels, bridges, blacktile,redwalls);
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Data_struct, map_size, player, goal, tiles, cubes, buttons, tunnels, bridges, blacktile,redwalls, waters);
 
 };

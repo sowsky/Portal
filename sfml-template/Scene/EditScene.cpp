@@ -1192,6 +1192,9 @@ void EditScene::FillUiToolBox()
 
 	uiTool[2][0].first = new Redwall;
 	uiTool[2][0].first->SetResourceTexture("Graphics/Ui/fizzler.png");
+
+	uiTool[2][1].first = new Water;
+	uiTool[2][1].first->SetResourceTexture("Graphics/Ui/goo.png");
 }
 
 void EditScene::SetUiToolPos(Vector2f pos)
@@ -1445,6 +1448,14 @@ void EditScene::Save()
 						saveObjInfo.redwalls.push_back(red);
 						break;
 					}
+					case 'w':
+					{
+						Water_struct water;
+						water.id = 'w';
+						water.posX = j;
+						water.posY = posY;
+						saveObjInfo.waters.push_back(water);
+					}
 					}
 				}
 			}
@@ -1550,6 +1561,12 @@ void EditScene::Load()
 		//	bridge->AddNumBox(num);
 		//}
 		mapTool[idxI - p.posY][p.posX].first.push_back(red);
+	}
+
+	for (auto& p : loadObjInfo.waters)
+	{
+		Water* water = new Water;
+		mapTool[idxI - p.posY][p.posX].first.push_back(water);
 	}
 
 	//////////

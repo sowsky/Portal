@@ -22,14 +22,12 @@ protected:
 	RectangleShape* hitbox;
 	float projectilespeed = 2000.f;
 	int dir;
-	//RadialLight light;
-	DirectedLight light;
-	EdgeVector edges;
 
 	VertexArray portalArray;
 	Texture* orangeTex;
 	RectangleShape backFace;
 	RectangleShape frontFace;
+	RectangleShape light;
 	bool texStand;
 };
 

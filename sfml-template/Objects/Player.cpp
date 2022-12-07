@@ -182,6 +182,9 @@ void Player::Update(float dt)
 
 	if (InputMgr::GetKeyDown(Keyboard::P))
 		devMod = !devMod;
+
+	if (InputMgr::GetKeyDown(Keyboard::F))
+		showIndicator = !showIndicator;
 }
 
 void Player::PhysicsUpdate(float dt)
@@ -241,7 +244,8 @@ void Player::Draw(RenderWindow& window)
 	window.draw(portalGun);
 	if (devMod)
 		ShowBornForDev(window);
-
+	if (showIndicator)
+		ShowIndicator(window);
 }
 
 void Player::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
@@ -412,6 +416,11 @@ void Player::ShowBornForDev(RenderWindow& window)
 	window.draw(spine2);
 	window.draw(clavicle);
 	window.draw(armBorn);
+	//window.draw(indicator);
+}
+
+void Player::ShowIndicator(RenderWindow& window)
+{
 	window.draw(indicator);
 }
 

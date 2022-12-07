@@ -10,18 +10,11 @@ Orange::Orange()
 	hitbox = new RectangleShape;
 	hitbox->setFillColor(Color::Red);
 
-	light.setRange(6);
-	light.setColor(Color(248, 147, 30));
-	//light.setBeamAngle(90);
-	light.setBeamWidth(1.5f);
-	light.setIntensity(0.3f);
-	light.rotate(0);
-	light.setScale(Utils::GetSpriteSize(sprite));
-	light.castLight(edges.begin(), edges.end());
-
-	edges.emplace_back(sprite.getPosition(), sprite.getPosition());
-
 	///////////////////
+	light.setSize({ 5, 40 });
+	Utils::SetOrigin(light, Origins::ML);
+	light.setFillColor(Color(ORANGE, 150));
+
 	portalArray.setPrimitiveType(Quads);
 	portalArray.resize(4);
 
@@ -43,34 +36,32 @@ Orange::~Orange()
 void Orange::Update(float dt)
 {
 	Utils::SetOrigin(*hitbox, Origins::BC);
-	light.setPosition(sprite.getPosition());
-
 	hitbox->setSize({ sprite.getGlobalBounds().width - 10,sprite.getGlobalBounds().height });
-	hitbox->setPosition(sprite.getPosition());
-
-	
+		
 	Translate(direction * dt * projectilespeed);
 
+	hitbox->setPosition(sprite.getPosition());
 }
 
 void Orange::Draw(RenderWindow& window)
 {
-
-	//SpriteObj::Draw(window);	
-	//window.draw(*hitbox);
-	DrawPortalArray(window);
 	window.draw(light);
+	//SpriteObj::Draw(window);	
+	DrawPortalArray(window);
+
 }
 
 void Orange::SetLightDir(int side, bool texdir)
 {
-	light.setRotation(side);
+	light.setRotation(side);	
 	texStand = texdir;
 }
 
 void Orange::DrawPortalArray(RenderWindow& window)
 {
 	Vector2f vanishingPoint = window.getView().getCenter();
+
+	light.setPosition(sprite.getPosition());
 
 	frontFace.setPosition(
 		sprite.getPosition() - (vanishingPoint - sprite.getPosition()) * (1.f - DEPTH)

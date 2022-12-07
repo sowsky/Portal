@@ -42,7 +42,9 @@ public:
 	void WalkAnimaton(float dt);
 	void RotateAnimation(RenderWindow& window);
 	void ShowBornForDev(RenderWindow& window);
+	void ShowIndicator(RenderWindow& window);
 	void Respawn();
+
 
 	Vector2f GetClaviclePos();
 	Vector2f GetIndicator();
@@ -95,6 +97,8 @@ protected:
 
 	bool devMod = false;
 	bool right;
+
+	bool showIndicator = false;
 
 	SoundBuffer footstepBuffer;
 	Sound footstep;

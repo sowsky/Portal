@@ -11,18 +11,11 @@ Blue::Blue()
 	hitbox = new RectangleShape;
 	hitbox->setFillColor(Color::Red);
 
-	light.setRange(6);
-	light.setColor(Color(37, 255, 254));
-	//light.setBeamAngle(90);
-	light.setBeamWidth(1.5f);
-	light.setIntensity(0.3f);
-	light.rotate(0);
-	light.setScale(Utils::GetSpriteSize(sprite));
-	light.castLight(edges.begin(), edges.end());
-
-	edges.emplace_back(sprite.getPosition(),sprite.getPosition());
-
 	////////////////
+	light.setSize({ 5, 40 });
+	Utils::SetOrigin(light, Origins::ML);
+	light.setFillColor(Color(BLUE, 150));
+
 	portalArray.setPrimitiveType(Quads);
 	portalArray.resize(4);
 
@@ -45,21 +38,19 @@ Blue::~Blue()
 void Blue::Update(float dt)
 {
 	Utils::SetOrigin(*hitbox, Origins::BC);
-	light.setPosition(sprite.getPosition());
 	hitbox->setSize({ sprite.getGlobalBounds().width - 10,sprite.getGlobalBounds().height });
-	hitbox->setPosition(sprite.getPosition());
 
 	Translate(direction *dt* projectilespeed);
 
 	hitbox->setPosition(sprite.getPosition());
-
 }
 
 void Blue::Draw(RenderWindow& window)
 {
+	window.draw(light);
 	//SpriteObj::Draw(window);
 	DrawPortalArray(window);
-	window.draw(light);	
+
 }
 
 void Blue::SetLightDir(int side, bool texdir)
@@ -70,6 +61,8 @@ void Blue::SetLightDir(int side, bool texdir)
 void Blue::DrawPortalArray(RenderWindow& window)
 {
 	Vector2f vanishingPoint = window.getView().getCenter();
+
+	light.setPosition(sprite.getPosition());
 
 	frontFace.setPosition(
 		sprite.getPosition() - (vanishingPoint - sprite.getPosition()) * (1.f - DEPTH)
