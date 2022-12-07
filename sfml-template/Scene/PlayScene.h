@@ -159,12 +159,6 @@ private:
 	list<PsceneWire*> wires;
 	bool showWire;
 
-	SoundBuffer fireBlueBuffer;
-	SoundBuffer fireOrangeBuffer;
-
-	Sound fireBlue;
-	Sound fireOrange;
-
 	Sprite backtemp;	
 	
 };

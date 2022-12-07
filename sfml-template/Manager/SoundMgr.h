@@ -1,19 +1,18 @@
 #pragma once
 #include <SFML/Audio.hpp>
 #include <list>
+#include "../3rd/Singleton.h"
 using namespace std;
 using namespace sf;
 
 enum class SoundChoice
 {
-	TitleSound,
-	PlaySound,
-	ChopSound,
-	DeathSound,
-	TimeOutSound,
+	FireBlueSound,
+	FireOrangeSound,
+	WalkSound,
 };
 
-class SoundMgr 
+class SoundMgr : public Singleton<SoundMgr>
 {
 private:
 	vector<SoundBuffer> soundBuffers;
@@ -29,3 +28,4 @@ public:
 	SoundChoice GetSoundChoice();
 };
 
+#define SOUNDMGR (SoundMgr::GetInstance())

@@ -2,11 +2,9 @@
 
 SoundMgr::SoundMgr()
 {
-	soundName.push_back("sound/titleSound.wav"); // titleSound
-	soundName.push_back("sound/playSound.wav"); // playSound
-	soundName.push_back("sound/chop.wav");
-	soundName.push_back("sound/death.wav");
-	soundName.push_back("sound/out_of_time.wav");
+	soundName.push_back("Sound/fireblue.wav");
+	soundName.push_back("Sound/fireorange.wav");
+	soundName.push_back("Sound/footstep.wav");
 
 	SoundBuffer soundBuffer;
 	Sound sound;
@@ -48,26 +46,19 @@ void SoundMgr::SoundPlay(SoundChoice soundchoice)
 {
 	switch (soundchoice)
 	{
-	case SoundChoice::TitleSound:
+	case SoundChoice::FireBlueSound:
 		sounds[0].play();
 		break;
-
-	case SoundChoice::PlaySound:
+	case SoundChoice::FireOrangeSound:
 		sounds[1].play();
 		break;
-
-	case SoundChoice::ChopSound:
-		sounds[1].play();
-		break;
-
-	case SoundChoice::DeathSound:
+	case SoundChoice::WalkSound:
 		sounds[2].play();
 		break;
-
-	case SoundChoice::TimeOutSound:
-		sounds[3].play();
+	default:
 		break;
 	}
+
 	this->soundChoice = soundchoice;
 }
 

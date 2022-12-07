@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Manager\SoundMgr.cpp" />
     <ClCompile Include="Objects\BlackTile.cpp" />
     <ClCompile Include="Objects\Gel.cpp" />
     <ClCompile Include="Objects\Bridge.cpp" />
@@ -195,6 +196,7 @@
     <ClCompile Include="Objects\Water.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Manager\SoundMgr.h" />
     <ClInclude Include="Objects\BlackTile.h" />
     <ClInclude Include="Objects\Gel.h" />
     <ClInclude Include="Objects\Bridge.h" />

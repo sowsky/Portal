@@ -5,6 +5,7 @@
 #include "../FrameWork/Const.h"
 #include "../Manager/ResourceMgr.h"
 #include "../Scene/SceneMgr.h"
+#include "../Manager/SoundMgr.h"
 
 Player::Player()
 {
@@ -126,9 +127,6 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	Utils::SetOrigin(portalGun, Origins::ML);
 	portalGun.setScale(0.3f, 0.3f);
 
-	footstepBuffer.loadFromFile("Sound/footstep.wav");
-	footstep.setBuffer(footstepBuffer);
-
 	checkpointpos = position;
 }
 
@@ -229,22 +227,22 @@ void Player::Draw(RenderWindow& window)
 	if ((!isPlayingGame && !(SCENE_MGR->GetCurrKey() == Scenes::GAMESTART)) && !(SCENE_MGR->GetCurrKey() == Scenes::MAPLIST))
 		SpriteObj::Draw(window);
 
-	RotateAnimation(window);
+	if (isPlayingGame)
+	{
+		RotateAnimation(window);
 
-	//window.draw(*hitbox);
+		window.draw(p_body);
+		window.draw(p_lleg);
+		window.draw(p_rleg);
+		window.draw(p_head);
+		window.draw(p_arm);
+		window.draw(portalGun);
+		if (devMod)
+			ShowBornForDev(window);
+		if (showIndicator)
+			ShowIndicator(window);
+	}
 
-	//window.draw(*hitbox);	
-
-	window.draw(p_body);
-	window.draw(p_lleg);
-	window.draw(p_rleg);
-	window.draw(p_head);
-	window.draw(p_arm);
-	window.draw(portalGun);
-	if (devMod)
-		ShowBornForDev(window);
-	if (showIndicator)
-		ShowIndicator(window);
 }
 
 void Player::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
@@ -331,7 +329,7 @@ void Player::WalkAnimaton(float dt)
 		p_rleg.setScale(0.3f, 0.3f);
 		legdir *= -1;
 		groundTime = groundTimeMax;
-		footstep.play();
+		SOUNDMGR->SoundPlay(SoundChoice::WalkSound);
 	}
 
 	if (p_rleg.getScale().y < 0.25f)
@@ -339,7 +337,7 @@ void Player::WalkAnimaton(float dt)
 		p_rleg.setScale(0.3f, 0.25f);
 		legdir *= -1;
 		groundTime = groundTimeMax;
-		//footstep.play();
+		
 	}
 
 	p_lleg.setScale(0.3f, 0.55f - p_rleg.getScale().y);

@@ -43,6 +43,7 @@
     <ClCompile Include="Objects\Redwall.cpp" />
     <ClCompile Include="Objects\NumBox.cpp" />
     <ClCompile Include="Objects\Water.cpp" />
+    <ClCompile Include="Manager\SoundMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Manager\Animator.h" />
@@ -83,6 +84,7 @@
     <ClInclude Include="Objects\Redwall.h" />
     <ClInclude Include="Objects\NumBox.h" />
     <ClInclude Include="Objects\Water.h" />
+    <ClInclude Include="Manager\SoundMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

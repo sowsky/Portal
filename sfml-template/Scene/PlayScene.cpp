@@ -7,6 +7,7 @@
 #include "../Manager/ResourceMgr.h"
 #include "../Objects/Goal.h"
 #include "../Objects/FileData.h"
+#include "../Manager/SoundMgr.h"
 
 #pragma warning(disable:4996)
 using json = nlohmann::json;
@@ -534,12 +535,6 @@ PlayScene::PlayScene(string path)
 			}
 		}
 	}
-
-	fireBlueBuffer.loadFromFile("Sound/fireblue.wav");
-	fireOrangeBuffer.loadFromFile("Sound/fireorange.wav");
-
-	fireBlue.setBuffer(fireBlueBuffer);
-	fireOrange.setBuffer(fireOrangeBuffer);
 
 	backtemp.setTexture(*RESOURCEMGR->GetTexture("Graphics/tempback.png"));
 	backtemp.setPosition(200.f, 200.f);
@@ -1540,7 +1535,8 @@ void PlayScene::Input()
 		blue->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetClaviclePos()));
 		
 		////////////////////
-		fireBlue.play();
+		//fireBlue.play();
+		SOUNDMGR->SoundPlay(SoundChoice::FireBlueSound);
 	}
 
 
@@ -1616,7 +1612,8 @@ void PlayScene::Input()
 		orange->SetPos(player->GetClaviclePos());
 		orange->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetClaviclePos()));
 		/////////////////////
-		fireOrange.play();
+		//fireOrange.play();
+		SOUNDMGR->SoundPlay(SoundChoice::FireOrangeSound);
 	}
 
 	if (grabitem) {
