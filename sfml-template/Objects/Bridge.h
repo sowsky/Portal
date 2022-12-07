@@ -29,7 +29,8 @@ public:
 	virtual void SetButtonlist(vector<Button*>& button);
 
 	int GetConnected() { return connected; }
-
+	
+	void UpdateEmitter(RenderWindow& window);
 	void UpdateBridgeDraw(RenderWindow& window);
 	void DrawBackSide(RenderWindow& window);
 	Vector2f GetStartPos() { return startpos; }
@@ -58,6 +59,7 @@ protected:
 	b2Fixture* fixture = nullptr;	
 
 	//////////////////
+	Vector2f vanishingPoint;
 
 	Vector2f front_des_pos;
 	Vector2f back_des_pos;

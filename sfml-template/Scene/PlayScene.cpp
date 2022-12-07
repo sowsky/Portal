@@ -238,8 +238,12 @@ void PlayScene::Draw(RenderWindow& window)
 	{
 		for (auto w : wires)
 		{
-			window.draw(w->wire,
-				w->isOn ? orangeWire : blueWire);
+			if (w->isOn)
+				w->SetColor(Color(ORANGE));
+			else
+				w->SetColor(Color(BLUE));
+			window.draw(w->wire);
+			
 		}
 	}	
 
@@ -525,9 +529,6 @@ PlayScene::PlayScene(string path)
 			}
 		}
 	}
-
-	orangeWire = RESOURCEMGR->GetTexture("Graphics/orange.png");
-	blueWire = RESOURCEMGR->GetTexture("Graphics/blue.png");
 
 	fireBlueBuffer.loadFromFile("Sound/fireblue.wav");
 	fireOrangeBuffer.loadFromFile("Sound/fireorange.wav");
@@ -1531,7 +1532,8 @@ void PlayScene::Input()
 		blue->SetSize({ 20,20 });
 		madeblue = false;
 		blue->SetPos(player->GetClaviclePos());
-		blue->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
+		blue->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetClaviclePos()));
+		
 		////////////////////
 		fireBlue.play();
 	}
@@ -1607,7 +1609,7 @@ void PlayScene::Input()
 		orange->SetSize({ 20,20 });
 		madeorange = false;
 		orange->SetPos(player->GetClaviclePos());
-		orange->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetPositions()));
+		orange->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetClaviclePos()));
 		/////////////////////
 		fireOrange.play();
 	}

@@ -272,15 +272,10 @@ void Bridge::Update(float dt)
 void Bridge::Draw(RenderWindow& window)
 {
 	if (isPlayingGame)
-	{
-		if (active)
-		{
-			if (setedpos) {
-				UpdateBridgeDraw(window);
-			}
-		}
+	{		
 		if (connected == 0)
 			window.draw(frontEmitter);
+
 		//window.draw(hitbox);
 		//window.draw(start);
 		//window.draw(destiny);		
@@ -301,9 +296,9 @@ void Bridge::SetButtonlist(vector<Button*>& button)
 	}
 }
 
-void Bridge::UpdateBridgeDraw(RenderWindow& window)
+void Bridge::UpdateEmitter(RenderWindow& window)
 {
-	Vector2f vanishingPoint = window.getView().getCenter();
+	vanishingPoint = window.getView().getCenter();
 
 	frontEmitter.setPosition(
 		startpos - (vanishingPoint - startpos) * (1.f - DEPTH)
@@ -312,7 +307,10 @@ void Bridge::UpdateBridgeDraw(RenderWindow& window)
 	backEmitter.setPosition(
 		startpos + (vanishingPoint - startpos) * (1.f - DEPTH)
 	);
+}
 
+void Bridge::UpdateBridgeDraw(RenderWindow& window)
+{
 	front_des_pos = endpos - (vanishingPoint - endpos) * (1.f - DEPTH);
 	back_des_pos = endpos + (vanishingPoint - endpos) * (1.f - DEPTH);
 
@@ -330,15 +328,16 @@ void Bridge::DrawBackSide(RenderWindow& window)
 {
 	if (isPlayingGame)
 	{
+		UpdateEmitter(window);
+		if (connected == 0)
+			window.draw(backEmitter);
 		if (active)
 		{
+			UpdateBridgeDraw(window);
 			if (setedpos) {
-				if (connected == 0)
-					window.draw(backEmitter);
 				window.draw(bridge_rect, bridge_color);
-
+				window.draw(bridge);
 			}
-			window.draw(bridge);
 		}
 		//window.draw(hitbox);
 		//window.draw(start);

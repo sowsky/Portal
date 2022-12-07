@@ -33,7 +33,12 @@ struct PsceneWire
 		:isOn(o)
 	{
 		wire.resize(2);
-		wire.setPrimitiveType(Lines);
+		wire.setPrimitiveType(Lines);		
+	}
+	void SetColor(Color color)
+	{
+		wire[0].color = color;
+		wire[1].color = color;
 	}
 	VertexArray wire;
 	bool& isOn;
@@ -152,10 +157,6 @@ private:
 	float openingTime = 0.f;	
 	map<int, list<Vector2f>> wireList;
 	list<PsceneWire*> wires;
-
-	Texture* orangeWire;
-	Texture* blueWire;
-
 	bool showWire;
 
 	SoundBuffer fireBlueBuffer;

@@ -47,8 +47,6 @@ void WireableObject::Init()
 {
 	Object::Init();
 	SetWireCheckBox();
-	orange = RESOURCEMGR->GetTexture("Graphics/orange.png");
-	blue = RESOURCEMGR->GetTexture("Graphics/blue.png");
 }
 
 void WireableObject::Update(float dt)
@@ -109,14 +107,10 @@ void WireableObject::DrawWire(RenderWindow& window)
 		&& InputMgr::GetMouseButtonDown(Mouse::Left))
 	{
 		SetPhase(Phase::CatcherSelect);
-		Button* temp = (Button*)this;
+		Button* temp = (Button*)this;		
 		wires.push_back(new Wire);
 		currWire = wires.back();
-		wires.back()->buttonNum = temp->GetButtonId();		
-		wires.back()->isConnected = false;
-		wires.back()->isActive = true;
-		wires.back()->wire.setPrimitiveType(Lines);
-		wires.back()->wire.resize(2);
+		wires.back()->buttonNum = temp->GetButtonId();
 	}
 
 	if (phase == Phase::CatcherSelect
@@ -164,7 +158,7 @@ void WireableObject::DrawWire(RenderWindow& window)
 		{
 			if (w->isActive)
 			{
-				window.draw(w->wire, blue);
+				window.draw(w->wire);
 			}
 		}
 }

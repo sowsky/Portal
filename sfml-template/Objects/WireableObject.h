@@ -8,6 +8,14 @@ using namespace std;
 class WireableObject;
 struct Wire
 {
+	Wire()
+		:isConnected(false), isActive(true)
+	{
+		wire.setPrimitiveType(Lines);
+		wire.resize(2);
+		wire[0].color = Color(37, 255, 254);
+		wire[1].color = Color(37, 255, 254);
+	}
 	VertexArray wire;
 	int buttonNum;
 	bool isConnected;
@@ -59,9 +67,6 @@ protected:
 	list<int> wireNum;
 	
 	list<Wire*> wires;
-
-	Texture* orange;
-	Texture* blue;
 
 	static Phase phase;	
 	static WireableObject* targetCatcherPtr;
