@@ -172,9 +172,7 @@ void PlayScene::PhysicsUpdate(float dt)
 
 void PlayScene::Draw(RenderWindow& window)
 {
-	window.setView(worldView);
-
-	window.draw(backtemp);
+	window.setView(worldView);	
 
 	for (auto v : wall) {
 		v->Draw(window);
@@ -574,8 +572,7 @@ PlayScene::PlayScene(string path)
 		}
 	}
 
-	backtemp.setTexture(*RESOURCEMGR->GetTexture("Graphics/tempback.png"));
-	backtemp.setPosition(200.f, 200.f);
+	//background.setTexture(RESOURCEMGR->GetTexture())
 
 }
 

@@ -1,4 +1,5 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
+Graphics/backgrounds/background.png,0
 Graphics/switch.png,0
 Graphics/Ui/switch1.png,0
 Graphics/Ui/switch2.png,0
@@ -12,7 +13,6 @@ Graphics/Ui/tileb2.png,0
 Graphics/Ui/tileb3.png,0
 Graphics/orangeportal.png,0
 Graphics/blueportal.png,0
-Graphics/tempback.png,0
 Graphics/title.png,0
 Graphics/tunnel/tunnel.png,0
 Graphics/bridge/back.png,0

@@ -113,8 +113,7 @@ private:
 	Vector2f box2dposition={ GRIDSIZE / 2,GRIDSIZE / 2 };
 
 	View backgroundView;
-	View endingView;
-	RectangleShape background;
+	View endingView;	
 	
 	Blue* blue;
 	Orange* orange;
@@ -168,7 +167,7 @@ private:
 	list<PsceneWire*> wires;
 	bool showWire;
 
-	Sprite backtemp;	
+	Sprite background;
 	
 };
 
