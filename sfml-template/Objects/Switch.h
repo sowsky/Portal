@@ -15,6 +15,7 @@ public:
 	virtual void Draw(RenderWindow& window);
 	virtual void Draw
 	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
+	virtual void SetPressed() {  }
 
 	float GetTime() { return time; }
 	virtual void SetSwitchActive() { isPress = !isPress; }

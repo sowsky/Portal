@@ -16,7 +16,7 @@ public:
 	RectangleShape* GetHitbox() { return hitbox; }
 	bool GetPressed() { return isPress; }
 	bool& GetIsPressRef() { return isPress; }
-	void SetPressed() { isPress = !isPress; }
+	virtual void SetPressed() { isPress = !isPress; }
 
 	int GetButtonId() { return buttonId; }
 	void SetButtonId(int a) { buttonId = a; }

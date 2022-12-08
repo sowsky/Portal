@@ -118,7 +118,7 @@ void PlayScene::Update(float dt)
 	RedwallCheck();
 	WaterCheck(dt);
 
-	if (IsMadeTunnelFollowOrangePortal || IsMadeTunnelFollowBluePortal)
+	if ((IsMadeTunnelFollowOrangePortal || IsMadeTunnelFollowBluePortal) || (IsMadeBridgeFollowBluePortal || IsMadeBridgeFollowOrangePortal))
 		CheckStillObjectalive();
 
 	for (auto b : button) {
@@ -555,7 +555,6 @@ PlayScene::PlayScene(string path)
 					}
 					}
 				}
-				cout << box2dposition.x << " " << box2dposition.y << endl;
 			}
 		}
 		currgrid = { GRIDSIZE / 2, currgrid.y + GRIDSIZE };
@@ -1149,7 +1148,6 @@ void PlayScene::PushButton()
 			check = true;
 
 		if (!check) {
-			cout << "setpreed false" << endl;
 			b->SetPressed();
 		}
 	}
@@ -1284,7 +1282,6 @@ void PlayScene::BridgeCheck()
 			if (w->GetGlobalBounds().intersects(v->GetHitBoxGlobalbound())) {
 				v->SetHitwall(true);
 				v->Setwhohitwall(*w);
-
 			}
 		}
 	}
@@ -1295,7 +1292,6 @@ void PlayScene::BridgeCheck()
 			if (w->GetGlobalBounds().intersects(v->GetHitBoxGlobalbound())) {
 				v->SetHitwall(true);
 				v->Setwhohitwall(*w);
-
 			}
 		}
 	}
@@ -1486,13 +1482,13 @@ void PlayScene::CheckStillObjectalive()
 		}
 		if (!on)
 		{
-			auto ite = tunnel.begin();
-			while (ite != tunnel.end())
+			auto ite = bridge.begin();
+			while (ite != bridge.end())
 			{
 				if ((*ite)->GetConnected() == 2)
 				{
 					auto ptr = (*ite);
-					ite = tunnel.erase(ite);
+					ite = bridge.erase(ite);
 					delete ptr;
 					break;
 				}
@@ -1514,13 +1510,13 @@ void PlayScene::CheckStillObjectalive()
 		}
 		if (!on)
 		{
-			auto ite = tunnel.begin();
-			while (ite != tunnel.end())
+			auto ite = bridge.begin();
+			while (ite != bridge.end())
 			{
 				if ((*ite)->GetConnected() == 1)
 				{
 					auto ptr = (*ite);
-					ite = tunnel.erase(ite);
+					ite = bridge.erase(ite);
 					delete ptr;
 					break;
 				}
@@ -1906,7 +1902,6 @@ void PlayScene::MoveToPortal()
 	}
 	if (madeblue && blue->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		player->SetFlying(true);
-		cout << player->GetRecentSpeed().y << endl;
 		float recenty = player->GetRecentSpeed().y * -1;
 		float recentx = abs(player->GetRecentSpeed().x);
 		if ((int)recenty <= 2)
@@ -1919,7 +1914,6 @@ void PlayScene::MoveToPortal()
 			player->SetPlayerBodyPos({ orange->GetPos().x,orange->GetPos().y - player->GetGlobalBounds().height });
 			player->GetBody()->SetLinearVelocity({ 0,0 });
 			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,recenty });
-			cout << player->GetRecentSpeed().y * -1 << endl;
 
 		}
 		else if (orange->GetPortalDir() == 1) {
@@ -1946,12 +1940,9 @@ void PlayScene::MoveToPortal()
 	//////////////////////////////move to blue//////////////////////////////////////
 	if (madeorange && orange->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		player->SetFlying(true);
-		cout << player->GetRecentSpeed().y << endl;
 
 		float recenty = player->GetRecentSpeed().y * -1;
 		float recentx = abs(player->GetRecentSpeed().x);
-
-
 
 		if ((int)recenty <= 2)
 			recenty = 1;
@@ -1963,7 +1954,6 @@ void PlayScene::MoveToPortal()
 			player->SetPlayerBodyPos({ blue->GetPos().x,blue->GetPos().y - player->GetGlobalBounds().height });
 			player->GetBody()->SetLinearVelocity({ 0,0 });
 			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,recenty });
-			cout << player->GetRecentSpeed().y * -1 << endl;
 
 		}
 		else if (blue->GetPortalDir() == 1) {
