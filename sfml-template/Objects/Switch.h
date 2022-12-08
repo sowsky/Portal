@@ -15,7 +15,10 @@ public:
 	virtual void Draw
 	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
 
-private:
+	///////////
+	float GetTime() { return time; }
+
+protected:
 	RectangleShape swtich;
 	float time;
 	bool switchType; //false=sustain  true= turn on after time

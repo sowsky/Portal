@@ -1206,6 +1206,15 @@ void EditScene::FillUiToolBox()
 
 	uiTool[2][1].first = new Water;
 	uiTool[2][1].first->SetResourceTexture("Graphics/Ui/goo.png");
+
+	uiTool[3][0].first = new Switch;
+	uiTool[3][0].first->SetResourceTexture("Graphics/Ui/switch1.png");
+
+	uiTool[3][1].first = new AfterSwitch;
+	uiTool[3][1].first->SetResourceTexture("Graphics/Ui/switch2.png");
+
+	uiTool[3][2].first = new DurationSwitch;
+	uiTool[3][2].first->SetResourceTexture("Graphics/Ui/switch3.png");
 }
 
 void EditScene::SetUiToolPos(Vector2f pos)
@@ -1466,6 +1475,40 @@ void EditScene::Save()
 						water.posX = j;
 						water.posY = posY;
 						saveObjInfo.waters.push_back(water);
+						break;
+					}
+					case 's':
+					{
+						Switch_struct switchButton;
+						switchButton.id = 's';
+						switchButton.posX = j;
+						switchButton.posY = posY;
+						switchButton.time = 0.f;
+						switchButton.type = false;
+						saveObjInfo.switches.push_back(switchButton);
+						break;
+					}
+					case 'as':
+					{
+						Switch_struct switchButton;
+						switchButton.id = 's';
+						switchButton.posX = j;
+						switchButton.posY = posY;
+						switchButton.time = 3.f;
+						switchButton.type = true;
+						saveObjInfo.switches.push_back(switchButton);
+						break;
+					}
+					case 'ds':
+					{
+						Switch_struct switchButton;
+						switchButton.id = 's';
+						switchButton.posX = j;
+						switchButton.posY = posY;
+						switchButton.time = 3.f;
+						switchButton.type = false;
+						saveObjInfo.switches.push_back(switchButton);
+						break;
 					}
 					}
 				}

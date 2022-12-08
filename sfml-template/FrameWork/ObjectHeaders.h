@@ -12,4 +12,6 @@
 #include "../Objects/BlackTile.h"
 #include "../Objects/Redwall.h"
 #include "../Objects/Water.h"
-#include "../Objects/Switch.h"
+//#include "../Objects/Switch.h"
+#include "../Objects/Switches/AfterSwitch.h"
+#include "../Objects/Switches/DurationSwitch.h"

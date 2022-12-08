@@ -7,6 +7,9 @@ Switch::Switch()
 	type = ObjectType::Trigger;
 	objSize = ObjectSize::Normal;
 	attatchedPos = Rotate::Down;
+
+	switchType = false;
+	time = 0.f;
 }
 
 Switch::~Switch()
@@ -15,7 +18,7 @@ Switch::~Switch()
 
 SpriteObj* Switch::NewThis()
 {
-	return nullptr;
+	return new Switch;
 }
 
 void Switch::Update(float dt)
@@ -24,6 +27,8 @@ void Switch::Update(float dt)
 
 void Switch::Draw(RenderWindow& window)
 {
+	//if (!isPlayingGame)
+		SpriteObj::Draw(window);
 }
 
 void Switch::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)

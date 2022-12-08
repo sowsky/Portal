@@ -17,7 +17,7 @@ class SoundMgr : public Singleton<SoundMgr>
 private:
 	vector<SoundBuffer> soundBuffers;
 	vector<Sound> sounds;
-	vector<string> soundName;
+	vector<string> soundName;	
 
 	SoundChoice soundChoice;
 public:
