@@ -50,7 +50,7 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 		}
 		else if (dir == 2) {
 			Utils::SetOrigin(bridge, Origins::BC);
-			startpos = { position.x,position.y + GRIDSIZE / 2 };
+			startpos = { position.x,position.y - 1 + GRIDSIZE / 2 };
 			bridge.setPosition(startpos);
 			frontEmitter.setRotation(270.f);
 			backEmitter.setRotation(270.f);
@@ -69,20 +69,20 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 		}
 		else if (dir == 3) {
 			Utils::SetOrigin(bridge, Origins::ML);
-			startpos = { position.x - GRIDSIZE / 2,position.y };
+			startpos = { position.x + 1 - GRIDSIZE / 2 + 2,position.y };
 			bridge.setPosition(startpos);
 
 		}
 		bridge.setSize({ 0, bridgeThickness });
 		start.setSize({ 5,50 });
 	}
-	if (connected != 0&& connected != 2) {
+	if (connected != 0 && connected != 2) {
 		startpos.y += 25;
 	}
 	start.setPosition(startpos);
 
 	bridge.setFillColor(Color(80, 188, 233, 255));
-	
+
 
 	this->world = world;
 	b2BodyDef bodyDef;
@@ -125,8 +125,9 @@ void Bridge::Update(float dt)
 	for (auto b : button) {
 		if (!b->GetPressed()) {
 			active = false;
-			destiny.setPosition(startpos);			
-			
+			setedpos = false;
+			destiny.setPosition(startpos);
+
 		}
 	}
 
@@ -155,6 +156,7 @@ void Bridge::Update(float dt)
 			bridge.setSize({ 0,10 });
 		}
 		hitbox.setSize(bridge.getSize());
+		hitbox.setPosition({ -100,-100 });
 		hitwall = false;
 
 		if (fixture != nullptr) {
@@ -175,7 +177,7 @@ void Bridge::Update(float dt)
 
 	if (!hitwall) {
 		if (dir == 0 || dir == 2) {
-			bridge.setSize({ bridge.getSize().x,bridge.getSize().y + 100 });
+			bridge.setSize({ bridge.getSize().x,bridge.getSize().y + 10 });
 			if (dir == 0) {
 				Utils::SetOrigin(bridge, Origins::TC);
 			}
@@ -185,7 +187,7 @@ void Bridge::Update(float dt)
 
 		}
 		else {
-			bridge.setSize({ bridge.getSize().x + 100,bridge.getSize().y });
+			bridge.setSize({ bridge.getSize().x + 10,bridge.getSize().y });
 			if (dir == 1) {
 				Utils::SetOrigin(bridge, Origins::MR);
 			}
@@ -195,7 +197,7 @@ void Bridge::Update(float dt)
 
 		}
 	}
-	else if (hitwall && whohitwall != nullptr/*) && !setedpos*/) {
+	else if (hitwall) {
 		if (fixture != nullptr) {
 			body->DestroyFixture(body->GetFixtureList());
 		}
@@ -215,23 +217,24 @@ void Bridge::Update(float dt)
 
 
 			Utils::SetOrigin(bridge, Origins::TC);
+			destiny.setSize({ bridge.getSize().x,10 });
 			bridge.setSize({ bridge.getSize().x ,whohitwall->GetGlobalBounds().top - bridge.getPosition().y });
+			endpos = { bridge.getPosition().x,bridge.getPosition().y + bridge.getSize().y };
 			x = bridge.getPosition().x / SCALE;
 			y = (bridge.getPosition().y + (bridge.getSize().y / 2)) / SCALE * -1;
-			endpos = { bridge.getPosition().x,bridge.getPosition().y + bridge.getSize().y };
-			destiny.setSize({ bridge.getSize().x,10 });
 
 		}
 		else if (dir == 2) {
 
 			Utils::SetOrigin(bridge, Origins::BC);
+			bridge.setSize({ bridge.getSize().x,bridge.getPosition().y - (whohitwall->GetGlobalBounds().top + whohitwall->GetGlobalBounds().height) });
+			destiny.setSize({ bridge.getSize().x,10 });
+			endpos = { bridge.getPosition().x,bridge.getPosition().y - bridge.getSize().y };
+
 
 			x = bridge.getPosition().x / SCALE;
 			y = (bridge.getPosition().y + (bridge.getSize().y / 2) - bridge.getSize().y) / SCALE * -1;
-			endpos = { bridge.getPosition().x,bridge.getPosition().y - bridge.getSize().y };
-			destiny.setSize({ bridge.getSize().x,10 });
-			bridge.setSize({ bridge.getSize().x,bridge.getPosition().y - (whohitwall->GetGlobalBounds().top + whohitwall->GetGlobalBounds().height) });
-
+			cout<<x << " " <<y<< endl;
 		}
 		else if (dir == 1) {
 			Utils::SetOrigin(bridge, Origins::MR);
@@ -241,7 +244,6 @@ void Bridge::Update(float dt)
 			y = bridge.getPosition().y / SCALE * -1;
 			destiny.setSize({ 10,bridge.getSize().y });
 			endpos = { bridge.getPosition().x - bridge.getSize().x ,bridge.getPosition().y, };
-
 		}
 
 
@@ -249,11 +251,14 @@ void Bridge::Update(float dt)
 			Utils::SetOrigin(bridge, Origins::ML);
 
 			bridge.setSize({ (whohitwall->GetGlobalBounds().left) - bridge.getPosition().x,bridge.getSize().y });
-			x = (bridge.getPosition().x + (bridge.getSize().x / 2)) / SCALE;
-			y = bridge.getPosition().y / SCALE * -1;
+
 			destiny.setSize({ 10,bridge.getSize().y });
 
 			endpos = { bridge.getPosition().x + bridge.getSize().x ,bridge.getPosition().y, };
+
+			x = (bridge.getPosition().x + (bridge.getSize().x / 2)) / SCALE;
+			y = bridge.getPosition().y / SCALE * -1;
+
 		}
 
 		body->SetTransform({ x,y }, 0);
@@ -262,8 +267,12 @@ void Bridge::Update(float dt)
 
 	//Utils::SetOrigin(hitbox, Origins::MC);
 
-	destiny.setPosition(endpos);
+
+	destiny.setPosition(startpos);
+
+
 	bridge.setPosition(startpos);
+
 	hitbox.setOrigin(bridge.getOrigin());
 
 	hitbox.setSize(bridge.getSize());
@@ -277,6 +286,8 @@ void Bridge::Draw(RenderWindow& window)
 {
 	if (isPlayingGame)
 	{
+		window.draw(destiny);
+
 		if (active)
 		{
 			if (setedpos) {
@@ -287,7 +298,6 @@ void Bridge::Draw(RenderWindow& window)
 			window.draw(frontEmitter);
 		//window.draw(hitbox);
 		//window.draw(start);
-		//window.draw(destiny);		
 	}
 	if (!isPlayingGame)
 		WireableObject::Draw(window);

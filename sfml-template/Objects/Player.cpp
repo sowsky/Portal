@@ -230,10 +230,8 @@ void Player::PhysicsUpdate(float dt)
 	if (isFlying || isJumping) {
 		if (abs(GetRecentSpeed().y) < 0.1f && abs(body->GetLinearVelocity().y) <= 0.01f) {
 			isJumping = false;
-			cout << "isjumping false" << endl;
 			if (isFlying) {
 				isFlying = false;
-				cout << "isFlying false" << endl;
 
 			}
 		}
