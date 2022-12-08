@@ -68,6 +68,7 @@ public:
 	void MakeButton(int rotaion, int id);
 	void MakePortal();
 	void MakeBlackWall(bool isEnd);
+	void MakeSwitch(int rotaion, int id,float time,bool switchtype);
 
 	void MakeGoal(vector<int> list);
 

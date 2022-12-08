@@ -205,6 +205,12 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
 	}
 
+	for (auto v : switches) {
+		v->Draw(window);
+		v->Draw(pass_diffuse, normals_shader, pass_normals);
+
+	}
+
 	for (auto v : bridge) {
 		v->DrawBackSide(window);
 	}
@@ -432,7 +438,10 @@ PlayScene::PlayScene(string path)
 					case 's':
 					case 'S':
 					{
-
+						Switch_struct* tempS = (Switch_struct*)obj;
+						MakeSwitch(tempS->rotation, tempS->buttonId, tempS->time, tempS->type);
+						box2dposition.x += GRIDSIZE;
+						break;
 					}
 					case'@':
 					{
@@ -597,9 +606,17 @@ void PlayScene::MakeBlackWall(bool isEnd)
 	currgrid.x += GRIDSIZE;
 }
 
+void PlayScene::MakeSwitch(int rotaion, int id, float time, bool switchtype)
+{
+	switches.push_back(new Switch(currgrid, rotaion, id, time, switchtype));
+
+	currgrid.x += GRIDSIZE;
+
+}
+
 void PlayScene::MakeCube()
 {
-	Cube* newCube = new Cube(world.get(), Vector2f{ currgrid }, Vector2f({ GRIDSIZE, GRIDSIZE }));
+	Cube* newCube = new Cube(world.get(), currgrid, Vector2f({ GRIDSIZE, GRIDSIZE }));
 
 	cube.push_back(newCube);
 
@@ -608,7 +625,7 @@ void PlayScene::MakeCube()
 
 void PlayScene::MakePlayer()
 {
-	player = new Player(world.get(), Vector2f{ currgrid }, Vector2f({ 20, 50 }));
+	player = new Player(world.get(), currgrid , Vector2f({ 20, 50 }));
 
 	currgrid.x += GRIDSIZE;
 }
@@ -2142,6 +2159,11 @@ void PlayScene::Release()
 		delete v;
 	}
 	water.clear();
+
+	for (auto v : switches) {
+		delete v;
+	}
+	switches.clear();
 
 	if (orange != nullptr)
 		delete orange;

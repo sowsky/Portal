@@ -13,7 +13,7 @@ Tunnel::Tunnel()
 
 }
 
-Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool Isblue, bool active, int connected)
+Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, vector<int> switchlist, bool Isblue, bool active, int connected)
 	:IsBlue(Isblue), dir(dir), active(active), connected(connected)
 {
 	if (Isblue)
@@ -25,6 +25,7 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 	start.setFillColor(Color(0, 255, 0, 255));
 
 	buttonid = buttonlist;
+	switchid = switchlist;
 
 	if (dir == 0 || dir == 2) {
 		if (dir == 0) {
@@ -100,6 +101,13 @@ void Tunnel::Update(float dt)
 	//	active = !active;
 
 	for (auto b : button) {
+		if (!b->GetPressed()) {
+			active = false;
+			destiny.setPosition(startpos);
+		}
+	}
+	
+	for (auto b : switches) {
 		if (!b->GetPressed()) {
 			active = false;
 			destiny.setPosition(startpos);
@@ -281,6 +289,17 @@ void Tunnel::SetButtonlist(vector<Button*>& button)
 		for (int i = 0; i < buttonid.size(); i++) {
 			if (b->GetButtonId() == buttonid[i]) {
 				this->button.push_back(b);
+			}
+		}
+	}
+}
+
+void Tunnel::SetSwitchlist(vector<Switch*>& button)
+{
+	for (auto b : switches) {
+		for (int i = 0; i < switches.size(); i++) {
+			if (b->GetButtonId() == switchid[i]) {
+				this->switches.push_back(b);
 			}
 		}
 	}
