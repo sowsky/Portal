@@ -194,6 +194,7 @@
     <ClCompile Include="Objects\Tunnel.cpp" />
     <ClCompile Include="Objects\VertexArrayObj.cpp" />
     <ClCompile Include="Objects\Water.cpp" />
+    <ClCompile Include="Objects\Switch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Manager\SoundMgr.h" />
@@ -236,6 +237,7 @@
     <ClInclude Include="Objects\Tunnel.h" />
     <ClInclude Include="Objects\VertexArrayObj.h" />
     <ClInclude Include="Objects\Water.h" />
+    <ClInclude Include="Objects\Switch.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

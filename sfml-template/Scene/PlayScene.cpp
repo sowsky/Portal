@@ -63,9 +63,6 @@ void PlayScene::Update(float dt)
 	blue->Update(dt);
 	orange->Update(dt);
 
-
-
-
 	if (!isMovingViewCenter) {
 
 		Vector2f currentcampos = worldView.getCenter();
@@ -89,8 +86,7 @@ void PlayScene::Update(float dt)
 			c->Respawn();
 		}
 	}
-
-	
+		
 	MakePortal();
 	MoveToPortal();
 	PushButton();
@@ -107,8 +103,9 @@ void PlayScene::Update(float dt)
 		if (InputMgr::GetKeyDown(Keyboard::E)) {
 			cout << "drop" << endl;
 			grabitem = false;
-
+			
 			grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
+			grabbedcube->GetBody()->SetLinearVelocity({0,-1});
 			grabbedcube = nullptr;
 
 		}
@@ -345,6 +342,11 @@ PlayScene::PlayScene(string path)
 		loadedArray[p.posY][p.posX].push_back(&p);
 	}
 
+	for (auto& p : loadObjInfo.switches)
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+
 	for (int i = 0; i < colNum; i++)
 	{
 		for (int j = 0; j < rowNum; j++)
@@ -426,6 +428,11 @@ PlayScene::PlayScene(string path)
 						MakeButton(obj->rotation, tempB->buttonId);
 						box2dposition.x += GRIDSIZE;
 						break;
+					}
+					case 's':
+					case 'S':
+					{
+
 					}
 					case'@':
 					{
@@ -697,15 +704,15 @@ void PlayScene::MakePortal()
 
 	for (auto b : redwall)
 	{
-		if (b->GetredwallGlobalBound().intersects(blue->GetGlobalBounds())) {
-			particle.emitParticles(blue->GetPos(), false);
+		if (b->GetredwallHitboxGlobalBound().intersects(blue->GetGlobalBounds())) {
+			particle.emitParticles(b->GetRedwallPos(), false);
 			blue->SetPos({ -1000,-1000 });
 			blue->SetDir({ 0,0 });
 			madeblue = false;
 
 		}
-		if (b->GetredwallGlobalBound().intersects(orange->GetGlobalBounds())) {
-			particle.emitParticles(orange->GetPos(), false);
+		if (b->GetredwallHitboxGlobalBound().intersects(orange->GetGlobalBounds())) {
+			particle.emitParticles(b->GetRedwallPos(), false);
 			orange->SetPos({ -1000,-1000 });
 			blue->SetDir({ 0,0 });
 			madeorange = false;
@@ -1049,7 +1056,6 @@ void PlayScene::PushButton()
 			b->SetPressed(true);
 			break;
 		}
-
 	}
 
 	///////////////////////////button////////////////////////////////////
@@ -1065,39 +1071,43 @@ void PlayScene::PushButton()
 		}
 	}
 
-	for (auto b : button) {
-		if (!b->GetPressed())
-			continue;
+	//for (auto b : button) {
+	//	if (!b->GetPressed())
+	//		continue;
 
-		bool off = false;
-		for (auto c : cube) {
-			if (c->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
-				off = false;
-				break;
-			}
-			off = true;
-		}
-		if (off)
-			b->SetPressed(false);
-	}
+	//	bool off = false;
+	//	for (auto c : cube) {
+	//		if (c->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
+	//			off = false;
+	//			break;
+	//		}
+	//		off = true;
+	//	}
+	//	if (off)
+	//		b->SetPressed(false);
+	//}
 
+	/////////////unpush check
 	for (auto b : button) {
+		bool check = false;
 		if (!b->GetPressed())
 			continue;
 
 		for (auto c : cube) {
 			if (b->GetHitbox()->getGlobalBounds().intersects(c->GetGlobalBounds())) {
-				continue;
+				check = true;
+				break;
 			}
+		}			
+
+
+		if (player->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds()))
+			check = true;
+
+	if (!check) {
+		cout << "setpreed false" << endl;
 			b->SetPressed(false);
-			break;
 		}
-		if (!b->GetPressed())
-			break;
-
-		if (!player->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds()))
-			b->SetPressed(false);
-
 	}
 
 }

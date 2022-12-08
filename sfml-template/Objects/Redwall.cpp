@@ -153,7 +153,10 @@ void Redwall::Update(float dt)
 	redwall.setPosition(startpos);
 
 	//	Utils::SetOrigin(destiny, Origins::MC);
-		
+	hitbox.setSize({ redwall.getSize().x+40, redwall.getSize().y+40});
+	hitbox.setOrigin(redwall.getOrigin());
+	hitbox.setPosition(redwall.getPosition());
+	hitbox.setFillColor(Color::Green);
 }
 
 void Redwall::Draw(RenderWindow& window)
@@ -164,9 +167,14 @@ void Redwall::Draw(RenderWindow& window)
 	}
 	else
 	{
-		if (active)
+		if (active){
 			window.draw(redwall);
+			//window.draw(hitbox);
+		}
+
 	}
+
+	
 }
 
 

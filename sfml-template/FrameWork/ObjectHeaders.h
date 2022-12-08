@@ -12,3 +12,4 @@
 #include "../Objects/BlackTile.h"
 #include "../Objects/Redwall.h"
 #include "../Objects/Water.h"
+#include "../Objects/Switch.h"

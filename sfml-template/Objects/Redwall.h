@@ -24,7 +24,10 @@ public:
 
 	void Setwhohitwall(SpriteObj* wall) { whohitwall = wall; }
 
+	FloatRect GetredwallHitboxGlobalBound() { return hitbox.getGlobalBounds(); }
 	Vector2f GetStartPos() { return startpos; }
+
+	Vector2f GetRedwallPos() { return redwall.getPosition(); }
 private:
 	RectangleShape redwall;
 	list<Button*> button;
@@ -34,6 +37,8 @@ private:
 	bool hitwall = false;
 	const float thickness = 10;;
 	int dir;
+
+	RectangleShape hitbox;
 
 	SpriteObj* whohitwall = nullptr;
 
