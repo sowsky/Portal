@@ -177,7 +177,7 @@ void Bridge::Update(float dt)
 
 	if (!hitwall) {
 		if (dir == 0 || dir == 2) {
-			bridge.setSize({ bridge.getSize().x,bridge.getSize().y + 10 });
+			bridge.setSize({ bridge.getSize().x,bridge.getSize().y + 100 });
 			if (dir == 0) {
 				Utils::SetOrigin(bridge, Origins::TC);
 			}
@@ -187,7 +187,7 @@ void Bridge::Update(float dt)
 
 		}
 		else {
-			bridge.setSize({ bridge.getSize().x + 10,bridge.getSize().y });
+			bridge.setSize({ bridge.getSize().x + 100,bridge.getSize().y });
 			if (dir == 1) {
 				Utils::SetOrigin(bridge, Origins::MR);
 			}
