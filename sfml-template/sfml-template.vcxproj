@@ -151,6 +151,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Objects\Switches\AfterSwitch.cpp" />
+    <ClCompile Include="Objects\Switches\DurationSwitch.cpp" />
     <ClCompile Include="Manager\SoundMgr.cpp" />
     <ClCompile Include="Objects\BlackTile.cpp" />
     <ClCompile Include="Objects\Gel.cpp" />
@@ -197,6 +199,8 @@
     <ClCompile Include="Objects\Switch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Objects\Switches\AfterSwitch.h" />
+    <ClInclude Include="Objects\Switches\DurationSwitch.h" />
     <ClInclude Include="Manager\SoundMgr.h" />
     <ClInclude Include="Objects\BlackTile.h" />
     <ClInclude Include="Objects\Gel.h" />

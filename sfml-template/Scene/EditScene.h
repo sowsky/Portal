@@ -63,6 +63,7 @@ public:
 	void DrawMapList(RenderWindow& window);
 
 	array<bool, 4>& SetOnSideTiles(int col, int row);
+	void PushToLoadedWireInfo(int buttonId, WireableObject* ptr);
 
 	void Reset();
 	void Save();
@@ -138,5 +139,6 @@ private:
 	Sprite loadScreen;
 	View loadView;
 	list<pair<RectangleShape*, Text*>> loadList;
+	map<int, list<WireableObject*>> loadedWireInfo;
 };
 

@@ -8,6 +8,8 @@ public:
 	Switch();
 	virtual ~Switch();
 
+	virtual SpriteObj* NewThis();
+
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);
 	virtual void Draw
@@ -16,7 +18,7 @@ public:
 private:
 	RectangleShape swtich;
 	float time;
-	bool type; //false=sustain  true= turn on after time
+	bool switchType; //false=sustain  true= turn on after time
 	int id;
 };
 

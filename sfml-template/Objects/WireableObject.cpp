@@ -135,7 +135,10 @@ void WireableObject::DrawWire(RenderWindow& window)
 		return;
 
 	if (type == ObjectType::Trigger)
-		wires.back()->wire[0].position = sprite.getPosition();
+		for (auto& w : wires)
+		{			
+			w->wire[0].position = sprite.getPosition();
+		}
 	
 	if (!wires.back()->isConnected)
 	{
@@ -145,7 +148,7 @@ void WireableObject::DrawWire(RenderWindow& window)
 		else
 		{			
 			wires.back()->targetPtr = targetCatcherPtr;
-			wires.back()->wire[1].position = targetCatcherPtr->GetSpritePos();
+			//wires.back()->wire[1].position = targetCatcherPtr->GetSpritePos();
 			wires.back()->isConnected = true;
 			targetCatcherPtr = nullptr;
 			currWire = nullptr;
@@ -158,6 +161,9 @@ void WireableObject::DrawWire(RenderWindow& window)
 		{
 			if (w->isActive)
 			{
+				if(w->isConnected)
+					w->wire[1].position = w->targetPtr->GetSpritePos();
+				
 				window.draw(w->wire);
 			}
 		}
@@ -196,6 +202,15 @@ void WireableObject::DrawWire(RenderWindow& window)
 //	delete numbox.back();
 //	numbox.pop_back();
 //}
+
+void WireableObject::AddWire(WireableObject* target)
+{	
+	Button* temp = (Button*)this;
+	wires.push_back(new Wire);	
+	wires.back()->buttonNum = temp->GetButtonId();
+	wires.back()->targetPtr = target;	
+	wires.back()->isConnected = true;	
+}
 
 list<int> WireableObject::GetWireListFromMapTool()
 {

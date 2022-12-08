@@ -1165,6 +1165,17 @@ array<bool, 4>& EditScene::SetOnSideTiles(int col, int row)
 	return sideBool;
 }
 
+void EditScene::PushToLoadedWireInfo(int buttonId, WireableObject* ptr)
+{
+	if (loadedWireInfo.find(buttonId) == loadedWireInfo.end())
+	{
+		list<WireableObject*> temp;
+		temp.clear();
+		loadedWireInfo.insert({ buttonId, temp });
+	}
+	loadedWireInfo[buttonId].push_back(ptr);
+}
+
 void EditScene::FillUiToolBox()
 {
 	uiTool[0][0].first = new Tile;
@@ -1475,9 +1486,7 @@ void EditScene::Save()
 }
 
 void EditScene::Load()
-{
-	Reset();
-
+{	
 	string mapName;
 
 	mapName += "Map/" + loadString + ".json";
@@ -1487,27 +1496,23 @@ void EditScene::Load()
 
 	colNum = loadObjInfo.map_size.col;
 	rowNum = loadObjInfo.map_size.row;
-	int idxI = colNum - 1;
 
+	Reset();
+
+	int idxI = colNum - 1;
+	
+	loadedWireInfo.clear();
 	///// �� & ��
 	mapTool[idxI - loadObjInfo.player.posY][loadObjInfo.player.posX].first.push_back(new Player);
 
 	Goal* goal = new Goal;
 	goal->SetButtonList(loadObjInfo.goal.buttonList);
-	//for (auto num : loadObjInfo.goal.buttonList)
-	//{
-	//	goal->AddNumBox(num);
-	//}
+	for (auto id : loadObjInfo.goal.buttonList)
+	{
+		PushToLoadedWireInfo(id, goal);
+	}
 	mapTool[idxI - loadObjInfo.goal.posY][loadObjInfo.goal.posX].first.push_back(goal);
 	/////
-	for (auto& p : loadObjInfo.buttons)
-	{
-		Button* button = new Button;
-		button->SetRotation((Rotate)p.rotation);
-		button->SetButtonId(p.buttonId);
-		//button->AddNumBox(p.buttonId);
-		mapTool[idxI - p.posY][p.posX].first.push_back(button);
-	}
 
 	for (auto& p : loadObjInfo.cubes)
 	{
@@ -1532,10 +1537,10 @@ void EditScene::Load()
 		Tunnel* tunnel = new Tunnel;
 		tunnel->SetRotation((Rotate)p.rotation);
 		tunnel->SetButtonlist(p.buttonList);
-		//for (auto num : p.buttonList)
-		//{
-		//	tunnel->AddNumBox(num);
-		//}
+		for (auto id : p.buttonList)
+		{
+			PushToLoadedWireInfo(id, tunnel);
+		}
 		mapTool[idxI - p.posY][p.posX].first.push_back(tunnel);
 	}
 
@@ -1544,10 +1549,10 @@ void EditScene::Load()
 		Bridge* bridge = new Bridge;
 		bridge->SetRotation((Rotate)p.rotation);
 		bridge->SetButtonlist(p.buttonList);
-		//for (auto num : p.buttonList)
-		//{
-		//	bridge->AddNumBox(num);
-		//}
+		for (auto id : p.buttonList)
+		{
+			PushToLoadedWireInfo(id, bridge);
+		}
 		mapTool[idxI - p.posY][p.posX].first.push_back(bridge);
 	}
 
@@ -1556,10 +1561,10 @@ void EditScene::Load()
 		Redwall* red = new Redwall;
 		red->SetRotation((Rotate)p.rotation);
 		red->SetButtonlist(p.buttonList);
-		//for (auto num : p.buttonList)
-		//{
-		//	bridge->AddNumBox(num);
-		//}
+		for (auto id : p.buttonList)
+		{
+			PushToLoadedWireInfo(id, red);
+		}
 		mapTool[idxI - p.posY][p.posX].first.push_back(red);
 	}
 
@@ -1570,6 +1575,22 @@ void EditScene::Load()
 	}
 
 	//////////
+
+	for (auto& p : loadObjInfo.buttons)
+	{
+		Button* button = new Button;
+		button->SetRotation((Rotate)p.rotation);
+		button->SetButtonId(p.buttonId);
+		
+		for (auto ptr : loadedWireInfo[button->GetButtonId()])
+		{
+			button->AddWire(ptr);
+		}
+
+		mapTool[idxI - p.posY][p.posX].first.push_back(button);
+	}
+
+	////////////////
 
 	Vector2f fixPos{ TILE_SIZE / 2,TILE_SIZE };
 
@@ -1597,6 +1618,7 @@ void EditScene::Load()
 
 	SetMapToolSize();
 	loadString.clear();
+	loadedWireInfo.clear();
 }
 
 void EditScene::Play()

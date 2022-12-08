@@ -50,6 +50,8 @@ public:
 	//void AddNumBox(int num);
 	//void RemoveNumBox();
 
+	void AddWire(WireableObject* target);
+
 	list<int> GetWireListFromMapTool();	
 
 	//list<int>& GetWireNum() { return wireNum; }
