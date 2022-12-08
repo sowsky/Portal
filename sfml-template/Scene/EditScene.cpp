@@ -1486,7 +1486,8 @@ void EditScene::Save()
 }
 
 void EditScene::Load()
-{	
+{
+
 	string mapName;
 
 	mapName += "Map/" + loadString + ".json";
@@ -1498,7 +1499,6 @@ void EditScene::Load()
 	rowNum = loadObjInfo.map_size.row;
 
 	Reset();
-
 	int idxI = colNum - 1;
 	
 	loadedWireInfo.clear();

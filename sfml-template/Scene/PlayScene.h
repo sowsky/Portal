@@ -144,6 +144,8 @@ private:
 	int width;
 	int height;
 
+	float maxspeed=16;
+
 	// Front and backbuffer as Pointer for std::swap
 	unique_ptr<RenderTexture> front, back;
 	RenderTexture pass_normals, pass_diffuse;
