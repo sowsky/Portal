@@ -91,6 +91,7 @@ protected:
 	RectangleShape clavicle;
 	RectangleShape armBorn;
 	RectangleShape indicator;
+	RectangleShape jump;
 
 	float jumpcooltime = 0;
 	bool startMove;

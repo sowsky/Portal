@@ -1559,7 +1559,7 @@ void PlayScene::Input()
 	}
 
 	//blue
-	if (InputMgr::GetMouseButtonDown(Mouse::Left) && !grabitem) {
+	if (InputMgr::GetMouseButtonDown(Mouse::Left) ) {
 		auto it = tunnel.begin();
 		if (IsMadeTunnelFollowBluePortal) {
 			while (it != tunnel.end())
@@ -1638,7 +1638,7 @@ void PlayScene::Input()
 
 
 	//orange
-	if (InputMgr::GetMouseButtonDown(Mouse::Right) && !grabitem) {
+	if (InputMgr::GetMouseButtonDown(Mouse::Right) ) {
 		auto it = tunnel.begin();
 		if (IsMadeTunnelFollowBluePortal) {
 			while (it != tunnel.end())
@@ -1819,64 +1819,83 @@ void PlayScene::MoveToPortal()
 	if (madeblue && blue->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		player->SetFlying(true);
 		cout << player->GetRecentSpeed().y << endl;
-		float recent = player->GetPlayerBodyLinearVelocity().y * -1;
-		if ((int)recent <= 2)
-			recent = 1;
+		float recenty = player->GetRecentSpeed().y * -1;
+		float recentx = abs(player->GetRecentSpeed().x);
+		if ((int)recenty <= 2)
+			recenty = 1;
+
+		if (recenty > maxspeed)
+			recenty = maxspeed;
 
 		if (orange->GetPortalDir() == 0) {
 			player->SetPlayerBodyPos({ orange->GetPos().x,orange->GetPos().y - player->GetGlobalBounds().height });
 			player->GetBody()->SetLinearVelocity({ 0,0 });
-			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,recent });
+			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,recenty });
 			cout << player->GetRecentSpeed().y * -1 << endl;
 
 		}
 		else if (orange->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ orange->GetPos().x + 30,orange->GetPos().y });
-			float force = (abs(player->GetRecentSpeed().y)) + (abs(player->GetRecentSpeed().x));
+			float force = (abs(player->GetRecentSpeed().y)) + (recentx);
+			if (force > maxspeed/2)
+				force = maxspeed/2;
 			player->GetBody()->SetLinearVelocity({ force ,1 });
 		}
 		else if (orange->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ orange->GetPos().x ,orange->GetPos().y + player->GetGlobalBounds().height });
-			//	player->GetBody()->SetLinearVelocity({ 0,player->GetRecentSpeed().y });
-			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyLinearVelocity().x,player->GetRecentSpeed().y - 1 });
+			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyLinearVelocity().x,recenty * -1 });
 		}
 		else if (orange->GetPortalDir() == 3) {
 			player->SetPlayerBodyPos({ orange->GetPos().x - 30 ,orange->GetPos().y });
-			float force = (abs(player->GetRecentSpeed().y)) + (abs(player->GetRecentSpeed().x));
-			player->GetBody()->SetLinearVelocity({ force * -1,1 });
+			float force = (abs(player->GetRecentSpeed().y)) + (recentx);
+			if (force > maxspeed/2)
+				force = maxspeed/2;
+			player->GetBody()->SetLinearVelocity({ force*-1 ,1 });
 		}
 	}
+
 
 	//////////////////////////////move to blue//////////////////////////////////////
 	if (madeorange && orange->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		player->SetFlying(true);
 		cout << player->GetRecentSpeed().y << endl;
 
-		float recent = player->GetRecentSpeed().y * -1;
-		if ((int)recent <= 2)
-			recent = 1;
+		float recenty = player->GetRecentSpeed().y * -1;
+		float recentx = abs(player->GetRecentSpeed().x);
+	
+		
+			
+		if ((int)recenty <= 2)
+			recenty = 1;
+
+		if (recenty > maxspeed)
+			recenty = maxspeed;
 
 		if (blue->GetPortalDir() == 0) {
 			player->SetPlayerBodyPos({ blue->GetPos().x,blue->GetPos().y - player->GetGlobalBounds().height });
 			player->GetBody()->SetLinearVelocity({ 0,0 });
-			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,recent });
+			player->GetBody()->SetLinearVelocity({ player->GetRecentSpeed().x ,recenty });
 			cout << player->GetRecentSpeed().y * -1 << endl;
 
 		}
 		else if (blue->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ blue->GetPos().x + 30,blue->GetPos().y });
-			float force = (abs(player->GetRecentSpeed().y)) + (abs(player->GetRecentSpeed().x));
+			float force = (abs(player->GetRecentSpeed().y)) + (recentx);
+			if (force > maxspeed/2)
+				force = maxspeed/2;
 			player->GetBody()->SetLinearVelocity({ force ,1 });
 		}
 		else if (blue->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ blue->GetPos().x ,blue->GetPos().y + player->GetGlobalBounds().height });
-			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyLinearVelocity().x,player->GetRecentSpeed().y - 1 });
+			player->GetBody()->SetLinearVelocity({ player->GetPlayerBodyLinearVelocity().x,recenty * -1 });
 
 		}
 		else if (blue->GetPortalDir() == 3) {
 			player->SetPlayerBodyPos({ blue->GetPos().x - 30 ,blue->GetPos().y });
-			float force = (abs(player->GetRecentSpeed().y)) + (abs(player->GetRecentSpeed().x));
-			player->GetBody()->SetLinearVelocity({ force * -1 ,1 });
+			float force = (abs(player->GetRecentSpeed().y)) + (recentx);
+			if (force > maxspeed/2)
+				force = maxspeed/2;
+			player->GetBody()->SetLinearVelocity({ force*-1 ,1 });
 		}
 	}
 
@@ -1958,6 +1977,7 @@ void PlayScene::MoveToPortal()
 				pos = { orange->GetPos().x,orange->GetPos().y - orange->GetGlobalBounds().height - 30 };
 				dir = 2;
 			}
+
 			else if (orange->GetPortalDir() == 1) {
 				pos = { orange->GetPos().x + 50,orange->GetPos().y };
 				dir = 3;
@@ -1966,6 +1986,7 @@ void PlayScene::MoveToPortal()
 				pos = { orange->GetPos().x,orange->GetPos().y + orange->GetGlobalBounds().height + 30 };
 				dir = 0;
 			}
+
 			else if (orange->GetPortalDir() == 3) {
 				pos = { orange->GetPos().x - 50,orange->GetPos().y };
 				dir = 1;
@@ -1989,7 +2010,7 @@ void PlayScene::MoveToPortal()
 			Vector2f pos;
 			int dir = 0;
 			if (blue->GetPortalDir() == 0) {
-				pos = { blue->GetPos().x,orange->GetPos().y - blue->GetGlobalBounds().height - 30 };
+				pos = { blue->GetPos().x,blue->GetPos().y - blue->GetGlobalBounds().height - 30 };
 				dir = 2;
 			}
 			else if (blue->GetPortalDir() == 1) {

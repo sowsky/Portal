@@ -181,6 +181,12 @@ void Player::Update(float dt)
 
 	if (InputMgr::GetKeyDown(Keyboard::F))
 		showIndicator = !showIndicator;
+
+
+	jump.setSize({p_body.getScale().x,10});
+	jump.setFillColor(Color::Green);
+	Utils::SetOrigin(jump, Origins::TC);
+	jump.setPosition(p_body.getPosition().x,p_body.getPosition().y+10);
 }
 
 void Player::PhysicsUpdate(float dt)
@@ -257,6 +263,7 @@ void Player::Draw(RenderWindow& window)
 		window.draw(p_head);
 		window.draw(p_arm);
 		window.draw(portalGun);
+		window.draw(jump);
 		if (devMod)
 			ShowBornForDev(window);
 		if (showIndicator)

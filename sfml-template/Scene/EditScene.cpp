@@ -1476,7 +1476,7 @@ void EditScene::Save()
 
 void EditScene::Load()
 {
-	Reset();
+	
 
 	string mapName;
 
@@ -1487,6 +1487,7 @@ void EditScene::Load()
 
 	colNum = loadObjInfo.map_size.col;
 	rowNum = loadObjInfo.map_size.row;
+	Reset();
 	int idxI = colNum - 1;
 
 	///// �� & ��
