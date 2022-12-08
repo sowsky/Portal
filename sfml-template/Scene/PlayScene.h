@@ -68,7 +68,7 @@ public:
 	void MakeButton(int rotaion, int id);
 	void MakePortal();
 	void MakeBlackWall(bool isEnd);
-	void MakeSwitch(int rotaion, int id,float time,bool switchtype);
+	void MakeSwitch(int rotaion, int id,float time, bool switchtype);
 
 	void MakeGoal(vector<int> list);
 
@@ -91,6 +91,8 @@ public:
 	void LightTestInputForDev();
 	void ClearRenderBuffer();
 	void OpenStage(float dt);
+	void BackAndLightControl();
+	void DrawNormalAndDiffuse(RenderWindow& window);
 private:
 	b2DistanceJoint* joint;
 	b2Vec2 mouseWorld;
@@ -168,6 +170,7 @@ private:
 	bool showWire;
 
 	Sprite background;
-	
+	Texture* backgroundNormal;
+	bool testLight = false;	
 };
 

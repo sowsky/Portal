@@ -145,8 +145,7 @@ void PlayScene::Update(float dt)
 	//light.position.x = 0;
 	//light.position.y = height;
 
-	//light.position.x = GetMouseWorldPos().x;
-	//light.position.y = height - GetMouseWorldPos().y;
+	BackAndLightControl();
 }
 
 void PlayScene::PhysicsUpdate(float dt)
@@ -173,6 +172,8 @@ void PlayScene::PhysicsUpdate(float dt)
 void PlayScene::Draw(RenderWindow& window)
 {
 	window.setView(worldView);	
+
+	DrawNormalAndDiffuse(window);
 
 	for (auto v : wall) {
 		v->Draw(window);
@@ -533,8 +534,11 @@ PlayScene::PlayScene(string path)
 		wallbunchwidth = GRIDSIZE;
 	}
 
-	height = colNum * GRIDSIZE*2;
-	width = rowNum * GRIDSIZE*2;
+	//height = colNum * GRIDSIZE*2;
+	//width = rowNum * GRIDSIZE*2;
+
+	height = colNum * GRIDSIZE;
+	width = rowNum * GRIDSIZE;
 
 	bgNormal = RESOURCEMGR->GetTexture("Graphics/bg.png");
 	SetTex(crosshair, "Graphics/crosshair/alloff.png");
@@ -575,7 +579,10 @@ PlayScene::PlayScene(string path)
 		}
 	}
 
-	//background.setTexture(RESOURCEMGR->GetTexture())
+	background.setTexture(*RESOURCEMGR->GetTexture("Graphics/backgrounds/background.png"));
+	backgroundNormal = RESOURCEMGR->GetTexture("Graphics/backgrounds/background_n.png");
+
+	Utils::SetSpriteSize(background,{ rowNum * GRIDSIZE, colNum * GRIDSIZE });
 
 }
 
@@ -1817,6 +1824,44 @@ void PlayScene::OpenStage(float dt)
 		return;
 	openingTime -= dt;
 	worldView.zoom(0.995f);
+}
+
+void PlayScene::BackAndLightControl()
+{
+	if (InputMgr::GetKeyDown(Keyboard::Numpad0))
+	{
+		testLight = !testLight;
+	}
+
+	if (testLight)
+	{
+		light.position.x = GetMouseWorldPos().x;
+		light.position.y = height - GetMouseWorldPos().y;
+	}
+
+	if (InputMgr::GetKeyDown(Keyboard::I))
+	{
+		background.move({ 0,-10.f });
+	}
+	if (InputMgr::GetKeyDown(Keyboard::K))
+	{
+		background.move({ 0,10.f });
+	}
+	if (InputMgr::GetKeyDown(Keyboard::J))
+	{
+		background.move({ -10.f, 0 });
+	}
+	if (InputMgr::GetKeyDown(Keyboard::L))
+	{
+		background.move({ 10.f, 0 });
+	}
+}
+
+void PlayScene::DrawNormalAndDiffuse(RenderWindow& window)
+{
+	pass_diffuse.draw(background);
+	normals_shader.setParameter("sampler_normal", *backgroundNormal);
+	pass_normals.draw(background, &normals_shader);
 }
 
 

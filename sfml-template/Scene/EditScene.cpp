@@ -1485,6 +1485,9 @@ void EditScene::Save()
 						switchButton.posY = posY;
 						switchButton.time = 0.f;
 						switchButton.type = false;
+						switchButton.rotation = (int)tool->GetRotation();
+						Switch* tempSwitch = (Switch*)tool;
+						switchButton.buttonId = tempSwitch->GetButtonId();
 						saveObjInfo.switches.push_back(switchButton);
 						break;
 					}
@@ -1496,6 +1499,9 @@ void EditScene::Save()
 						switchButton.posY = posY;
 						switchButton.time = 3.f;
 						switchButton.type = true;
+						switchButton.rotation = (int)tool->GetRotation();
+						Switch* tempSwitch = (Switch*)tool;
+						switchButton.buttonId = tempSwitch->GetButtonId();
 						saveObjInfo.switches.push_back(switchButton);
 						break;
 					}
@@ -1507,6 +1513,9 @@ void EditScene::Save()
 						switchButton.posY = posY;
 						switchButton.time = 3.f;
 						switchButton.type = false;
+						switchButton.rotation = (int)tool->GetRotation();
+						Switch* tempSwitch = (Switch*)tool;
+						switchButton.buttonId = tempSwitch->GetButtonId();
 						saveObjInfo.switches.push_back(switchButton);
 						break;
 					}
@@ -1631,6 +1640,20 @@ void EditScene::Load()
 		}
 
 		mapTool[idxI - p.posY][p.posX].first.push_back(button);
+	}
+
+	for (auto& p : loadObjInfo.switches)
+	{
+		Switch* switchB = new Switch;
+		switchB->SetRotation((Rotate)p.rotation);
+		switchB->SetButtonId(p.buttonId);
+
+		for (auto ptr : loadedWireInfo[switchB->GetButtonId()])
+		{
+			switchB->AddWire(ptr);
+		}
+
+		mapTool[idxI - p.posY][p.posX].first.push_back(switchB);
 	}
 
 	////////////////

@@ -10,6 +10,8 @@ Switch::Switch()
 
 	switchType = false;
 	time = 0.f;
+
+	buttonId = buttonNum * -1;
 }
 
 Switch::Switch(Vector2f position, int rotation, int id, float time, bool switchtype)
@@ -69,14 +71,13 @@ void Switch::Draw(RenderWindow& window)
 
 	if (!isPlayingGame)
 	{
-		SpriteObj::Draw(window);
+		WireableObject::Draw(window);
 	}
 	else
 	{
 		SpriteObj::Draw(window);
 		window.draw(hitbox);
 	}	
-
 }
 
 void Switch::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
