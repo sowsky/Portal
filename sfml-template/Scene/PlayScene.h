@@ -68,6 +68,7 @@ public:
 	void MakeButton(int rotaion, int id);
 	void MakePortal();
 	void MakeBlackWall(bool isEnd);
+	void MakeSwitch(int rotaion, int id,float time,bool switchtype);
 
 	void MakeGoal(vector<int> list);
 
@@ -103,7 +104,6 @@ private:
 	vector<BlackTile*> blackwall;
 	vector<Redwall*> redwall;
 	vector<Water*> water;
-	vector<Switch*> switches;
 
 	Vector2f temp = { 0,0 };
 

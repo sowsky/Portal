@@ -13,7 +13,7 @@ Tunnel::Tunnel()
 
 }
 
-Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool Isblue, bool active, int connected)
+Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist,  bool Isblue, bool active, int connected)
 	:IsBlue(Isblue), dir(dir), active(active), connected(connected)
 {
 	if (Isblue)

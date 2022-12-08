@@ -6,6 +6,7 @@ class Switch : public Button
 {
 public:
 	Switch();
+	Switch(Vector2f position,int rotation,int id, float time,bool switchtype);
 	virtual ~Switch();
 
 	virtual SpriteObj* NewThis();
@@ -15,13 +16,18 @@ public:
 	virtual void Draw
 	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
 
-	///////////
 	float GetTime() { return time; }
+	void SetActive() { switchon = !switchon; }
 
+	FloatRect GethitboxGlobalBounds() { return hitbox.getGlobalBounds(); }
 protected:
-	RectangleShape swtich;
+
+	RectangleShape hitbox;
+
+	bool switchon=false;
+
 	float time;
+	float remainingtime;
 	bool switchType; //false=sustain  true= turn on after time
-	int id;
 };
 

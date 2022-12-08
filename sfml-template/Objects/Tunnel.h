@@ -3,6 +3,8 @@
 #include "WireableObject.h"
 #include "Button.h"
 #include "Tile.h"
+#include "Tunnel.h"
+#include "Switch.h"
 
 class Tunnel : public WireableObject
 {
@@ -49,6 +51,7 @@ public:
 private:
 	list<Button*> button;
 	vector<int>buttonid;
+
 
 	SpriteObj* whohitwall;
 	RectangleShape tuns;
