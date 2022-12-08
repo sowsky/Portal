@@ -106,6 +106,7 @@ private:
 	vector<BlackTile*> blackwall;
 	vector<Redwall*> redwall;
 	vector<Water*> water;
+	vector<Switch*> switches;
 
 	Vector2f temp = { 0,0 };
 

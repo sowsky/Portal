@@ -6,7 +6,7 @@
 
 class Button : public WireableObject {
 public:
-	Button();
+	Button();	
 	virtual ~Button();
 
 	virtual SpriteObj* NewThis();
@@ -16,12 +16,12 @@ public:
 	RectangleShape* GetHitbox() { return hitbox; }
 	bool GetPressed() { return isPress; }
 	bool& GetIsPressRef() { return isPress; }
-	void SetPressed(bool a) { isPress = a; }
+	void SetPressed() { isPress = !isPress; }
 
 	int GetButtonId() { return buttonId; }
 	void SetButtonId(int a) { buttonId = a; }
 	static void SetIsEditMap(bool edit) { isEditMap = edit; }
-
+	virtual void SetSwitchActive() {};
 protected:
 	bool isPress = false;
 	static int buttonNum;
