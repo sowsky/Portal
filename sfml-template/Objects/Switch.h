@@ -17,17 +17,12 @@ public:
 	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
 
 	float GetTime() { return time; }
-	void SetActive() { switchon = !switchon; }
+	virtual void SetSwitchActive() { isPress = !isPress; }
 
-	FloatRect GethitboxGlobalBounds() { return hitbox.getGlobalBounds(); }
 protected:
-
-	RectangleShape hitbox;
-
-	bool switchon=false;
-
 	float time;
 	float remainingtime;
 	bool switchType; //false=sustain  true= turn on after time
+	int rot;
 };
 

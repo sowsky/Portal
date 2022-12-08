@@ -60,6 +60,9 @@ void PlayScene::Update(float dt)
 	for (auto w : water) {
 		w->Update(dt);
 	}
+	for (auto w : button) {
+		w->Update(dt);
+	}
 	blue->Update(dt);
 	orange->Update(dt);
 
@@ -86,7 +89,7 @@ void PlayScene::Update(float dt)
 			c->Respawn();
 		}
 	}
-		
+
 	MakePortal();
 	MoveToPortal();
 	PushButton();
@@ -94,18 +97,24 @@ void PlayScene::Update(float dt)
 	BridgeCheck();
 	RedwallCheck();
 	WaterCheck(dt);
-	 
+
 	if (IsMadeTunnelFollowOrangePortal || IsMadeTunnelFollowBluePortal)
 		CheckStillObjectalive();
+
+	for (auto b : button) {
+		if (InputMgr::GetKeyDown(Keyboard::E)&&b->GetHitbox()->getGlobalBounds().intersects(player->GetGlobalBounds())) {
+			b->SetSwitchActive();
+		}
+	}
 
 	if (grabitem) {
 
 		if (InputMgr::GetKeyDown(Keyboard::E)) {
 			cout << "drop" << endl;
 			grabitem = false;
-			
+
 			grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(grabitem);
-			grabbedcube->GetBody()->SetLinearVelocity({0,-1});
+			grabbedcube->GetBody()->SetLinearVelocity({ 0,-1 });
 			grabbedcube = nullptr;
 
 		}
@@ -172,7 +181,7 @@ void PlayScene::PhysicsUpdate(float dt)
 
 void PlayScene::Draw(RenderWindow& window)
 {
-	window.setView(worldView);	
+	window.setView(worldView);
 
 	for (auto v : wall) {
 		v->Draw(window);
@@ -529,12 +538,12 @@ PlayScene::PlayScene(string path)
 			}
 		}
 		currgrid = { GRIDSIZE / 2, currgrid.y + GRIDSIZE };
-		box2dposition = { GRIDSIZE / 2, currgrid.y+GRIDSIZE };
+		box2dposition = { GRIDSIZE / 2, currgrid.y + GRIDSIZE };
 		wallbunchwidth = GRIDSIZE;
 	}
 
-	height = colNum * GRIDSIZE*2;
-	width = rowNum * GRIDSIZE*2;
+	height = colNum * GRIDSIZE * 2;
+	width = rowNum * GRIDSIZE * 2;
 
 	bgNormal = RESOURCEMGR->GetTexture("Graphics/bg.png");
 	SetTex(crosshair, "Graphics/crosshair/alloff.png");
@@ -616,7 +625,7 @@ void PlayScene::MakeCube()
 
 void PlayScene::MakePlayer()
 {
-	player = new Player(world.get(), currgrid , Vector2f({ 20, 50 }));
+	player = new Player(world.get(), currgrid, Vector2f({ 20, 50 }));
 
 	currgrid.x += GRIDSIZE;
 }
@@ -1061,7 +1070,7 @@ void PlayScene::PushButton()
 			continue;
 
 		if (player->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
-			b->SetPressed(true);
+			b->SetPressed();
 			break;
 		}
 	}
@@ -1073,7 +1082,7 @@ void PlayScene::PushButton()
 			continue;
 		for (auto c : cube) {
 			if (c->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
-				b->SetPressed(true);
+				b->SetPressed();
 				break;
 			}
 		}
@@ -1106,15 +1115,15 @@ void PlayScene::PushButton()
 				check = true;
 				break;
 			}
-		}			
+		}
 
 
 		if (player->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds()))
 			check = true;
 
-	if (!check) {
-		cout << "setpreed false" << endl;
-			b->SetPressed(false);
+		if (!check) {
+			cout << "setpreed false" << endl;
+			b->SetPressed();
 		}
 	}
 
@@ -1567,7 +1576,7 @@ void PlayScene::Input()
 	}
 
 	//blue
-	if (InputMgr::GetMouseButtonDown(Mouse::Left) ) {
+	if (InputMgr::GetMouseButtonDown(Mouse::Left)) {
 		auto it = tunnel.begin();
 		if (IsMadeTunnelFollowBluePortal) {
 			while (it != tunnel.end())
@@ -1646,7 +1655,7 @@ void PlayScene::Input()
 
 
 	//orange
-	if (InputMgr::GetMouseButtonDown(Mouse::Right) ) {
+	if (InputMgr::GetMouseButtonDown(Mouse::Right)) {
 		auto it = tunnel.begin();
 		if (IsMadeTunnelFollowBluePortal) {
 			while (it != tunnel.end())
@@ -1846,8 +1855,8 @@ void PlayScene::MoveToPortal()
 		else if (orange->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ orange->GetPos().x + 30,orange->GetPos().y });
 			float force = (abs(player->GetRecentSpeed().y)) + (recentx);
-			if (force > maxspeed/2)
-				force = maxspeed/2;
+			if (force > maxspeed / 2)
+				force = maxspeed / 2;
 			player->GetBody()->SetLinearVelocity({ force ,1 });
 		}
 		else if (orange->GetPortalDir() == 2) {
@@ -1857,9 +1866,9 @@ void PlayScene::MoveToPortal()
 		else if (orange->GetPortalDir() == 3) {
 			player->SetPlayerBodyPos({ orange->GetPos().x - 30 ,orange->GetPos().y });
 			float force = (abs(player->GetRecentSpeed().y)) + (recentx);
-			if (force > maxspeed/2)
-				force = maxspeed/2;
-			player->GetBody()->SetLinearVelocity({ force*-1 ,1 });
+			if (force > maxspeed / 2)
+				force = maxspeed / 2;
+			player->GetBody()->SetLinearVelocity({ force * -1 ,1 });
 		}
 	}
 
@@ -1871,9 +1880,9 @@ void PlayScene::MoveToPortal()
 
 		float recenty = player->GetRecentSpeed().y * -1;
 		float recentx = abs(player->GetRecentSpeed().x);
-	
-		
-			
+
+
+
 		if ((int)recenty <= 2)
 			recenty = 1;
 
@@ -1890,8 +1899,8 @@ void PlayScene::MoveToPortal()
 		else if (blue->GetPortalDir() == 1) {
 			player->SetPlayerBodyPos({ blue->GetPos().x + 30,blue->GetPos().y });
 			float force = (abs(player->GetRecentSpeed().y)) + (recentx);
-			if (force > maxspeed/2)
-				force = maxspeed/2;
+			if (force > maxspeed / 2)
+				force = maxspeed / 2;
 			player->GetBody()->SetLinearVelocity({ force ,1 });
 		}
 		else if (blue->GetPortalDir() == 2) {
@@ -1902,9 +1911,9 @@ void PlayScene::MoveToPortal()
 		else if (blue->GetPortalDir() == 3) {
 			player->SetPlayerBodyPos({ blue->GetPos().x - 30 ,blue->GetPos().y });
 			float force = (abs(player->GetRecentSpeed().y)) + (recentx);
-			if (force > maxspeed/2)
-				force = maxspeed/2;
-			player->GetBody()->SetLinearVelocity({ force*-1 ,1 });
+			if (force > maxspeed / 2)
+				force = maxspeed / 2;
+			player->GetBody()->SetLinearVelocity({ force * -1 ,1 });
 		}
 	}
 
