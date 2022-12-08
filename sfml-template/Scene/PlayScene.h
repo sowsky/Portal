@@ -130,8 +130,7 @@ private:
 	bool IsMadeBridgeFollowOrangePortal = false;
 	bool IsMadeBridgeFollowBluePortal = false;
 
-	RectangleShape ending;
-	Texture* bgNormal;
+	RectangleShape ending;	
 
 	////////////////////////////////////////////////////
 	unique_ptr<b2World> world;
@@ -173,5 +172,6 @@ private:
 	Sprite background;
 	Texture* backgroundNormal;
 	bool testLight = false;	
+	bool isfreeView = false;
 };
 

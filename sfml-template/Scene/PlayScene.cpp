@@ -66,10 +66,11 @@ void PlayScene::Update(float dt)
 	blue->Update(dt);
 	orange->Update(dt);
 
-	if (!isMovingViewCenter) {
+	if (!isMovingViewCenter && !isfreeView) {
 
 		Vector2f currentcampos = worldView.getCenter();
 		worldView.setCenter(Utils::Lerp(currentcampos.x, player->GetPos().x, dt * 4), Utils::Lerp(currentcampos.y, player->GetPos().y, dt * 4));
+				
 		//worldView.setCenter({ temp.x/SCALE,temp.y/SCALE });
 		/*float x;
 		float y;
@@ -80,6 +81,25 @@ void PlayScene::Update(float dt)
 		}*/
 	}
 
+	if (isfreeView)
+	{
+		if (InputMgr::GetMousePos().x < 0.f)
+		{
+			worldView.move({ -800.f * dt,0.f });
+		}
+		if (InputMgr::GetMousePos().x > WINDOW_WIDTH)
+		{
+			worldView.move({ 800.f * dt,0.f });
+		}
+		if (InputMgr::GetMousePos().y < 0.f)
+		{
+			worldView.move({ 0.f, -800.f * dt });
+		}
+		if (InputMgr::GetMousePos().y > WINDOW_HEIGHT)
+		{
+			worldView.move({ 0.f, 800.f * dt });
+		}	
+	}
 
 	if (player->GetPos().y >= height + 200) {
 		player->Respawn();
@@ -182,7 +202,7 @@ void PlayScene::Draw(RenderWindow& window)
 {
 	window.setView(worldView);
 
-	DrawNormalAndDiffuse(window);
+	//DrawNormalAndDiffuse(window);
 
 	for (auto v : wall) {
 		v->Draw(window);
@@ -549,8 +569,7 @@ PlayScene::PlayScene(string path)
 
 	height = colNum * GRIDSIZE;
 	width = rowNum * GRIDSIZE;
-
-	bgNormal = RESOURCEMGR->GetTexture("Graphics/bg.png");
+		
 	SetTex(crosshair, "Graphics/crosshair/alloff.png");
 	crosshair.setScale(0.3f, 0.3f);
 	Utils::SetOrigin(crosshair, Origins::MC);
@@ -1761,6 +1780,11 @@ void PlayScene::Input()
 		showWire = !showWire;
 	}
 
+	if (InputMgr::GetKeyDown(Keyboard::V))
+	{
+		isfreeView = !isfreeView;
+	}
+
 	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
 		if (SCENE_MGR->GetPrevKey() == Scenes::MAPEDITER)
 		{
@@ -1843,11 +1867,11 @@ void PlayScene::BackAndLightControl()
 		testLight = !testLight;
 	}
 
-	if (testLight)
-	{
-		light.position.x = GetMouseWorldPos().x;
-		light.position.y = height - GetMouseWorldPos().y;
-	}
+	//if (testLight)
+	//{
+	//	light.position.x = GetMouseWorldPos().x;
+	//	light.position.y = height - GetMouseWorldPos().y;
+	//}
 
 	if (InputMgr::GetKeyDown(Keyboard::I))
 	{

@@ -152,7 +152,7 @@ void WireableObject::DrawWire(RenderWindow& window)
 			wires.back()->isConnected = true;
 			targetCatcherPtr = nullptr;
 			currWire = nullptr;
-			phase = Phase::TriggerSelect;	
+			phase = Phase::TriggerSelect;
 		}
 	}
 
@@ -206,10 +206,16 @@ void WireableObject::DrawWire(RenderWindow& window)
 void WireableObject::AddWire(WireableObject* target)
 {	
 	Button* temp = (Button*)this;
-	wires.push_back(new Wire);	
+	wires.push_back(new Wire);
 	wires.back()->buttonNum = temp->GetButtonId();
 	wires.back()->targetPtr = target;	
-	wires.back()->isConnected = true;	
+	wires.back()->isConnected = true;		
+	target->AddWire(wires.back());
+}
+
+void WireableObject::AddWire(Wire* wire)
+{
+	wires.push_back(wire);
 }
 
 list<int> WireableObject::GetWireListFromMapTool()

@@ -139,12 +139,6 @@ void EditScene::Init()
 	saveText.setString(saveString);
 
 	InitUiTool();
-
-	if (SCENE_MGR->GetPrevKey() == Scenes::PLAY)
-	{
-		loadString = "temp";
-		Load();
-	}
 }
 
 void EditScene::Release()
@@ -165,6 +159,12 @@ void EditScene::Enter()
 	Scene::SetUiView();
 	Init();
 	Button::SetIsEditMap(true);
+
+	if (SCENE_MGR->GetPrevKey() == Scenes::PLAY)
+	{
+		loadString = "temp";
+		Load();
+	}
 }
 
 void EditScene::Exit()
