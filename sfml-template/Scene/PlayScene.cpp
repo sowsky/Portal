@@ -205,12 +205,6 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
 	}
 
-	for (auto v : switches) {
-		v->Draw(window);
-		v->Draw(pass_diffuse, normals_shader, pass_normals);
-
-	}
-
 	for (auto v : bridge) {
 		v->DrawBackSide(window);
 	}
@@ -608,7 +602,7 @@ void PlayScene::MakeBlackWall(bool isEnd)
 
 void PlayScene::MakeSwitch(int rotaion, int id, float time, bool switchtype)
 {
-	switches.push_back(new Switch(currgrid, rotaion, id, time, switchtype));
+	button.push_back(new Switch(currgrid, rotaion, id, time, switchtype));
 
 	currgrid.x += GRIDSIZE;
 
@@ -1728,6 +1722,7 @@ void PlayScene::Input()
 		/////////////////////
 		//fireOrange.play();
 		SOUNDMGR->SoundPlay(SoundChoice::FireOrangeSound);
+
 	}
 
 	if (grabitem) {
@@ -2159,11 +2154,6 @@ void PlayScene::Release()
 		delete v;
 	}
 	water.clear();
-
-	for (auto v : switches) {
-		delete v;
-	}
-	switches.clear();
 
 	if (orange != nullptr)
 		delete orange;

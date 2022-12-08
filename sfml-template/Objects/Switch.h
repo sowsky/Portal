@@ -16,11 +16,14 @@ public:
 	virtual void Draw
 	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
 
+	void SetActive() { switchon = !switchon; }
+
 	FloatRect GethitboxGlobalBounds() { return hitbox.getGlobalBounds(); }
 	
 private:
 	RectangleShape hitbox;
 
+	bool switchon=false;
 	float time;
 	float remainingtime;
 	bool switchType; //false=sustain  true= turn on after time

@@ -10,7 +10,7 @@ class Tunnel : public WireableObject
 {
 public:
 	Tunnel();
-	Tunnel(const Vector2f& position, int dir, vector<int> buttonlist,vector<int> switchlist, bool Isblue, bool active,int connected);
+	Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool Isblue, bool active,int connected);
 	virtual ~Tunnel();
 
 	virtual void Update(float dt);
@@ -36,9 +36,6 @@ public:
 	virtual void SetButtonlist(vector<Button*>& button);
 	virtual void SetButtonlist(vector<int> idList) { buttonid = idList; }
 
-	virtual void SetSwitchlist(vector<Switch*>& button);
-	virtual void SetSwitchlist(vector<int> idList) { buttonid = idList; }
-
 	RectangleShape* GetHitbox() { return &hitbox; }
 
 	int GetDir() { return dir; }
@@ -55,8 +52,6 @@ private:
 	list<Button*> button;
 	vector<int>buttonid;
 
-	list<Switch*> switches;
-	vector<int>switchid;
 
 	SpriteObj* whohitwall;
 	RectangleShape tuns;
