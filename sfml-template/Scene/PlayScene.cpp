@@ -1885,11 +1885,11 @@ void PlayScene::BackAndLightControl()
 		testLight = !testLight;
 	}
 
-	if (testLight)
-	{
-		light.position.x = GetMouseWorldPos().x;
-		light.position.y = height - GetMouseWorldPos().y;
-	}
+	//if (testLight)
+	//{
+	//	light.position.x = GetMouseWorldPos().x;
+	//	light.position.y = height - GetMouseWorldPos().y;
+	//}
 
 	if (InputMgr::GetKeyDown(Keyboard::I))
 	{

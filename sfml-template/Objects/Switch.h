@@ -19,12 +19,13 @@ public:
 
 	float GetTime() { return time; }
 	void SetTime(float t) { time = t; }
-	virtual void SetSwitchActive() { isPress = !isPress; }
+	virtual void SetSwitchActive();
 
 protected:
 	float time;
 	float remainingtime;
 	bool switchType; //false=sustain  true= turn on after time
 	int rot;
+	bool after=false;
 };
 

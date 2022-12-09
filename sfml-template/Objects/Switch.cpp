@@ -20,8 +20,7 @@ Switch::Switch(Vector2f position, int rotation, int id, float time, bool switcht
 	SetResourceTexture("Graphics/switch.png");
 	SetOrigin(Origins::BC);
 
-	SetSize({ 20,40 });
-
+	SetSize({ 10,40 });
 
 	buttonId = id;
 
@@ -75,19 +74,16 @@ void Switch::Update(float dt)
 
 	if (time != 0) {
 		remainingtime -= dt;
-
 	}
 
 	if (remainingtime <=0) {
 		if (!switchType&&time!=0) {   //sustatin while on
 			isPress = false;
 		}
-		else if (switchType) {
+		else if (switchType&&after) {
 			isPress = true;
 		}
 	}
-
-
 
 	//////////////after work
 	if (remainingtime <= 0)
@@ -118,4 +114,17 @@ void Switch::Draw(RenderWindow& window)
 
 void Switch::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
 {
+}
+
+void Switch::SetSwitchActive()
+{
+	isPress = !isPress;
+	if (!switchType && time != 0) {
+		isPress = true;
+	}
+	else if (switchType) {
+		isPress = false;
+		after = true;
+	}
+	remainingtime = time;
 }
