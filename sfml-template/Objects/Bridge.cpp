@@ -312,7 +312,7 @@ void Bridge::Draw(RenderWindow& window)
 		WireableObject::Draw(window);
 		if (isInMapTool)
 			DrawTexBox(window);
-	}		
+	}
 }
 
 

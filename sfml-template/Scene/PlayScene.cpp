@@ -489,7 +489,7 @@ PlayScene::PlayScene(string path)
 					case 'T':
 					{
 						Tunnel_sturct* tempT = (Tunnel_sturct*)obj;
-						tunnel.push_back(new Tunnel({ currgrid.x,currgrid.y }, tempT->rotation, tempT->buttonList, 1, true, 0));
+						tunnel.push_back(new Tunnel({ currgrid.x,currgrid.y }, tempT->rotation, tempT->buttonList, 1, tempT->active, 0));
 						currgrid.x += GRIDSIZE;
 						box2dposition.x += GRIDSIZE;
 

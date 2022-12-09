@@ -48,6 +48,14 @@ public:
 
 	vector<int> GetButtonid() { return buttonid; }
 	Vector2f GetStartPos() { return startpos; }
+
+	//////////////////////////////////////
+
+	void InitTexBox();
+	void DrawTexBox(RenderWindow& window);
+	bool GetTunnelActive() { return this->active; }
+	void SetTunnelActive(bool a) { this->active = a; }
+
 private:
 	list<Button*> button;
 	vector<int>buttonid;
@@ -72,5 +80,8 @@ private:
 
 	bool originactive;
 	Sprite emitter;
+
+	RectangleShape onOfftexBox;
+	Text onOffTex;
 };
 

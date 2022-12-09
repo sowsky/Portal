@@ -2,7 +2,7 @@
 
 MovingPlatform::MovingPlatform()
 {
-	SetResourceTexture("Graphics/Ui/uppanel.png");
+	SetResourceTexture("Graphics/panelup.png");
 
 	id = 'm';
 
@@ -28,7 +28,7 @@ void MovingPlatform::Draw(RenderWindow& window)
 	{
 		WireableObject::Draw(window);
 	}
-	if (isPlayingGame)
+	else
 	{
 		SpriteObj::Draw(window);
 	}
