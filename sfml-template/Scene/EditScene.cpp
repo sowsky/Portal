@@ -1217,6 +1217,10 @@ void EditScene::FillUiToolBox()
 
 	uiTool[3][2].first = new DurationSwitch;
 	uiTool[3][2].first->SetResourceTexture("Graphics/Ui/switch3.png");
+
+	uiTool[4][0].first = new MovingPlatform;
+	uiTool[4][0].first->SetResourceTexture("Graphics/Ui/uppanel.png");
+	
 }
 
 void EditScene::SetUiToolPos(Vector2f pos)
@@ -1432,7 +1436,9 @@ void EditScene::Save()
 						tunnel.posX = j;
 						tunnel.posY = posY;
 						tunnel.rotation = (int)tool->GetRotation();
-						WireableObject* wobj = (WireableObject*)tool;					
+						Tunnel* tl = (Tunnel*)tool;
+						tunnel.active = tl->GetTunnelActive();
+						WireableObject* wobj = (WireableObject*)tool;				
 						for (auto w : wobj->GetWireList())
 						{
 							tunnel.buttonList.push_back(w->buttonNum);
@@ -1523,6 +1529,24 @@ void EditScene::Save()
 						saveObjInfo.switches.push_back(switchButton);
 						break;
 					}
+					case 'm':
+					{
+						Dummy_struct1 move;
+						move.id = 'm';
+						move.posX = j;
+						move.posY = posY;
+						if ((int)tool->GetRotation() == 1 ||
+							(int)tool->GetRotation() == 3)
+							break;
+						move.rotation = (int)tool->GetRotation();
+						WireableObject* wobj = (WireableObject*)tool;
+						for (auto w : wobj->GetWireList())
+						{							
+							move.dummyVec.push_back(w->buttonNum);
+						}
+						saveObjInfo.dummys1.push_back(move);
+						break;
+					}
 					default :
 						break;
 					}
@@ -1595,6 +1619,7 @@ void EditScene::Load()
 		Tunnel* tunnel = new Tunnel;
 		tunnel->SetRotation((Rotate)p.rotation);
 		tunnel->SetButtonlist(p.buttonList);
+		tunnel->SetTunnelActive(p.active);
 		for (auto id : p.buttonList)
 		{
 			PushToLoadedWireInfo(id, tunnel);
@@ -1625,6 +1650,17 @@ void EditScene::Load()
 			PushToLoadedWireInfo(id, red);
 		}
 		mapTool[idxI - p.posY][p.posX].first.push_back(red);
+	}
+
+	for (auto& p : loadObjInfo.dummys1)
+	{
+		MovingPlatform* move = new MovingPlatform;
+		move->SetRotation((Rotate)p.rotation);		
+		for (auto id : p.dummyVec)
+		{
+			PushToLoadedWireInfo(id, move);
+		}
+		mapTool[idxI - p.posY][p.posX].first.push_back(move);
 	}
 
 	for (auto& p : loadObjInfo.waters)

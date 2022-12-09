@@ -1,6 +1,7 @@
 #include "Tunnel.h"
 #include "../FrameWork/stdafx.h"
 #include "../FrameWork/InputMgr.h"
+#include "../Manager/ResourceMgr.h"
 
 Tunnel::Tunnel()
 {
@@ -11,6 +12,7 @@ Tunnel::Tunnel()
 
 	type = ObjectType::Catcher;
 
+	InitTexBox();
 }
 
 Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist,  bool Isblue, bool active, int connected)
@@ -223,7 +225,11 @@ void Tunnel::Update(float dt)
 void Tunnel::Draw(RenderWindow& window)
 {
 	if (!isPlayingGame)
+	{
 		WireableObject::Draw(window);
+		if (isInMapTool)
+			DrawTexBox(window);
+	}		
 	else
 	{
 		if (enable)
@@ -338,5 +344,40 @@ void Tunnel::TransParticles(float dt)
 				break;
 			}
 		}
+	}
+}
+
+void Tunnel::InitTexBox()
+{
+	onOffTex.setFont(*RESOURCEMGR->GetFont("Fonts/D-DINCondensed-Bold.otf"));
+	onOffTex.setCharacterSize(7);
+	onOffTex.setFillColor(Color::Black);
+	onOfftexBox.setSize({ 8.f, 8.f });
+	Utils::SetOrigin(onOfftexBox, Origins::MC);
+	onOfftexBox.setFillColor(Color::White);
+	onOfftexBox.setOutlineThickness(0.5f);
+	onOfftexBox.setOutlineColor(Color::Black);
+}
+
+void Tunnel::DrawTexBox(RenderWindow& window)
+{
+	onOfftexBox.setPosition(sprite.getPosition());
+	onOffTex.setPosition(onOfftexBox.getPosition());
+
+	Vector2f mousePos = window.mapPixelToCoords((Vector2i)InputMgr::GetMousePos(), window.getView());
+
+	if (onOfftexBox.getGlobalBounds().contains(mousePos) &&
+		InputMgr::GetMouseButtonDown(Mouse::Left) && Switch::GetShowTimer())
+	{
+		this->active = !this->active;
+	}
+
+	onOffTex.setString(this->active ? "ON" : "OFF");
+	Utils::SetOrigin(onOffTex, Origins::BC);
+
+	if (Switch::GetShowTimer())
+	{
+		window.draw(onOfftexBox);
+		window.draw(onOffTex);
 	}
 }
