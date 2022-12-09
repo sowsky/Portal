@@ -19,10 +19,9 @@ Switch::Switch(Vector2f position, int rotation, int id, float time, bool switcht
 {
 	SetResourceTexture("Graphics/switch.png");
 	SetOrigin(Origins::BC);
-	if (rot == 0 || rot == 2)
-		SetSize({ GetSize().x/2,40});
-	else
-		SetSize({ 40,GetSize().x / 2 });
+
+	SetSize({ 20,40 });
+
 
 	buttonId = id;
 
@@ -32,14 +31,17 @@ Switch::Switch(Vector2f position, int rotation, int id, float time, bool switcht
 	if (rotation == 0) {			//top of gird
 		hitbox->setPosition({ position.x,position.y - GRIDSIZE / 2 });
 		hitbox->setSize({ GRIDSIZE,GRIDSIZE / 4 });
+
 	}
 	else if (rotation == 1) {	//right of gird
 		hitbox->setPosition({ position.x + GRIDSIZE / 2,position.y });
 		hitbox->setSize({ GRIDSIZE,GRIDSIZE / 4 });
+
 	}
 	else if (rotation == 2) {	//bottom of gird
 		hitbox->setPosition({ position.x, position.y + GRIDSIZE / 2 });
 		hitbox->setSize({ GRIDSIZE,GRIDSIZE / 4 });
+
 	}
 	else if (rotation == 3) {	//left of gird
 		hitbox->setPosition({ position.x - GRIDSIZE / 2,position.y });
@@ -52,7 +54,6 @@ Switch::Switch(Vector2f position, int rotation, int id, float time, bool switcht
 	else
 		hitbox->setSize({ 40,10 });
 
-	SetPos(hitbox->getPosition());
 }
 
 Switch::~Switch()
