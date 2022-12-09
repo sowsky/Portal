@@ -1,4 +1,5 @@
 #include "Switch.h"
+#include "../Manager/ResourceMgr.h"
 
 bool Switch::showTimer = false;
 
@@ -19,7 +20,8 @@ Switch::Switch()
 Switch::Switch(Vector2f position, int rotation, int id, float time, bool switchtype)
 	: switchType(switchtype), time(time), rot(rotation)
 {
-	SetResourceTexture("Graphics/switch.png");
+	switchType ?
+		SetResourceTexture("Graphics/switchaf.png") : SetResourceTexture("Graphics/switch.png");
 	SetOrigin(Origins::BC);
 
 	SetSize({ 10,40 });
@@ -55,6 +57,14 @@ Switch::Switch(Vector2f position, int rotation, int id, float time, bool switcht
 	else
 		hitbox->setSize({ 40,10 });
 
+	timerTex.setFont(*RESOURCEMGR->GetFont("Fonts/D-DINCondensed-Bold.otf"));
+	timerTex.setFillColor(switchType ? Color::Yellow : Color::Red);
+	timerTex.setCharacterSize(40);
+	indicator.setPointCount(3);
+	indicator.setFillColor(switchType? Color::Yellow : Color::Red);
+	indicator.setRadius(30);	
+	Utils::SetOrigin(timerTex, Origins::MC);
+	timerTex.setPosition(position.x, position.y - GRIDSIZE * 0.5f);
 }
 
 Switch::~Switch()
@@ -90,6 +100,12 @@ void Switch::Update(float dt)
 	//////////////after work
 	if (remainingtime <= 0)
 		remainingtime = time;
+
+	////////////////
+
+	timerTex.setString(to_string((int)(remainingtime + 0.99f)));
+
+
 }
 
 void Switch::Draw(RenderWindow& window)
@@ -111,6 +127,10 @@ void Switch::Draw(RenderWindow& window)
 	{
 		window.draw(*hitbox);
 		SpriteObj::Draw(window);
+		if(!switchType && isPress && remainingtime)
+			window.draw(timerTex);		
+		if (switchType && !isPress && after)
+			window.draw(timerTex);
 	}
 }
 

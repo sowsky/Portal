@@ -32,5 +32,8 @@ protected:
 	static bool showTimer;
 
 	bool after=false;
+		
+	Text timerTex;
+	CircleShape indicator;
 };
 
