@@ -299,10 +299,10 @@ void PlayScene::Draw(RenderWindow& window)
 }
 
 PlayScene::PlayScene(string path)
-	//:light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
-	//	sf::Vector3f(0, 0, 0.08),
-	//	sf::Vector3f(0.5, 0.5, 0.5)),
-	//falloff(0.5, 0.5, 0.5)
+//:light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
+//	sf::Vector3f(0, 0, 0.08),
+//	sf::Vector3f(0.5, 0.5, 0.5)),
+//falloff(0.5, 0.5, 0.5)
 	:light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
 		sf::Vector3f(0, 0, 0.08),
 		sf::Vector3f(0.5, 0.5, 0.5)),
@@ -489,7 +489,7 @@ PlayScene::PlayScene(string path)
 					case 'T':
 					{
 						Tunnel_sturct* tempT = (Tunnel_sturct*)obj;
-						tunnel.push_back(new Tunnel({ currgrid.x,currgrid.y }, tempT->rotation, tempT->buttonList, 1, false, 0));
+						tunnel.push_back(new Tunnel({ currgrid.x,currgrid.y }, tempT->rotation, tempT->buttonList, 1, true, 0));
 						currgrid.x += GRIDSIZE;
 						box2dposition.x += GRIDSIZE;
 
@@ -750,6 +750,8 @@ void PlayScene::MakePortal()
 
 	for (auto b : redwall)
 	{
+		if (!b->GetIspress())
+			continue;
 		if (b->GetredwallHitboxGlobalBound().intersects(blue->GetGlobalBounds())) {
 			particle.emitParticles(b->GetRedwallPos(), false);
 			blue->SetPos({ -1000,-1000 });
@@ -1117,9 +1119,7 @@ void PlayScene::PushButton()
 		}
 	}
 
-
 	//bridge
-
 	for (auto b : button) {
 		if (b->GetPressed())
 			continue;
@@ -1371,23 +1371,26 @@ void PlayScene::RedwallCheck()
 
 
 		if (r->GetredwallGlobalBound().intersects(player->GethitboxGlobalBounds())) {
-			madeblue = false;
-			madeorange = false;
-			blue->SetPos({ -1000,-1000 });
-			orange->SetPos({ -1000,-1000 });
-			blue->SetDir({ 0,0 });
-			orange->SetDir({ 0,0 });
+			if (r->GetIspress()) {
+				madeblue = false;
+				madeorange = false;
+				blue->SetPos({ -1000,-1000 });
+				orange->SetPos({ -1000,-1000 });
+				blue->SetDir({ 0,0 });
+				orange->SetDir({ 0,0 });
+			}
 		}
 		for (auto c : cube) {
 			if (r->GetredwallGlobalBound().intersects(c->GethitboxGlobalBounds())) {
-				if (grabitem) {
+				if (r->GetIspress()) {
+					if (grabitem) {
+						grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(false);
 
-					grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(false);
-
-					grabbedcube = nullptr;
-					grabitem = false;
+						grabbedcube = nullptr;
+						grabitem = false;
+					}
+					c->MovetoStartpos();
 				}
-				c->MovetoStartpos();
 			}
 		}
 	}

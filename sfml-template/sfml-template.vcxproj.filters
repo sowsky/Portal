@@ -47,6 +47,7 @@
     <ClCompile Include="Objects\Switch.cpp" />
     <ClCompile Include="Objects\Switches\DurationSwitch.cpp" />
     <ClCompile Include="Objects\Switches\AfterSwitch.cpp" />
+    <ClCompile Include="Objects\MovingPlatform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Manager\Animator.h" />
@@ -91,6 +92,7 @@
     <ClInclude Include="Objects\Switch.h" />
     <ClInclude Include="Objects\Switches\DurationSwitch.h" />
     <ClInclude Include="Objects\Switches\AfterSwitch.h" />
+    <ClInclude Include="Objects\MovingPlatform.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

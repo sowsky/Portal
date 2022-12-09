@@ -14,7 +14,7 @@ Bridge::Bridge()
 }
 
 Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool active, int dir, int connected)
-	:dir(dir), active(active), connected(connected)
+	:dir(dir), active(active), connected(connected),originactive(active)
 {
 	///////////
 	buttonid = buttonlist;
@@ -125,11 +125,12 @@ void Bridge::Update(float dt)
 	//if (InputMgr::GetKeyDown(Keyboard::R))
 	//	active = !active;
 
-	active *= active;
+
+	active = originactive;
 
 	for (auto b : button) {
 		if (!b->GetPressed()) {
-			active *=active;
+			active = !originactive;
 			setedpos = false;
 			destiny.setPosition(startpos);
 			hit.setPosition({ 0,0 });

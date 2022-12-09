@@ -12,7 +12,7 @@ Redwall::Redwall()
 }
 
 Redwall::Redwall(Vector2f& position, vector<int> buttonlist, bool active, int dir)
-	:active(active), dir(dir), buttonid(buttonlist)
+	:enable(active), dir(dir), buttonid(buttonlist), originactive(active)
 {
 	redwall.setFillColor(Color(255, 0, 0, 100));
 
@@ -56,18 +56,19 @@ Redwall::~Redwall()
 
 void Redwall::Update(float dt)
 {
-	active = true;
+
+	enable = originactive;
 
 	for (auto b : button) {
 		if (!b->GetPressed()) {
-			active = false;
+			enable = !originactive;
 			hitbox.setPosition(-100, -100);
 			//destiny.setPosition(startpos);
 			return;
 		}
 	}
 
-	if (!active) {
+	if (!enable) {
 		if (dir == 0 || dir == 2) {
 			if (dir == 0) {
 				Utils::SetOrigin(redwall, Origins::MC);
@@ -168,7 +169,7 @@ void Redwall::Draw(RenderWindow& window)
 	}
 	else
 	{
-		if (active){
+		if (enable){
 			window.draw(redwall);
 			//window.draw(hitbox);
 		}

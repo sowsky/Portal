@@ -5,7 +5,7 @@ class MovingPlatform :  public WireableObject
 {
 public:
 	MovingPlatform();
-	virtual ~MovingPlatform();
+	virtual ~MovingPlatform() {}
 
 	virtual SpriteObj* NewThis();
 

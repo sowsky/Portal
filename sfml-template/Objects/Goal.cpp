@@ -101,7 +101,7 @@ void Goal::Draw(RenderWindow& window)
 		DrawSides(window);
 		window.draw(door, doorTex);
 		window.draw(sprite);
-	}		
+	}
 }
 
 void Goal::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)

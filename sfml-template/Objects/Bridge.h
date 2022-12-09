@@ -50,6 +50,7 @@ protected:
 	bool active;
 	bool hitwall;
 	bool setedpos;
+	bool originactive;
 	int connected = 0; //0==none 1==follow blue 2==follow orange
 
 	RectangleShape bridge;

@@ -28,15 +28,18 @@ public:
 	Vector2f GetStartPos() { return startpos; }
 
 	Vector2f GetRedwallPos() { return redwall.getPosition(); }
+
+	bool GetIspress() { return enable; };
 private:
 	RectangleShape redwall;
 	list<Button*> button;
 	vector<int>buttonid;
 	Vector2f startpos;
-	bool active;
+	bool enable;
 	bool hitwall = false;
 	const float thickness = 10;;
 	int dir;
+	bool originactive;
 
 	RectangleShape hitbox;
 

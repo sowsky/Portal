@@ -52,7 +52,6 @@ private:
 	list<Button*> button;
 	vector<int>buttonid;
 
-
 	SpriteObj* whohitwall;
 	RectangleShape tuns;
 	RectangleShape hitbox;
@@ -71,6 +70,7 @@ private:
 	Vector2f particleDir;
 	bool isPtcSetted = false;
 
+	bool originactive;
 	Sprite emitter;
 };
 
