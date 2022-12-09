@@ -217,11 +217,10 @@ void Bridge::Update(float dt)
 		float y;
 
 		if (dir == 0) {
-
-
 			Utils::SetOrigin(bridge, Origins::TC);
-			destiny.setSize({ bridge.getSize().x,10 });
+			cout << whohitwall->GetGlobalBounds().top << endl;
 			bridge.setSize({ bridge.getSize().x ,whohitwall->GetGlobalBounds().top - bridge.getPosition().y });
+			destiny.setSize({ bridge.getSize().x,10 });
 			endpos = { bridge.getPosition().x,bridge.getPosition().y + bridge.getSize().y };
 			x = bridge.getPosition().x / SCALE;
 			y = (bridge.getPosition().y + (bridge.getSize().y / 2)) / SCALE * -1;
@@ -234,10 +233,8 @@ void Bridge::Update(float dt)
 			destiny.setSize({ bridge.getSize().x,10 });
 			endpos = { bridge.getPosition().x,bridge.getPosition().y - bridge.getSize().y };
 
-
 			x = bridge.getPosition().x / SCALE;
 			y = (bridge.getPosition().y + (bridge.getSize().y / 2) - bridge.getSize().y) / SCALE * -1;
-			cout<<x << " " <<y<< endl;
 		}
 		else if (dir == 1) {
 			Utils::SetOrigin(bridge, Origins::MR);
@@ -283,6 +280,11 @@ void Bridge::Update(float dt)
 		Vector2f pos = { body->GetPosition().x * SCALE,body->GetPosition().y * SCALE * -1 };
 		hitbox.setPosition(pos);
 	}
+	if (whohitwall != nullptr&& dir == 0) {
+		cout << whohitwall->GetGlobalBounds().top << endl;
+		int a = 10;
+	}
+
 }
 
 void Bridge::Draw(RenderWindow& window)
@@ -301,7 +303,7 @@ void Bridge::Draw(RenderWindow& window)
 			window.draw(frontEmitter);
 		//window.draw(hitbox);
 		//window.draw(start);
-	//	window.draw(hit);
+		window.draw(hit);
 	}
 	if (!isPlayingGame)
 		WireableObject::Draw(window);

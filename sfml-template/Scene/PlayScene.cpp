@@ -70,7 +70,7 @@ void PlayScene::Update(float dt)
 
 		Vector2f currentcampos = worldView.getCenter();
 		worldView.setCenter(Utils::Lerp(currentcampos.x, player->GetPos().x, dt * 4), Utils::Lerp(currentcampos.y, player->GetPos().y, dt * 4));
-				
+
 		//worldView.setCenter({ temp.x/SCALE,temp.y/SCALE });
 		/*float x;
 		float y;
@@ -98,7 +98,7 @@ void PlayScene::Update(float dt)
 		if (InputMgr::GetMousePos().y > WINDOW_HEIGHT)
 		{
 			worldView.move({ 0.f, 800.f * dt });
-		}	
+		}
 	}
 
 	if (player->GetPos().y >= height + 200) {
@@ -122,7 +122,7 @@ void PlayScene::Update(float dt)
 		CheckStillObjectalive();
 
 	for (auto b : button) {
-		if (InputMgr::GetKeyDown(Keyboard::E)&&b->GetHitbox()->getGlobalBounds().intersects(player->GetGlobalBounds())) {
+		if (InputMgr::GetKeyDown(Keyboard::E) && b->GetHitbox()->getGlobalBounds().intersects(player->GetGlobalBounds())) {
 			b->SetSwitchActive();
 		}
 	}
@@ -569,7 +569,7 @@ PlayScene::PlayScene(string path)
 
 	height = colNum * GRIDSIZE;
 	width = rowNum * GRIDSIZE;
-		
+
 	SetTex(crosshair, "Graphics/crosshair/alloff.png");
 	crosshair.setScale(0.3f, 0.3f);
 	Utils::SetOrigin(crosshair, Origins::MC);
@@ -611,7 +611,7 @@ PlayScene::PlayScene(string path)
 	background.setTexture(*RESOURCEMGR->GetTexture("Graphics/backgrounds/background.png"));
 	backgroundNormal = RESOURCEMGR->GetTexture("Graphics/backgrounds/background_n.png");
 
-	Utils::SetSpriteSize(background,{ rowNum * GRIDSIZE, colNum * GRIDSIZE });
+	Utils::SetSpriteSize(background, { rowNum * GRIDSIZE, colNum * GRIDSIZE });
 
 }
 
@@ -1281,8 +1281,10 @@ void PlayScene::BridgeCheck()
 	for (auto w : wall) {
 		for (auto v : bridge) {
 			if (w->GetGlobalBounds().intersects(v->GetHitBoxGlobalbound())) {
-				v->SetHitwall(true);
-				v->Setwhohitwall(*w);
+				if (!v->GetHitwall()) {
+					v->SetHitwall(true);
+					v->Setwhohitwall(*w);
+				}
 			}
 		}
 	}
@@ -1291,8 +1293,10 @@ void PlayScene::BridgeCheck()
 	for (auto w : blackwall) {
 		for (auto v : bridge) {
 			if (w->GetGlobalBounds().intersects(v->GetHitBoxGlobalbound())) {
-				v->SetHitwall(true);
-				v->Setwhohitwall(*w);
+				if (!v->GetHitwall()) {
+					v->SetHitwall(true);
+					v->Setwhohitwall(*w);
+				}
 			}
 		}
 	}
@@ -2291,7 +2295,7 @@ void PlayScene::Enter()
 	pass_diffuse.create(width, height);
 
 	/////////////////////////////
-	
+
 	front2 = unique_ptr<RenderTexture>(new RenderTexture());
 	back2 = unique_ptr<RenderTexture>(new RenderTexture());
 
