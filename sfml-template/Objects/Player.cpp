@@ -119,7 +119,7 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	armBorn.setFillColor(Color::Blue);
 
 	indicator.setSize({ 1024.f, 0.5f });
-	indicator.setFillColor(Color::Blue);
+	indicator.setFillColor(Color::Red);
 
 	Utils::SetOrigin(p_rleg, Origins::TC);
 	Utils::SetOrigin(p_arm, Origins::ML);
