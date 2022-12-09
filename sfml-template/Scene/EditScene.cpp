@@ -1220,6 +1220,10 @@ void EditScene::FillUiToolBox()
 
 	uiTool[4][0].first = new MovingPlatform;
 	uiTool[4][0].first->SetResourceTexture("Graphics/Ui/uppanel.png");
+
+	uiTool[4][1].first = new AngledTile;
+	uiTool[4][1].first->SetResourceTexture("Graphics/Ui/angle.png");
+	
 	
 }
 
@@ -1551,6 +1555,15 @@ void EditScene::Save()
 						saveObjInfo.dummys1.push_back(move);
 						break;
 					}
+					case 'a':
+					{
+						AngledTile_struct angle;
+						angle.id = 'a';
+						angle.posX = j;
+						angle.posY = posY;
+						angle.rotation = (int)tool->GetRotation();
+						saveObjInfo.angleTiles.push_back(angle);
+					}
 					default :
 						break;
 					}
@@ -1616,6 +1629,13 @@ void EditScene::Load()
 	{
 		BlackTile* tile = new BlackTile;
 		mapTool[idxI - p.posY][p.posX].first.push_back(tile);
+	}
+
+	for (auto& p : loadObjInfo.angleTiles)
+	{
+		AngledTile* angle = new AngledTile;
+		angle->SetRotation((Rotate)p.rotation);
+		mapTool[idxI - p.posY][p.posX].first.push_back(angle);
 	}
 
 	for (auto& p : loadObjInfo.tunnels)

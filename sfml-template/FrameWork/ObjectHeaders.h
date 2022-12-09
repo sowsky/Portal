@@ -16,3 +16,4 @@
 #include "../Objects/Switches/AfterSwitch.h"
 #include "../Objects/Switches/DurationSwitch.h"
 #include "../Objects/MovingPlatform.h"
+#include "../Objects/AngledTile.h"
