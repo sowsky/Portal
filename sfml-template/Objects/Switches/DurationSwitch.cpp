@@ -3,7 +3,7 @@
 DurationSwitch::DurationSwitch()
 {
 	SetResourceTexture("Graphics/switch.png");
-	id = 'ds';
+	id = '8';
 	type = ObjectType::Trigger;
 	objSize = ObjectSize::Normal;
 	attatchedPos = Rotate::Down;
