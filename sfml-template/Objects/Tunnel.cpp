@@ -172,7 +172,7 @@ void Tunnel::Update(float dt)
 			tuns.setSize({ tuns.getSize().x,whohitwall->GetGlobalBounds().top - tuns.getPosition().y });
 
 			endpos = { tuns.getPosition().x,tuns.getPosition().y + tuns.getSize().y };
-
+			
 		}
 		else if (dir == 2) {
 			destiny.setSize({ tuns.getSize().x,10 });
@@ -235,7 +235,7 @@ void Tunnel::Draw(RenderWindow& window)
 		//window.draw(hitbox);			
 		//window.draw(emitter);
 	}
-	window.draw(destiny);
+	//window.draw(destiny);
 }
 
 void Tunnel::ChangeDir()

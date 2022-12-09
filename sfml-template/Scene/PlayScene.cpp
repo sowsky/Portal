@@ -1406,14 +1406,6 @@ void PlayScene::WaterCheck(float dt)
 
 void PlayScene::CheckStillObjectalive()
 {
-	if (!IsMadeTunnelFollowOrangePortal) {
-		//check blue hit
-		for (auto b : bridge) {
-			if (b->GetDestinyGlobalbound().intersects(blue->GetGlobalBounds())) {
-
-			}
-		}
-	}
 
 	////////////////////////////////////////////////////////////////////
 	if (IsMadeTunnelFollowOrangePortal) {
@@ -1477,7 +1469,7 @@ void PlayScene::CheckStillObjectalive()
 		bool on = false;
 		for (auto t : bridge)
 		{
-			if (t->GetDestinyGlobalbound().intersects(blue->GetGlobalBounds())) {
+			if (t->GetHitGlobalbound().intersects(blue->GetGlobalBounds())) {
 				on = true;
 			}
 		}
@@ -1505,7 +1497,7 @@ void PlayScene::CheckStillObjectalive()
 		bool on = false;
 		for (auto t : bridge)
 		{
-			if (t->GetDestinyGlobalbound().intersects(orange->GetGlobalBounds())) {
+			if (t->GetHitGlobalbound().intersects(orange->GetGlobalBounds())) {
 				on = true;
 			}
 		}
@@ -2085,7 +2077,6 @@ void PlayScene::MoveToPortal()
 				pos = { orange->GetPos().x,orange->GetPos().y - orange->GetGlobalBounds().height - 30 };
 				dir = 2;
 			}
-
 			else if (orange->GetPortalDir() == 1) {
 				pos = { orange->GetPos().x + 50,orange->GetPos().y };
 				dir = 3;
@@ -2094,13 +2085,11 @@ void PlayScene::MoveToPortal()
 				pos = { orange->GetPos().x,orange->GetPos().y + orange->GetGlobalBounds().height + 30 };
 				dir = 0;
 			}
-
 			else if (orange->GetPortalDir() == 3) {
 				pos = { orange->GetPos().x - 50,orange->GetPos().y };
 				dir = 1;
 
 			}
-
 
 			tunnel.push_back(new Tunnel(pos, dir, temp, tunnel[i]->GetColor(), true, 2));
 			IsMadeTunnelFollowOrangePortal = true;
@@ -2150,7 +2139,7 @@ void PlayScene::MoveToPortal()
 	for (int i = 0; i < (int)bridge.size(); i++) {
 
 		//hit blue
-		if (bridge[i]->GetHitBoxGlobalbound().intersects(blue->GetGlobalBounds()) && !IsMadeBridgeFollowOrangePortal) {
+		if (bridge[i]->GetHitGlobalbound().intersects(blue->GetGlobalBounds()) && !IsMadeBridgeFollowOrangePortal) {
 			vector<int> temp;
 			Vector2f pos;
 			int dir = 0;
@@ -2178,7 +2167,7 @@ void PlayScene::MoveToPortal()
 		}
 
 		//hit orange
-		if (bridge[i]->GetHitBoxGlobalbound().intersects(orange->GetGlobalBounds()) && !IsMadeBridgeFollowBluePortal) {
+		if (bridge[i]->GetHitGlobalbound().intersects(orange->GetGlobalBounds()) && !IsMadeBridgeFollowBluePortal) {
 			vector<int> temp;
 			Vector2f pos;
 			int dir = 0;

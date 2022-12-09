@@ -16,7 +16,7 @@ public:
 	void SetHitwall(bool a) { hitwall = a; }
 	void Setwhohitwall(SpriteObj& victim) { whohitwall = &victim; }
 	FloatRect GetHitBoxGlobalbound() { return hitbox.getGlobalBounds(); }
-
+	FloatRect GetHitGlobalbound() { return hit.getGlobalBounds(); }
 	virtual void SetButtonlist(vector<int> idList) { buttonid = idList; }
 
 	FloatRect GetBridgeGlobalBound() { return bridge.getGlobalBounds(); }
@@ -49,6 +49,7 @@ protected:
 	RectangleShape hitbox;
 	RectangleShape destiny;
 	RectangleShape start;
+	RectangleShape hit;
 
 	Vector2f startpos;
 	Vector2f endpos;

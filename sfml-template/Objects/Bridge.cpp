@@ -105,6 +105,9 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 	backEmitter.setPosition(startpos);
 
 	///////////
+
+	hit.setFillColor(Color::White);
+	hit.setSize({ 10,10 });
 }
 
 Bridge::~Bridge()
@@ -127,7 +130,7 @@ void Bridge::Update(float dt)
 			active = false;
 			setedpos = false;
 			destiny.setPosition(startpos);
-
+			hit.setPosition({ 0,0 });
 		}
 	}
 
@@ -267,11 +270,11 @@ void Bridge::Update(float dt)
 
 	//Utils::SetOrigin(hitbox, Origins::MC);
 
-
 	destiny.setPosition(startpos);
 
-
 	bridge.setPosition(startpos);
+	Utils::SetOrigin(hit, Origins::MC);
+	hit.setPosition(endpos);
 
 	hitbox.setOrigin(bridge.getOrigin());
 
@@ -298,6 +301,7 @@ void Bridge::Draw(RenderWindow& window)
 			window.draw(frontEmitter);
 		//window.draw(hitbox);
 		//window.draw(start);
+	//	window.draw(hit);
 	}
 	if (!isPlayingGame)
 		WireableObject::Draw(window);
