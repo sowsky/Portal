@@ -61,6 +61,7 @@ void Redwall::Update(float dt)
 	for (auto b : button) {
 		if (!b->GetPressed()) {
 			active = false;
+			hitbox.setPosition(-100, -100);
 			//destiny.setPosition(startpos);
 			return;
 		}

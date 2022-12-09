@@ -22,7 +22,7 @@ Switch::Switch(Vector2f position, int rotation, int id, float time, bool switcht
 	SetResourceTexture("Graphics/switch.png");
 	SetOrigin(Origins::BC);
 
-	SetSize({ 10,40 });
+	SetSize({ 100,40 });
 
 	buttonId = id;
 
@@ -32,11 +32,14 @@ Switch::Switch(Vector2f position, int rotation, int id, float time, bool switcht
 	if (rotation == 0) {			//top of gird
 		hitbox->setPosition({ position.x,position.y - GRIDSIZE / 2 });
 		hitbox->setSize({ GRIDSIZE,GRIDSIZE / 4 });
+		SetRotation(180.f);
 
 	}
 	else if (rotation == 1) {	//right of gird
 		hitbox->setPosition({ position.x + GRIDSIZE / 2,position.y });
 		hitbox->setSize({ GRIDSIZE,GRIDSIZE / 4 });
+		SetRotation(-90.f);
+
 
 	}
 	else if (rotation == 2) {	//bottom of gird
@@ -47,6 +50,8 @@ Switch::Switch(Vector2f position, int rotation, int id, float time, bool switcht
 	else if (rotation == 3) {	//left of gird
 		hitbox->setPosition({ position.x - GRIDSIZE / 2,position.y });
 		hitbox->setSize({ GRIDSIZE ,GRIDSIZE / 4 });
+		SetRotation(90.f);
+
 	}
 
 	hitbox->setFillColor(Color::Yellow);
@@ -55,6 +60,7 @@ Switch::Switch(Vector2f position, int rotation, int id, float time, bool switcht
 	else
 		hitbox->setSize({ 40,10 });
 
+	SetPos(hitbox->getPosition());
 }
 
 Switch::~Switch()
@@ -68,11 +74,22 @@ SpriteObj* Switch::NewThis()
 
 void Switch::Update(float dt)
 {
-	Utils::SetOrigin(*hitbox, Origins::BC);
-	if (rot == 0 || rot == 2)
-		hitbox->setSize({ 10,40 });
-	else
-		hitbox->setSize({ 40,10 });
+
+	if (rot == 0) {
+		Utils::SetOrigin(*hitbox, Origins::TC);
+	}
+	else if (rot == 1) {
+		Utils::SetOrigin(*hitbox, Origins::MR);
+	}
+	else if (rot == 2) {
+		Utils::SetOrigin(*hitbox, Origins::BC);
+	}
+	else if (rot == 3) {
+		Utils::SetOrigin(*hitbox, Origins::ML);
+	}
+	hitbox->setPosition(GetPos());
+
+
 
 	if (time != 0) {
 		remainingtime -= dt;
@@ -129,4 +146,5 @@ void Switch::SetSwitchActive()
 		after = true;
 	}
 	remainingtime = time;
+
 }

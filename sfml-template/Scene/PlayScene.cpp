@@ -1116,21 +1116,20 @@ void PlayScene::PushButton()
 		}
 	}
 
-	//for (auto b : button) {
-	//	if (!b->GetPressed())
-	//		continue;
 
-	//	bool off = false;
-	//	for (auto c : cube) {
-	//		if (c->GetGlobalBounds().intersects(b->GetHitbox()->getGlobalBounds())) {
-	//			off = false;
-	//			break;
-	//		}
-	//		off = true;
-	//	}
-	//	if (off)
-	//		b->SetPressed(false);
-	//}
+	//bridge
+
+	for (auto b : button) {
+		if (b->GetPressed())
+			continue;
+		for (auto c : bridge) {
+			if (c->GetHitGlobalbound().intersects(b->GetHitbox()->getGlobalBounds())) {
+				b->SetPressed();
+				break;
+			}
+		}
+	}
+
 
 	/////////////unpush check
 	for (auto b : button) {
@@ -1140,6 +1139,13 @@ void PlayScene::PushButton()
 
 		for (auto c : cube) {
 			if (b->GetHitbox()->getGlobalBounds().intersects(c->GetGlobalBounds())) {
+				check = true;
+				break;
+			}
+		}
+
+		for (auto c : bridge) {
+			if (b->GetHitbox()->getGlobalBounds().intersects(c->GetHitGlobalbound())) {
 				check = true;
 				break;
 			}
