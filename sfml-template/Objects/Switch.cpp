@@ -15,7 +15,7 @@ Switch::Switch()
 }
 
 Switch::Switch(Vector2f position, int rotation, int id, float time, bool switchtype)
-	: switchType(switchtype), time(time),rot(rotation)
+	: switchType(switchtype), time(time), rot(rotation)
 {
 	SetResourceTexture("Graphics/switch.png");
 	SetOrigin(Origins::BC);
@@ -25,8 +25,8 @@ Switch::Switch(Vector2f position, int rotation, int id, float time, bool switcht
 
 	buttonId = id;
 
-	hitbox= new RectangleShape();
-	Utils::SetOrigin(*hitbox,Origins::BC);
+	hitbox = new RectangleShape();
+	Utils::SetOrigin(*hitbox, Origins::BC);
 
 	if (rotation == 0) {			//top of gird
 		hitbox->setPosition({ position.x,position.y - GRIDSIZE / 2 });
@@ -68,16 +68,30 @@ SpriteObj* Switch::NewThis()
 void Switch::Update(float dt)
 {
 	Utils::SetOrigin(*hitbox, Origins::BC);
-	if ( rot== 0 || rot == 2)
+	if (rot == 0 || rot == 2)
 		hitbox->setSize({ 10,40 });
 	else
 		hitbox->setSize({ 40,10 });
 
 	if (time != 0) {
 		remainingtime -= dt;
-		if (remainingtime <= 0)
-			remainingtime = time;
+
 	}
+
+	if (remainingtime <=0) {
+		if (!switchType&&time!=0) {   //sustatin while on
+			isPress = false;
+		}
+		else if (switchType) {
+			isPress = true;
+		}
+	}
+
+
+
+	//////////////after work
+	if (remainingtime <= 0)
+		remainingtime = time;
 }
 
 void Switch::Draw(RenderWindow& window)
@@ -99,7 +113,7 @@ void Switch::Draw(RenderWindow& window)
 	{
 		window.draw(*hitbox);
 		SpriteObj::Draw(window);
-	}	
+	}
 }
 
 void Switch::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
