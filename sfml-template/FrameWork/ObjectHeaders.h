@@ -15,3 +15,4 @@
 //#include "../Objects/Switch.h"
 #include "../Objects/Switches/AfterSwitch.h"
 #include "../Objects/Switches/DurationSwitch.h"
+#include "../Objects/MovingPlatform.h"
