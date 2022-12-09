@@ -1438,6 +1438,7 @@ void EditScene::Save()
 						tunnel.rotation = (int)tool->GetRotation();
 						Tunnel* tl = (Tunnel*)tool;
 						tunnel.active = tl->GetTunnelActive();
+						tunnel.IsBlue = tl->GetColor();
 						WireableObject* wobj = (WireableObject*)tool;				
 						for (auto w : wobj->GetWireList())
 						{
@@ -1623,6 +1624,7 @@ void EditScene::Load()
 		tunnel->SetRotation((Rotate)p.rotation);
 		tunnel->SetButtonlist(p.buttonList);
 		tunnel->SetTunnelActive(p.active);
+		tunnel->SetColor(p.IsBlue);
 		for (auto id : p.buttonList)
 		{
 			PushToLoadedWireInfo(id, tunnel);

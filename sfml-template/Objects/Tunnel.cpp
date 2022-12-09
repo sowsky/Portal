@@ -13,6 +13,7 @@ Tunnel::Tunnel()
 	type = ObjectType::Catcher;
 
 	InitTexBox();
+	InitColorBox();
 }
 
 Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist,  bool Isblue, bool active, int connected)
@@ -228,7 +229,11 @@ void Tunnel::Draw(RenderWindow& window)
 	{
 		WireableObject::Draw(window);
 		if (isInMapTool)
+		{
 			DrawTexBox(window);
+			DrawColorBox(window);
+		}
+			
 	}		
 	else
 	{
@@ -359,6 +364,14 @@ void Tunnel::InitTexBox()
 	onOfftexBox.setOutlineColor(Color::Black);
 }
 
+void Tunnel::InitColorBox()
+{
+	colorBox.setSize({ 8.f, 8.f });	
+	colorBox.setFillColor(Color::Blue);
+	colorBox.setOutlineThickness(0.5f);
+	colorBox.setOutlineColor(Color::Black);
+}
+
 void Tunnel::DrawTexBox(RenderWindow& window)
 {
 	onOfftexBox.setPosition(sprite.getPosition());
@@ -380,4 +393,23 @@ void Tunnel::DrawTexBox(RenderWindow& window)
 		window.draw(onOfftexBox);
 		window.draw(onOffTex);
 	}
+}
+
+void Tunnel::DrawColorBox(RenderWindow& window)
+{
+	if (!Switch::GetShowTimer())
+		return;
+
+	colorBox.setPosition(onOfftexBox.getTransform().transformPoint(onOfftexBox.getPoint(1)));	
+
+	Vector2f mousePos = window.mapPixelToCoords((Vector2i)InputMgr::GetMousePos(), window.getView());
+
+	if (colorBox.getGlobalBounds().contains(mousePos) &&
+		InputMgr::GetMouseButtonDown(Mouse::Left) && Switch::GetShowTimer())
+	{
+		IsBlue = !IsBlue;
+		colorBox.setFillColor(IsBlue ? Color::Blue : Color::Yellow);
+	}
+
+	window.draw(colorBox);
 }
