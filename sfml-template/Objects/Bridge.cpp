@@ -125,7 +125,6 @@ void Bridge::Update(float dt)
 	//if (InputMgr::GetKeyDown(Keyboard::R))
 	//	active = !active;
 
-
 	active = originactive;
 
 	for (auto b : button) {

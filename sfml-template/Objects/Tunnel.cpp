@@ -14,7 +14,7 @@ Tunnel::Tunnel()
 }
 
 Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist,  bool Isblue, bool active, int connected)
-	:IsBlue(Isblue), dir(dir), active(active), connected(connected), originactive(active)
+	:IsBlue(Isblue), dir(dir), enable(active), connected(connected), originactive(active)
 {
 	if (Isblue)
 		tuns.setFillColor(Color(BLUE, 50));
@@ -97,16 +97,16 @@ void Tunnel::Update(float dt)
 	//if (InputMgr::GetKeyDown(Keyboard::R))
 	//	active = !active;
 
-	active = originactive;
+	enable = originactive;
 
 	for  (auto b : button) {
 		if (!b->GetPressed()) {
-			active = !originactive;
+			enable = !originactive;
 			destiny.setPosition(startpos);
 		}
 	}
 
-	if (!active) {
+	if (!enable) {
 		if (dir == 0 || dir == 2) {
 			if (dir == 0) {
 				Utils::SetOrigin(tuns, Origins::TC);
@@ -213,7 +213,7 @@ void Tunnel::Update(float dt)
 	hitbox.setOrigin(tuns.getOrigin());
 	hitbox.setPosition(tuns.getPosition());
 
-	if ((hitwall && whohitwall != nullptr) && active)
+	if ((hitwall && whohitwall != nullptr) && enable)
 	{
 		SetParticlePos();
 		TransParticles(dt);
@@ -226,7 +226,7 @@ void Tunnel::Draw(RenderWindow& window)
 		WireableObject::Draw(window);
 	else
 	{
-		if (active)
+		if (enable)
 		{
 		//	window.draw(tuns);
 			window.draw(particles);
@@ -266,12 +266,12 @@ void Tunnel::TurnOn()
 {
 	for (auto b : button) {
 		if (!b->GetPressed()) {
-			active = false;
+			enable = false;
 		}
 	}
 
 	//active door
-	active = true;
+	enable = true;
 }
 
 void Tunnel::SetButtonlist(vector<Button*>& button)
