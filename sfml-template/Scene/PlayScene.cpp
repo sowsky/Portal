@@ -509,7 +509,8 @@ PlayScene::PlayScene(string path)
 					case 'l':
 					case 'L': {
 						Bridge_sturct* tempB = (Bridge_sturct*)obj;
-						bridge.push_back(new Bridge(world.get(), currgrid, tempB->buttonList, true, tempB->rotation, 0));
+						bridge.push_back(new Bridge(world.get(), currgrid, tempB->buttonList, tempB->on, tempB->rotation, 0));
+						//bridge.back()->BridgeSetActive(tempB->on);						
 						currgrid.x += GRIDSIZE;
 						box2dposition.x += GRIDSIZE;
 

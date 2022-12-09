@@ -2,6 +2,7 @@
 #include"../FrameWork/InputMgr.h"
 #include "../FrameWork/stdafx.h"
 #include "../Manager/ResourceMgr.h"
+#include "../Objects/Switch.h"
 Bridge::Bridge()
 {
 	SetResourceTexture("Graphics/temp/bridge.png");
@@ -9,6 +10,7 @@ Bridge::Bridge()
 
 	objSize = ObjectSize::Normal;
 	type = ObjectType::Catcher;
+	InitTexBox();
 }
 
 Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool active, int dir, int connected)
@@ -123,11 +125,11 @@ void Bridge::Update(float dt)
 	//if (InputMgr::GetKeyDown(Keyboard::R))
 	//	active = !active;
 
-	active = true;
+	active *= active;
 
 	for (auto b : button) {
 		if (!b->GetPressed()) {
-			active = false;
+			active *=active;
 			setedpos = false;
 			destiny.setPosition(startpos);
 			hit.setPosition({ 0,0 });
@@ -305,7 +307,11 @@ void Bridge::Draw(RenderWindow& window)
 		//window.draw(hit);
 	}
 	if (!isPlayingGame)
+	{
 		WireableObject::Draw(window);
+		if (isInMapTool)
+			DrawTexBox(window);
+	}		
 }
 
 
@@ -363,4 +369,39 @@ void Bridge::DrawBackSide(RenderWindow& window)
 		//window.draw(start);
 		//window.draw(destiny);		
 	}
+}
+
+void Bridge::InitTexBox()
+{
+	onOffTex.setFont(*RESOURCEMGR->GetFont("Fonts/D-DINCondensed-Bold.otf"));
+	onOffTex.setCharacterSize(7);
+	onOffTex.setFillColor(Color::Black);
+	onOfftexBox.setSize({ 8.f, 8.f });
+	Utils::SetOrigin(onOfftexBox, Origins::MC);
+	onOfftexBox.setFillColor(Color::White);
+	onOfftexBox.setOutlineThickness(0.5f);
+	onOfftexBox.setOutlineColor(Color::Black);
+}
+
+void Bridge::DrawTexBox(RenderWindow& window)
+{
+	onOfftexBox.setPosition(sprite.getPosition());
+	onOffTex.setPosition(onOfftexBox.getPosition());
+
+	Vector2f mousePos = window.mapPixelToCoords((Vector2i)InputMgr::GetMousePos(), window.getView());
+
+	if (onOfftexBox.getGlobalBounds().contains(mousePos) &&
+		InputMgr::GetMouseButtonDown(Mouse::Left) && Switch::GetShowTimer())
+	{
+		this->active = !this->active;
+	}
+
+	onOffTex.setString(this->active ? "ON" : "OFF");
+	Utils::SetOrigin(onOffTex, Origins::BC);
+
+	if (Switch::GetShowTimer())
+	{
+		window.draw(onOfftexBox);
+		window.draw(onOffTex);
+	}	
 }

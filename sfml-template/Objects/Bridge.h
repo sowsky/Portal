@@ -35,6 +35,13 @@ public:
 	void UpdateBridgeDraw(RenderWindow& window);
 	void DrawBackSide(RenderWindow& window);
 	Vector2f GetStartPos() { return startpos; }
+
+	/////////////////////////
+	void InitTexBox();
+	void DrawTexBox(RenderWindow& window);
+	bool BridgeActive() { return this->active; }
+	void BridgeSetActive(bool a) { this->active = a; }
+
 protected:
 	list<Button*> button;
 	vector<int>buttonid;
@@ -76,5 +83,8 @@ protected:
 	Texture* bridge_color;
 
 	float backDp;
+
+	RectangleShape onOfftexBox;
+	Text onOffTex;
 };
 

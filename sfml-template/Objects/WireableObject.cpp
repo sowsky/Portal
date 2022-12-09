@@ -46,7 +46,7 @@ WireableObject::~WireableObject()
 void WireableObject::Init()
 {
 	Object::Init();
-	SetWireCheckBox();
+	SetWireCheckBox();	
 }
 
 void WireableObject::Update(float dt)

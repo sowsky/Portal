@@ -53,7 +53,7 @@ public:
 	void AddWire(WireableObject* target);
 	void AddWire(Wire* wire);
 
-	list<int> GetWireListFromMapTool();	
+	list<int> GetWireListFromMapTool();
 
 	//list<int>& GetWireNum() { return wireNum; }
 

@@ -705,10 +705,21 @@ void EditScene::Input(float dt)
 		SpriteObj::OnOffWiringState(isWiring = !isWiring);
 		WireableObject::SetPhase(isWiring ? Phase::TriggerSelect : Phase::None);
 		isWiring ? LoadDataToWireableList() : RelaseWireableList();
+
+		if (isWiring && Switch::GetShowTimer())
+		{
+			Switch::OnOffShowTimer();
+		}			
 	}
+
 	if (InputMgr::GetKeyDown(Keyboard::Num3))
 	{
 		Switch::OnOffShowTimer();
+		if (Switch::GetShowTimer && isWiring)
+		{
+			isWiring = false;
+			SpriteObj::OnOffWiringState(isWiring);
+		}
 	}
 }
 
@@ -1435,7 +1446,9 @@ void EditScene::Save()
 						bridge.id = 'l';
 						bridge.posX = j;
 						bridge.posY = posY;
-						bridge.rotation = (int)tool->GetRotation();
+						bridge.rotation = (int)tool->GetRotation();						
+						Bridge* br = (Bridge*)tool;
+						bridge.on = br->BridgeActive();
 						WireableObject* wobj = (WireableObject*)tool;					
 						for (auto w : wobj->GetWireList())
 						{
@@ -1594,6 +1607,7 @@ void EditScene::Load()
 		Bridge* bridge = new Bridge;
 		bridge->SetRotation((Rotate)p.rotation);
 		bridge->SetButtonlist(p.buttonList);
+		bridge->BridgeSetActive(p.on);
 		for (auto id : p.buttonList)
 		{
 			PushToLoadedWireInfo(id, bridge);

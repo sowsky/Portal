@@ -22,6 +22,7 @@ public:
 
 	virtual void SetSwitchActive();
 	static void OnOffShowTimer() { showTimer = !showTimer; }
+	static bool GetShowTimer() { return showTimer; }
 
 protected:
 	float time;
