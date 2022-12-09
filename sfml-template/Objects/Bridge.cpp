@@ -187,7 +187,6 @@ void Bridge::Update(float dt)
 			else if (dir == 2) {
 				Utils::SetOrigin(bridge, Origins::BC);
 			}
-
 		}
 		else {
 			bridge.setSize({ bridge.getSize().x + 100,bridge.getSize().y });
@@ -303,7 +302,7 @@ void Bridge::Draw(RenderWindow& window)
 			window.draw(frontEmitter);
 		//window.draw(hitbox);
 		//window.draw(start);
-		window.draw(hit);
+		//window.draw(hit);
 	}
 	if (!isPlayingGame)
 		WireableObject::Draw(window);
