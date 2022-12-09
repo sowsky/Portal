@@ -14,7 +14,7 @@ Tunnel::Tunnel()
 }
 
 Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist,  bool Isblue, bool active, int connected)
-	:IsBlue(Isblue), dir(dir), active(active), connected(connected)
+	:IsBlue(Isblue), dir(dir), active(active), connected(connected), originactive(active)
 {
 	if (Isblue)
 		tuns.setFillColor(Color(BLUE, 50));
@@ -94,14 +94,14 @@ void Tunnel::Update(float dt)
 {
 	Utils::SetOrigin(start, Origins::MC);
 
-	active = true;
-
 	//if (InputMgr::GetKeyDown(Keyboard::R))
 	//	active = !active;
 
-	for (auto b : button) {
+	active = originactive;
+
+	for  (auto b : button) {
 		if (!b->GetPressed()) {
-			active = false;
+			active = !originactive;
 			destiny.setPosition(startpos);
 		}
 	}
