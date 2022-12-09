@@ -202,7 +202,8 @@ void PlayScene::Draw(RenderWindow& window)
 {
 	window.setView(worldView);
 
-	//DrawNormalAndDiffuse(window);
+	DrawNormalAndDiffuse(window);
+	DrawRenderedBackGroundBuffer(window);
 
 	for (auto v : wall) {
 		v->Draw(window);
@@ -1536,6 +1537,30 @@ void PlayScene::DrawBackGroundView(RenderWindow& window)
 	window.setView(backgroundView);
 }
 
+void PlayScene::DrawRenderedBackGroundBuffer(RenderWindow& window)
+{
+
+	pass_diffuse2.display();
+	pass_normals2.display();
+
+	lights_shader.setParameter("resolution", sf::Vector2f(width, height));
+	lights_shader.setParameter("sampler_normal", pass_normals2.getTexture());
+	lights_shader.setParameter("ambient_intensity", ambient_intensity);
+	lights_shader.setParameter("falloff", falloff);
+
+	lights_shader.setParameter("sampler_light", front2->getTexture());
+	lights_shader.setParameter("light_pos", light.position);
+	lights_shader.setParameter("light_color", light.color);
+	back2->draw(sf::Sprite(pass_diffuse2.getTexture()), &lights_shader);
+	back2->display();
+	std::swap(back2, front2);
+
+	// Draw diffuse color
+	window.draw(sf::Sprite(pass_diffuse2.getTexture()));
+	// Blend lighting over
+	window.draw(sf::Sprite(front2->getTexture()), sf::BlendMultiply);
+}
+
 void PlayScene::DrawRenderedBuffer(RenderWindow& window)
 {
 	pass_diffuse.display();
@@ -1839,6 +1864,11 @@ void PlayScene::LightTestInputForDev()
 
 void PlayScene::ClearRenderBuffer()
 {
+	back2->clear();
+	front2->clear();
+	pass_diffuse2.clear(Color::Transparent);
+	pass_normals2.clear(Color::Transparent);
+
 	back->clear();
 	front->clear();
 	//pass_diffuse.clear(Color::White);
@@ -1863,11 +1893,11 @@ void PlayScene::BackAndLightControl()
 		testLight = !testLight;
 	}
 
-	//if (testLight)
-	//{
-	//	light.position.x = GetMouseWorldPos().x;
-	//	light.position.y = height - GetMouseWorldPos().y;
-	//}
+	if (testLight)
+	{
+		light.position.x = GetMouseWorldPos().x;
+		light.position.y = height - GetMouseWorldPos().y;
+	}
 
 	if (InputMgr::GetKeyDown(Keyboard::I))
 	{
@@ -1889,9 +1919,9 @@ void PlayScene::BackAndLightControl()
 
 void PlayScene::DrawNormalAndDiffuse(RenderWindow& window)
 {
-	pass_diffuse.draw(background);
+	pass_diffuse2.draw(background);
 	normals_shader.setParameter("sampler_normal", *backgroundNormal);
-	pass_normals.draw(background, &normals_shader);
+	pass_normals2.draw(background, &normals_shader);
 }
 
 
@@ -2270,6 +2300,19 @@ void PlayScene::Enter()
 
 	pass_normals.create(width, height);
 	pass_diffuse.create(width, height);
+
+	/////////////////////////////
+	
+	front2 = unique_ptr<RenderTexture>(new RenderTexture());
+	back2 = unique_ptr<RenderTexture>(new RenderTexture());
+
+	front2->create(width, height);
+	back2->create(width, height);
+
+	pass_normals2.create(width, height);
+	pass_diffuse2.create(width, height);
+
+	////////////////////////////
 
 	lights_shader.loadFromFile("Shader/light.frag", Shader::Fragment);
 	normals_shader.loadFromFile("Shader/normals.frag", Shader::Fragment);
