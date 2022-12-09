@@ -1220,6 +1220,10 @@ void EditScene::FillUiToolBox()
 
 	uiTool[4][0].first = new MovingPlatform;
 	uiTool[4][0].first->SetResourceTexture("Graphics/Ui/uppanel.png");
+
+	uiTool[4][1].first = new AngledTile;
+	uiTool[4][1].first->SetResourceTexture("Graphics/Ui/angle.png");
+	
 	
 }
 
@@ -1438,6 +1442,7 @@ void EditScene::Save()
 						tunnel.rotation = (int)tool->GetRotation();
 						Tunnel* tl = (Tunnel*)tool;
 						tunnel.active = tl->GetTunnelActive();
+						tunnel.IsBlue = tl->GetColor();
 						WireableObject* wobj = (WireableObject*)tool;				
 						for (auto w : wobj->GetWireList())
 						{
@@ -1531,14 +1536,17 @@ void EditScene::Save()
 					}
 					case 'm':
 					{
+						if ((int)tool->GetRotation() == 1 ||
+							(int)tool->GetRotation() == 3)
+							break;
+
 						Dummy_struct1 move;
 						move.id = 'm';
 						move.posX = j;
 						move.posY = posY;
-						if ((int)tool->GetRotation() == 1 ||
-							(int)tool->GetRotation() == 3)
-							break;
 						move.rotation = (int)tool->GetRotation();
+						MovingPlatform* tempM = (MovingPlatform*)tool;
+						move.dummyFloat1 = tempM->GetRange();
 						WireableObject* wobj = (WireableObject*)tool;
 						for (auto w : wobj->GetWireList())
 						{							
@@ -1546,6 +1554,15 @@ void EditScene::Save()
 						}
 						saveObjInfo.dummys1.push_back(move);
 						break;
+					}
+					case 'a':
+					{
+						AngledTile_struct angle;
+						angle.id = 'a';
+						angle.posX = j;
+						angle.posY = posY;
+						angle.rotation = (int)tool->GetRotation();
+						saveObjInfo.angleTiles.push_back(angle);
 					}
 					default :
 						break;
@@ -1614,12 +1631,20 @@ void EditScene::Load()
 		mapTool[idxI - p.posY][p.posX].first.push_back(tile);
 	}
 
+	for (auto& p : loadObjInfo.angleTiles)
+	{
+		AngledTile* angle = new AngledTile;
+		angle->SetRotation((Rotate)p.rotation);
+		mapTool[idxI - p.posY][p.posX].first.push_back(angle);
+	}
+
 	for (auto& p : loadObjInfo.tunnels)
 	{
 		Tunnel* tunnel = new Tunnel;
 		tunnel->SetRotation((Rotate)p.rotation);
 		tunnel->SetButtonlist(p.buttonList);
 		tunnel->SetTunnelActive(p.active);
+		tunnel->SetColor(p.IsBlue);
 		for (auto id : p.buttonList)
 		{
 			PushToLoadedWireInfo(id, tunnel);
@@ -1655,7 +1680,8 @@ void EditScene::Load()
 	for (auto& p : loadObjInfo.dummys1)
 	{
 		MovingPlatform* move = new MovingPlatform;
-		move->SetRotation((Rotate)p.rotation);		
+		move->SetRotation((Rotate)p.rotation);	
+		move->SetRange(p.dummyFloat1);
 		for (auto id : p.dummyVec)
 		{
 			PushToLoadedWireInfo(id, move);

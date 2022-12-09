@@ -13,12 +13,20 @@ public:
 
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);
+
+	void DrawUi(RenderWindow& window);
+
+	int GetRange() { return range; }
+	void SetRange(int r) { range = r; }
 protected:
+	int range = 1;
+
 	CircleShape up;
 	CircleShape down;
 	
 	RectangleShape platform;
 	RectangleShape Pillar;
+
 
 	Vector2f destiny;
 	Vector2f endpos;
@@ -36,5 +44,8 @@ protected:
 
 	b2Body* platformbody = nullptr;
 	b2Fixture* platformfixture = nullptr;
+
+	array<Sprite, 20> arrows;
+
 };
 

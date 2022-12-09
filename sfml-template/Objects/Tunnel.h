@@ -18,6 +18,7 @@ public:
 
 	void SetDir(bool b) { IsBlue = b; }  //true==blue,false=orange
 	bool GetColor() { return IsBlue; }
+	void SetColor(bool color) { IsBlue = color; }
 
 	void ChangeDir();
 	void ChangeColor();
@@ -52,7 +53,9 @@ public:
 	//////////////////////////////////////
 
 	void InitTexBox();
+	void InitColorBox();
 	void DrawTexBox(RenderWindow& window);
+	void DrawColorBox(RenderWindow& window);
 	bool GetTunnelActive() { return this->active; }
 	void SetTunnelActive(bool a) { this->active = a; }
 
@@ -83,5 +86,7 @@ private:
 
 	RectangleShape onOfftexBox;
 	Text onOffTex;
+
+	RectangleShape colorBox;
 };
 
