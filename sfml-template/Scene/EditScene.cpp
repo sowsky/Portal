@@ -1531,14 +1531,17 @@ void EditScene::Save()
 					}
 					case 'm':
 					{
+						if ((int)tool->GetRotation() == 1 ||
+							(int)tool->GetRotation() == 3)
+							break;
+
 						Dummy_struct1 move;
 						move.id = 'm';
 						move.posX = j;
 						move.posY = posY;
-						if ((int)tool->GetRotation() == 1 ||
-							(int)tool->GetRotation() == 3)
-							break;
 						move.rotation = (int)tool->GetRotation();
+						MovingPlatform* tempM = (MovingPlatform*)tool;
+						move.dummyFloat1 = tempM->GetRange();
 						WireableObject* wobj = (WireableObject*)tool;
 						for (auto w : wobj->GetWireList())
 						{							
@@ -1655,7 +1658,8 @@ void EditScene::Load()
 	for (auto& p : loadObjInfo.dummys1)
 	{
 		MovingPlatform* move = new MovingPlatform;
-		move->SetRotation((Rotate)p.rotation);		
+		move->SetRotation((Rotate)p.rotation);	
+		move->SetRange(p.dummyFloat1);
 		for (auto id : p.dummyVec)
 		{
 			PushToLoadedWireInfo(id, move);
