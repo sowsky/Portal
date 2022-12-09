@@ -143,8 +143,8 @@ private:
 	//////
 	ParticleSystem particle;
 	
-	int width;
-	int height;
+	const int width=4000;
+	const int height=4000;
 
 	float maxspeed=16;
 
@@ -177,5 +177,9 @@ private:
 	Texture* backgroundNormal;
 	bool testLight = false;	
 	bool isfreeView = false;
+
+	float currentcamposx;
+	float currentcamposy;
+
 };
 

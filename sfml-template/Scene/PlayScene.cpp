@@ -68,9 +68,14 @@ void PlayScene::Update(float dt)
 
 	if (!isMovingViewCenter && !isfreeView) {
 
-		Vector2f currentcampos = worldView.getCenter();
-		worldView.setCenter(Utils::Lerp(currentcampos.x, player->GetPos().x, dt * 4), Utils::Lerp(currentcampos.y, player->GetPos().y, dt * 4));
+		//if (currentcamposx > FRAMEWORK->GetWindowSize().x / 2) {  //stop x update
+			currentcamposx = worldView.getCenter().x;
+			currentcamposy = worldView.getCenter().y;
+		//}
 
+		
+		worldView.setCenter(Utils::Lerp(currentcamposx, player->GetPos().x, dt * 4), Utils::Lerp(currentcamposy, player->GetPos().y, dt * 4));
+		cout << WorldPosToScreen(player->GetPos()).x<<" "<< WorldPosToScreen(player->GetPos()).y << endl;
 		//worldView.setCenter({ temp.x/SCALE,temp.y/SCALE });
 		/*float x;
 		float y;
@@ -566,11 +571,11 @@ PlayScene::PlayScene(string path)
 	}
 
 
-	//height = colNum * GRIDSIZE*2;
-	//width = rowNum * GRIDSIZE*2;
+	/*height = colNum * GRIDSIZE*100;
+	width = rowNum * GRIDSIZE*100;*/
 
-	height = colNum * GRIDSIZE;
-	width = rowNum * GRIDSIZE;
+	//height = colNum * GRIDSIZE;
+	//width = rowNum * GRIDSIZE;
 
 	SetTex(crosshair, "Graphics/crosshair/alloff.png");
 	crosshair.setScale(0.3f, 0.3f);
@@ -614,6 +619,8 @@ PlayScene::PlayScene(string path)
 	backgroundNormal = RESOURCEMGR->GetTexture("Graphics/backgrounds/background_n.png");
 
 	Utils::SetSpriteSize(background, { rowNum * GRIDSIZE, colNum * GRIDSIZE });
+
+	worldView.setCenter(player->GetPos());
 
 }
 

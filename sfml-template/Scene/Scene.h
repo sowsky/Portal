@@ -38,7 +38,7 @@ public:
 	Vector2f ScreenToWorldPos(Vector2i screenPos);
 	Vector2f ScreenToUiPos(Vector2i screenPos);
 	Vector2i UiPosToScreen(Vector2f UiPos);
-
+	Vector2i WorldPosToScreen(Vector2f pos);
 	Vector2f GetMouseWorldPos();
 	void SetTex(Sprite& sprite, string id);		
 };
