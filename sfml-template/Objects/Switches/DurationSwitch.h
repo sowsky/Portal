@@ -8,5 +8,14 @@ public:
 
 	virtual SpriteObj* NewThis();
 	float GetTime() { return time; }
+
+
+	virtual void Draw(RenderWindow& window);
+protected:
+	RectangleShape box;
+	Text num;
+
+	CircleShape up;
+	CircleShape down;
 };
 

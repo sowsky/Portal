@@ -1,5 +1,7 @@
 #include "Switch.h"
 
+bool Switch::showTimer = false;
+
 Switch::Switch()
 {
 	SetResourceTexture("Graphics/switch.png");

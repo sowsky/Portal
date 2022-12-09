@@ -706,19 +706,10 @@ void EditScene::Input(float dt)
 		WireableObject::SetPhase(isWiring ? Phase::TriggerSelect : Phase::None);
 		isWiring ? LoadDataToWireableList() : RelaseWireableList();
 	}
-	//if (InputMgr::GetKeyDown(Keyboard::A) &&
-	//	isWiring &&
-	//	numBox.front()->GetNum() > 1)
-	//{
-	//	numBox.front()->SetNum(numBox.front()->GetNum() - 1);
-	//}
-
-	//if (InputMgr::GetKeyDown(Keyboard::D) &&
-	//	isWiring &&
-	//	numBox.front()->GetNum() < Button::GetButtonNum())
-	//{
-	//	numBox.front()->SetNum(numBox.front()->GetNum() + 1);
-	//}
+	if (InputMgr::GetKeyDown(Keyboard::Num3))
+	{
+		Switch::OnOffShowTimer();
+	}
 }
 
 void EditScene::DrawOutLine(RenderWindow& window)
@@ -1519,6 +1510,8 @@ void EditScene::Save()
 						saveObjInfo.switches.push_back(switchButton);
 						break;
 					}
+					default :
+						break;
 					}
 				}
 			}
@@ -1644,9 +1637,15 @@ void EditScene::Load()
 
 	for (auto& p : loadObjInfo.switches)
 	{
-		Switch* switchB = new Switch;
+		Switch* switchB;
+		if (p.type)
+			switchB = new AfterSwitch;
+		else
+			switchB = p.time ? new DurationSwitch : new Switch;
+				
 		switchB->SetRotation((Rotate)p.rotation);
 		switchB->SetButtonId(p.buttonId);
+		switchB->SetTime(p.time);
 
 		for (auto ptr : loadedWireInfo[switchB->GetButtonId()])
 		{

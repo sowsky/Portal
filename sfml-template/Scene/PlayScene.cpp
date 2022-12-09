@@ -299,14 +299,15 @@ void PlayScene::Draw(RenderWindow& window)
 }
 
 PlayScene::PlayScene(string path)
+	//:light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
+	//	sf::Vector3f(0, 0, 0.08),
+	//	sf::Vector3f(0.5, 0.5, 0.5)),
+	//falloff(0.5, 0.5, 0.5)
 	:light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
 		sf::Vector3f(0, 0, 0.08),
 		sf::Vector3f(0.5, 0.5, 0.5)),
-	falloff(0.5, 0.5, 0.5)
-	//light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
-	//	sf::Vector3f(0, 0, 0),
-	//	sf::Vector3f(0.5, 0.5, 0.5)),
-	//falloff(4, 4, 4)
+	falloff(2, 2, 2)
+
 {
 
 	b2Vec2 g(0.0f, -10);

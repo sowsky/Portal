@@ -117,9 +117,12 @@ void WireableObject::DrawWire(RenderWindow& window)
 		&& InputMgr::GetMouseButtonDown(Mouse::Right)
 		&& !wires.back()->isConnected)
 	{
-		delete wires.back();		
-		wires.pop_back();
-		SetPhase(Phase::TriggerSelect);
+		if (!wires.empty())
+		{
+			delete wires.back();
+			wires.pop_back();
+			SetPhase(Phase::TriggerSelect);
+		}
 	}
 
 	if (phase == Phase::CatcherSelect
