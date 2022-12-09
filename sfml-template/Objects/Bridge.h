@@ -15,6 +15,7 @@ public:
 	bool GetHitwall() { return hitwall; }
 	void SetHitwall(bool a) { hitwall = a; }
 	void Setwhohitwall(SpriteObj& victim) { whohitwall = &victim; }
+	SpriteObj* Getwhohitwall() { return whohitwall; }
 	FloatRect GetHitBoxGlobalbound() { return hitbox.getGlobalBounds(); }
 	FloatRect GetHitGlobalbound() { return hit.getGlobalBounds(); }
 	virtual void SetButtonlist(vector<int> idList) { buttonid = idList; }

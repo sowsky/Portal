@@ -19,7 +19,8 @@ public:
 
 	float GetTime() { return time; }
 	void SetTime(float t) { time = t; }
-	virtual void SetSwitchActive() { isPress = !isPress; }
+
+	virtual void SetSwitchActive();
 	static void OnOffShowTimer() { showTimer = !showTimer; }
 
 protected:
@@ -29,5 +30,7 @@ protected:
 	int rot;
 
 	static bool showTimer;
+
+	bool after=false;
 };
 
