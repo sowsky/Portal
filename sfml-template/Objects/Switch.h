@@ -18,6 +18,7 @@ public:
 	virtual void SetPressed() {  }
 
 	float GetTime() { return time; }
+	void SetTime(float t) { time = t; }
 	virtual void SetSwitchActive() { isPress = !isPress; }
 
 protected:

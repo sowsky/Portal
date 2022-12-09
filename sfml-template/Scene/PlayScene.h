@@ -86,6 +86,7 @@ public:
 	
 public:
 	void DrawBackGroundView(RenderWindow& window);
+	void DrawRenderedBackGroundBuffer(RenderWindow& window);
 	void DrawRenderedBuffer(RenderWindow& window);
 	void Input();
 	void LightTestInputForDev();
@@ -150,6 +151,9 @@ private:
 	// Front and backbuffer as Pointer for std::swap
 	unique_ptr<RenderTexture> front, back;
 	RenderTexture pass_normals, pass_diffuse;
+
+	unique_ptr<RenderTexture> front2, back2;
+	RenderTexture pass_normals2, pass_diffuse2;
 	//Texture normal_map, diffuse_map;
 
 	Shader lights_shader;

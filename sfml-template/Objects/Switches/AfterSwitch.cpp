@@ -3,7 +3,7 @@
 AfterSwitch::AfterSwitch()
 {
 	SetResourceTexture("Graphics/switch.png");
-	id = 'as';
+	id = '9';
 	type = ObjectType::Trigger;
 	objSize = ObjectSize::Normal;
 	attatchedPos = Rotate::Down;

@@ -1491,31 +1491,31 @@ void EditScene::Save()
 						saveObjInfo.switches.push_back(switchButton);
 						break;
 					}
-					case 'as':
+					case '9':
 					{
 						Switch_struct switchButton;
 						switchButton.id = 's';
 						switchButton.posX = j;
-						switchButton.posY = posY;
-						switchButton.time = 3.f;
+						switchButton.posY = posY;						
 						switchButton.type = true;
 						switchButton.rotation = (int)tool->GetRotation();
 						Switch* tempSwitch = (Switch*)tool;
 						switchButton.buttonId = tempSwitch->GetButtonId();
+						switchButton.time = tempSwitch->GetTime();
 						saveObjInfo.switches.push_back(switchButton);
 						break;
 					}
-					case 'ds':
+					case '8':
 					{
 						Switch_struct switchButton;
 						switchButton.id = 's';
 						switchButton.posX = j;
-						switchButton.posY = posY;
-						switchButton.time = 3.f;
+						switchButton.posY = posY;						
 						switchButton.type = false;
 						switchButton.rotation = (int)tool->GetRotation();
 						Switch* tempSwitch = (Switch*)tool;
 						switchButton.buttonId = tempSwitch->GetButtonId();
+						switchButton.time = tempSwitch->GetTime();
 						saveObjInfo.switches.push_back(switchButton);
 						break;
 					}
