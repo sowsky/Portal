@@ -40,6 +40,7 @@ bool Framework::Init(int width, int height)
 
 	window.create(VideoMode(windowSize.x, windowSize.y), "Game", sf::Style::Close);
 	window.setFramerateLimit(60);
+	//window.setVerticalSyncEnabled(true);
 
 	RESOURCEMGR->GetInstance()->LoadAll();
 	//  SOUND_MGR->Init();
@@ -52,7 +53,7 @@ bool Framework::Init(int width, int height)
 bool Framework::Do()
 {	
 	while (window.isOpen())
-	{
+	{			
 		deltaTime = clock.restart();
 		float dt = GetDT();
 		InputMgr::Update(dt);

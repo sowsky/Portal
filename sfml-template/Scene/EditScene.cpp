@@ -1552,8 +1552,8 @@ void EditScene::Save()
 						move.posY = posY;
 						move.rotation = (int)tool->GetRotation();
 						MovingPlatform* tempM = (MovingPlatform*)tool;
-						move.dummyFloat1 = tempM->GetRange();
-						move.dummyFloat2 = tempM->GetPlatformOn();
+						move.dummyFloat1 = tempM->GetPlatformOn(); 
+						move.dummyFloat2 = tempM->GetRange();
 						WireableObject* wobj = (WireableObject*)tool;
 						for (auto w : wobj->GetWireList())
 						{							
@@ -1728,8 +1728,8 @@ void EditScene::Load()
 	{
 		MovingPlatform* move = new MovingPlatform;
 		move->SetRotation((Rotate)p.rotation);	
-		move->SetRange(p.dummyFloat1);
-		move->SetPlatformOn(p.dummyFloat2);
+		move->SetPlatformOn(p.dummyFloat1);
+		move->SetRange(p.dummyFloat2);
 		for (auto id : p.dummyVec)
 		{
 			PushToLoadedWireInfo(id, move);

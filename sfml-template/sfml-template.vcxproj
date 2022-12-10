@@ -202,6 +202,7 @@
     <ClCompile Include="Objects\VertexArrayObj.cpp" />
     <ClCompile Include="Objects\Water.cpp" />
     <ClCompile Include="Objects\Switch.cpp" />
+    <ClCompile Include="Shader\Wave.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Gels\AccelGel.h" />
@@ -252,6 +253,7 @@
     <ClInclude Include="Objects\VertexArrayObj.h" />
     <ClInclude Include="Objects\Water.h" />
     <ClInclude Include="Objects\Switch.h" />
+    <ClInclude Include="Shader\Wave.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

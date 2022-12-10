@@ -580,6 +580,11 @@ PlayScene::PlayScene(string path)
 					case 'M':
 					{
 						//// 상승 발판
+						Dummy_struct1* tempM = (Dummy_struct1*)obj;
+						tempM->dummyFloat1; //onoff
+						tempM->dummyFloat2; //이동 높이
+						tempM->dummyVec; //버튼 목록
+
 						break;
 					}
 					case 'a':
@@ -592,18 +597,21 @@ PlayScene::PlayScene(string path)
 					case 'D':
 					{
 						///드로퍼
+						Dummy_struct2* tempD = (Dummy_struct2*)obj;
+						tempD->dummyFloat1; //onoff
+						tempD->dummyVec; //버튼 목록					
+						
 					}
 					case 'g':
 					case 'G':
 					{
 						//젤
 						Dummy_struct3* tempG = (Dummy_struct3*)obj;
-						if (tempG->dummyFloat2) ///dummyFloat2  = isblue 대체용
-						{							
-							new BounceGel;
-						}
-						else 
-							new AccelGel;						
+						tempG->dummyFloat1; // onoff 
+						tempG->dummyFloat2; // isblue
+						//new BounceGel; 점프젤
+						//new AccelGel; 가속젤					
+						tempG->dummyVec; //버튼 목록
 					}						
 					}
 				}
