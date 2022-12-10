@@ -2,6 +2,7 @@
 #include "../FrameWork/stdafx.h"
 #include "../FrameWork/InputMgr.h"
 #include "../Manager/ResourceMgr.h"
+#include "../FrameWork/Const.h"
 
 Tunnel::Tunnel()
 {
@@ -407,9 +408,10 @@ void Tunnel::DrawColorBox(RenderWindow& window)
 	if (colorBox.getGlobalBounds().contains(mousePos) &&
 		InputMgr::GetMouseButtonDown(Mouse::Left) && Switch::GetShowTimer())
 	{
-		IsBlue = !IsBlue;
-		colorBox.setFillColor(IsBlue ? Color::Blue : Color::Yellow);
+		IsBlue = !IsBlue;		
 	}
+
+	colorBox.setFillColor(IsBlue ? Color::Blue : Color(ORANGE));
 
 	window.draw(colorBox);
 }

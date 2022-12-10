@@ -1,9 +1,13 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
 Graphics/backgrounds/background.png,0
 Graphics/backgrounds/background_n.png,0
+Graphics/temp/droppertool.png,0
+Graphics/temp/geltool.png,0
 Graphics/switch.png,0
 Graphics/switchaf.png,0
 Graphics/panelup.png,0
+Graphics/Ui/gel.png,0
+Graphics/Ui/dropper.png,0
 Graphics/Ui/angletool.png,0
 Graphics/Ui/angle.png,0
 Graphics/Ui/arrow.png,0

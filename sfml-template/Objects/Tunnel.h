@@ -70,7 +70,7 @@ private:
 	RectangleShape start;
 	Vector2f startpos;
 	Vector2f endpos;
-	bool IsBlue;
+	bool IsBlue = true;
 	bool active;
 	bool hitwall = false;
 	int dir = 0;

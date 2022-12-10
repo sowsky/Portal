@@ -377,6 +377,26 @@ PlayScene::PlayScene(string path)
 		loadedArray[p.posY][p.posX].push_back(&p);
 	}
 
+	for (auto& p : loadObjInfo.dummys1)  //발판
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+
+	for (auto& p : loadObjInfo.dummys2)  //드로퍼
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+
+	for (auto& p : loadObjInfo.dummys3)  //젤
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+
+	for (auto& p : loadObjInfo.angleTiles) 
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+
 	for (int i = 0; i < colNum; i++)
 	{
 		for (int j = 0; j < rowNum; j++)
@@ -556,6 +576,35 @@ PlayScene::PlayScene(string path)
 						box2dposition.x += GRIDSIZE;
 						break;
 					}
+					case 'm':
+					case 'M':
+					{
+						//// 상승 발판
+						break;
+					}
+					case 'a':
+					case 'A':
+					{
+						//// 기울어진 벽
+						break;
+					}
+					case 'd':
+					case 'D':
+					{
+						///드로퍼
+					}
+					case 'g':
+					case 'G':
+					{
+						//젤
+						Dummy_struct3* tempG = (Dummy_struct3*)obj;
+						if (tempG->dummyFloat2) ///dummyFloat2  = isblue 대체용
+						{							
+							new BounceGel;
+						}
+						else 
+							new AccelGel;						
+					}						
 					}
 				}
 			}

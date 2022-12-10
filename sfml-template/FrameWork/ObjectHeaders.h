@@ -17,3 +17,7 @@
 #include "../Objects/Switches/DurationSwitch.h"
 #include "../Objects/MovingPlatform.h"
 #include "../Objects/AngledTile.h"
+#include "../Objects/Dropper.h"
+//#include "../Objects/Gel.h"
+#include "../Objects/Gels/AccelGel.h"
+#include "../Objects/Gels/BounceGel.h"
