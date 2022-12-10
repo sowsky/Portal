@@ -63,6 +63,9 @@ void PlayScene::Update(float dt)
 	for (auto w : button) {
 		w->Update(dt);
 	}
+	for (auto w : movingplat) {
+		w->Update(dt);
+	}
 	blue->Update(dt);
 	orange->Update(dt);
 
@@ -233,6 +236,10 @@ void PlayScene::Draw(RenderWindow& window)
 
 	for (auto v : water)
 		v->Draw(window);
+
+	for (auto v : movingplat) {
+		v->Draw(window);
+	}
 
 	for (auto v : cube) {
 		v->Draw(window);

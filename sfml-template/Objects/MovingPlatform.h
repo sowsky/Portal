@@ -25,7 +25,7 @@ protected:
 	CircleShape down;
 	
 	RectangleShape platform;
-	RectangleShape Pillar;
+	RectangleShape pillar;
 
 
 	Vector2f destiny;

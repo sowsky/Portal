@@ -29,42 +29,78 @@ MovingPlatform::MovingPlatform()
 	down.setPointCount(3);
 	down.setFillColor(Color::Black);
 	down.setRadius(4.f);
-	Utils::SetOrigin(down, Origins::MC);	
+	Utils::SetOrigin(down, Origins::MC);
 }
 
 MovingPlatform::MovingPlatform(b2World* world, Vector2f& position, bool on, float destX, float destY, vector<int> buttonlist)
 	:buttonid(buttonlist), enable(on), world(world)
 {
+	Utils::SetOrigin(platform, Origins::MC);
 	destiny = { destX, destY };
+
 	if (position.y > destY) {
-		Utils::SetOrigin(Pillar, Origins::BC);
-		endpos = { destX,destY-30 };
+		Utils::SetOrigin(pillar, Origins::BC);
+
+		pillar.setPosition(position.x, position.y + GRIDSIZE / 2);
+		endpos = { pillar.getPosition().x,pillar.getPosition().y - 30 };
+
 		dir = 2;
 	}
 	else {
-		Utils::SetOrigin(Pillar, Origins::TC);
-		endpos = { destX,destY + 30 };
+		Utils::SetOrigin(pillar, Origins::TC);
+
+		pillar.setPosition(position.x, position.y - GRIDSIZE / 2);
+		endpos = { pillar.getPosition().x,pillar.getPosition().y + 30 };
 
 		dir = 0;
 	}
 
-	Pillar.setPosition(position);
-	
-	Utils::SetOrigin(platform, Origins::MC);
-	platform.setPosition(endpos);
+	pillar.setFillColor(Color::Red);
+	platform.setFillColor(Color::Green);
 	platform.setSize({ GRIDSIZE, 20 });
+}
 
+void MovingPlatform::Update(float dt)
+{
+	enable = false;
 
+	Utils::SetOrigin(platform, Origins::MC);
 
+	if (dir == 2) {
+		Utils::SetOrigin(pillar, Origins::BC);
+
+	}
+	else if (dir == 0) {
+		Utils::SetOrigin(pillar, Origins::TC);
+	}
+
+	if (enable) {
+		if (dir == 2) {
+			pillar.setSize({ 10,pillar.getPosition().y - destiny.y });
+			endpos.y = pillar.getPosition().y - pillar.getSize().y - 30;
+		}
+		else if (dir == 0) {
+			pillar.setSize({ 10,destiny.y - pillar.getPosition().y });
+			endpos.y = pillar.getPosition().y + pillar.getSize().y + 30;
+		}
+	}
+	else {
+		pillar.setSize({ 10,0 });
+		if (dir == 0) {
+			endpos.y = pillar.getPosition().y + 30;
+		}
+		else if (dir == 2) {
+			endpos.y = pillar.getPosition().y - 30;
+		}
+	}
+
+	platform.setPosition(endpos);
+//	platform.setSize({ GRIDSIZE, 20 });
 }
 
 SpriteObj* MovingPlatform::NewThis()
 {
 	return new MovingPlatform;
-}
-
-void MovingPlatform::Update(float dt)
-{
 }
 
 void MovingPlatform::Draw(RenderWindow& window)
@@ -79,6 +115,8 @@ void MovingPlatform::Draw(RenderWindow& window)
 	}
 	else
 	{
+		window.draw(pillar);
+		window.draw(platform);
 		SpriteObj::Draw(window);
 	}
 }
@@ -135,10 +173,10 @@ void MovingPlatform::DrawUi(RenderWindow& window)
 		if (!i)
 			arrows[i].setPosition(sprite.getPosition());
 		else
-			arrows[i].setPosition(arrows[i - 1].getPosition().x , arrows[i - 1].getPosition().y + rot * 25);
+			arrows[i].setPosition(arrows[i - 1].getPosition().x, arrows[i - 1].getPosition().y + rot * 25);
 
 		window.draw(arrows[i]);
 	}
 	window.draw(up);
-	window.draw(down);	
+	window.draw(down);
 }
