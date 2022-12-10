@@ -389,6 +389,26 @@ PlayScene::PlayScene(string path)
 		loadedArray[p.posY][p.posX].push_back(&p);
 	}
 
+	for (auto& p : loadObjInfo.dummys1)  //����
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+
+	for (auto& p : loadObjInfo.dummys2)  //�����
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+
+	for (auto& p : loadObjInfo.dummys3)  //��
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+
+	for (auto& p : loadObjInfo.angleTiles) 
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+
 	for (int i = 0; i < colNum; i++)
 	{
 		for (int j = 0; j < rowNum; j++)
@@ -568,6 +588,43 @@ PlayScene::PlayScene(string path)
 						box2dposition.x += GRIDSIZE;
 						break;
 					}
+					case 'm':
+					case 'M':
+					{
+						//// ��� ����
+						Dummy_struct1* tempM = (Dummy_struct1*)obj;
+						tempM->dummyFloat1; //onoff
+						tempM->dummyFloat2; //�̵� ����
+						tempM->dummyVec; //��ư ���
+
+						break;
+					}
+					case 'a':
+					case 'A':
+					{
+						//// ������ ��
+						break;
+					}
+					case 'd':
+					case 'D':
+					{
+						///�����
+						Dummy_struct2* tempD = (Dummy_struct2*)obj;
+						tempD->dummyFloat1; //onoff
+						tempD->dummyVec; //��ư ���					
+						
+					}
+					case 'g':
+					case 'G':
+					{
+						//��
+						Dummy_struct3* tempG = (Dummy_struct3*)obj;
+						tempG->dummyFloat1; // onoff 
+						tempG->dummyFloat2; // isblue
+						//new BounceGel; ������
+						//new AccelGel; ������					
+						tempG->dummyVec; //��ư ���
+					}						
 					}
 				}
 			}

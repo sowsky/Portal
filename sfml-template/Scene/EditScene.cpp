@@ -1209,6 +1209,9 @@ void EditScene::FillUiToolBox()
 	uiTool[2][1].first = new Water;
 	uiTool[2][1].first->SetResourceTexture("Graphics/Ui/goo.png");
 
+	uiTool[2][2].first = new Gel;
+	uiTool[2][2].first->SetResourceTexture("Graphics/Ui/gel.png");
+
 	uiTool[3][0].first = new Switch;
 	uiTool[3][0].first->SetResourceTexture("Graphics/Ui/switch1.png");
 
@@ -1223,6 +1226,9 @@ void EditScene::FillUiToolBox()
 
 	uiTool[4][1].first = new AngledTile;
 	uiTool[4][1].first->SetResourceTexture("Graphics/Ui/angle.png");
+
+	uiTool[4][2].first = new Dropper;
+	uiTool[4][2].first->SetResourceTexture("Graphics/Ui/dropper.png");
 	
 	
 }
@@ -1443,7 +1449,7 @@ void EditScene::Save()
 						Tunnel* tl = (Tunnel*)tool;
 						tunnel.active = tl->GetTunnelActive();
 						tunnel.IsBlue = tl->GetColor();
-						WireableObject* wobj = (WireableObject*)tool;				
+						WireableObject* wobj = (WireableObject*)tool;		
 						for (auto w : wobj->GetWireList())
 						{
 							tunnel.buttonList.push_back(w->buttonNum);
@@ -1546,7 +1552,8 @@ void EditScene::Save()
 						move.posY = posY;
 						move.rotation = (int)tool->GetRotation();
 						MovingPlatform* tempM = (MovingPlatform*)tool;
-						move.dummyFloat1 = tempM->GetRange();
+						move.dummyFloat1 = tempM->GetPlatformOn(); 
+						move.dummyFloat2 = tempM->GetRange();
 						WireableObject* wobj = (WireableObject*)tool;
 						for (auto w : wobj->GetWireList())
 						{							
@@ -1563,9 +1570,49 @@ void EditScene::Save()
 						angle.posY = posY;
 						angle.rotation = (int)tool->GetRotation();
 						saveObjInfo.angleTiles.push_back(angle);
+						break;
+					}
+					case 'd':
+					{
+						if ((int)tool->GetRotation() != 0)
+							break;
+
+						Dummy_struct2 drop;
+						drop.id = 'd';
+						drop.posX = j;
+						drop.posY = posY;
+						drop.rotation = 0;
+						Dropper* dp = (Dropper*)tool;
+						drop.dummyFloat1 = dp->GetDropperTurnON();
+						WireableObject* wobj = (WireableObject*)tool;
+						for (auto w : wobj->GetWireList())
+						{
+							drop.dummyVec.push_back(w->buttonNum);
+						}
+						saveObjInfo.dummys2.push_back(drop);
+						break;
+					}
+					case 'g':
+					{
+						Dummy_struct3 gel;
+						gel.id = 'g';
+						gel.posX = j;
+						gel.posY = posY;
+						gel.rotation = (int)tool->GetRotation();
+						Gel* tempG = (Gel*)tool;
+						gel.dummyFloat1 = tempG->GetGelTurnON();
+						gel.dummyFloat2 = tempG->GetIsBlue();
+						WireableObject* wobj = (WireableObject*)tool;
+						for (auto w : wobj->GetWireList())
+						{
+							gel.dummyVec.push_back(w->buttonNum);
+						}
+						saveObjInfo.dummys3.push_back(gel);
 					}
 					default :
+					{
 						break;
+					}						
 					}
 				}
 			}
@@ -1681,12 +1728,38 @@ void EditScene::Load()
 	{
 		MovingPlatform* move = new MovingPlatform;
 		move->SetRotation((Rotate)p.rotation);	
-		move->SetRange(p.dummyFloat1);
+		move->SetPlatformOn(p.dummyFloat1);
+		move->SetRange(p.dummyFloat2);
 		for (auto id : p.dummyVec)
 		{
 			PushToLoadedWireInfo(id, move);
 		}
 		mapTool[idxI - p.posY][p.posX].first.push_back(move);
+	}
+
+	for (auto& p : loadObjInfo.dummys2)
+	{
+		Dropper* drop = new Dropper;
+		drop->SetRotation((Rotate)p.rotation);
+		drop->SetDropperTurnON(p.dummyFloat1);
+		for (auto id : p.dummyVec)
+		{
+			PushToLoadedWireInfo(id, drop);
+		}
+		mapTool[idxI - p.posY][p.posX].first.push_back(drop);
+	}
+
+	for (auto& p : loadObjInfo.dummys3)
+	{
+		Gel* gel = new Gel;
+		gel->SetRotation((Rotate)p.rotation);
+		gel->SetGelTurnON(p.dummyFloat1);
+		gel->SetIsBlue(p.dummyFloat2);
+		for (auto id : p.dummyVec)
+		{
+			PushToLoadedWireInfo(id, gel);
+		}
+		mapTool[idxI - p.posY][p.posX].first.push_back(gel);
 	}
 
 	for (auto& p : loadObjInfo.waters)

@@ -26,6 +26,9 @@ Orange::Orange()
 	portalArray[1].texCoords = { texSize.x,0 };
 	portalArray[2].texCoords = { texSize.x,texSize.y };
 	portalArray[3].texCoords = { 0,texSize.y };
+
+	PortalState.texture = RESOURCEMGR->GetTexture("Graphics/orangeportal.png");
+	PortalState.shader = &shader.shader;
 }
 
 Orange::~Orange()
@@ -41,6 +44,8 @@ void Orange::Update(float dt)
 	Translate(direction * dt * projectilespeed);
 
 	hitbox->setPosition(sprite.getPosition());
+
+	shader.Update(dt);
 }
 
 void Orange::Draw(RenderWindow& window)
@@ -87,7 +92,7 @@ void Orange::DrawPortalArray(RenderWindow& window)
 		portalArray[3].position = backFace.getTransform().transformPoint(backFace.getPoint(2));
 	}
 
-	window.draw(portalArray, orangeTex);
+	window.draw(portalArray, PortalState);
 	//window.draw(backFace);
 	//window.draw(frontFace);
 }

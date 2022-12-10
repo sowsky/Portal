@@ -29,6 +29,7 @@ MovingPlatform::MovingPlatform()
 	down.setPointCount(3);
 	down.setFillColor(Color::Black);
 	down.setRadius(4.f);
+
 	Utils::SetOrigin(down, Origins::MC);
 }
 
@@ -96,6 +97,11 @@ void MovingPlatform::Update(float dt)
 
 	platform.setPosition(endpos);
 //	platform.setSize({ GRIDSIZE, 20 });
+
+	Utils::SetOrigin(down, Origins::MC);	
+
+	InitTexBox();
+
 }
 
 SpriteObj* MovingPlatform::NewThis()
@@ -111,6 +117,7 @@ void MovingPlatform::Draw(RenderWindow& window)
 		if (isInMapTool && Switch::GetShowTimer())
 		{
 			DrawUi(window);
+			DrawTexBox(window);
 		}
 	}
 	else
@@ -179,4 +186,39 @@ void MovingPlatform::DrawUi(RenderWindow& window)
 	}
 	window.draw(up);
 	window.draw(down);
+}
+
+void MovingPlatform::InitTexBox()
+{
+	onOffTex.setFont(*RESOURCEMGR->GetFont("Fonts/D-DINCondensed-Bold.otf"));
+	onOffTex.setCharacterSize(7);
+	onOffTex.setFillColor(Color::Black);
+	onOfftexBox.setSize({ 8.f, 8.f });
+	Utils::SetOrigin(onOfftexBox, Origins::MC);
+	onOfftexBox.setFillColor(Color::White);
+	onOfftexBox.setOutlineThickness(0.5f);
+	onOfftexBox.setOutlineColor(Color::Black);
+}
+
+void MovingPlatform::DrawTexBox(RenderWindow& window)
+{
+	onOfftexBox.setPosition(sprite.getPosition());
+	onOffTex.setPosition(onOfftexBox.getPosition());
+
+	Vector2f mousePos = window.mapPixelToCoords((Vector2i)InputMgr::GetMousePos(), window.getView());
+
+	if (onOfftexBox.getGlobalBounds().contains(mousePos) &&
+		InputMgr::GetMouseButtonDown(Mouse::Left) && Switch::GetShowTimer())
+	{
+		isTurnedOn = !isTurnedOn;
+	}
+
+	onOffTex.setString(isTurnedOn ? "ON" : "OFF");
+	Utils::SetOrigin(onOffTex, Origins::BC);
+
+	if (Switch::GetShowTimer())
+	{
+		window.draw(onOfftexBox);
+		window.draw(onOffTex);
+	}
 }

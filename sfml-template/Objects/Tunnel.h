@@ -70,8 +70,10 @@ private:
 	RectangleShape start;
 	Vector2f startpos;
 	Vector2f endpos;
+
 	bool IsBlue;
 	bool enable;
+
 	bool hitwall = false;
 	int dir = 0;
 	int connected = 0; //0==none 1==follow blue 2==follow orange
