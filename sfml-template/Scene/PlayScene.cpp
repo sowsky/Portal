@@ -72,13 +72,13 @@ void PlayScene::Update(float dt)
 	if (!isMovingViewCenter && !isfreeView) {
 
 		//if (currentcamposx > FRAMEWORK->GetWindowSize().x / 2) {  //stop x update
-			currentcamposx = worldView.getCenter().x;
-			currentcamposy = worldView.getCenter().y;
+		currentcamposx = worldView.getCenter().x;
+		currentcamposy = worldView.getCenter().y;
 		//}
 
-		
+
 		worldView.setCenter(Utils::Lerp(currentcamposx, player->GetPos().x, dt * 4), Utils::Lerp(currentcamposy, player->GetPos().y, dt * 4));
-		cout << WorldPosToScreen(player->GetPos()).x<<" "<< WorldPosToScreen(player->GetPos()).y << endl;
+	//	cout << WorldPosToScreen(player->GetPos()).x << " " << WorldPosToScreen(player->GetPos()).y << endl;
 		//worldView.setCenter({ temp.x/SCALE,temp.y/SCALE });
 		/*float x;
 		float y;
@@ -237,9 +237,7 @@ void PlayScene::Draw(RenderWindow& window)
 	for (auto v : water)
 		v->Draw(window);
 
-	for (auto v : movingplat) {
-		v->Draw(window);
-	}
+	
 
 	for (auto v : cube) {
 		v->Draw(window);
@@ -290,6 +288,10 @@ void PlayScene::Draw(RenderWindow& window)
 	if (particle.running())
 		window.draw(particle);
 
+	for (auto v : movingplat) {
+		v->Draw(window);
+	}
+
 	if (showWire)
 	{
 		for (auto w : wires)
@@ -304,6 +306,8 @@ void PlayScene::Draw(RenderWindow& window)
 
 	window.setView(uiView);
 	window.draw(crosshair);
+
+	
 
 	window.setView(endingView);
 	if (dark != 0)
@@ -404,7 +408,7 @@ PlayScene::PlayScene(string path)
 		loadedArray[p.posY][p.posX].push_back(&p);
 	}
 
-	for (auto& p : loadObjInfo.angleTiles) 
+	for (auto& p : loadObjInfo.angleTiles)
 	{
 		loadedArray[p.posY][p.posX].push_back(&p);
 	}
@@ -593,10 +597,10 @@ PlayScene::PlayScene(string path)
 					{
 						//// ��� ����
 						Dummy_struct1* tempM = (Dummy_struct1*)obj;
-						tempM->dummyFloat1; //onoff
-						tempM->dummyFloat2; //�̵� ����
-						tempM->dummyVec; //��ư ���
-
+						bool temp=tempM->dummyFloat1 == 0 ? false : true;
+						movingplat.push_back(new MovingPlatform(world.get(),currgrid,temp,tempM->rotation,tempM->dummyFloat2,tempM->dummyVec));
+						currgrid.x += GRIDSIZE;
+						box2dposition.x += GRIDSIZE;
 						break;
 					}
 					case 'a':
@@ -612,7 +616,7 @@ PlayScene::PlayScene(string path)
 						Dummy_struct2* tempD = (Dummy_struct2*)obj;
 						tempD->dummyFloat1; //onoff
 						tempD->dummyVec; //��ư ���					
-						
+
 					}
 					case 'g':
 					case 'G':
@@ -624,7 +628,7 @@ PlayScene::PlayScene(string path)
 						//new BounceGel; ������
 						//new AccelGel; ������					
 						tempG->dummyVec; //��ư ���
-					}						
+					}
 					}
 				}
 			}
@@ -659,6 +663,11 @@ PlayScene::PlayScene(string path)
 	}
 	if (!redwall.empty()) {
 		for (auto t : redwall) {
+			t->SetButtonlist(button);
+		}
+	}
+	if (!movingplat.empty()) {
+		for (auto t : movingplat) {
 			t->SetButtonlist(button);
 		}
 	}
@@ -793,7 +802,7 @@ void PlayScene::MakePortal()
 			madeblue = false;
 		}
 		if (w->GetGlobalBounds().intersects(orange->GetGlobalBounds())) {
-			particle.emitParticles(orange->GetPos(), false);
+			particle.emitParticles(orange->GetPos(), true);
 			orange->SetPos({ -1000,-1000 });
 			blue->SetDir({ 0,0 });
 			madeorange = false;
@@ -811,7 +820,7 @@ void PlayScene::MakePortal()
 
 		}
 		if (b->GetStartposGlobalbound().intersects(orange->GetGlobalBounds())) {
-			particle.emitParticles(orange->GetPos(), false);
+			particle.emitParticles(orange->GetPos(), true);
 			orange->SetPos({ -1000,-1000 });
 			blue->SetDir({ 0,0 });
 			madeorange = false;
@@ -831,7 +840,26 @@ void PlayScene::MakePortal()
 
 		}
 		if (b->GetredwallHitboxGlobalBound().intersects(orange->GetGlobalBounds())) {
-			particle.emitParticles(b->GetRedwallPos(), false);
+			particle.emitParticles(b->GetRedwallPos(), true);
+			orange->SetPos({ -1000,-1000 });
+			blue->SetDir({ 0,0 });
+			madeorange = false;
+
+		}
+	}
+
+	for (auto b : movingplat)
+	{
+		
+		if (b->GetplatformGlobalBounds().intersects(blue->GetGlobalBounds())) {
+			particle.emitParticles(blue->GetPos(), false);
+			blue->SetPos({ -1000,-1000 });
+			blue->SetDir({ 0,0 });
+			madeblue = false;
+
+		}
+		if (b->GetplatformGlobalBounds().intersects(orange->GetGlobalBounds())) {
+			particle.emitParticles(orange->GetPos(), true);
 			orange->SetPos({ -1000,-1000 });
 			blue->SetDir({ 0,0 });
 			madeorange = false;
@@ -2325,6 +2353,10 @@ void PlayScene::Release()
 		delete v;
 	}
 	water.clear();
+	for (auto v : movingplat) {
+		delete v;
+	}
+	movingplat.clear();
 
 	if (orange != nullptr)
 		delete orange;

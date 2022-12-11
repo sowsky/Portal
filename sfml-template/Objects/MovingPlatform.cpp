@@ -33,76 +33,88 @@ MovingPlatform::MovingPlatform()
 	Utils::SetOrigin(down, Origins::MC);
 }
 
-MovingPlatform::MovingPlatform(b2World* world, Vector2f& position, bool on, float destX, float destY, vector<int> buttonlist)
-	:buttonid(buttonlist), enable(on), world(world)
+MovingPlatform::MovingPlatform(b2World* world, Vector2f& position, bool on, float rot, float destY, vector<float> buttonlist)
+	:buttonid(buttonlist), enable(on), world(world),originactive(on)
 {
-	Utils::SetOrigin(platform, Origins::MC);
-	destiny = { destX, destY };
-
-	if (position.y > destY) {
-		Utils::SetOrigin(pillar, Origins::BC);
-
-		pillar.setPosition(position.x, position.y + GRIDSIZE / 2);
-		endpos = { pillar.getPosition().x,pillar.getPosition().y - 30 };
-
-		dir = 2;
-	}
-	else {
-		Utils::SetOrigin(pillar, Origins::TC);
-
-		pillar.setPosition(position.x, position.y - GRIDSIZE / 2);
-		endpos = { pillar.getPosition().x,pillar.getPosition().y + 30 };
-
+	if (rot==0) {
 		dir = 0;
+		platform.setPosition(position.x, position.y - (GRIDSIZE / 2));
+		destiny.y = platform.getPosition().y + (destY * GRIDSIZE);
+
+	}
+	else if (rot==2) {
+		dir = 2;
+		platform.setPosition(position.x , position.y + (GRIDSIZE / 2));
+		destiny.y = platform.getPosition().y-(destY * GRIDSIZE);
 	}
 
-	pillar.setFillColor(Color::Red);
+	originpos = platform.getPosition();
 	platform.setFillColor(Color::Green);
-	platform.setSize({ GRIDSIZE, 20 });
+	platform.setSize({ GRIDSIZE, 10 });
+
+	this->world = world;
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_staticBody;
+	bodyDef.position.Set(position.x / SCALE, position.y / SCALE * -1);
+	platformbody = this->world->CreateBody(&bodyDef);
+
+	b2PolygonShape boxShape;
+	boxShape.SetAsBox(platform.getSize().x / SCALE / 2, platform.getSize().y / SCALE / 2);
+
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &boxShape;
+	fixtureDef.density = 1.0f;
+	fixtureDef.friction = 0.2f;
+	platformfixture = platformbody->CreateFixture(&fixtureDef);
+
 }
 
 void MovingPlatform::Update(float dt)
 {
-	enable = false;
-
 	Utils::SetOrigin(platform, Origins::MC);
 
-	if (dir == 2) {
-		Utils::SetOrigin(pillar, Origins::BC);
-
+	if (InputMgr::GetKeyDown(Keyboard::Y))
+	{
+		enable = !enable;
 	}
-	else if (dir == 0) {
-		Utils::SetOrigin(pillar, Origins::TC);
+
+	enable = originactive;
+
+	for (auto b : button) {
+		if (!b->GetPressed()) {
+			enable = !originactive;			
+		}
 	}
 
 	if (enable) {
-		if (dir == 2) {
-			pillar.setSize({ 10,pillar.getPosition().y - destiny.y });
-			endpos.y = pillar.getPosition().y - pillar.getSize().y - 30;
-		}
-		else if (dir == 0) {
-			pillar.setSize({ 10,destiny.y - pillar.getPosition().y });
-			endpos.y = pillar.getPosition().y + pillar.getSize().y + 30;
-		}
+		float tempy = Utils::Lerp(platform.getPosition().y, destiny.y, 0.1);
+		platform.setPosition(platform.getPosition().x, tempy);
+		cout << (int)destiny.y << endl;
 	}
 	else {
-		pillar.setSize({ 10,0 });
-		if (dir == 0) {
-			endpos.y = pillar.getPosition().y + 30;
-		}
-		else if (dir == 2) {
-			endpos.y = pillar.getPosition().y - 30;
-		}
+		float tempy = Utils::Lerp(platform.getPosition().y, originpos.y, 0.1);
+		platform.setPosition(platform.getPosition().x, tempy);
+		cout << (int)originpos.y << endl;
+
 	}
+	platformbody->SetTransform({ platform.getPosition().x / SCALE,platform.getPosition().y / SCALE * -1}, 0);
 
-	platform.setPosition(endpos);
-//	platform.setSize({ GRIDSIZE, 20 });
-
-	Utils::SetOrigin(down, Origins::MC);	
+	Utils::SetOrigin(down, Origins::MC);
 
 	InitTexBox();
-
 }
+
+void MovingPlatform::SetButtonlist(vector<Button*>& button)
+{
+	for (auto b : button) {
+		for (int i = 0; i < buttonid.size(); i++) {
+			if (b->GetButtonId() == buttonid[i]) {
+				this->button.push_back(b);
+			}
+		}
+	}
+}
+
 
 SpriteObj* MovingPlatform::NewThis()
 {
@@ -122,8 +134,8 @@ void MovingPlatform::Draw(RenderWindow& window)
 	}
 	else
 	{
-		window.draw(pillar);
 		window.draw(platform);
+		//window.draw(pillar);
 		SpriteObj::Draw(window);
 	}
 }

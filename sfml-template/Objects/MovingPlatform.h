@@ -6,7 +6,7 @@ class MovingPlatform :  public WireableObject
 {
 public:
 	MovingPlatform();
-	MovingPlatform(b2World* world, Vector2f& position,bool on,float destX,float destY,vector<int> buttonlist);
+	MovingPlatform(b2World* world, Vector2f& position,bool on,float rot,float destY,vector<float> buttonlist);
 	virtual ~MovingPlatform() {};
 
 	virtual SpriteObj* NewThis();
@@ -23,9 +23,15 @@ public:
 	void DrawTexBox(RenderWindow& window);	
 	bool GetPlatformOn() { return isTurnedOn; }
 	void SetPlatformOn(bool a) { isTurnedOn = a; }
+	void SetButtonlist(vector<Button*>& button);
+
+	bool Getenable() { return enable; }
+	
+	FloatRect GetplatformGlobalBounds() { return platform.getGlobalBounds(); }
 protected:
 	int range = 1;
 	bool isTurnedOn;
+	bool originactive;
 
 	CircleShape up;
 	CircleShape down;
@@ -35,11 +41,13 @@ protected:
 
 
 	Vector2f destiny;
-	Vector2f endpos;
+	Vector2f originpos;
 
+	float y;
+	float x;
 	bool enable;
 	list<Button*> button;
-	vector<int>buttonid;
+	vector<float>buttonid;
 
 	int dir;
 
