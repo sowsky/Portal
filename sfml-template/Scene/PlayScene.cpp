@@ -607,6 +607,8 @@ PlayScene::PlayScene(string path)
 					case 'A':
 					{
 						//// ������ ��
+
+						
 						break;
 					}
 					case 'd':

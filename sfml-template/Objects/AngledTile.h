@@ -11,5 +11,7 @@ public:
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);
 protected:
+	
+
 };
 

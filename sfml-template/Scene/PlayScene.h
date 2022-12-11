@@ -109,6 +109,7 @@ private:
 	vector<Water*> water;
 	vector<Switch*> switches;
 	vector<MovingPlatform*> movingplat;
+	vector<AngledTile*> angledtile;
 
 	Vector2f temp = { 0,0 };
 
