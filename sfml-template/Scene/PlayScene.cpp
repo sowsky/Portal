@@ -851,14 +851,14 @@ void PlayScene::MakePortal()
 	for (auto b : movingplat)
 	{
 		
-		if (b->GetplatformGlobalBounds().intersects(blue->GetGlobalBounds())) {
+		if (b->GetplatformGlobalBounds().intersects(blue->GetGlobalBounds())||b->GetpillarGlobalBounds().intersects(blue->GetGlobalBounds())) {
 			particle.emitParticles(blue->GetPos(), false);
 			blue->SetPos({ -1000,-1000 });
 			blue->SetDir({ 0,0 });
 			madeblue = false;
 
 		}
-		if (b->GetplatformGlobalBounds().intersects(orange->GetGlobalBounds())) {
+		if (b->GetplatformGlobalBounds().intersects(orange->GetGlobalBounds()) || b->GetpillarGlobalBounds().intersects(orange->GetGlobalBounds())) {
 			particle.emitParticles(orange->GetPos(), true);
 			orange->SetPos({ -1000,-1000 });
 			blue->SetDir({ 0,0 });

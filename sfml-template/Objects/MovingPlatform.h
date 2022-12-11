@@ -28,6 +28,7 @@ public:
 	bool Getenable() { return enable; }
 	
 	FloatRect GetplatformGlobalBounds() { return platform.getGlobalBounds(); }
+	FloatRect GetpillarGlobalBounds() { return pillar.getGlobalBounds(); }
 protected:
 	int range = 1;
 	bool isTurnedOn;
@@ -38,7 +39,7 @@ protected:
 	
 	RectangleShape platform;
 	RectangleShape pillar;
-
+	RectangleShape test;
 
 	Vector2f destiny;
 	Vector2f originpos;

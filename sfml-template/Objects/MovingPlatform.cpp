@@ -34,32 +34,37 @@ MovingPlatform::MovingPlatform()
 }
 
 MovingPlatform::MovingPlatform(b2World* world, Vector2f& position, bool on, float rot, float destY, vector<float> buttonlist)
-	:buttonid(buttonlist), enable(on), world(world),originactive(on)
+	:buttonid(buttonlist), enable(on), world(world), originactive(on)
 {
-	if (rot==0) {
+	if (rot == 0) {
 		dir = 0;
 		platform.setPosition(position.x, position.y - (GRIDSIZE / 2));
 		destiny.y = platform.getPosition().y + (destY * GRIDSIZE);
 
 	}
-	else if (rot==2) {
+	else if (rot == 2) {
 		dir = 2;
-		platform.setPosition(position.x , position.y + (GRIDSIZE / 2));
-		destiny.y = platform.getPosition().y-(destY * GRIDSIZE);
+		platform.setPosition(position.x, position.y + (GRIDSIZE / 2));
+		destiny.y = platform.getPosition().y - (destY * GRIDSIZE);
 	}
 
 	originpos = platform.getPosition();
+	pillar.setFillColor(Color::Green);
+	pillar.setPosition(platform.getPosition());
 	platform.setFillColor(Color::Green);
 	platform.setSize({ GRIDSIZE, 10 });
 
 	this->world = world;
 	b2BodyDef bodyDef;
-	bodyDef.type = b2_staticBody;
-	bodyDef.position.Set(position.x / SCALE, position.y / SCALE * -1);
+	bodyDef.type = b2_kinematicBody;
+	bodyDef.position.Set(platform.getPosition().x / SCALE, platform.getPosition().y / SCALE * -1);
 	platformbody = this->world->CreateBody(&bodyDef);
 
 	b2PolygonShape boxShape;
 	boxShape.SetAsBox(platform.getSize().x / SCALE / 2, platform.getSize().y / SCALE / 2);
+
+	platformbody->SetGravityScale(0);
+	platformbody->SetFixedRotation(1);
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
@@ -67,11 +72,33 @@ MovingPlatform::MovingPlatform(b2World* world, Vector2f& position, bool on, floa
 	fixtureDef.friction = 0.2f;
 	platformfixture = platformbody->CreateFixture(&fixtureDef);
 
+
+
+	b2BodyDef bodyDef1;
+	bodyDef1.type = b2_staticBody;
+	bodyDef1.position.Set(pillar.getPosition().x / SCALE, pillar.getPosition().y / SCALE * -1);
+	pillarbody = this->world->CreateBody(&bodyDef1);
+
+	b2PolygonShape boxShape1;
+	boxShape1.SetAsBox(pillar.getSize().x / SCALE / 2, pillar.getSize().y / SCALE / 2);
+
+	b2FixtureDef fixtureDef1;
+	fixtureDef1.shape = &boxShape1;
+	fixtureDef1.density = 100.0f;
+	fixtureDef1.friction = 1.0f;
+	pillarfixture = pillarbody->CreateFixture(&fixtureDef1);
 }
 
 void MovingPlatform::Update(float dt)
 {
 	Utils::SetOrigin(platform, Origins::MC);
+
+	if (dir == 0) {
+		Utils::SetOrigin(pillar, Origins::TC);
+	}
+	else if (dir == 2) {
+		Utils::SetOrigin(pillar, Origins::BC);
+	}
 
 	if (InputMgr::GetKeyDown(Keyboard::Y))
 	{
@@ -82,22 +109,86 @@ void MovingPlatform::Update(float dt)
 
 	for (auto b : button) {
 		if (!b->GetPressed()) {
-			enable = !originactive;			
+			enable = !originactive;
 		}
 	}
 
+
 	if (enable) {
-		float tempy = Utils::Lerp(platform.getPosition().y, destiny.y, 0.1);
-		platform.setPosition(platform.getPosition().x, tempy);
-		cout << (int)destiny.y << endl;
-	}
-	else {
-		float tempy = Utils::Lerp(platform.getPosition().y, originpos.y, 0.1);
-		platform.setPosition(platform.getPosition().x, tempy);
-		cout << (int)originpos.y << endl;
+		bool check;
+		if (dir == 0) {
+			check = platform.getPosition().y > destiny.y ? false : true;
+		}
+		else if (dir == 2) {
+			check = platform.getPosition().y < destiny.y ? false : true;
+		}
+
+		if (check && dir == 2) {
+			float tempy = Utils::Lerp(platform.getPosition().y, destiny.y, 0.001);
+			pillar.setSize({ 10, abs(originpos.y - tempy) });
+			platformbody->SetLinearVelocity({ 0,1.f });
+		}
+		else if (check && dir == 0) {
+			float tempy = Utils::Lerp(platform.getPosition().y, destiny.y, 0.001);
+			pillar.setSize({ 10, abs(originpos.y - tempy) });
+			platformbody->SetLinearVelocity({ 0,-1.f });
+		}
+		else {
+			platformbody->SetLinearVelocity({ 0,0 });
+
+		}
+		platformbody->SetTransform({ originpos.x / SCALE,platformbody->GetPosition().y }, 0);
 
 	}
-	platformbody->SetTransform({ platform.getPosition().x / SCALE,platform.getPosition().y / SCALE * -1}, 0);
+	else {
+		bool check;
+		if (dir == 0) {
+			check = platform.getPosition().y > originpos.y ? true : false;
+		}
+		else if (dir == 2) {
+			check = platform.getPosition().y < originpos.y ? true : false;
+			cout << check << endl;
+		}
+
+		if (check && dir == 2) {
+			platformbody->SetLinearVelocity({ 0,-1.f });
+		}
+		if (check && dir == 0) {
+			platformbody->SetLinearVelocity({ 0,1.f });
+
+		}
+
+		if (!check)
+		{
+			platformbody->SetLinearVelocity({ 0,0 });
+		}
+		float tempy = Utils::Lerp(platform.getPosition().y, originpos.y, 0.001);
+		pillar.setSize({ 10, abs(originpos.y - tempy) });
+
+		platformbody->SetTransform({ originpos.x / SCALE,platformbody->GetPosition().y }, 0);
+	}
+
+	platform.setPosition(platformbody->GetPosition().x * SCALE, platformbody->GetPosition().y * SCALE * -1);
+
+
+	if (pillarfixture != nullptr) {
+		pillarbody->DestroyFixture(pillarbody->GetFixtureList());
+	}
+
+	b2PolygonShape boxShape1;
+	boxShape1.SetAsBox(pillar.getSize().x / SCALE / 2, pillar.getSize().y / SCALE / 2);
+
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &boxShape1;
+	fixtureDef.density = 1;
+	fixtureDef.friction = 0.3f;
+	pillarfixture = pillarbody->CreateFixture(&fixtureDef);
+
+	if (dir == 0)
+		pillarbody->SetTransform({ pillarbody->GetPosition().x,(pillar.getPosition().y+pillar.getSize().y/2)/SCALE*-1 }, 0);
+	else
+		pillarbody->SetTransform({ pillarbody->GetPosition().x,(pillar.getPosition().y - pillar.getSize().y / 2) / SCALE * -1 }, 0);
+
 
 	Utils::SetOrigin(down, Origins::MC);
 
@@ -135,7 +226,7 @@ void MovingPlatform::Draw(RenderWindow& window)
 	else
 	{
 		window.draw(platform);
-		//window.draw(pillar);
+		window.draw(pillar);
 		SpriteObj::Draw(window);
 	}
 }
