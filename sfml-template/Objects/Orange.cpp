@@ -11,9 +11,11 @@ Orange::Orange()
 	hitbox->setFillColor(Color::Red);
 
 	///////////////////
-	light.setSize({ 5, 40 });
-	Utils::SetOrigin(light, Origins::ML);
-	light.setFillColor(Color(ORANGE, 150));
+	light.setSize({ 40, 5 });
+	Utils::SetOrigin(light, Origins::BC);
+	light.setTexture(RESOURCEMGR->GetTexture("Graphics/Shader/orange.png"));
+	light.setFillColor(Color(255, 255, 255, 150));
+	
 
 	portalArray.setPrimitiveType(Quads);
 	portalArray.resize(4);
@@ -26,8 +28,9 @@ Orange::Orange()
 	portalArray[1].texCoords = { texSize.x,0 };
 	portalArray[2].texCoords = { texSize.x,texSize.y };
 	portalArray[3].texCoords = { 0,texSize.y };
-
-	PortalState.texture = RESOURCEMGR->GetTexture("Graphics/orangeportal.png");
+		
+	shader.distortionFactor = 0.1f;
+	PortalState.texture = orangeTex;
 	PortalState.shader = &shader.shader;
 }
 
@@ -50,7 +53,7 @@ void Orange::Update(float dt)
 
 void Orange::Draw(RenderWindow& window)
 {
-	window.draw(light);
+	window.draw(light, &shader.shader);
 	//SpriteObj::Draw(window);	
 	DrawPortalArray(window);
 

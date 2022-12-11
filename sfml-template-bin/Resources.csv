@@ -1,4 +1,11 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
+Graphics/button/front_n.png,0
+Graphics/button/front.png,0
+Graphics/button/up.png,0
+Graphics/button/buttonfront.png,0
+Graphics/button/buttonfront_n.png,0
+Graphics/button/buttonup.png,0
+Graphics/Shader/reproduction.png,0
 Graphics/Shader/orange.png,0
 Graphics/Shader/blue.png,0
 Graphics/Shader/distortion_map.png,0
@@ -114,4 +121,5 @@ Graphics/orange.png,0
 Graphics/crosshair.png,0
 Fonts/NanumGothic.otf,1
 Fonts/times.ttf,1
+Fonts/DS-DIGI.TTF,1
 Fonts/D-DINCondensed-Bold.otf,1

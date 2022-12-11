@@ -30,8 +30,7 @@ protected:
 	RectangleShape frontFace;
 	RectangleShape light;
 	bool texStand;
-
-	RenderStates lightState;
+		
 	RenderStates PortalState;
 	Wave shader;
 };
