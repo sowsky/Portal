@@ -645,8 +645,8 @@ PlayScene::PlayScene(string path)
 	/*height = colNum * GRIDSIZE*100;
 	width = rowNum * GRIDSIZE*100;*/
 
-	//height = colNum * GRIDSIZE;
-	//width = rowNum * GRIDSIZE;
+	height = colNum * GRIDSIZE;
+	width = rowNum * GRIDSIZE;
 
 	SetTex(crosshair, "Graphics/crosshair/alloff.png");
 	crosshair.setScale(0.3f, 0.3f);
@@ -750,7 +750,7 @@ void PlayScene::MakeButton(int rotaion, int id)
 	button.back()->SetOrigin(Origins::BC);
 	button.back()->SetButtonId(id);
 	button.back()->SetPos(currgrid);
-	button.back()->SetRotation(rotaion);
+	button.back()->SetRotation(rotaion);	
 
 	if (rotaion == 0) {			//top of gird
 		button.back()->SetPos({ currgrid.x,currgrid.y - GRIDSIZE / 2 });
@@ -772,7 +772,12 @@ void PlayScene::MakeButton(int rotaion, int id)
 		button.back()->SetSize({ GRIDSIZE ,GRIDSIZE / 4 });
 
 	}
-	currgrid.x += GRIDSIZE;
+	currgrid.x += GRIDSIZE;	
+
+	//////////////
+
+	button.back()->SetUpButtonPos();
+	button.back()->SetButtonRoation(rotaion);
 }
 
 void PlayScene::MakePortal()

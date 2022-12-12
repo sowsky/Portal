@@ -145,8 +145,11 @@ private:
 	//////
 	ParticleSystem particle;
 	
-	const int width=4000;
-	const int height=4000;
+	//const int width=4000;
+	//const int height=4000;
+
+	int width;
+	int height;
 
 	float maxspeed=16;
 

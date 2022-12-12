@@ -17,6 +17,7 @@ public:
 	void SetAllSidesTex(string id);	
 	void SetSidesTex(string id, int rot);
 	void SetBackFaceOrigin(Origins origin);
+	void SetBackFaceOrigin(Vector2f o);
 	void SetBackFaceSize(Vector2f size);	
 	
 	void ChageCoords(Vector2u texSize);
@@ -26,6 +27,7 @@ public:
 	void Update();
 	void Draw(RenderWindow& window);
 	void DrawRenderStates(RenderWindow& window);
+	RectangleShape& GetBackFace() { return backFace; }
 	RenderStates* GetRenderStates() { return &state; }
 private:
 	array<pair<bool, VertexArray>, 4> sides;

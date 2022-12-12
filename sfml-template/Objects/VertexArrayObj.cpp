@@ -44,6 +44,11 @@ void VertexArrayObj::SetBackFaceOrigin(Origins origin)
 	Utils::SetOrigin(backFace, origin);
 }
 
+void VertexArrayObj::SetBackFaceOrigin(Vector2f o)
+{
+	backFace.setOrigin(o);
+}
+
 void VertexArrayObj::SetBackFaceSize(Vector2f size)
 {
 	float dp = depth * 2 - 1.f;
@@ -101,14 +106,15 @@ void VertexArrayObj::Draw(RenderWindow& window)
 	);
 
 	frontFace.setRotation(pivotSprite.getRotation());
-	backFace.setRotation(pivotSprite.getRotation());	
+	backFace.setRotation(pivotSprite.getRotation());
 
 	Vector2f backLt = backFace.getTransform().transformPoint(backFace.getPoint(0));
 	Vector2f backRt = backFace.getTransform().transformPoint(backFace.getPoint(1));
 	Vector2f backRb = backFace.getTransform().transformPoint(backFace.getPoint(2));
 	Vector2f backLb = backFace.getTransform().transformPoint(backFace.getPoint(3));
 	
-	FloatRect frontRect = frontFace.getLocalBounds();
+	FloatRect frontRect = frontFace.getLocalBounds();	
+	
 	Vector2f frontLt = frontFace.getTransform().transformPoint({ frontRect.left, frontRect.top });
 	Vector2f frontRt = frontFace.getTransform().transformPoint({ frontRect.left + frontRect.width, frontRect.top });
 	Vector2f frontRb = frontFace.getTransform().transformPoint({ frontRect.left + frontRect.width, frontRect.top + frontRect.height });
