@@ -1,6 +1,11 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
+Graphics/waterup.png,0
+Graphics/water.png,0
+Graphics/signs/dropper.png,0
+Graphics/signs/dropper_t.png,0
 Graphics/button/front_n.png,0
 Graphics/button/front.png,0
+Graphics/button/front_on.png,0
 Graphics/button/up.png,0
 Graphics/button/buttonfront.png,0
 Graphics/button/buttonfront_n.png,0

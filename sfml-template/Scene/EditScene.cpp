@@ -1228,9 +1228,11 @@ void EditScene::FillUiToolBox()
 	uiTool[4][1].first->SetResourceTexture("Graphics/Ui/angle.png");
 
 	uiTool[4][2].first = new Dropper;
-	uiTool[4][2].first->SetResourceTexture("Graphics/Ui/dropper.png");
-	
-	
+	uiTool[4][2].first->SetResourceTexture("Graphics/Ui/dropper.png");	
+
+	uiTool[6][0].first = new Sign('1');
+	uiTool[6][1].first = new Sign('2');
+	uiTool[6][2].first = new Sign('3');
 }
 
 void EditScene::SetUiToolPos(Vector2f pos)
@@ -1497,6 +1499,12 @@ void EditScene::Save()
 						water.id = 'w';
 						water.posX = j;
 						water.posY = posY;
+						water.rotation = 2;
+						//if (!mapTool[i + 1][j].first.empty() &&
+						//	mapTool[i + 1][j].first.front()->GetId() == 'w')
+						//{
+						//	water.rotation = 0;
+						//}
 						saveObjInfo.waters.push_back(water);
 						break;
 					}
@@ -1610,6 +1618,19 @@ void EditScene::Save()
 							gel.dummyVec.push_back(w->buttonNum);
 						}
 						saveObjInfo.dummys3.push_back(gel);
+						break;
+					}
+					case '7' :
+					{
+						Dropper_struct sign;
+						sign.id = '7';
+						sign.posX = j;
+						sign.posY = posY;
+						sign.rotation = 2;
+						Sign* tempS = (Sign*)tool;
+						sign.contentsId = tempS->GetSignId();
+						saveObjInfo.droppes.push_back(sign);
+						break;
 					}
 					default :
 					{
@@ -1768,7 +1789,14 @@ void EditScene::Load()
 	for (auto& p : loadObjInfo.waters)
 	{
 		Water* water = new Water;
+		water->SetRotation((Rotate)p.rotation);
 		mapTool[idxI - p.posY][p.posX].first.push_back(water);
+	}
+
+	for (auto& p : loadObjInfo.droppes)
+	{
+		Sign* sign = new Sign(p.contentsId);
+		mapTool[idxI - p.posY][p.posX].first.push_back(sign);
 	}
 
 	//////////

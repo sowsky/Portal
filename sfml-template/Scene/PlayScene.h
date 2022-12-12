@@ -111,6 +111,11 @@ private:
 	vector<MovingPlatform*> movingplat;
 	vector<AngledTile*> angledtile;
 
+	/////////////////
+	vector<Sign*> sign;
+	////////////////
+
+
 	Vector2f temp = { 0,0 };
 
 	Cube* grabbedcube = nullptr;

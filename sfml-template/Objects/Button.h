@@ -32,6 +32,7 @@ public:
 	void SetUpButtonPos();
 	void SetButtonRoation(int val);
 	void UpdatePressureAnimation(float dt);
+	void ChageTexOnoff(bool press);
 
 protected:
 	bool isPress = false;
@@ -59,5 +60,7 @@ protected:
 	float limit = 1.f;
 	const float move = 20.f;
 	int rot;
+
+	bool prevState;
 };
 

@@ -189,6 +189,7 @@
     <ClCompile Include="Objects\Tile.cpp" />
     <ClCompile Include="Objects\WireableObject.cpp" />
     <ClCompile Include="Objects\WirePointArrows.cpp" />
+    <ClCompile Include="Objects\Sign.cpp" />
     <ClCompile Include="src\Color.cpp" />
     <ClCompile Include="src\Constants.cpp" />
     <ClCompile Include="src\DirectedLight.cpp" />
@@ -254,6 +255,7 @@
     <ClInclude Include="Objects\Water.h" />
     <ClInclude Include="Objects\Switch.h" />
     <ClInclude Include="Shader\Wave.h" />
+    <ClInclude Include="Objects\Sign.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

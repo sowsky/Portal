@@ -247,4 +247,27 @@ void Button::UpdatePressureAnimation(float dt)
 		}
 		}
 	}
+
+	ChageTexOnoff(isPress);
+}
+
+void Button::ChageTexOnoff(bool press)
+{	
+	if (prevState == press)
+		return;
+
+	prevState = press;
+
+	if (press)
+	{
+		SetSpriteTex(frontFace, "Graphics/button/front_on.png");
+		sideFaces.SetSidesTex("Graphics/button/front_on.png", 1);
+		sideFaces.SetSidesTex("Graphics/button/front_on.png", 3);
+	}
+	else
+	{
+		SetSpriteTex(frontFace, "Graphics/button/front.png");
+		sideFaces.SetSidesTex("Graphics/button/front.png", 1);
+		sideFaces.SetSidesTex("Graphics/button/front.png", 3);
+	}
 }

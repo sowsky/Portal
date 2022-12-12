@@ -26,7 +26,9 @@ public:
 
 	void Update();
 	void Draw(RenderWindow& window);
+	void DrawHalf(RenderWindow& window);
 	void DrawRenderStates(RenderWindow& window);
+	void SetActiveSides(int rot, bool active);
 	RectangleShape& GetBackFace() { return backFace; }
 	RenderStates* GetRenderStates() { return &state; }
 private:

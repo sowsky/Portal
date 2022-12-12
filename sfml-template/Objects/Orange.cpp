@@ -41,12 +41,13 @@ Orange::~Orange()
 
 void Orange::Update(float dt)
 {
-	Utils::SetOrigin(*hitbox, Origins::BC);
-	hitbox->setSize({ sprite.getGlobalBounds().width - 10,sprite.getGlobalBounds().height });
-		
+	hitbox->setSize({ sprite.getGlobalBounds().width - 10,sprite.getGlobalBounds().height - 10 });
+
+	Utils::SetOrigin(*hitbox, Origins::MC);
 	Translate(direction * dt * projectilespeed);
 
 	hitbox->setPosition(sprite.getPosition());
+	hitbox->setRotation(sprite.getRotation());
 
 	shader.Update(dt);
 }
@@ -56,6 +57,7 @@ void Orange::Draw(RenderWindow& window)
 	window.draw(light, &shader.shader);
 	//SpriteObj::Draw(window);	
 	DrawPortalArray(window);
+	//window.draw(*hitbox);
 
 }
 

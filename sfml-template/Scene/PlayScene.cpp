@@ -213,9 +213,12 @@ void PlayScene::Draw(RenderWindow& window)
 	DrawNormalAndDiffuse(window);
 	DrawRenderedBackGroundBuffer(window);
 
+
 	for (auto v : wall) {
 		v->Draw(window);
 	}
+
+
 
 	for (auto v : button) {
 		v->Draw(window);
@@ -256,6 +259,10 @@ void PlayScene::Draw(RenderWindow& window)
 	if (goal != nullptr) {
 		goal->Draw(window);
 		//goal->Draw(pass_diffuse, normals_shader, pass_normals);
+	}
+
+	for (auto v : sign) {
+		v->Draw(window);
 	}
 
 	DrawRenderedBuffer(window);
@@ -405,6 +412,11 @@ PlayScene::PlayScene(string path)
 	}
 
 	for (auto& p : loadObjInfo.dummys3)  //��
+	{
+		loadedArray[p.posY][p.posX].push_back(&p);
+	}
+
+	for (auto& p : loadObjInfo.droppes)
 	{
 		loadedArray[p.posY][p.posX].push_back(&p);
 	}
@@ -588,7 +600,10 @@ PlayScene::PlayScene(string path)
 					{
 						Water_struct* tempW = (Water_struct*)obj;
 						water.push_back(new Water(currgrid));
-
+						if (!(int)water.back()->GetRotation())
+						{
+							water.back()->SetActiveSurface(false);
+						}
 						currgrid.x += GRIDSIZE;
 						box2dposition.x += GRIDSIZE;
 						break;
@@ -618,8 +633,8 @@ PlayScene::PlayScene(string path)
 						///�����
 						Dummy_struct2* tempD = (Dummy_struct2*)obj;
 						tempD->dummyFloat1; //onoff
-						tempD->dummyVec; //��ư ���					
-
+						tempD->dummyVec; //��ư ���			
+						break;
 					}
 					case 'g':
 					case 'G':
@@ -631,6 +646,15 @@ PlayScene::PlayScene(string path)
 						//new BounceGel; ������
 						//new AccelGel; ������					
 						tempG->dummyVec; //��ư ���
+						break;
+					}
+					case '7':
+					{
+						Dropper_struct* tempD = (Dropper_struct*)obj;
+						sign.push_back(new Sign(tempD->contentsId, false));
+						sign.back()->SetPos(currgrid);
+						currgrid.x += GRIDSIZE;
+						box2dposition.x += GRIDSIZE;
 					}
 					}
 				}
@@ -2382,6 +2406,12 @@ void PlayScene::Release()
 		delete v;
 	}
 	wires.clear();
+
+	for (auto v : sign)
+	{
+		delete v;
+	}
+	sign.clear();
 }
 
 void PlayScene::Enter()
