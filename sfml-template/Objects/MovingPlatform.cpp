@@ -29,8 +29,10 @@ MovingPlatform::MovingPlatform()
 	down.setPointCount(3);
 	down.setFillColor(Color::Black);
 	down.setRadius(4.f);
-
+	
 	Utils::SetOrigin(down, Origins::MC);
+
+	InitTexBox();
 }
 
 MovingPlatform::MovingPlatform(b2World* world, Vector2f& position, bool on, float rot, float destY, vector<float> buttonlist)
@@ -190,9 +192,7 @@ void MovingPlatform::Update(float dt)
 		pillarbody->SetTransform({ pillarbody->GetPosition().x,(pillar.getPosition().y - pillar.getSize().y / 2) / SCALE * -1 }, 0);
 
 
-	Utils::SetOrigin(down, Origins::MC);
 
-	InitTexBox();
 }
 
 void MovingPlatform::SetButtonlist(vector<Button*>& button)
@@ -319,9 +319,6 @@ void MovingPlatform::DrawTexBox(RenderWindow& window)
 	onOffTex.setString(isTurnedOn ? "ON" : "OFF");
 	Utils::SetOrigin(onOffTex, Origins::BC);
 
-	if (Switch::GetShowTimer())
-	{
-		window.draw(onOfftexBox);
-		window.draw(onOffTex);
-	}
+	window.draw(onOfftexBox);
+	window.draw(onOffTex);
 }

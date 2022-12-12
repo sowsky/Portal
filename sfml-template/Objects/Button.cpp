@@ -28,7 +28,7 @@ Button::Button()
 
 	/////////////////////
 	
-	Vector2u buttonTexSize = RESOURCEMGR->GetTexture("Graphics/button/front_n.png")->getSize();
+	Vector2u buttonTexSize = RESOURCEMGR->GetTexture("Graphics/button/front.png")->getSize();
 
 	float buttonTexRatio = buttonTexSize.x / buttonTexSize.y;
 
@@ -46,6 +46,10 @@ Button::Button()
 	sideFaces.SetSidesTex("Graphics/button/up.png", 0);	
 	sideFaces.SetBackFaceSize(frontSize);
 	sideFaces.SetBackFaceOrigin(Origins::BC);
+
+	Vector2u upButtonTexSize = RESOURCEMGR->GetTexture("Graphics/button/buttonfront.png")->getSize();
+
+	//b_frontSize = { GRIDSIZE / DEPTH * 0.8f, GRIDSIZE / DEPTH / buttonTexRatio * 0.8f };
 }
 
 
@@ -67,6 +71,7 @@ void Button::Draw(RenderWindow& window)
 		WireableObject::Draw(window);
 	else
 	{
+		SetUpButtonPos();
 		Utils::SetOrigin(*hitbox, Origins::MC);
 		hitbox->setSize({ Utils::GetSpriteSize(sprite).x - 20,Utils::GetSpriteSize(sprite).y });
 		hitbox->setPosition(sprite.getPosition());
@@ -76,6 +81,10 @@ void Button::Draw(RenderWindow& window)
 		}		
 		sideFaces.Draw(window);
 	}
+}
+
+void Button::SetUpButtonPos()
+{
 }
 
 void Button::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)

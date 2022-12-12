@@ -30,6 +30,14 @@ public:
 	Vector2f GetRedwallPos() { return redwall.getPosition(); }
 
 	bool GetIspress() { return enable; };
+
+	///////////////////
+
+	void InitTexBox();	
+	void DrawTexBox(RenderWindow& window);	
+	bool GetRedActive() { return originactive; }
+	void SetRedActive(bool a) { originactive = a; }
+
 private:
 	RectangleShape redwall;
 	list<Button*> button;
@@ -45,5 +53,8 @@ private:
 
 	SpriteObj* whohitwall = nullptr;
 
+	/////////////////////////
+	RectangleShape onOfftexBox;
+	Text onOffTex;
 };
 

@@ -1481,7 +1481,9 @@ void EditScene::Save()
 						red.posX = j;
 						red.posY = posY;
 						red.rotation = (int)tool->GetRotation();
-						WireableObject* wobj = (WireableObject*)tool;					
+						Redwall* rw = (Redwall*)tool;
+						red.on = rw->GetRedActive();
+						WireableObject* wobj = (WireableObject*)tool;
 						for (auto w : wobj->GetWireList())
 						{
 							red.buttonList.push_back(w->buttonNum);
@@ -1717,6 +1719,7 @@ void EditScene::Load()
 		Redwall* red = new Redwall;
 		red->SetRotation((Rotate)p.rotation);
 		red->SetButtonlist(p.buttonList);
+		red->SetRedActive(p.on);
 		for (auto id : p.buttonList)
 		{
 			PushToLoadedWireInfo(id, red);

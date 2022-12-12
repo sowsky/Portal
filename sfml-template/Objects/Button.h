@@ -23,6 +23,7 @@ public:
 	void SetButtonId(int a) { buttonId = a; }
 	static void SetIsEditMap(bool edit) { isEditMap = edit; }
 	virtual void SetSwitchActive() {};
+	void SetUpButtonPos();
 
 	/////////////////////////////
 	virtual void Draw
