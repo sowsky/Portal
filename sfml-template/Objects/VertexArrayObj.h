@@ -15,6 +15,7 @@ public:
 	void SetRotatable(bool rot);
 	void SetDepth(float dp);
 	void SetAllSidesTex(string id);	
+	void SetSidesTex(string id, int rot);
 	void SetBackFaceOrigin(Origins origin);
 	void SetBackFaceSize(Vector2f size);	
 	

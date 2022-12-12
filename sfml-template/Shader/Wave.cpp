@@ -11,11 +11,11 @@ Wave::Wave()
 
 	shader.setParameter("currentTexture", Shader::CurrentTexture);
 	shader.setParameter("distortionMapTexture", distortionMap);
+	shader.setParameter("riseFactor", riseFactor);
 }
 
 void Wave::Update(float dt)
 {
 	shader.setParameter("time", time += dt);
-	shader.setParameter("distortionFactor", distortionFactor);
-	shader.setParameter("riseFactor", riseFactor);
+	shader.setParameter("distortionFactor", distortionFactor);	
 }

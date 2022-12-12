@@ -74,12 +74,13 @@ Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
 
 void Cube::Respawn()
 {
-	body->SetTransform({ startpos.x / SCALE,(startpos.y-10) / SCALE * -1 }, 0);
-	body->SetLinearVelocity({ 0,-1 });
-}
+	//body->SetTransform({ startpos.x / SCALE,(startpos.y-10) / SCALE * -1 }, 0);
+	//body->SetLinearVelocity({ 0,-1 });
 
-void Cube::DrawDestroyAnimation(RenderWindow& window)
-{
+	if (cubeState != State::Normal)
+		return;
+
+	InitDestroy();
 }
 
 void Cube::SetNormalStateTex()
@@ -108,10 +109,10 @@ void Cube::UpdateDestroyAnimation(float dt)
 	shader.Update(dt);	
 	if (cubeState == State::Destroy)
 	{
-		shader.distortionFactor += dt * 0.5f;
+		shader.distortionFactor += dt;
 
 		if (cubeTransp > 20)
-			cubeTransp -= 100 * dt;				
+			cubeTransp -= 200 * dt;				
 		
 		sideFaces.SetTransparent(cubeTransp);
 		frontFace.setColor(Color(255, 255, 255, cubeTransp));
@@ -125,9 +126,9 @@ void Cube::UpdateDestroyAnimation(float dt)
 
 	if (cubeState == State::Reproduction)
 	{		
-		shader.distortionFactor -= dt * 0.5f;
+		shader.distortionFactor -= dt;
 
-		cubeTransp += 100 * dt;
+		cubeTransp += 200 * dt;
 		sideFaces.SetTransparent(cubeTransp);
 		frontFace.setColor(Color(255, 255, 255, cubeTransp));
 		if (shader.distortionFactor < 0.f)

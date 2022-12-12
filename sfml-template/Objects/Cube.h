@@ -49,7 +49,6 @@ public:
 	void SetNormalStateTex();
 	void InitDestroy();
 	void UpdateDestroyAnimation(float dt);
-	void DrawDestroyAnimation(RenderWindow& window);
 protected:
 	bool ground = false;
 	RectangleShape* hitbox;

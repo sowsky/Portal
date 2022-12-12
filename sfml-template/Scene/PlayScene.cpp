@@ -217,6 +217,11 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(window);
 	}
 
+	for (auto v : button) {
+		v->Draw(window);
+		v->Draw(pass_diffuse, normals_shader, pass_normals);
+	}
+
 	if (madeorange) {
 		orange->Draw(window);
 	}
@@ -272,10 +277,6 @@ void PlayScene::Draw(RenderWindow& window)
 
 	if (player != nullptr)
 		player->Draw(window);
-
-	for (auto v : button) {
-		v->Draw(window);
-	}
 
 	for (auto v : tunnel) {
 		v->Draw(window);
@@ -1490,7 +1491,7 @@ void PlayScene::RedwallCheck()
 						grabbedcube = nullptr;
 						grabitem = false;
 					}
-					c->MovetoStartpos();
+					c->Respawn();
 				}
 			}
 		}
