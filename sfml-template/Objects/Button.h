@@ -4,6 +4,7 @@
 #include "SpriteObj.h"
 #include "Goal.h"
 
+class VertexArrayObj;
 class Button : public WireableObject {
 public:
 	Button();	
@@ -22,6 +23,11 @@ public:
 	void SetButtonId(int a) { buttonId = a; }
 	static void SetIsEditMap(bool edit) { isEditMap = edit; }
 	virtual void SetSwitchActive() {};
+
+	/////////////////////////////
+	virtual void Draw
+	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
+
 protected:
 	bool isPress = false;
 	static int buttonNum;
@@ -29,5 +35,18 @@ protected:
 	static bool isEditMap;
 	RectangleShape* hitbox;
 
+
+	////////////////////////////////
+	VertexArrayObj sideFaces;
+	Sprite frontFace;
+	Vector2f frontSize;
+	Texture* normal;
+
+	////////////////
+	Sprite b_pivot;
+	VertexArrayObj b_sideFaces;
+	Sprite b_frontFace;
+	Vector2f b_frontSize;
+	Texture* b_normal;
 };
 

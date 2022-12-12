@@ -25,6 +25,20 @@ void VertexArrayObj::SetAllSidesTex(string id)
 	}
 }
 
+void VertexArrayObj::SetSidesTex(string id, int rot)
+{
+	texSize = RESOURCEMGR->GetTexture(id)->getSize();
+
+	tileTextures[rot] = RESOURCEMGR->GetTexture(id);
+	sides[rot].first = true;
+	sides[rot].second.setPrimitiveType(Quads);
+	sides[rot].second.resize(4);
+	sides[rot].second[0].texCoords = { 0.f, 0.f };
+	sides[rot].second[1].texCoords = { (float)texSize.x, 0.f };
+	sides[rot].second[2].texCoords = (Vector2f)texSize;
+	sides[rot].second[3].texCoords = { 0.f, (float)texSize.y };
+}
+
 void VertexArrayObj::SetBackFaceOrigin(Origins origin)
 {
 	Utils::SetOrigin(backFace, origin);
