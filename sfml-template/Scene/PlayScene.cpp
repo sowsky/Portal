@@ -600,10 +600,8 @@ PlayScene::PlayScene(string path)
 					{
 						Water_struct* tempW = (Water_struct*)obj;
 						water.push_back(new Water(currgrid));
-						if (!(int)water.back()->GetRotation())
-						{
-							water.back()->SetActiveSurface(false);
-						}
+						water.back()->SetIsTop(tempW->rotation);
+						water.back()->InitSetting();
 						currgrid.x += GRIDSIZE;
 						box2dposition.x += GRIDSIZE;
 						break;

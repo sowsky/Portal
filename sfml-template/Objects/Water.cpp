@@ -1,11 +1,15 @@
 #include "Water.h"
 
-Water::Water()
-    :sideFaces(frontFace, sprite)
+Water::Water(bool top)
+    :sideFaces(frontFace, sprite), isTop(top)
 {
     id = 'w';
 
-    SetResourceTexture("Graphics/Ui/goo.png");
+    if(isTop)
+        SetResourceTexture("Graphics/waterup.png");    
+    else
+        SetResourceTexture("Graphics/water.png"); 
+    
 
     type = ObjectType::None;
     objSize = ObjectSize::Big;
@@ -18,28 +22,17 @@ Water::Water()
 Water::Water(Vector2f position)
     :sideFaces(frontFace, sprite)
 {
+    attatchedPos = Rotate::Down;
+
     Utils::SetOrigin(water, Origins::MC);
 
     water.setSize({ GRIDSIZE, GRIDSIZE });
-    pos= position;
-    water.setFillColor(Color::Blue);
-    sprite.setPosition(pos);
-
-    frontSize = { GRIDSIZE / DEPTH, GRIDSIZE / DEPTH };
-    SetSpriteTex(frontFace, "Graphics/water.png");
-    Utils::SetOrigin(frontFace, Origins::MC);
-    Utils::SetSpriteSize(frontFace, frontSize);
-
-    sideFaces.SetDepth(DEPTH);
-    sideFaces.SetSidesTex("Graphics/water.png", 0);
-    sideFaces.SetBackFaceSize(frontSize);
-    sideFaces.SetBackFaceOrigin(Origins::MC);
- 
+    pos= position;     
 }
 
 SpriteObj* Water::NewThis()
 {
-    return new Water;
+    return new Water(isTop);
 }
 
 void Water::Update(float dt)
@@ -62,7 +55,22 @@ void Water::Draw(RenderWindow& window)
 
 }
 
-void Water::SetActiveSurface(bool active)
+void Water::InitSetting()
 {
-    sideFaces.SetActiveSides(0, active);
+    sprite.setPosition(pos);
+
+    frontSize = { GRIDSIZE / DEPTH, GRIDSIZE / DEPTH };
+    if(isTop)
+        SetSpriteTex(frontFace, "Graphics/waterup.png");
+    else
+        SetSpriteTex(frontFace, "Graphics/water.png");
+    
+    Utils::SetOrigin(frontFace, Origins::MC);
+    Utils::SetSpriteSize(frontFace, frontSize);
+
+    sideFaces.SetDepth(DEPTH);
+    if(isTop)
+        sideFaces.SetSidesTex("Graphics/watersurface.png", 0);    
+    sideFaces.SetBackFaceSize(frontSize);
+    sideFaces.SetBackFaceOrigin(Origins::MC);
 }

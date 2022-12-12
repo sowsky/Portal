@@ -42,6 +42,7 @@ public:
 
 	void UpdatePlayerPos(float dt);
 	void WalkAnimaton(float dt);
+	void StruggelAnimation(float dt);
 	void RotateAnimation(RenderWindow& window);
 	void ShowBornForDev(RenderWindow& window);
 	void ShowIndicator(RenderWindow& window);
@@ -76,6 +77,7 @@ protected:
 	Sprite p_head;
 	Sprite p_body;
 	RectangleShape p_arm;	
+	RectangleShape p_spare_arm;
 	Sprite p_lleg;
 	Sprite p_rleg;
 	Sprite portalGun;

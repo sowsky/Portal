@@ -94,6 +94,11 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	p_arm.setFillColor(Color::Black);
 	Utils::SetOrigin(p_arm, Origins::ML);
 
+	p_spare_arm.setSize({ 10.f, 4.5f });
+	p_spare_arm.setFillColor(Color::Black);
+	Utils::SetOrigin(p_spare_arm, Origins::MR);
+
+
 	p_lleg.setScale(0.3f, 0.3f);
 	p_rleg.setScale(0.3f, 0.3f);
 
@@ -368,6 +373,15 @@ void Player::WalkAnimaton(float dt)
 
 	p_lleg.setScale(0.3f, 0.55f - p_rleg.getScale().y);
 
+}
+
+void Player::StruggelAnimation(float dt)
+{
+	WalkAnimaton(dt);
+
+	p_arm.setPosition(clavicle.getTransform().transformPoint(clavicle.getPoint(1)));
+	p_spare_arm.setPosition(clavicle.getTransform().transformPoint(clavicle.getPoint(0)));
+	
 }
 
 void Player::RotateAnimation(RenderWindow& window)

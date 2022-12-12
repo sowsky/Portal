@@ -5,7 +5,7 @@ class VertexArrayObj;
 class Water : public SpriteObj
 {
 public:
-	Water();
+	Water(bool top);
 	Water(Vector2f position);
 	virtual ~Water() {}
 
@@ -15,7 +15,10 @@ public:
 
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);
-	void SetActiveSurface(bool active);
+	void InitSetting();
+
+	bool GetIsTop() { return isTop; }
+	void SetIsTop(bool top) { isTop = top; }
 protected:
 	RectangleShape water;
 
@@ -25,5 +28,7 @@ protected:
 
 	Sprite frontFace;
 	VertexArrayObj sideFaces;
+
+	bool isTop;
 };
 

@@ -1,4 +1,5 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
+Graphics/watersurface.png,0
 Graphics/waterup.png,0
 Graphics/water.png,0
 Graphics/signs/dropper.png,0
@@ -31,6 +32,7 @@ Graphics/Ui/switch1.png,0
 Graphics/Ui/switch2.png,0
 Graphics/Ui/switch3.png,0
 Graphics/Ui/goo.png,0
+Graphics/Ui/gootop.png,0
 Graphics/Ui/tile1.png,0
 Graphics/Ui/tile2.png,0
 Graphics/Ui/tile3.png,0

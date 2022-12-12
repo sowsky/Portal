@@ -1206,11 +1206,14 @@ void EditScene::FillUiToolBox()
 	uiTool[2][0].first = new Redwall;
 	uiTool[2][0].first->SetResourceTexture("Graphics/Ui/fizzler.png");
 
-	uiTool[2][1].first = new Water;
+	uiTool[2][1].first = new Water(false);
 	uiTool[2][1].first->SetResourceTexture("Graphics/Ui/goo.png");
 
-	uiTool[2][2].first = new Gel;
-	uiTool[2][2].first->SetResourceTexture("Graphics/Ui/gel.png");
+	uiTool[2][2].first = new Water(true);
+	uiTool[2][2].first->SetResourceTexture("Graphics/Ui/gootop.png");
+
+	uiTool[2][3].first = new Gel;
+	uiTool[2][3].first->SetResourceTexture("Graphics/Ui/gel.png");
 
 	uiTool[3][0].first = new Switch;
 	uiTool[3][0].first->SetResourceTexture("Graphics/Ui/switch1.png");
@@ -1499,12 +1502,8 @@ void EditScene::Save()
 						water.id = 'w';
 						water.posX = j;
 						water.posY = posY;
-						water.rotation = 2;
-						//if (!mapTool[i + 1][j].first.empty() &&
-						//	mapTool[i + 1][j].first.front()->GetId() == 'w')
-						//{
-						//	water.rotation = 0;
-						//}
+						Water* tempW = (Water*)tool;
+						water.rotation = tempW->GetIsTop();
 						saveObjInfo.waters.push_back(water);
 						break;
 					}
@@ -1788,8 +1787,7 @@ void EditScene::Load()
 
 	for (auto& p : loadObjInfo.waters)
 	{
-		Water* water = new Water;
-		water->SetRotation((Rotate)p.rotation);
+		Water* water = new Water(p.rotation);		
 		mapTool[idxI - p.posY][p.posX].first.push_back(water);
 	}
 
