@@ -12,9 +12,10 @@ Blue::Blue()
 	hitbox->setFillColor(Color::Red);
 
 	////////////////
-	light.setSize({ 5, 40 });
-	Utils::SetOrigin(light, Origins::ML);
-	light.setFillColor(Color(BLUE, 150));
+	light.setSize({ 40, 5 });
+	Utils::SetOrigin(light, Origins::BC);
+	light.setTexture(RESOURCEMGR->GetTexture("Graphics/Shader/blue.png"));
+	light.setFillColor(Color(255, 255, 255, 150));
 
 	portalArray.setPrimitiveType(Quads);
 	portalArray.resize(4);
@@ -27,6 +28,10 @@ Blue::Blue()
 	portalArray[1].texCoords = { texSize.x,0 };
 	portalArray[2].texCoords = { texSize.x,texSize.y };
 	portalArray[3].texCoords = { 0,texSize.y };
+
+	shader.distortionFactor = 0.1f;
+	PortalState.texture = blueTex;
+	PortalState.shader = &shader.shader;
 }
 
 Blue::~Blue()
@@ -43,11 +48,13 @@ void Blue::Update(float dt)
 	Translate(direction *dt* projectilespeed);
 
 	hitbox->setPosition(sprite.getPosition());
+
+	shader.Update(dt);
 }
 
 void Blue::Draw(RenderWindow& window)
 {
-	window.draw(light);
+	window.draw(light, &shader.shader);
 	//SpriteObj::Draw(window);
 	DrawPortalArray(window);
 
@@ -88,7 +95,7 @@ void Blue::DrawPortalArray(RenderWindow& window)
 		portalArray[3].position = backFace.getTransform().transformPoint(backFace.getPoint(2));
 	}	
 
-	window.draw(portalArray, blueTex);
+	window.draw(portalArray, PortalState);
 	//window.draw(backFace);
 	//window.draw(frontFace);
 }

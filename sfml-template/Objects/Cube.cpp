@@ -54,23 +54,93 @@ Cube::Cube(b2World* world, const Vector2f& position, Vector2f dimensions)
 	hitbox->setPosition(GetPos());
 
 	///////
-	Vector2f frontSize = { cubeSizeV2f.x / DEPTH, cubeSizeV2f.y / DEPTH };
+	frontSize = { cubeSizeV2f.x / DEPTH, cubeSizeV2f.y / DEPTH };
 
-	SetSpriteTex(frontFace, "Graphics/temp/cube.png");
-	Utils::SetOrigin(frontFace, Origins::MC);
-	Utils::SetSpriteSize(frontFace, frontSize);
+	SetNormalStateTex();
+
 	normal = RESOURCEMGR->GetTexture("Graphics/temp/cuben.png");
 
 	sideFaces.SetDepth(DEPTH + 0.005f);
 	sideFaces.SetAllSidesTex("Graphics/temp/cube.png");
 	sideFaces.SetBackFaceSize(frontSize);
 	sideFaces.SetBackFaceOrigin(Origins::MC);
+
+	destroy = RESOURCEMGR->GetTexture("Graphics/Shader/reproduction.png");
+
+	shader.distortionFactor = 0.f;
+	sideFaces.GetRenderStates()->shader = &shader.shader;
+	sideFaces.GetRenderStates()->texture = destroy;
 }
 
 void Cube::Respawn()
 {
 	body->SetTransform({ startpos.x / SCALE,(startpos.y-10) / SCALE * -1 }, 0);
 	body->SetLinearVelocity({ 0,-1 });
+}
+
+void Cube::DrawDestroyAnimation(RenderWindow& window)
+{
+}
+
+void Cube::SetNormalStateTex()
+{
+	SetSpriteTex(frontFace, "Graphics/temp/cube.png");
+	Utils::SetOrigin(frontFace, Origins::MC);
+	Utils::SetSpriteSize(frontFace, frontSize);
+}
+
+void Cube::InitDestroy()
+{
+	Vector2u texSize = destroy->getSize();
+	frontFace.setTexture(*destroy);	
+	IntRect texRect((Vector2i)texSize * 1 / 4, (Vector2i)texSize * 1 / 2);
+	frontFace.setTextureRect(texRect);
+	frontFace.setScale(frontFace.getScale() * 2.f);
+	Utils::SetOrigin(frontFace, Origins::MC);
+	
+	sideFaces.ChageCoords(texSize);
+
+	cubeState = State::Destroy;	
+}
+
+void Cube::UpdateDestroyAnimation(float dt)
+{
+	shader.Update(dt);	
+	if (cubeState == State::Destroy)
+	{
+		shader.distortionFactor += dt * 0.5f;
+
+		if (cubeTransp > 20)
+			cubeTransp -= 100 * dt;				
+		
+		sideFaces.SetTransparent(cubeTransp);
+		frontFace.setColor(Color(255, 255, 255, cubeTransp));
+
+		if (shader.distortionFactor > 1.1f)
+		{			
+			body->SetTransform({ startpos.x / SCALE,startpos.y / SCALE * -1 }, 0);
+			cubeState = State::Reproduction;
+		}
+	}
+
+	if (cubeState == State::Reproduction)
+	{		
+		shader.distortionFactor -= dt * 0.5f;
+
+		cubeTransp += 100 * dt;
+		sideFaces.SetTransparent(cubeTransp);
+		frontFace.setColor(Color(255, 255, 255, cubeTransp));
+		if (shader.distortionFactor < 0.f)
+		{			
+			cubeTransp = 255;
+			sideFaces.SetTransparent(cubeTransp);
+			sideFaces.ReturnPrevCoords();
+			frontFace.setColor(Color(255, 255, 255, cubeTransp));			
+			SetNormalStateTex();
+			body->SetLinearVelocity({ 0,-1 });
+			cubeState = State::Normal;
+		}
+	}
 }
 
 Cube::~Cube()
@@ -141,6 +211,12 @@ void Cube::Update(float dt)
 	}
 
 	//cout << body->GetLinearVelocity().y << endl;
+
+	if (cubeState == State::Destroy ||
+		cubeState == State::Reproduction)
+	{
+		UpdateDestroyAnimation(dt);
+	}
 }
 
 void Cube::PhysicsUpdate()
@@ -151,7 +227,24 @@ void Cube::PhysicsUpdate()
 void Cube::Draw(RenderWindow& window)
 {
 	if (isPlayingGame)
-		sideFaces.Draw(window);
+	{
+		switch (cubeState)
+		{
+		case State::Normal:
+			sideFaces.Draw(window);
+			break;
+		case State::Destroy:					
+		case State::Reproduction:
+		{
+			window.draw(frontFace, &shader.shader);
+			sideFaces.DrawRenderStates(window);
+			break;
+		}			
+		default:
+			break;
+		}		
+	}
+		
 	
 	if (!isPlayingGame)
 		SpriteObj::Draw(window);
@@ -160,6 +253,9 @@ void Cube::Draw(RenderWindow& window)
 
 void Cube::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
 {
+	if (cubeState != State::Normal)
+		return;
+
 	diffuse.draw(frontFace);
 	NormalPass(normal, frontFace, this->normal, nShader);
 }
@@ -176,7 +272,10 @@ void Cube::SetCubeBodyForce(b2Vec2 force)
 }
 
 void Cube::MovetoStartpos()
-{
-	body->SetTransform({ startpos.x / SCALE,startpos.y / SCALE * -1 },0);
+{	
+	if (cubeState != State::Normal)
+		return;
+
+	InitDestroy();	
 }
 

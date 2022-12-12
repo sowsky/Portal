@@ -1,6 +1,7 @@
 #pragma once
 #include "SpriteObj.h"
 #include <Candle/Candle.hpp>
+#include "../Shader/Wave.h"
 
 using namespace candle;
 
@@ -29,5 +30,8 @@ protected:
 	RectangleShape frontFace;
 	RectangleShape light;
 	bool texStand;
+	
+	RenderStates PortalState;
+	Wave shader;
 };
 

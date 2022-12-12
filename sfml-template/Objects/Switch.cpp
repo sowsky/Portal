@@ -63,7 +63,7 @@ Switch::Switch(Vector2f position, int rotation, int id, float time, bool switcht
 		hitbox->setSize({ 40,10 });
 
 
-	timerTex.setFont(*RESOURCEMGR->GetFont("Fonts/D-DINCondensed-Bold.otf"));
+	timerTex.setFont(*RESOURCEMGR->GetFont("Fonts/DS-DIGI.TTF"));
 	timerTex.setFillColor(switchType ? Color::Yellow : Color::Red);
 	timerTex.setCharacterSize(40);
 	indicator.setPointCount(3);

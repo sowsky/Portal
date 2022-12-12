@@ -1,6 +1,15 @@
 #pragma once
 #include "SpriteObj.h"
 #include "box2d/box2d.h"
+#include "../Shader/Wave.h"
+
+enum class State
+{
+	None = -1,
+	Normal,
+	Destroy,
+	Reproduction,
+};
 
 class Cube : public SpriteObj
 {
@@ -36,6 +45,11 @@ public:
 
 	void SetGravity(int g) { body->SetGravityScale(g); }
 	void Respawn();
+	////////////////
+	void SetNormalStateTex();
+	void InitDestroy();
+	void UpdateDestroyAnimation(float dt);
+	void DrawDestroyAnimation(RenderWindow& window);
 protected:
 	bool ground = false;
 	RectangleShape* hitbox;
@@ -56,6 +70,13 @@ protected:
 
 	VertexArrayObj sideFaces;
 	Sprite frontFace;
+	Vector2f frontSize;
 	Texture* normal;
+
+
+	Wave shader;
+	Texture* destroy;
+	State cubeState = State::Normal;
+	int cubeTransp = 255;
 };
 

@@ -328,7 +328,7 @@ void Player::UpdatePlayerPos(float dt)
 
 void Player::WalkAnimaton(float dt)
 {
-	if (!IsMoving /*|| recentspeed.y*/)
+	if (!IsMoving || recentspeed.y)
 	{
 		startMove = false;
 		p_rleg.setScale(0.3f, 0.3f);
