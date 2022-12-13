@@ -274,9 +274,7 @@ void Cube::SetCubeBodyForce(b2Vec2 force)
 
 void Cube::MovetoStartpos()
 {	
-	if (cubeState != State::Normal)
-		return;
-
-	InitDestroy();	
+	body->SetTransform({ startpos.x / SCALE,(startpos.y-10) / SCALE * -1 }, 0);
+	body->SetLinearVelocity({ 0,-1 });
 }
 

@@ -19,6 +19,8 @@ public:
 
 	void DrawPortalArray(RenderWindow& window);
 	virtual void SetSize(Vector2f size);
+
+	FloatRect Gethitboxglobalbounds() { return hitbox->getGlobalBounds(); }
 protected:
 	RectangleShape* hitbox;
 	float projectilespeed = 2000.f;

@@ -134,6 +134,8 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	portalGun.setScale(0.3f, 0.3f);
 
 	checkpointpos = position;
+
+	hitbox->setSize({ GetSize().x,GetSize().y*0.8f});
 }
 
 Player::~Player()
@@ -154,8 +156,7 @@ void Player::Update(float dt)
 
 	Utils::ChangeBCSpriteSFMLPosToBox2dPos(*this, *body, dt);
 
-	Utils::SetOrigin(*hitbox, Origins::BC);
-	hitbox->setSize({ GetSize() });
+	Utils::SetOrigin(*hitbox, Origins::BC);	
 	hitbox->setPosition(GetPos());
 
 	if (body->GetLinearVelocity().x != 0) {

@@ -238,7 +238,13 @@ void PlayScene::Draw(RenderWindow& window)
 		blue->Draw(window);
 	}
 
+
 	for (auto v : wall) {
+		v->Draw(pass_diffuse, normals_shader, pass_normals);
+	}
+
+	for (auto v : movingplat) {
+		v->Draw(window);
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
 	}
 
@@ -300,10 +306,6 @@ void PlayScene::Draw(RenderWindow& window)
 
 	if (particle.running())
 		window.draw(particle);
-
-	for (auto v : movingplat) {
-		v->Draw(window);
-	}
 
 	for (auto v : angledtile) {
 		v->Draw(window);
@@ -1229,7 +1231,7 @@ void PlayScene::Respawn()
 	blue->SetDir({ 0,0 });
 	orange->SetDir({ 0,0 });
 	for (auto c : cube) {
-		c->Respawn();
+		c->MovetoStartpos();
 	}
 	if (grabitem) {
 		grabbedcube->ChangeBodyTypeBetweenStaticAndDynamic(false);
@@ -2090,7 +2092,7 @@ void PlayScene::MoveToPortal()
 	if (!madeblue || !madeorange) {
 		return;
 	}
-	if (madeblue && blue->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
+	if (madeblue && blue->Gethitboxglobalbounds().intersects(player->GethitboxGlobalBounds())) {
 		player->SetFlying(true);
 		float recenty = player->GetRecentSpeed().y * -1;
 		float recentx = abs(player->GetRecentSpeed().x);
@@ -2128,7 +2130,7 @@ void PlayScene::MoveToPortal()
 
 
 	//////////////////////////////move to blue//////////////////////////////////////
-	if (madeorange && orange->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
+	if (madeorange && orange->Gethitboxglobalbounds().intersects(player->GethitboxGlobalBounds())) {
 		player->SetFlying(true);
 
 		float recenty = player->GetRecentSpeed().y * -1;
@@ -2170,7 +2172,7 @@ void PlayScene::MoveToPortal()
 
 	///////////////////////////////////////CUBE////////////////////////////////////////////////////
 	for (auto c : cube) {
-		if (madeblue && blue->GetGlobalBounds().intersects(c->GetGlobalBounds())) {
+		if (madeblue && blue->Gethitboxglobalbounds().intersects(c->GetGlobalBounds())) {
 			if (orange->GetPortalDir() == 0) {
 				c->SetCubeBodyPos({ orange->GetPos().x,orange->GetPos().y - c->GetGlobalBounds().height });
 				if (abs(c->GetCubeBodyForce().y) <= 0.5f) {
@@ -2201,7 +2203,7 @@ void PlayScene::MoveToPortal()
 		}
 
 
-		if (madeorange && orange->GetGlobalBounds().intersects(c->GetGlobalBounds())) {
+		if (madeorange && orange->Gethitboxglobalbounds().intersects(c->GetGlobalBounds())) {
 			if (blue->GetPortalDir() == 0) {
 				c->SetCubeBodyPos({ blue->GetPos().x,blue->GetPos().y - c->GetGlobalBounds().height });
 				if (abs(c->GetCubeBodyForce().y) <= 0.5f) {
