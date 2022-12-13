@@ -54,13 +54,16 @@ MovingPlatform::MovingPlatform(b2World* world, Vector2f& position, bool on, floa
 
 	if (dir == 0) {
 		Utils::SetOrigin(pillar, Origins::TC);
+		
+
 	}
 	else if (dir == 2) {
 		Utils::SetOrigin(pillar, Origins::BC);
+		
 	}
 
 	originpos = platform.getPosition();
-	pillar.setFillColor(Color::Green);
+	//pillar.setFillColor(Color::Green);
 	pillar.setPosition(platform.getPosition());
 	platform.setFillColor(Color::Green);
 	platform.setSize({ GRIDSIZE, 10 });
@@ -124,6 +127,12 @@ MovingPlatform::MovingPlatform(b2World* world, Vector2f& position, bool on, floa
 	sideFaces.SetBackFaceOrigin(Origins::MC);
 
 	sprite.setPosition(platform.getPosition());
+
+	
+	pillar_diffuse.setRotation(sprite.getRotation());
+	pillar_diffuse.setTexture(RESOURCEMGR->GetTexture("Graphics/platform/pillar.png"));
+	pillar_n = RESOURCEMGR->GetTexture("Graphics/platform/pillar_n.png");
+	pillar_diffuse.setPosition(originpos);
 }
 
 void MovingPlatform::Update(float dt)
@@ -131,10 +140,10 @@ void MovingPlatform::Update(float dt)
 	Utils::SetOrigin(platform, Origins::MC);
 
 	if (dir == 0) {
-		Utils::SetOrigin(pillar, Origins::TC);
+		Utils::SetOrigin(pillar, Origins::TC);		
 	}
 	else if (dir == 2) {
-		Utils::SetOrigin(pillar, Origins::BC);
+		Utils::SetOrigin(pillar, Origins::BC);		
 	}
 
 	if (InputMgr::GetKeyDown(Keyboard::Y))
@@ -226,8 +235,11 @@ void MovingPlatform::Update(float dt)
 	else
 		pillarbody->SetTransform({ pillarbody->GetPosition().x,(pillar.getPosition().y - pillar.getSize().y / 2) / SCALE * -1 }, 0);
 
-	sprite.setPosition(platform.getPosition());
-
+	sprite.setPosition(platform.getPosition());	
+	//Utils::SetOrigin(sprite, Origins::MC);
+	pillar_diffuse.setSize({ 10, abs(originpos.y - sprite.getPosition().y)});
+	Utils::SetOrigin(pillar_diffuse, Origins::BC);	
+	//cout << pillar.getPosition().y << endl;
 }
 
 void MovingPlatform::SetButtonlist(vector<Button*>& button)
@@ -261,8 +273,8 @@ void MovingPlatform::Draw(RenderWindow& window)
 	else
 	{
 		//window.draw(platform);
-		window.draw(pillar);
-		SpriteObj::Draw(window);
+		//window.draw(pillar);
+		//SpriteObj::Draw(window);
 
 		sideFaces.Draw(window);
 		window.draw(frontFace);
@@ -273,6 +285,12 @@ void MovingPlatform::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture
 {
 	diffuse.draw(frontFace);
 	NormalPass(normal, frontFace, this->normal, nShader);
+}
+
+void MovingPlatform::DrawPillar(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
+{
+	diffuse.draw(pillar_diffuse);
+	NormalPass(normal, pillar_diffuse, pillar_n, nShader);
 }
 
 void MovingPlatform::DrawUi(RenderWindow& window)

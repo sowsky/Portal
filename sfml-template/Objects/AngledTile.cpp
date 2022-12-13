@@ -37,7 +37,7 @@ AngledTile::AngledTile(b2World* world, Vector2f position, int angle)
 	}
 
 	hitbox.setFillColor(Color::Red);
-	hitbox.setSize({ 10,40 });
+	hitbox.setSize({ 10,30 });
 	hitbox.setPosition(hitboxpos);
 	if (dir == 1 || dir == 3) {
 		hitbox.setRotation(45);

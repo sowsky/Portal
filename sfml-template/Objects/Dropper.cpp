@@ -16,12 +16,39 @@ Dropper::Dropper()
 	InitTexBox();
 }
 
+Dropper::Dropper(Vector2f pos, vector<float> buttonlist,Cube* cube)
+	:buttonid(buttonlist), cube(cube)
+{
+	dropper.setFillColor(Color::Yellow);
+	Utils::SetOrigin(dropper, Origins::MC);
+
+	dropper.setPosition(pos);
+	dropper.setSize({ GRIDSIZE,GRIDSIZE });
+
+}
+
 Dropper::~Dropper()
 {
 }
 
 void Dropper::Update(float dt)
 {
+	Utils::SetOrigin(dropper, Origins::MC);
+
+	if (isTurnOn)
+		return;
+	this->cube->SetPos({ -1000,1000 });
+	this->cube->GetBody()->SetLinearVelocity({0,0});
+
+	cout << cube->GetPos().x << endl;
+	for (auto b: button) {
+		if (!b->GetPressed()) {
+			return;
+		}
+	}
+	isTurnOn = true;
+	cube->Respawn();
+	
 }
 
 void Dropper::Draw(RenderWindow& window)
@@ -36,7 +63,7 @@ void Dropper::Draw(RenderWindow& window)
 	}
 	else
 	{
-
+		window.draw(dropper);
 	}
 }
 
@@ -80,5 +107,16 @@ void Dropper::DrawTexBox(RenderWindow& window)
 	{
 		window.draw(onOfftexBox);
 		window.draw(onOffTex);
+	}
+}
+
+void Dropper::SetButtonlist(vector<Button*>& button)
+{
+	for (auto b : button) {
+		for (int i = 0; i < buttonid.size(); i++) {
+			if (b->GetButtonId() == buttonid[i]) {
+				this->button.push_back(b);
+			}
+		}
 	}
 }

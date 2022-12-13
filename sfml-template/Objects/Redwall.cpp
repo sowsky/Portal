@@ -32,7 +32,7 @@ Redwall::Redwall(Vector2f& position, vector<int> buttonlist, bool active, int di
 			startpos = { position.x,position.y  };
 			redwall.setPosition(startpos);
 		}
-		redwall.setSize({ thickness,10 });
+		redwall.setSize({ GRIDSIZE,10 });
 		//start.setSize({ 50,10 });
 	}
 	else {
@@ -47,10 +47,11 @@ Redwall::Redwall(Vector2f& position, vector<int> buttonlist, bool active, int di
 			redwall.setPosition(startpos);
 
 		}
-		redwall.setSize({ 10,thickness });
+		redwall.setSize({ 10,GRIDSIZE });
 		//start.setSize({ 10,50 });
 
 	}
+	Utils::SetOrigin(redwall, Origins::MC);
 
 }
 
@@ -61,7 +62,6 @@ Redwall::~Redwall()
 
 void Redwall::Update(float dt)
 {
-
 	enable = originactive;
 
 	for (auto b : button) {
@@ -69,6 +69,7 @@ void Redwall::Update(float dt)
 			enable = !originactive;
 			hitbox.setPosition(-100, -100);
 			//destiny.setPosition(startpos);
+			//redwall.setSize({ 0,0 });
 			return;
 		}
 	}
@@ -83,7 +84,7 @@ void Redwall::Update(float dt)
 				Utils::SetOrigin(redwall, Origins::MC);
 				redwall.setPosition(startpos);
 			}
-			redwall.setSize({ thickness,50 });
+			//redwall.setSize({ thickness,50 });
 		}
 		else {
 			if (dir == 1) {
@@ -95,11 +96,12 @@ void Redwall::Update(float dt)
 				redwall.setPosition(startpos);
 
 			}
-			redwall.setSize({ 50,thickness });
+			//redwall.setSize({ 0,0 });
 		}
 		//hitbox.setSize(redwall.getSize());
 		hitwall = false;
 
+		redwall.setPosition(startpos);
 		return;
 	}
 

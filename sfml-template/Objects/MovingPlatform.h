@@ -15,6 +15,8 @@ public:
 	virtual void Draw(RenderWindow& window);
 	virtual void Draw
 	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
+	virtual void DrawPillar
+	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
 
 	void DrawUi(RenderWindow& window);
 
@@ -74,5 +76,8 @@ protected:
 	Sprite frontFace;
 	Vector2f frontSize;
 	Texture* normal;
+
+	RectangleShape pillar_diffuse;
+	Texture* pillar_n;
 };
 

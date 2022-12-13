@@ -115,7 +115,7 @@ private:
 	vector<Switch*> switches;
 	vector<MovingPlatform*> movingplat;
 	vector<AngledTile*> angledtile;
-
+	vector<Dropper*> dropper;
 	/////////////////
 	vector<Sign*> sign;
 	////////////////
