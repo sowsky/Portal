@@ -51,6 +51,8 @@ private:
 
 	RectangleShape hitbox;
 
+	Vector2f pos;
+
 	SpriteObj* whohitwall = nullptr;
 
 	/////////////////////////
