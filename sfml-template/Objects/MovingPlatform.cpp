@@ -4,6 +4,7 @@
 #include "../FrameWork/InputMgr.h"
 
 MovingPlatform::MovingPlatform()
+	:sideFaces(frontFace, sprite)
 {
 	SetResourceTexture("Graphics/panelup.png");
 
@@ -36,7 +37,8 @@ MovingPlatform::MovingPlatform()
 }
 
 MovingPlatform::MovingPlatform(b2World* world, Vector2f& position, bool on, float rot, float destY, vector<float> buttonlist)
-	:buttonid(buttonlist), enable(on), world(world), originactive(on)
+	:buttonid(buttonlist), enable(on), world(world), originactive(on),
+	 sideFaces(frontFace, sprite)
 {
 	if (rot == 0) {
 		dir = 0;
@@ -48,6 +50,13 @@ MovingPlatform::MovingPlatform(b2World* world, Vector2f& position, bool on, floa
 		dir = 2;
 		platform.setPosition(position.x, position.y + (GRIDSIZE / 2));
 		destiny.y = platform.getPosition().y - (destY * GRIDSIZE);
+	}
+
+	if (dir == 0) {
+		Utils::SetOrigin(pillar, Origins::TC);
+	}
+	else if (dir == 2) {
+		Utils::SetOrigin(pillar, Origins::BC);
 	}
 
 	originpos = platform.getPosition();
@@ -89,6 +98,32 @@ MovingPlatform::MovingPlatform(b2World* world, Vector2f& position, bool on, floa
 	fixtureDef1.density = 100.0f;
 	fixtureDef1.friction = 1.0f;
 	pillarfixture = pillarbody->CreateFixture(&fixtureDef1);
+
+	////////////////////////////////////////
+
+	Vector2u pTexSize = RESOURCEMGR->GetTexture("Graphics/platform/front.png")->getSize();
+
+	float pTexRatio = pTexSize.x / pTexSize.y;
+	frontSize = { FRONTSIZE,FRONTSIZE / pTexRatio };
+	Utils::SetOrigin(sprite, Origins::MC);
+	if (dir == 0)
+		sprite.setRotation(180.f);
+
+	SetSpriteTex(frontFace, "Graphics/platform/front.png");
+	Utils::SetSpriteSize(frontFace, frontSize);
+	Utils::SetOrigin(frontFace, Origins::MC);
+
+	normal = RESOURCEMGR->GetTexture("Graphics/platform/front_n.png");
+
+	sideFaces.SetDepth(DEPTH);
+	sideFaces.SetSidesTex("Graphics/platform/side.png", 1);
+	sideFaces.SetSidesTex("Graphics/platform/side.png", 3);
+	sideFaces.SetSidesTex("Graphics/platform/floor.png", 0);
+	sideFaces.SetSidesTex("Graphics/platform/floor.png", 2);
+	sideFaces.SetBackFaceSize(frontSize);
+	sideFaces.SetBackFaceOrigin(Origins::MC);
+
+	sprite.setPosition(platform.getPosition());
 }
 
 void MovingPlatform::Update(float dt)
@@ -191,7 +226,7 @@ void MovingPlatform::Update(float dt)
 	else
 		pillarbody->SetTransform({ pillarbody->GetPosition().x,(pillar.getPosition().y - pillar.getSize().y / 2) / SCALE * -1 }, 0);
 
-
+	sprite.setPosition(platform.getPosition());
 
 }
 
@@ -225,10 +260,19 @@ void MovingPlatform::Draw(RenderWindow& window)
 	}
 	else
 	{
-		window.draw(platform);
+		//window.draw(platform);
 		window.draw(pillar);
 		SpriteObj::Draw(window);
+
+		sideFaces.Draw(window);
+		window.draw(frontFace);
 	}
+}
+
+void MovingPlatform::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
+{
+	diffuse.draw(frontFace);
+	NormalPass(normal, frontFace, this->normal, nShader);
 }
 
 void MovingPlatform::DrawUi(RenderWindow& window)

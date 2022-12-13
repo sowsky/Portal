@@ -13,6 +13,8 @@ public:
 
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);
+	virtual void Draw
+	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
 
 	void DrawUi(RenderWindow& window);
 
@@ -66,5 +68,11 @@ protected:
 	RectangleShape onOfftexBox;
 	Text onOffTex;
 
+	////////////////////////////
+
+	VertexArrayObj sideFaces;
+	Sprite frontFace;
+	Vector2f frontSize;
+	Texture* normal;
 };
 

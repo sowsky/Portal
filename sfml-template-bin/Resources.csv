@@ -1,4 +1,8 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
+Graphics/platform/side.png,0
+Graphics/platform/floor.png,0
+Graphics/platform/front_n.png,0
+Graphics/platform/front.png,0
 Graphics/watersurface.png,0
 Graphics/waterup.png,0
 Graphics/water.png,0
