@@ -55,6 +55,7 @@ void AngledTile::Draw(RenderWindow& window)
 	if (isPlayingGame)
 	{
 		window.draw(triangle);
+		window.draw(hitbox);
 	}
 	else
 	{

@@ -244,7 +244,7 @@ void Player::PhysicsUpdate(float dt)
 
 	if ((InputMgr::GetKeyDown(Keyboard::Space) && !isJumping) && !isFlying) {
 		isJumping = true;
-		body->ApplyLinearImpulse({ 0,3.f }, GetPlayerBodyLinearVelocity(), 1);
+		body->ApplyLinearImpulse({ 0,2.f }, GetPlayerBodyLinearVelocity(), 1);
 		jumpcooltime = 0;
 	}
 
