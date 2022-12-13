@@ -11,9 +11,15 @@ public:
 
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);
+
+	FloatRect GetHitboxGlobalbounds() { return hitbox.getGlobalBounds(); }
+
+	int Getdir() { return dir + 4; }
+	
 protected:
 	ConvexShape triangle;
 	int dir;
 	RectangleShape hitbox;
+	Vector2f hitboxpos;
 };
 

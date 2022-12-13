@@ -814,26 +814,6 @@ void PlayScene::MakeButton(int rotaion, int id)
 
 void PlayScene::MakePortal()
 {
-	int bluecollidercount = 0;
-	//wall=mc blue=mc
-
-	float sety;
-	float setx;
-
-	bool intersect = false;
-	RectangleShape blueTL;
-	RectangleShape blueTR;
-	RectangleShape blueBL;
-	RectangleShape blueBR;
-
-	Vector2f bluetlpos, bluetrpos, blueblpos, bluebrpos;
-	bool bluetlhit = false;
-	bool bluetrhit = false;
-	bool blueblhit = false;
-	bool bluebrhit = false;
-	float bluey;
-	float bluex;
-
 	for (auto w : blackwall) {
 		if (w->GetGlobalBounds().intersects(blue->GetGlobalBounds())) {
 			particle.emitParticles(blue->GetPos(), false);
@@ -906,6 +886,33 @@ void PlayScene::MakePortal()
 
 		}
 	}
+
+	for (auto a : angledtile) {
+		if (blue->GetGlobalBounds().intersects(a->GetHitboxGlobalbounds())) {
+			blue->SetPortalDir(a->Getdir());
+			//blue->SetPos();
+		}
+	}
+
+	int bluecollidercount = 0;
+	//wall=mc blue=mc
+
+	float sety;
+	float setx;
+
+	bool intersect = false;
+	RectangleShape blueTL;
+	RectangleShape blueTR;
+	RectangleShape blueBL;
+	RectangleShape blueBR;
+
+	Vector2f bluetlpos, bluetrpos, blueblpos, bluebrpos;
+	bool bluetlhit = false;
+	bool bluetrhit = false;
+	bool blueblhit = false;
+	bool bluebrhit = false;
+	float bluey;
+	float bluex;
 
 	for (auto w : wall) {
 		if (!madeblue && w->GetGlobalBounds().intersects(blue->GetGlobalBounds())) {

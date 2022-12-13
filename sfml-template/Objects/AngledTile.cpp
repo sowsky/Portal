@@ -12,6 +12,7 @@ AngledTile::AngledTile()
 
 AngledTile::AngledTile(b2World* world, Vector2f position, int angle)
 {
+	hitboxpos = position;
 	triangle.setPointCount(3);
 	triangle.setPoint(0, Vector2f(0, 0));
 	triangle.setPoint(1, Vector2f(GRIDSIZE, GRIDSIZE));
@@ -32,8 +33,13 @@ AngledTile::AngledTile(b2World* world, Vector2f position, int angle)
 	}
 
 	hitbox.setFillColor(Color::Red);
-	if (dir == 1 || dir == 3) {}
-
+	hitbox.setSize({ 10,50 });
+	hitbox.setPosition(hitboxpos);
+	if (dir == 1 || dir == 3) {
+		hitbox.setRotation(45);
+	}
+	else
+		hitbox.setRotation(315);
 
 }
 
@@ -48,6 +54,8 @@ SpriteObj* AngledTile::NewThis()
 
 void AngledTile::Update(float dt)
 {
+	Utils::SetOrigin(hitbox, Origins::MC);
+
 }
 
 void AngledTile::Draw(RenderWindow& window)
