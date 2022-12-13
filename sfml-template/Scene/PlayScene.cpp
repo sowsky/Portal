@@ -448,9 +448,16 @@ PlayScene::PlayScene(string path)
 				box2dposition.x = currgrid.x;
 			}
 			else {
+				int temp1 = 0;
 				for (auto obj : loadedArray[i][j])  //load all object on 1grid
 				{
+					if (temp1 >= 1) {
+						box2dposition.x -= GRIDSIZE;
+						currgrid.x -= GRIDSIZE;
+					}
 
+					temp1++;
+					
 					switch (obj->id)
 					{
 					case '1':
@@ -818,6 +825,20 @@ void PlayScene::MakeButton(int rotaion, int id)
 
 void PlayScene::MakePortal()
 {
+	for (auto a : angledtile) {
+		if (a->GetGlobalBounds().intersects(blue->GetGlobalBounds())) {
+			particle.emitParticles(blue->GetPos(), false);
+			blue->SetPos({ -1000,-1000 });
+			blue->SetDir({ 0,0 });
+			madeblue = false;
+		}
+		if (a->GetGlobalBounds().intersects(orange->GetGlobalBounds())) {
+			particle.emitParticles(orange->GetPos(), true);
+			orange->SetPos({ -1000,-1000 });
+			orange->SetDir({ 0,0 });
+			madeorange = false;
+		}
+	}
 
 	for (auto w : blackwall) {
 		if (w->GetGlobalBounds().intersects(blue->GetGlobalBounds())) {
@@ -829,7 +850,7 @@ void PlayScene::MakePortal()
 		if (w->GetGlobalBounds().intersects(orange->GetGlobalBounds())) {
 			particle.emitParticles(orange->GetPos(), true);
 			orange->SetPos({ -1000,-1000 });
-			blue->SetDir({ 0,0 });
+			orange->SetDir({ 0,0 });
 			madeorange = false;
 
 		}
@@ -847,7 +868,7 @@ void PlayScene::MakePortal()
 		if (b->GetStartposGlobalbound().intersects(orange->GetGlobalBounds())) {
 			particle.emitParticles(orange->GetPos(), true);
 			orange->SetPos({ -1000,-1000 });
-			blue->SetDir({ 0,0 });
+			orange->SetDir({ 0,0 });
 			madeorange = false;
 
 		}
@@ -867,7 +888,7 @@ void PlayScene::MakePortal()
 		if (b->GetredwallHitboxGlobalBound().intersects(orange->GetGlobalBounds())) {
 			particle.emitParticles(b->GetRedwallPos(), true);
 			orange->SetPos({ -1000,-1000 });
-			blue->SetDir({ 0,0 });
+			orange->SetDir({ 0,0 });
 			madeorange = false;
 
 		}
@@ -886,7 +907,7 @@ void PlayScene::MakePortal()
 		if (b->GetplatformGlobalBounds().intersects(orange->GetGlobalBounds()) || b->GetpillarGlobalBounds().intersects(orange->GetGlobalBounds())) {
 			particle.emitParticles(orange->GetPos(), true);
 			orange->SetPos({ -1000,-1000 });
-			blue->SetDir({ 0,0 });
+			orange->SetDir({ 0,0 });
 			madeorange = false;
 
 		}
@@ -1576,8 +1597,6 @@ void PlayScene::WaterCheck(float dt)
 			}
 		}
 	}
-
-
 }
 
 void PlayScene::CheckStillObjectalive()
