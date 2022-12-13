@@ -818,6 +818,7 @@ void PlayScene::MakeButton(int rotaion, int id)
 
 void PlayScene::MakePortal()
 {
+
 	for (auto w : blackwall) {
 		if (w->GetGlobalBounds().intersects(blue->GetGlobalBounds())) {
 			particle.emitParticles(blue->GetPos(), false);
@@ -894,8 +895,19 @@ void PlayScene::MakePortal()
 	for (auto a : angledtile) {
 		if (blue->GetGlobalBounds().intersects(a->GetHitboxGlobalbounds())) {
 			blue->SetPortalDir(a->Getdir());
-			//blue->SetPos();
+			blue->SetPos(a->Gethitboxpos());
+			blue->SetDir({ 0,0 });
+
+			madeblue = true;
 		}
+		if (orange->GetGlobalBounds().intersects(a->GetHitboxGlobalbounds())) {
+			orange->SetPortalDir(a->Getdir());
+			orange->SetPos(a->Gethitboxpos());
+			orange->SetDir({ 0,0 });
+
+			madeorange = true;
+		}
+
 	}
 
 	int bluecollidercount = 0;
@@ -1040,7 +1052,6 @@ void PlayScene::MakePortal()
 			blue->SetPos({ -1000,-1000 });
 		}
 	}
-
 
 	int orangecollidercount = 0;
 	//wall=mc orange=mc
@@ -2126,6 +2137,20 @@ void PlayScene::MoveToPortal()
 				force = maxspeed / 2;
 			player->GetBody()->SetLinearVelocity({ force * -1 ,1 });
 		}
+		else if (orange->GetPortalDir()>=4&&orange->GetPortalDir()<=7) {
+			float speed=abs(player->GetRecentSpeed().x)>abs(player->GetRecentSpeed().y) ? player->GetRecentSpeed().x :player->GetRecentSpeed().y ;
+			//speed *=0.52;
+			if (orange->GetPortalDir() == 4) {
+				player->SetPlayerBodyPos({ orange->GetPos().x - 30 ,orange->GetPos().y-30 });
+				player->GetBody()->SetLinearVelocity({abs(speed)*-1,abs(speed)*-1});
+			}else if(orange->GetPortalDir() == 5) {
+				player->SetPlayerBodyPos({ orange->GetPos().x - 30 ,orange->GetPos().y - 30 });
+				player->GetBody()->SetLinearVelocity({ abs(speed) * -1 * 0.2f,abs(speed) * 0.5f });
+			}else if (orange->GetPortalDir() == 6) {
+				player->SetPlayerBodyPos({ orange->GetPos().x + 30 ,orange->GetPos().y - 30 });
+				player->GetBody()->SetLinearVelocity({ abs(speed)*0.2f,abs(speed)*0.5f });
+			}
+		}
 	}
 
 
@@ -2166,6 +2191,24 @@ void PlayScene::MoveToPortal()
 			if (force > maxspeed / 2)
 				force = maxspeed / 2;
 			player->GetBody()->SetLinearVelocity({ force * -1 ,1 });
+		}
+		else if (blue->GetPortalDir() >= 4 && blue->GetPortalDir() <= 7) {
+			float speed = abs(player->GetRecentSpeed().x) > abs(player->GetRecentSpeed().y) ? player->GetRecentSpeed().x : player->GetRecentSpeed().y;
+			//speed *=0.52;
+			if (blue->GetPortalDir() == 4) {
+				player->SetPlayerBodyPos({ blue->GetPos().x - 30 ,blue->GetPos().y - 30 });
+				player->GetBody()->SetLinearVelocity({ abs(speed) * -1,abs(speed) * -1 });
+			}
+			else if (blue->GetPortalDir() == 5) {
+				player->SetPlayerBodyPos({ blue->GetPos().x - 30 ,blue->GetPos().y - 30 });
+				player->GetBody()->SetLinearVelocity({ abs(speed) * -1 * 0.2f,abs(speed) * 0.5f });
+			}
+			else if (blue->GetPortalDir() == 6) {
+				player->SetPlayerBodyPos({ blue->GetPos().x + 30 ,blue->GetPos().y - 30 });
+				player->GetBody()->SetLinearVelocity({ abs(speed) * 0.2f,abs(speed) * 0.5f });
+			}
+
+
 		}
 	}
 

@@ -15,6 +15,8 @@ public:
 	FloatRect GetHitboxGlobalbounds() { return hitbox.getGlobalBounds(); }
 
 	int Getdir() { return dir + 4; }
+
+	Vector2f Gethitboxpos() { return hitboxpos; }
 	
 protected:
 	ConvexShape triangle;
