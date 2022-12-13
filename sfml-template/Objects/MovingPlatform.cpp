@@ -184,7 +184,7 @@ void MovingPlatform::Update(float dt)
 		}
 		else if (dir == 2) {
 			check = platform.getPosition().y < originpos.y ? true : false;
-			cout << check << endl;
+			//cout << check << endl;
 		}
 
 		if (check && dir == 2) {

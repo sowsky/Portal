@@ -2,6 +2,7 @@
 #include "../Manager/ResourceMgr.h"
 #include "../Scene/PlayScene.h"
 #include "../FrameWork/InputMgr.h"
+#include "AngledTile.h"
 
 Orange::Orange()
 {
@@ -80,9 +81,13 @@ void Orange::Update(float dt)
 
 void Orange::Draw(RenderWindow& window)
 {
-	window.draw(light, &shader.shader);
+	if (!AngledTile::GetIsOrangeOn())
+	{
+		window.draw(light, &shader.shader);
+		DrawPortalArray(window);
+	}
+
 	//SpriteObj::Draw(window);	
-	DrawPortalArray(window);
 	if(PlayScene::GetIsDevMod())
 		window.draw(*hitbox);
 }

@@ -278,6 +278,10 @@ void PlayScene::Draw(RenderWindow& window)
 
 	DrawRenderedBuffer(window);
 
+	for (auto v : angledtile) {
+		v->DrawBackFace(window);
+	}
+
 	if (player != nullptr)
 	{
 		player->Draw(window);
@@ -895,15 +899,27 @@ void PlayScene::MakePortal()
 	for (auto a : angledtile) {
 		if (blue->GetGlobalBounds().intersects(a->GetHitboxGlobalbounds())) {
 			blue->SetPortalDir(a->Getdir());
+			blue->SetHitBoxSize({ 10,10 });
 			blue->SetPos(a->Gethitboxpos());
 			blue->SetDir({ 0,0 });
-
+			blue->SetPortalDir(4);
+			//blue->SetSize({ 10,10 });
+			//blue->SetOrigin(Origins::MC);
+			a->SetAngleState(AngleState::Blue);
+			AngledTile::SetIsBlueOn(true);
+			
 			madeblue = true;
 		}
 		if (orange->GetGlobalBounds().intersects(a->GetHitboxGlobalbounds())) {
 			orange->SetPortalDir(a->Getdir());
+			orange->SetHitBoxSize({ 10,10 });
 			orange->SetPos(a->Gethitboxpos());
 			orange->SetDir({ 0,0 });
+			orange->SetPortalDir(4);
+			//orange->SetSize({ 10,10 });
+			//orange->SetOrigin(Origins::MC);
+			a->SetAngleState(AngleState::Orange);
+			AngledTile::SetIsOrangeOn(true);
 
 			madeorange = true;
 		}
@@ -1867,6 +1883,12 @@ void PlayScene::Input()
 		////////////////////
 		//fireBlue.play();
 		SOUNDMGR->SoundPlay(SoundChoice::FireBlueSound);
+
+		for (auto a : angledtile)
+		{
+			a->SetAngleState(AngleState::Noraml);
+		}
+		AngledTile::SetIsBlueOn(false);		
 	}
 
 
@@ -1944,7 +1966,11 @@ void PlayScene::Input()
 		/////////////////////
 		//fireOrange.play();
 		SOUNDMGR->SoundPlay(SoundChoice::FireOrangeSound);
-
+		for (auto a : angledtile)
+		{
+			a->SetAngleState(AngleState::Noraml);
+		}
+		AngledTile::SetIsOrangeOn(false);
 	}
 
 	if (grabitem) {

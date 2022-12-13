@@ -1,4 +1,8 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
+Graphics/angle/orange.png,0
+Graphics/angle/blue.png,0
+Graphics/angle/up.png,0
+Graphics/angle/side.png,0
 Graphics/platform/side.png,0
 Graphics/platform/floor.png,0
 Graphics/platform/front_n.png,0

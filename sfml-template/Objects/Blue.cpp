@@ -3,6 +3,7 @@
 #include "../Manager/ResourceMgr.h"
 #include "../FrameWork/InputMgr.h"
 #include "../Scene/PlayScene.h"
+#include "AngledTile.h"
 
 Blue::Blue()
 {
@@ -77,9 +78,12 @@ void Blue::Update(float dt)
 
 void Blue::Draw(RenderWindow& window)
 {
-	window.draw(light, &shader.shader);
+	if (!AngledTile::GetIsBLueOn())
+	{
+		window.draw(light, &shader.shader);
+		DrawPortalArray(window);
+	}
 	//SpriteObj::Draw(window);
-	DrawPortalArray(window);
 	if (PlayScene::GetIsDevMod())
 		window.draw(*hitbox);
 }
