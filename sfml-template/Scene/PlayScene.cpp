@@ -66,6 +66,9 @@ void PlayScene::Update(float dt)
 	for (auto w : movingplat) {
 		w->Update(dt);
 	}
+	for (auto w : angledtile) {
+		w->Update(dt);
+	}
 	blue->Update(dt);
 	orange->Update(dt);
 
@@ -297,6 +300,10 @@ void PlayScene::Draw(RenderWindow& window)
 		window.draw(particle);
 
 	for (auto v : movingplat) {
+		v->Draw(window);
+	}
+
+	for (auto v : angledtile) {
 		v->Draw(window);
 	}
 
@@ -620,9 +627,11 @@ PlayScene::PlayScene(string path)
 					case 'a':
 					case 'A':
 					{
-						//// ������ ��
+						AngledTile_struct* tempA = (AngledTile_struct*)obj;
+						angledtile.push_back(new AngledTile(world.get(), currgrid, tempA->rotation));
 
-						
+						currgrid.x += GRIDSIZE;
+						box2dposition.x += GRIDSIZE;
 						break;
 					}
 					case 'd':
@@ -653,6 +662,7 @@ PlayScene::PlayScene(string path)
 						sign.back()->SetPos(currgrid);
 						currgrid.x += GRIDSIZE;
 						box2dposition.x += GRIDSIZE;
+						break;
 					}
 					}
 				}
@@ -2387,6 +2397,10 @@ void PlayScene::Release()
 		delete v;
 	}
 	movingplat.clear();
+	for (auto v : angledtile) {
+		delete v;
+	}
+	angledtile.clear();
 
 	if (orange != nullptr)
 		delete orange;

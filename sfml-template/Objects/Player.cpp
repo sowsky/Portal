@@ -41,12 +41,12 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 	b2PolygonShape boxShape;
 
 	b2Vec2 center(0, 0);
-	center.y = (bound.height - radius) / 2 - (bound.height / 2 - radius) - 5;
+	center.y = ((bound.height - radius) / 2 - (bound.height / 2 - radius) - 5);
 	center.y /= SCALE;
 
 	boxShape.SetAsBox(
 		dimensions.x / SCALE / 2.0f,
-		dimensions.y / SCALE / 2.0f,
+		(dimensions.y-20) / SCALE / 2.0f,
 		center, 0.f);
 
 	b2FixtureDef fixtureDef;
