@@ -12,6 +12,8 @@
 #pragma warning(disable:4996)
 using json = nlohmann::json;
 
+bool PlayScene::isDevMod = false;
+
 void PlayScene::Update(float dt)
 {
 	crosshair.setPosition(InputMgr::GetMousePos());
@@ -538,7 +540,7 @@ PlayScene::PlayScene(string path)
 					case 'T':
 					{
 						Tunnel_sturct* tempT = (Tunnel_sturct*)obj;
-						tunnel.push_back(new Tunnel({ currgrid.x,currgrid.y }, tempT->rotation, tempT->buttonList, tempT->IsBlue, true, 0));
+						tunnel.push_back(new Tunnel({ currgrid.x,currgrid.y }, tempT->rotation, tempT->buttonList, tempT->IsBlue, tempT->active, 0));
 						currgrid.x += GRIDSIZE;
 						box2dposition.x += GRIDSIZE;
 
@@ -1952,6 +1954,11 @@ void PlayScene::Input()
 		return;
 	}
 
+
+	if (InputMgr::GetKeyDown(Keyboard::P))
+	{
+		isDevMod = !isDevMod;
+	}
 }
 
 void PlayScene::LightTestInputForDev()
@@ -2035,22 +2042,22 @@ void PlayScene::BackAndLightControl()
 	//	light.position.y = height - GetMouseWorldPos().y;
 	//}
 
-	if (InputMgr::GetKeyDown(Keyboard::I))
-	{
-		background.move({ 0,-10.f });
-	}
-	if (InputMgr::GetKeyDown(Keyboard::K))
-	{
-		background.move({ 0,10.f });
-	}
-	if (InputMgr::GetKeyDown(Keyboard::J))
-	{
-		background.move({ -10.f, 0 });
-	}
-	if (InputMgr::GetKeyDown(Keyboard::L))
-	{
-		background.move({ 10.f, 0 });
-	}
+	//if (InputMgr::GetKeyDown(Keyboard::I))
+	//{
+	//	background.move({ 0,-10.f });
+	//}
+	//if (InputMgr::GetKeyDown(Keyboard::K))
+	//{
+	//	background.move({ 0,10.f });
+	//}
+	//if (InputMgr::GetKeyDown(Keyboard::J))
+	//{
+	//	background.move({ -10.f, 0 });
+	//}
+	//if (InputMgr::GetKeyDown(Keyboard::L))
+	//{
+	//	background.move({ 10.f, 0 });
+	//}
 }
 
 void PlayScene::DrawNormalAndDiffuse(RenderWindow& window)

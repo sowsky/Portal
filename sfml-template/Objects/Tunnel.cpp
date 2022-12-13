@@ -383,10 +383,10 @@ void Tunnel::DrawTexBox(RenderWindow& window)
 	if (onOfftexBox.getGlobalBounds().contains(mousePos) &&
 		InputMgr::GetMouseButtonDown(Mouse::Left) && Switch::GetShowTimer())
 	{
-		this->active = !this->active;
+		originactive = !originactive;
 	}
 
-	onOffTex.setString(this->active ? "ON" : "OFF");
+	onOffTex.setString(originactive ? "ON" : "OFF");
 	Utils::SetOrigin(onOffTex, Origins::BC);
 
 	if (Switch::GetShowTimer())

@@ -56,8 +56,8 @@ public:
 	void InitColorBox();
 	void DrawTexBox(RenderWindow& window);
 	void DrawColorBox(RenderWindow& window);
-	bool GetTunnelActive() { return this->active; }
-	void SetTunnelActive(bool a) { this->active = a; }
+	bool GetTunnelActive() { return originactive; }
+	void SetTunnelActive(bool a) { originactive = a; }
 
 private:
 	list<Button*> button;
@@ -71,7 +71,7 @@ private:
 	Vector2f startpos;
 	Vector2f endpos;
 
-	bool IsBlue;
+	bool IsBlue = true;
 	bool enable;
 
 	bool hitwall = false;

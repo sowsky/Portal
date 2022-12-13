@@ -207,9 +207,9 @@ void Button::UpdatePressureAnimation(float dt)
 		{
 		case 0:
 		{
-			if (upPivot.getPosition().y - sprite.getPosition().y >= buttonHeightFix)
+			if (upPivot.getPosition().y - sprite.getPosition().y >= (int)buttonHeightFix)
 			{
-				upPivot.setPosition(sprite.getPosition().x, sprite.getPosition().y + buttonHeightFix);
+				upPivot.setPosition(sprite.getPosition().x, sprite.getPosition().y + (int)buttonHeightFix);
 				break;
 			}
 			upPivot.move({ 0, move * dt });
@@ -217,9 +217,9 @@ void Button::UpdatePressureAnimation(float dt)
 		}
 		case 1:
 		{
-			if (sprite.getPosition().x - upPivot.getPosition().x >= buttonHeightFix)
+			if (sprite.getPosition().x - upPivot.getPosition().x >= (int)buttonHeightFix)
 			{
-				upPivot.setPosition(sprite.getPosition().x - buttonHeightFix, sprite.getPosition().y);
+				upPivot.setPosition(sprite.getPosition().x - (int)buttonHeightFix, sprite.getPosition().y);
 				break;
 			}
 			upPivot.move({  - move * dt, 0 });
@@ -227,9 +227,9 @@ void Button::UpdatePressureAnimation(float dt)
 		}
 		case 2:
 		{
-			if (sprite.getPosition().y - upPivot.getPosition().y >= buttonHeightFix)
+			if (sprite.getPosition().y - upPivot.getPosition().y >= (int)buttonHeightFix)
 			{
-				upPivot.setPosition(upPivot.getPosition().x, sprite.getPosition().y - buttonHeightFix);
+				upPivot.setPosition(upPivot.getPosition().x, sprite.getPosition().y - (int)buttonHeightFix);
 				break;
 			}
 			upPivot.move({ 0, - move * dt });
@@ -237,9 +237,9 @@ void Button::UpdatePressureAnimation(float dt)
 		}
 		case 3:
 		{
-			if (upPivot.getPosition().x - sprite.getPosition().x >= buttonHeightFix)
+			if (upPivot.getPosition().x - sprite.getPosition().x >= (int)buttonHeightFix)
 			{
-				upPivot.setPosition(sprite.getPosition().x + buttonHeightFix, sprite.getPosition().y);
+				upPivot.setPosition(sprite.getPosition().x + (int)buttonHeightFix, sprite.getPosition().y);
 				break;
 			}
 			upPivot.move({ move * dt, 0 });

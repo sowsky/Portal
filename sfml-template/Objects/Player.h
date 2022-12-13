@@ -102,7 +102,7 @@ protected:
 	float groundTime = 0.25f;
 	float groundTimeMax = 0.0f;
 
-	bool devMod = false;
+	//bool devMod = false;
 	bool right;
 	bool isJumping = false;
 

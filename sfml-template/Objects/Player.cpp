@@ -6,6 +6,7 @@
 #include "../Manager/ResourceMgr.h"
 #include "../Scene/SceneMgr.h"
 #include "../Manager/SoundMgr.h"
+#include "../Scene/PlayScene.h"
 
 Player::Player()
 {
@@ -181,8 +182,8 @@ void Player::Update(float dt)
 
 	UpdatePlayerPos(dt);
 
-	if (InputMgr::GetKeyDown(Keyboard::P))
-		devMod = !devMod;
+	//if (InputMgr::GetKeyDown(Keyboard::P))
+	//	devMod = !devMod;
 
 	if (InputMgr::GetKeyDown(Keyboard::F))
 		showIndicator = !showIndicator;
@@ -267,8 +268,11 @@ void Player::Draw(RenderWindow& window)
 		window.draw(p_arm);
 		window.draw(portalGun);
 	//	window.draw(jump);
-		if (devMod)
+		if (PlayScene::GetIsDevMod())
+		{
 			ShowBornForDev(window);
+			window.draw(*hitbox);
+		}
 		if (showIndicator)
 			ShowIndicator(window);
 	}

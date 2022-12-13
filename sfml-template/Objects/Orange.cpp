@@ -1,5 +1,7 @@
 #include "Orange.h"
 #include "../Manager/ResourceMgr.h"
+#include "../Scene/PlayScene.h"
+#include "../FrameWork/InputMgr.h"
 
 Orange::Orange()
 {
@@ -11,7 +13,7 @@ Orange::Orange()
 	hitbox->setFillColor(Color::Red);
 
 	///////////////////
-	light.setSize({ 40, 5 });
+	light.setSize({ 40, 15 });
 	Utils::SetOrigin(light, Origins::BC);
 	light.setTexture(RESOURCEMGR->GetTexture("Graphics/Shader/orange.png"));
 	light.setFillColor(Color(255, 255, 255, 150));
@@ -41,7 +43,10 @@ Orange::~Orange()
 
 void Orange::Update(float dt)
 {
-	hitbox->setSize({ sprite.getGlobalBounds().width - 10,sprite.getGlobalBounds().height - 10 });
+	if(dir == 0 || dir == 2)
+		hitbox->setSize({ sprite.getGlobalBounds().width + widthVal,sprite.getGlobalBounds().height + heightVal });	
+	if (dir == 1 || dir == 3)
+		hitbox->setSize({ sprite.getGlobalBounds().width + heightVal,sprite.getGlobalBounds().height + widthVal });
 
 	Utils::SetOrigin(*hitbox, Origins::MC);
 	Translate(direction * dt * projectilespeed);
@@ -50,6 +55,27 @@ void Orange::Update(float dt)
 	hitbox->setRotation(sprite.getRotation());
 
 	shader.Update(dt);
+
+	//if (InputMgr::GetKeyDown(Keyboard::I))
+	//{
+	//	heightVal += 1.f;
+	//	cout << "너비 보정값 :" << widthVal << ", 높이 보정값 :" << heightVal << endl;
+	//}
+	//if (InputMgr::GetKeyDown(Keyboard::K))
+	//{
+	//	heightVal -= 1.f;
+	//	cout << "너비 보정값 :" << widthVal << ", 높이 보정값 :" << heightVal << endl;
+	//}
+	//if (InputMgr::GetKeyDown(Keyboard::J))
+	//{
+	//	widthVal -= 1.f;
+	//	cout << "너비 보정값 :" << widthVal << ", 높이 보정값 :" << heightVal << endl;
+	//}
+	//if (InputMgr::GetKeyDown(Keyboard::L))
+	//{
+	//	widthVal += 1.f;
+	//	cout << "너비 보정값 :" << widthVal << ", 높이 보정값 :" << heightVal << endl;
+	//}
 }
 
 void Orange::Draw(RenderWindow& window)
@@ -57,8 +83,8 @@ void Orange::Draw(RenderWindow& window)
 	window.draw(light, &shader.shader);
 	//SpriteObj::Draw(window);	
 	DrawPortalArray(window);
-	//window.draw(*hitbox);
-
+	if(PlayScene::GetIsDevMod())
+		window.draw(*hitbox);
 }
 
 void Orange::SetLightDir(int side, bool texdir)

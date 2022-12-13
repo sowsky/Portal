@@ -94,6 +94,11 @@ public:
 	void OpenStage(float dt);
 	void BackAndLightControl();
 	void DrawNormalAndDiffuse(RenderWindow& window);
+
+	////////////////////
+	static void SetIsDevMod(bool dev) { isDevMod = dev; }
+	static bool GetIsDevMod() { return isDevMod; }
+	static void TurnOnOffDevMod() { isDevMod = !isDevMod; }
 private:
 	b2DistanceJoint* joint;
 	b2Vec2 mouseWorld;
@@ -191,5 +196,7 @@ private:
 	float currentcamposx;
 	float currentcamposy;
 
+	/////////////////
+	static bool isDevMod;
 };
 

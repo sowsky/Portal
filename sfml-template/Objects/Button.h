@@ -58,7 +58,7 @@ protected:
 
 	float buttonHeightFix;
 	float limit = 1.f;
-	const float move = 20.f;
+	const float move = 40.f;
 	int rot;
 
 	bool prevState;
