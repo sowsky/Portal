@@ -651,7 +651,9 @@ PlayScene::PlayScene(string path)
 						///�����
 						Dummy_struct2* tempD = (Dummy_struct2*)obj;
 						tempD->dummyFloat1; //onoff
-						tempD->dummyVec; //��ư ���			
+						tempD->dummyVec; //��ư ���	
+
+						cube.push_back(new Cube(world.get(), currgrid, Vector2f({ GRIDSIZE, GRIDSIZE })));
 						break;
 					}
 					case 'g':
@@ -1888,7 +1890,6 @@ void PlayScene::Input()
 		SOUNDMGR->SoundPlay(SoundChoice::FireBlueSound);
 	}
 
-
 	//orange
 	if (InputMgr::GetMouseButtonDown(Mouse::Right)) {
 		auto it = tunnel.begin();
@@ -2171,7 +2172,6 @@ void PlayScene::MoveToPortal()
 			}
 		}
 	}
-
 
 	//////////////////////////////move to blue//////////////////////////////////////
 	if (madeorange && orange->Gethitboxglobalbounds().intersects(player->GethitboxGlobalBounds())) {

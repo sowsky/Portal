@@ -61,7 +61,6 @@ Redwall::~Redwall()
 
 void Redwall::Update(float dt)
 {
-
 	enable = originactive;
 
 	for (auto b : button) {
