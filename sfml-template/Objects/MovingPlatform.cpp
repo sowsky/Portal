@@ -107,7 +107,7 @@ MovingPlatform::MovingPlatform(b2World* world, Vector2f& position, bool on, floa
 	Vector2u pTexSize = RESOURCEMGR->GetTexture("Graphics/platform/front.png")->getSize();
 
 	float pTexRatio = pTexSize.x / pTexSize.y;
-	frontSize = { FRONTSIZE,FRONTSIZE / pTexRatio };
+	frontSize = { FRONTSIZE,FRONTSIZE / pTexRatio };	
 	Utils::SetOrigin(sprite, Origins::MC);
 	if (dir == 0)
 		sprite.setRotation(180.f);
@@ -237,7 +237,19 @@ void MovingPlatform::Update(float dt)
 
 	sprite.setPosition(platform.getPosition());	
 	//Utils::SetOrigin(sprite, Origins::MC);
-	pillar_diffuse.setSize({ 10, abs(originpos.y - sprite.getPosition().y)});
+	if (dir == 0)
+	{
+		pillar_diffuse.setSize({ 10, (sprite.getPosition().y - platFormHeightHalf) - pillar_diffuse.getPosition().y });
+		if(pillar_diffuse.getSize().y <= 0.f)
+			pillar_diffuse.setSize({ 10, 0.f });
+	}
+	if (dir == 2)
+	{
+		pillar_diffuse.setSize({ 10, pillar_diffuse.getPosition().y - (sprite.getPosition().y + platFormHeightHalf) });
+		if (pillar_diffuse.getSize().y <= 0.f)
+			pillar_diffuse.setSize({ 10, 0.f });
+	}	
+
 	Utils::SetOrigin(pillar_diffuse, Origins::BC);	
 	//cout << pillar.getPosition().y << endl;
 }
@@ -275,9 +287,10 @@ void MovingPlatform::Draw(RenderWindow& window)
 		//window.draw(platform);
 		//window.draw(pillar);
 		//SpriteObj::Draw(window);
-
-		sideFaces.Draw(window);
-		window.draw(frontFace);
+		                  	
+		
+		sideFaces.Draw(window);	
+			
 	}
 }
 

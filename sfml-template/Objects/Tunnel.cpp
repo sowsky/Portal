@@ -68,24 +68,49 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool I
 	emitter.setPosition(startpos);
 
 	particles.setPrimitiveType(Points);
-	switch (this->dir)
+	if (Isblue)
 	{
-	case 0:
-		particleDir = { 0.f, 1.f };
-		emitter.setRotation(180.f);
-		break;
-	case 1:
-		particleDir = { -1.f, 0.f };
-		emitter.setRotation(270.f);
-		break;
-	case 2:
-		particleDir = { 0.f, -1.f };
-		break;
-	case 3:
-		particleDir = { 1.f, 0.f };
-		emitter.setRotation(90.f);
-		break;
+		switch (this->dir)
+		{
+		case 0:
+			particleDir = { 0.f, 1.f };
+			emitter.setRotation(180.f);
+			break;
+		case 1:
+			particleDir = { -1.f, 0.f };
+			emitter.setRotation(270.f);
+			break;
+		case 2:
+			particleDir = { 0.f, -1.f };
+			break;
+		case 3:
+			particleDir = { 1.f, 0.f };
+			emitter.setRotation(90.f);
+			break;
+		}
 	}
+	else
+	{
+		switch (this->dir)
+		{
+		case 0:
+			particleDir = { 0.f, -1.f };
+			emitter.setRotation(180.f);
+			break;
+		case 1:
+			particleDir = { 1.f, 0.f };
+			emitter.setRotation(270.f);
+			break;
+		case 2:
+			particleDir = { 0.f, 1.f };
+			break;
+		case 3:
+			particleDir = { -1.f, 0.f };
+			emitter.setRotation(90.f);
+			break;
+		}
+	}
+
 }
 
 Tunnel::~Tunnel()
@@ -333,7 +358,7 @@ void Tunnel::TransParticles(float dt)
 	{
 	
 		particles[i].position = particles[i].position + dt * 130 * particleDir;
-		if (!tuns.getGlobalBounds().contains(particles[i].position))
+		if (IsBlue && !tuns.getGlobalBounds().contains(particles[i].position))
 		{
 			switch (dir)
 			{
@@ -348,6 +373,24 @@ void Tunnel::TransParticles(float dt)
 				break;
 			case 3:
 				particles[i].position.x = startpos.x;
+				break;
+			}
+		}
+		if (!IsBlue && !tuns.getGlobalBounds().contains(particles[i].position))
+		{
+			switch (dir)
+			{
+			case 0:
+				particles[i].position.y = endpos.y;
+				break;
+			case 1:
+				particles[i].position.x = endpos.x;
+				break;
+			case 2:
+				particles[i].position.y = endpos.y;
+				break;
+			case 3:
+				particles[i].position.x = endpos.x;
 				break;
 			}
 		}

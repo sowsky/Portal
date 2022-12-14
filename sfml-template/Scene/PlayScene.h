@@ -29,18 +29,22 @@ struct Light
 
 struct PsceneWire
 {
-	PsceneWire(bool& o)
+	PsceneWire(bool& o, Vector2f start, Vector2f end)
 		:isOn(o)
 	{
-		wire.resize(2);
-		wire.setPrimitiveType(Lines);		
+		float x = Utils::Distance(start, end);
+		float angle = Utils::Angle(start, end);
+		wireRect.setSize({ x, 1.f });
+		wireRect.setRotation(angle);
+		wireRect.setPosition(start);	
 	}
+
 	void SetColor(Color color)
-	{
-		wire[0].color = color;
-		wire[1].color = color;
+	{	
+		wireRect.setFillColor(color);
 	}
-	VertexArray wire;
+	
+	RectangleShape wireRect;
 	bool& isOn;
 };
 

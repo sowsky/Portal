@@ -79,5 +79,7 @@ protected:
 
 	RectangleShape pillar_diffuse;
 	Texture* pillar_n;
+
+	const float platFormHeightHalf = 3.9f;
 };
 

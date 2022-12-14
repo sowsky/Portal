@@ -230,8 +230,6 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(window);
 	}
 
-
-
 	for (auto v : button) {
 		v->Draw(window);
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
@@ -245,17 +243,16 @@ void PlayScene::Draw(RenderWindow& window)
 		blue->Draw(window);
 	}
 
-
 	for (auto v : wall) {
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
 	}
 
-	for (auto v : movingplat) {
+	for (auto v : blackwall) {
 		v->Draw(window);
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
 	}
 
-	for (auto v : blackwall) {
+	for (auto v : movingplat) {
 		v->Draw(window);
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
 	}
@@ -290,12 +287,12 @@ void PlayScene::Draw(RenderWindow& window)
 		v->DrawBackFace(window);
 	}
 
-	DrawRenderedBuffer(window);
-
 	if (player != nullptr)
 	{
 		player->Draw(window);
 	}
+
+	DrawRenderedBuffer(window);
 
 
 	/*for (auto v : wall) {
@@ -306,9 +303,6 @@ void PlayScene::Draw(RenderWindow& window)
 	for (auto v : redwall) {
 		v->Draw(window);
 	}
-
-	if (player != nullptr)
-		player->Draw(window);
 
 	for (auto v : tunnel) {
 		v->Draw(window);
@@ -332,8 +326,8 @@ void PlayScene::Draw(RenderWindow& window)
 			if (w->isOn)
 				w->SetColor(Color(ORANGE));
 			else
-				w->SetColor(Color(BLUE));
-			window.draw(w->wire);
+				w->SetColor(Color(BLUE));			
+			window.draw(w->wireRect);
 		}
 	}
 
@@ -753,9 +747,7 @@ PlayScene::PlayScene(string path)
 		{
 			for (auto w : wireList[b->GetButtonId()])
 			{
-				wires.push_back(new PsceneWire(b->GetIsPressRef()));
-				wires.back()->wire[0].position = b->GetSpritePos();
-				wires.back()->wire[1].position = w;
+				wires.push_back(new PsceneWire(b->GetIsPressRef(), b->GetSpritePos(), w));
 			}
 		}
 	}
