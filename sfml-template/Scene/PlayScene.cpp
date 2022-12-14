@@ -945,7 +945,7 @@ void PlayScene::MakePortal()
 			blue->SetHitBoxSize({ 10,10 });
 			blue->SetPos(a->Gethitboxpos());
 			blue->SetDir({ 0,0 });
-			blue->SetPortalDir(4);
+			blue->SetPortalDir(a->Getdir());
 			//blue->SetSize({ 10,10 });
 			//blue->SetOrigin(Origins::MC);
 			a->SetAngleState(AngleState::Blue);
@@ -958,7 +958,7 @@ void PlayScene::MakePortal()
 			orange->SetHitBoxSize({ 10,10 });
 			orange->SetPos(a->Gethitboxpos());
 			orange->SetDir({ 0,0 });
-			orange->SetPortalDir(4);
+			orange->SetPortalDir(a->Getdir());
 			//orange->SetSize({ 10,10 });
 			//orange->SetOrigin(Origins::MC);
 			a->SetAngleState(AngleState::Orange);
