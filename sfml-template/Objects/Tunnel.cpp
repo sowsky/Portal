@@ -247,7 +247,7 @@ void Tunnel::Draw(RenderWindow& window)
 		//window.draw(hitbox);			
 		//window.draw(emitter);
 	}
-	window.draw(destiny);
+//	window.draw(destiny);
 }
 
 void Tunnel::ChangeDir()

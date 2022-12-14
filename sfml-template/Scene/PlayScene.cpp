@@ -2349,11 +2349,11 @@ void PlayScene::MoveToPortal()
 				}
 				else if (orange->GetPortalDir() == 5) {
 					c->SetCubeBodyPos({ orange->GetPos().x - 30 ,orange->GetPos().y - 30 });
-					c->GetBody()->SetLinearVelocity({ abs(speed) * -1 * 0.2f,abs(speed) * 0.5f });
+					c->GetBody()->SetLinearVelocity({ abs(speed) * -1 * 1.0f,abs(speed) * 0.5f });
 				}
 				else if (orange->GetPortalDir() == 6) {
 					c->SetCubeBodyPos({ orange->GetPos().x + 30 ,orange->GetPos().y - 30 });
-					c->GetBody()->SetLinearVelocity({ abs(speed) * 0.2f,abs(speed) * 0.5f });
+					c->GetBody()->SetLinearVelocity({ abs(speed) * 1.0f,abs(speed) * 0.5f });
 				}
 			}
 		}
@@ -2394,11 +2394,11 @@ void PlayScene::MoveToPortal()
 				}
 				else if (blue->GetPortalDir() == 5) {
 					c->SetCubeBodyPos({ blue->GetPos().x - 30 ,blue->GetPos().y - 30 });
-					c->GetBody()->SetLinearVelocity({ abs(speed) * -1 * 0.2f,abs(speed) * 0.5f });
+					c->GetBody()->SetLinearVelocity({ abs(speed) * -1 * 1.0f,abs(speed) * 0.5f });
 				}
 				else if (blue->GetPortalDir() == 6) {
 					c->SetCubeBodyPos({ blue->GetPos().x + 30 ,blue->GetPos().y - 30 });
-					c->GetBody()->SetLinearVelocity({ abs(speed) * 0.2f,abs(speed) * 0.5f });
+					c->GetBody()->SetLinearVelocity({ abs(speed) * 1.0f,abs(speed) * 0.5f });
 				}
 
 
