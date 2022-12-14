@@ -14,7 +14,7 @@ Bridge::Bridge()
 }
 
 Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool active, int dir, int connected)
-	:dir(dir), active(active), connected(connected),originactive(active)
+	:dir(dir), active(active), connected(connected), originactive(active)
 {
 	///////////
 	buttonid = buttonlist;
@@ -79,7 +79,8 @@ Bridge::Bridge(b2World* world, Vector2f& position, vector<int> buttonlist, bool 
 		start.setSize({ 5,50 });
 	}
 	if (connected == 1 || connected == 2) {
-		startpos.y += 25;
+		if (dir == 1 || dir == 3)
+			startpos.y += 25;
 	}
 	start.setPosition(startpos);
 
@@ -132,7 +133,6 @@ void Bridge::Update(float dt)
 			active = !originactive;
 			setedpos = false;
 			destiny.setPosition(startpos);
-			hit.setPosition({ 0,0 });
 		}
 	}
 
@@ -176,6 +176,7 @@ void Bridge::Update(float dt)
 		fixtureDef.density = 1;
 		fixtureDef.friction = 0.3f;
 		fixture = body->CreateFixture(&fixtureDef);
+		hit.setPosition({ 0,0 });
 
 		return;
 	}
@@ -281,7 +282,7 @@ void Bridge::Update(float dt)
 		Vector2f pos = { body->GetPosition().x * SCALE,body->GetPosition().y * SCALE * -1 };
 		hitbox.setPosition(pos);
 	}
-	if (whohitwall != nullptr&& dir == 0) {
+	if (whohitwall != nullptr && dir == 0) {
 		cout << whohitwall->GetGlobalBounds().top << endl;
 		int a = 10;
 	}
@@ -292,7 +293,7 @@ void Bridge::Draw(RenderWindow& window)
 {
 	if (isPlayingGame)
 	{
-		window.draw(destiny);
+		//window.draw(destiny);
 
 		if (active)
 		{
@@ -403,5 +404,5 @@ void Bridge::DrawTexBox(RenderWindow& window)
 	{
 		window.draw(onOfftexBox);
 		window.draw(onOffTex);
-	}	
+	}
 }

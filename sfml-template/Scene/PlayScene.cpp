@@ -73,7 +73,7 @@ void PlayScene::Update(float dt)
 	}
 	for (auto w : dropper) {
 		w->Update(dt);
-	}	
+	}
 	blue->Update(dt);
 	orange->Update(dt);
 
@@ -950,7 +950,7 @@ void PlayScene::MakePortal()
 			//blue->SetOrigin(Origins::MC);
 			a->SetAngleState(AngleState::Blue);
 			AngledTile::SetIsBlueOn(true);
-			
+
 			madeblue = true;
 		}
 		if (orange->GetGlobalBounds().intersects(a->GetHitboxGlobalbounds())) {
@@ -1460,6 +1460,11 @@ void PlayScene::TunnelCheck()
 					else
 						player->GetBody()->SetLinearVelocity({ -0.2f,player->GetBody()->GetLinearVelocity().y });
 				}
+				if (!t->GetColor()) {
+					float x = player->GetPlayerBodyLinearVelocity().x;
+					float y = player->GetPlayerBodyLinearVelocity().y;
+					player->GetBody()->SetLinearVelocity({ x * -1,y });
+				}
 			}
 			if (t->GetDir() == 3) {
 				if (!player->GetIsMoving()) {
@@ -1475,6 +1480,11 @@ void PlayScene::TunnelCheck()
 						player->GetBody()->SetLinearVelocity({ 0.2f,player->GetBody()->GetLinearVelocity().y });
 
 				}
+				if (!t->GetColor()) {
+					float x = player->GetPlayerBodyLinearVelocity().x;
+					float y = player->GetPlayerBodyLinearVelocity().y;
+					player->GetBody()->SetLinearVelocity({ x * -1,y });
+				}
 			}
 		}
 
@@ -1484,18 +1494,30 @@ void PlayScene::TunnelCheck()
 				if (t->GetDir() == 0) {
 					float x = c->GetPos().x - t->GetTunsPos().x;
 					c->GetBody()->SetLinearVelocity({ x * -1 / 10,-2.f });
+					if (!t->GetColor()) {
+						c->GetBody()->SetLinearVelocity({ c->GetBody()->GetLinearVelocity().x,c->GetBody()->GetLinearVelocity().y * -1 });
+					}
 				}
 				if (t->GetDir() == 2) {
 					float x = c->GetPos().x - t->GetTunsPos().x;
 					c->GetBody()->SetLinearVelocity({ x * -1 / 10,2.f });
+					if (!t->GetColor()) {
+						c->GetBody()->SetLinearVelocity({ c->GetBody()->GetLinearVelocity().x,c->GetBody()->GetLinearVelocity().y * -1 });
+					}
 				}
 				if (t->GetDir() == 1) {
 					float y = c->GetPos().y - t->GetTunsPos().y;
 					c->GetBody()->SetLinearVelocity({ -2.f,y });
+					if (!t->GetColor()) {
+						c->GetBody()->SetLinearVelocity({ c->GetBody()->GetLinearVelocity().x * -1,c->GetBody()->GetLinearVelocity().y });
+					}
 				}
 				if (t->GetDir() == 3) {
 					float y = c->GetPos().y - t->GetTunsPos().y;
 					c->GetBody()->SetLinearVelocity({ 2.f,y });
+					if (!t->GetColor()) {
+						c->GetBody()->SetLinearVelocity({ c->GetBody()->GetLinearVelocity().x * -1,c->GetBody()->GetLinearVelocity().y });
+					}
 				}
 			}
 		}
@@ -1937,7 +1959,7 @@ void PlayScene::Input()
 		{
 			a->SetAngleState(AngleState::Noraml);
 		}
-		AngledTile::SetIsBlueOn(false);		
+		AngledTile::SetIsBlueOn(false);
 	}
 
 	//orange
@@ -2318,6 +2340,22 @@ void PlayScene::MoveToPortal()
 				float force = (abs(c->GetRecentSpeed().y)) + (abs(c->GetRecentSpeed().x));
 				c->GetBody()->SetLinearVelocity({ force * -1  ,1 });
 			}
+			else if (orange->GetPortalDir() >= 4 && orange->GetPortalDir() <= 7) {
+				float speed = abs(c->GetRecentSpeed().x) > abs(c->GetRecentSpeed().y) ? c->GetRecentSpeed().x : c->GetRecentSpeed().y;
+				//speed *=0.52;
+				if (orange->GetPortalDir() == 4) {
+					c->SetCubeBodyPos({ orange->GetPos().x - 30 ,orange->GetPos().y - 30 });
+					c->GetBody()->SetLinearVelocity({ abs(speed) * -1,abs(speed) * -1 });
+				}
+				else if (orange->GetPortalDir() == 5) {
+					c->SetCubeBodyPos({ orange->GetPos().x - 30 ,orange->GetPos().y - 30 });
+					c->GetBody()->SetLinearVelocity({ abs(speed) * -1 * 0.2f,abs(speed) * 0.5f });
+				}
+				else if (orange->GetPortalDir() == 6) {
+					c->SetCubeBodyPos({ orange->GetPos().x + 30 ,orange->GetPos().y - 30 });
+					c->GetBody()->SetLinearVelocity({ abs(speed) * 0.2f,abs(speed) * 0.5f });
+				}
+			}
 		}
 
 
@@ -2346,6 +2384,24 @@ void PlayScene::MoveToPortal()
 				c->SetCubeBodyPos({ blue->GetPos().x - c->GetGlobalBounds().width ,blue->GetPos().y });
 				float force = (abs(c->GetRecentSpeed().y)) + (abs(c->GetRecentSpeed().x));
 				c->GetBody()->SetLinearVelocity({ force * -1 ,1 });
+			}
+			else if (blue->GetPortalDir() >= 4 && blue->GetPortalDir() <= 7) {
+				float speed = abs(c->GetRecentSpeed().x) > abs(c->GetRecentSpeed().y) ? c->GetRecentSpeed().x : c->GetRecentSpeed().y;
+				//speed *=0.52;
+				if (blue->GetPortalDir() == 4) {
+					c->SetCubeBodyPos({ blue->GetPos().x - 30 ,blue->GetPos().y - 30 });
+					c->GetBody()->SetLinearVelocity({ abs(speed) * -1,abs(speed) * -1 });
+				}
+				else if (blue->GetPortalDir() == 5) {
+					c->SetCubeBodyPos({ blue->GetPos().x - 30 ,blue->GetPos().y - 30 });
+					c->GetBody()->SetLinearVelocity({ abs(speed) * -1 * 0.2f,abs(speed) * 0.5f });
+				}
+				else if (blue->GetPortalDir() == 6) {
+					c->SetCubeBodyPos({ blue->GetPos().x + 30 ,blue->GetPos().y - 30 });
+					c->GetBody()->SetLinearVelocity({ abs(speed) * 0.2f,abs(speed) * 0.5f });
+				}
+
+
 			}
 		}
 	}

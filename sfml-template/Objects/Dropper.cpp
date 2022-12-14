@@ -24,6 +24,9 @@ Dropper::Dropper(Vector2f pos, vector<float> buttonlist,Cube* cube)
 
 	dropper.setPosition(pos);
 	dropper.setSize({ GRIDSIZE,GRIDSIZE });
+	this->cube->SetPos({ -1000,1000 });
+	this->cube->GetBody()->SetLinearVelocity({ 0,0 });
+
 
 }
 
@@ -37,10 +40,7 @@ void Dropper::Update(float dt)
 
 	if (isTurnOn)
 		return;
-	this->cube->SetPos({ -1000,1000 });
-	this->cube->GetBody()->SetLinearVelocity({0,0});
 
-	cout << cube->GetPos().x << endl;
 	for (auto b: button) {
 		if (!b->GetPressed()) {
 			return;

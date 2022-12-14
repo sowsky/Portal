@@ -17,7 +17,7 @@ Tunnel::Tunnel()
 	InitColorBox();
 }
 
-Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist,  bool Isblue, bool active, int connected)
+Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist, bool Isblue, bool active, int connected)
 	:IsBlue(Isblue), dir(dir), enable(active), connected(connected), originactive(active)
 {
 	if (Isblue)
@@ -33,12 +33,12 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist,  bool 
 	if (dir == 0 || dir == 2) {
 		if (dir == 0) {
 			Utils::SetOrigin(tuns, Origins::TC);
-			startpos = { position.x, position.y+1 - GRIDSIZE / 2 };
+			startpos = { position.x, position.y + 1 - GRIDSIZE / 2 };
 			tuns.setPosition(startpos);
 		}
 		else if (dir == 2) {
 			Utils::SetOrigin(tuns, Origins::BC);
-			startpos = { position.x,position.y-1 + GRIDSIZE / 2 };
+			startpos = { position.x,position.y - 1 + GRIDSIZE / 2 };
 			tuns.setPosition(startpos);
 		}
 		tuns.setSize({ 50,0 });
@@ -47,12 +47,12 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist,  bool 
 	else {
 		if (dir == 1) {
 			Utils::SetOrigin(tuns, Origins::MR);
-			startpos = { position.x-1 + GRIDSIZE / 2,position.y };
+			startpos = { position.x - 1 + GRIDSIZE / 2,position.y };
 			tuns.setPosition(startpos);
 		}
 		else if (dir == 3) {
 			Utils::SetOrigin(tuns, Origins::ML);
-			startpos = { position.x+1 - GRIDSIZE / 2+2 ,position.y };
+			startpos = { position.x + 1 - GRIDSIZE / 2 + 2 ,position.y };
 			tuns.setPosition(startpos);
 
 		}
@@ -79,7 +79,7 @@ Tunnel::Tunnel(const Vector2f& position, int dir, vector<int> buttonlist,  bool 
 		emitter.setRotation(270.f);
 		break;
 	case 2:
-		particleDir = { 0.f, -1.f };		
+		particleDir = { 0.f, -1.f };
 		break;
 	case 3:
 		particleDir = { 1.f, 0.f };
@@ -103,10 +103,9 @@ void Tunnel::Update(float dt)
 
 	enable = originactive;
 
-	for  (auto b : button) {
+	for (auto b : button) {
 		if (!b->GetPressed()) {
 			enable = !originactive;
-			destiny.setPosition(startpos);
 		}
 	}
 
@@ -139,6 +138,7 @@ void Tunnel::Update(float dt)
 		hitwall = false;
 
 		particleNum = 0;
+		destiny.setPosition(startpos);
 
 		return;
 	}
@@ -176,7 +176,7 @@ void Tunnel::Update(float dt)
 			tuns.setSize({ tuns.getSize().x,whohitwall->GetGlobalBounds().top - tuns.getPosition().y });
 
 			endpos = { tuns.getPosition().x,tuns.getPosition().y + tuns.getSize().y };
-			
+
 		}
 		else if (dir == 2) {
 			destiny.setSize({ tuns.getSize().x,10 });
@@ -234,20 +234,20 @@ void Tunnel::Draw(RenderWindow& window)
 			DrawTexBox(window);
 			DrawColorBox(window);
 		}
-			
-	}		
+
+	}
 	else
 	{
 		if (enable)
 		{
-		//	window.draw(tuns);
+			//	window.draw(tuns);
 			window.draw(particles);
-		}		
-		
+		}
+
 		//window.draw(hitbox);			
 		//window.draw(emitter);
 	}
-	//window.draw(destiny);
+	window.draw(destiny);
 }
 
 void Tunnel::ChangeDir()
@@ -331,6 +331,7 @@ void Tunnel::TransParticles(float dt)
 {
 	for (int i = 0; i < particleNum; i++)
 	{
+	
 		particles[i].position = particles[i].position + dt * 130 * particleDir;
 		if (!tuns.getGlobalBounds().contains(particles[i].position))
 		{
@@ -367,7 +368,7 @@ void Tunnel::InitTexBox()
 
 void Tunnel::InitColorBox()
 {
-	colorBox.setSize({ 8.f, 8.f });	
+	colorBox.setSize({ 8.f, 8.f });
 	colorBox.setFillColor(Color::Blue);
 	colorBox.setOutlineThickness(0.5f);
 	colorBox.setOutlineColor(Color::Black);
@@ -401,14 +402,14 @@ void Tunnel::DrawColorBox(RenderWindow& window)
 	if (!Switch::GetShowTimer())
 		return;
 
-	colorBox.setPosition(onOfftexBox.getTransform().transformPoint(onOfftexBox.getPoint(1)));	
+	colorBox.setPosition(onOfftexBox.getTransform().transformPoint(onOfftexBox.getPoint(1)));
 
 	Vector2f mousePos = window.mapPixelToCoords((Vector2i)InputMgr::GetMousePos(), window.getView());
 
 	if (colorBox.getGlobalBounds().contains(mousePos) &&
 		InputMgr::GetMouseButtonDown(Mouse::Left) && Switch::GetShowTimer())
 	{
-		IsBlue = !IsBlue;		
+		IsBlue = !IsBlue;
 	}
 
 	colorBox.setFillColor(IsBlue ? Color::Blue : Color(ORANGE));
