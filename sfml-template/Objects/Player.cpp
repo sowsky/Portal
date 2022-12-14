@@ -47,7 +47,7 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 
 	boxShape.SetAsBox(
 		dimensions.x / SCALE / 2.0f,
-		(dimensions.y-20) / SCALE / 2.0f,
+		(dimensions.y - 20) / SCALE / 2.0f,
 		center, 0.f);
 
 	b2FixtureDef fixtureDef;
@@ -135,7 +135,7 @@ Player::Player(b2World* world, const Vector2f& position, Vector2f dimensions)
 
 	checkpointpos = position;
 
-	hitbox->setSize({ GetSize().x,GetSize().y*0.8f});
+	hitbox->setSize({ GetSize().x,GetSize().y * 0.8f });
 }
 
 Player::~Player()
@@ -156,7 +156,7 @@ void Player::Update(float dt)
 
 	Utils::ChangeBCSpriteSFMLPosToBox2dPos(*this, *body, dt);
 
-	Utils::SetOrigin(*hitbox, Origins::BC);	
+	Utils::SetOrigin(*hitbox, Origins::BC);
 	hitbox->setPosition(GetPos());
 
 	if (body->GetLinearVelocity().x != 0) {
@@ -164,7 +164,10 @@ void Player::Update(float dt)
 		speedtX = 0;
 	}
 
-	if (body->GetLinearVelocity().y != 0) {
+	//cout <<body->GetLinearVelocity().y - 0.f << endl;
+	if (fabs(body->GetLinearVelocity().y - 0.f) > std::numeric_limits<double>::epsilon())
+		//if (body->GetLinearVelocity().y != 0)
+	{
 		recentspeed.y = body->GetLinearVelocity().y;
 		speedtY = 0;
 	}
@@ -174,7 +177,6 @@ void Player::Update(float dt)
 	if (speedtX >= 0.1f) {
 		recentspeed.x = 0;
 		speedtX = 0;
-
 	}
 	if (speedtY >= 0.1f) {
 		recentspeed.y = 0;
@@ -190,10 +192,10 @@ void Player::Update(float dt)
 		showIndicator = !showIndicator;
 
 
-	jump.setSize({p_body.getScale().x,10});
+	jump.setSize({ p_body.getScale().x,10 });
 	jump.setFillColor(Color::Green);
 	Utils::SetOrigin(jump, Origins::TC);
-	jump.setPosition(p_body.getPosition().x,p_body.getPosition().y+10);
+	jump.setPosition(p_body.getPosition().x, p_body.getPosition().y + 10);
 }
 
 void Player::PhysicsUpdate(float dt)
@@ -223,7 +225,25 @@ void Player::PhysicsUpdate(float dt)
 			body->SetLinearVelocity({ 0,body->GetLinearVelocity().y });
 	}
 
-	if ((InputMgr::GetKey(Keyboard::A) || InputMgr::GetKey(Keyboard::D)) && body->GetLinearVelocity().y == 0) {
+
+	if ((InputMgr::GetKey(Keyboard::A) || InputMgr::GetKey(Keyboard::D))) {
+		if (abs(body->GetLinearVelocity().x) <= 0.0000000109487) {
+			addt += dt;
+			if (addt >= 0.2f) {
+				cout << dt << endl;
+
+				//if (InputMgr::GetKey(Keyboard::A)) {
+					//body->SetTransform({ (body->GetPosition().x+0.115f),body->GetPosition().y}, 0);
+					body->ApplyForce({body->GetLinearVelocity().x*-1,-10}, body->GetWorldCenter(), 1);
+			//	}
+			//	else{
+					//body->SetTransform({ (body->GetPosition().x - 0.115f),body->GetPosition().y }, 0);
+				//}
+			}
+
+		}
+		//0.
+		//
 		/*if (pressdt >= 0.5) {
 			body->ApplyLinearImpulse({ 0,0.5f }, GetPlayerBodyLinearVelocity(), 1);
 			if ((int)body->GetLinearVelocity().x == 0 && body->GetLinearVelocity().y > 0) {
@@ -231,8 +251,10 @@ void Player::PhysicsUpdate(float dt)
 			}
 		}*/
 	}
+	else
+					addt = 0;
 
-	
+
 
 	if (isFlying || isJumping) {
 		if (abs(GetRecentSpeed().y) < 0.1f && abs(body->GetLinearVelocity().y) <= 0.01f) {
@@ -268,7 +290,7 @@ void Player::Draw(RenderWindow& window)
 		window.draw(p_head);
 		window.draw(p_arm);
 		window.draw(portalGun);
-	//	window.draw(jump);
+		//	window.draw(jump);
 		if (PlayScene::GetIsDevMod())
 		{
 			ShowBornForDev(window);
@@ -386,7 +408,7 @@ void Player::StruggelAnimation(float dt)
 
 	p_arm.setPosition(clavicle.getTransform().transformPoint(clavicle.getPoint(1)));
 	p_spare_arm.setPosition(clavicle.getTransform().transformPoint(clavicle.getPoint(0)));
-	
+
 }
 
 void Player::RotateAnimation(RenderWindow& window)

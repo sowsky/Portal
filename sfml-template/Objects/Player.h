@@ -110,5 +110,6 @@ protected:
 
 	float pressdt = 0.0f;
 
+	float addt = 0.0f;
 };
 

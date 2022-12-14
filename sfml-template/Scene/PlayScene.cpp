@@ -2193,9 +2193,11 @@ void PlayScene::MoveToPortal()
 	}
 	if (madeblue && blue->Gethitboxglobalbounds().intersects(player->GethitboxGlobalBounds())) {
 		player->SetFlying(true);
-		float recenty = player->GetRecentSpeed().y * -1;
+		float recenty = abs(player->GetRecentSpeed().y);
 		float recentx = abs(player->GetRecentSpeed().x);
-		if ((int)recenty <= 2)
+
+	//	cout << abs(player->GetRecentSpeed().y) << endl;
+		if ((int)recenty <= 1)
 			recenty = 1;
 
 		if (recenty > maxspeed)
@@ -2208,11 +2210,15 @@ void PlayScene::MoveToPortal()
 
 		}
 		else if (orange->GetPortalDir() == 1) {
+			
+
 			player->SetPlayerBodyPos({ orange->GetPos().x + 30,orange->GetPos().y });
 			float force = (abs(player->GetRecentSpeed().y)) + (recentx);
 			if (force > maxspeed / 2)
 				force = maxspeed / 2;
 			player->GetBody()->SetLinearVelocity({ force ,1 });
+			
+
 		}
 		else if (orange->GetPortalDir() == 2) {
 			player->SetPlayerBodyPos({ orange->GetPos().x ,orange->GetPos().y + player->GetGlobalBounds().height });
@@ -2247,10 +2253,14 @@ void PlayScene::MoveToPortal()
 	if (madeorange && orange->Gethitboxglobalbounds().intersects(player->GethitboxGlobalBounds())) {
 		player->SetFlying(true);
 
-		float recenty = player->GetRecentSpeed().y * -1;
+		float recenty = abs(player->GetRecentSpeed().y);
 		float recentx = abs(player->GetRecentSpeed().x);
-
-		if ((int)recenty <= 2)
+		
+		cout << player->GetRecentSpeed().y - player->GetBody()->GetLinearVelocity().y << endl;
+		if (player->GetRecentSpeed().y-player->GetBody()->GetLinearVelocity().y) {
+			recenty = 14.f;
+		}
+		if ((int)recenty <= 1)
 			recenty = 1;
 
 		if (recenty > maxspeed)
@@ -2296,8 +2306,6 @@ void PlayScene::MoveToPortal()
 				player->SetPlayerBodyPos({ blue->GetPos().x + 30 ,blue->GetPos().y - 30 });
 				player->GetBody()->SetLinearVelocity({ abs(speed) * 0.2f,abs(speed) * 0.5f });
 			}
-
-
 		}
 	}
 
