@@ -1570,6 +1570,10 @@ void PlayScene::Respawn()
 
 	}
 
+	for (auto b : button) {
+		b->Setpress(false);
+	}
+
 	dark = 0;
 }
 

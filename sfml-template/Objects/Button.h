@@ -34,6 +34,7 @@ public:
 	void UpdatePressureAnimation(float dt);
 	void ChageTexOnoff(bool press);
 
+	void Setpress(bool a) { isPress = a; }
 protected:
 	bool isPress = false;
 	static int buttonNum;
