@@ -1,4 +1,15 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
+Graphics/pause/return_on.png,0
+Graphics/pause/return.png,0
+Graphics/pause/restart_on.png,0
+Graphics/pause/restart.png,0
+Graphics/pause/option_on.png,0
+Graphics/pause/option.png,0
+Graphics/pause/main.png,0
+Graphics/pause/main_on.png,0
+Graphics/pause/exit.png,0
+Graphics/pause/exit_on.png,0
+Graphics/pause/background.png,0
 Graphics/signs/sign0.png,0
 Graphics/signs/sign1.png,0
 Graphics/signs/sign2.png,0

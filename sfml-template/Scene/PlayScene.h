@@ -212,5 +212,12 @@ private:
 
 	Sprite diffuseSprite;
 	Sprite frontSprite;
+
+	Sprite pause_back;
+	Sprite pause_main;
+	Sprite pause_exit;
+	Sprite pause_option;
+	Sprite pause_restart;
+	Sprite pause_return;
 };
 
