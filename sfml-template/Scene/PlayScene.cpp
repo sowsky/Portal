@@ -405,6 +405,7 @@ void PlayScene::PauseDraw(RenderWindow& window)
 		if (InputMgr::GetMouseButtonDown(Mouse::Left))
 		{
 			SCENE_MGR->ChangeScene(Scenes::GAMESTART);
+			return;
 		}
 	}
 	else
@@ -486,8 +487,7 @@ void PlayScene::InitOptionSetting()
 
 	scroll.setPosition((optionMain.getPosition() + Vector2f{ 49.f, 468.f }));
 	Utils::SetOrigin(scrollButton, Origins::MC);
-
-	cout << scroll.getGlobalBounds().height << endl;
+		
 	scrollButton.setPosition(scroll.getPosition());
 	scrollButton.move({ 0, 3.06f });
 
@@ -558,7 +558,7 @@ void PlayScene::UpdateOption()
 		volume = (int)(((scrollButton.getPosition().x - rect.left) / rect.width) * 100);		
 	}
 
-	cout << SOUNDMGR->GetVolumeInt() << endl;
+	//cout << SOUNDMGR->GetVolumeInt() << endl;
 }
 
 void PlayScene::DrawOption(RenderWindow& window)

@@ -48,6 +48,8 @@ void StartMenu::Init()
 	Utils::SetSpriteSize(exit, { size.x * 0.25f, size.y * 0.2f });
 	Utils::SetOrigin(exit, Origins::ML);
 	exit.setPosition({ 10,  option.getPosition().y + 100 });
+
+	InitOptionSetting();
 }
 
 void StartMenu::Release()
@@ -102,7 +104,7 @@ void StartMenu::Update(float dt)
 		option.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/optionblack.png"));
 		if (InputMgr::GetMouseButtonDown(Mouse::Left)) {
 			playon = false;
-			optionon = true;
+			optionon = !optionon;
 			for (auto v : stagelist) {
 				delete v;
 			}
@@ -110,7 +112,11 @@ void StartMenu::Update(float dt)
 		}
 	}
 	else
-		option.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/option.png"));
+	{
+		if(!optionon)
+			option.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/option.png"));		
+	}
+
 
 	if (exit.getGlobalBounds().contains(mospos)) {
 		exit.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/exitblack.png"));
@@ -153,6 +159,11 @@ void StartMenu::Draw(RenderWindow& window)
 	for (auto v : stagelist) {
 		window.draw(*v);
 	}
+
+	if (optionon)
+		DrawOption(window);
+
+	//cout << InputMgr::GetMousePos().x << ", " << InputMgr::GetMousePos().y << endl;
 }
 
 void StartMenu::LoadFile()
@@ -182,5 +193,127 @@ void StartMenu::LoadFile()
 			y += 60;
 		}
 	}
+}
+
+void StartMenu::InitOptionSetting()
+{
+	optionPos = { 384.f , 148.f };
+
+	optionMain.setTexture(*RESOURCEMGR->GetTexture("Graphics/option/main.png"));
+	scroll.setTexture(*RESOURCEMGR->GetTexture("Graphics/option/scroll.png"));
+	scrollButton.setTexture(*RESOURCEMGR->GetTexture("Graphics/option/button.png"));
+
+	blank = RESOURCEMGR->GetTexture("Graphics/option/blank.png");
+	checkered = RESOURCEMGR->GetTexture("Graphics/option/check.png");
+
+	indicatorOn.setTexture(*checkered);
+	indicatorOff.setTexture(*blank);
+	soundOn.setTexture(*checkered);
+	soundOff.setTexture(*blank);
+
+	optionMain.setScale(0.68f, 0.68f);
+	scroll.setScale(0.68f, 0.68f);
+	scrollButton.setScale(0.68f, 0.68f);
+	indicatorOn.setScale(0.68f, 0.68f);
+	indicatorOff.setScale(0.68f, 0.68f);
+	soundOn.setScale(0.68f, 0.68f);
+	soundOff.setScale(0.68f, 0.68f);
+
+	optionMain.setPosition(optionPos);
+	indicatorOn.setPosition((optionMain.getPosition() + Vector2f{ 183.f, 140.f }));
+	indicatorOff.setPosition((optionMain.getPosition() + Vector2f{ 463.f, 140.f }));
+
+	soundOn.setPosition((optionMain.getPosition() + Vector2f{ 183.f, 374.f }));
+	soundOff.setPosition((optionMain.getPosition() + Vector2f{ 463.f, 374.f }));
+
+	scroll.setPosition((optionMain.getPosition() + Vector2f{ 49.f, 468.f }));
+	Utils::SetOrigin(scrollButton, Origins::MC);
+
+	cout << scroll.getGlobalBounds().height << endl;
+	scrollButton.setPosition(scroll.getPosition());
+	scrollButton.move({ 0, 3.06f });
+
+	FloatRect rect = scroll.getGlobalBounds();
+	float y = scrollButton.getPosition().y;
+
+	scrollButton.setPosition(rect.left + (rect.width * volume) / 100, y);
+}
+
+void StartMenu::UpdateOption()
+{
+	Vector2f mousePos = InputMgr::GetMousePos();
+	bool mouseLeft = InputMgr::GetMouseButtonDown(Mouse::Left);
+
+	if (indicatorOn.getGlobalBounds().contains(mousePos) && mouseLeft)
+		isIndicatorOn = true;
+
+	if (indicatorOff.getGlobalBounds().contains(mousePos) && mouseLeft)
+		isIndicatorOn = false;
+
+	if (soundOn.getGlobalBounds().contains(mousePos) && mouseLeft)
+	{
+		isSoundOn = true;
+
+	}
+
+	if (soundOff.getGlobalBounds().contains(mousePos) && mouseLeft)
+	{
+		FloatRect rect = scroll.getGlobalBounds();
+		float y = scrollButton.getPosition().y;
+
+		isSoundOn = false;
+
+		volume = 0;
+		scrollButton.setPosition(rect.left, y);
+	}
+
+	indicatorOn.setTexture(isIndicatorOn ? *checkered : *blank);
+	indicatorOff.setTexture(!isIndicatorOn ? *checkered : *blank);
+
+	soundOn.setTexture(isSoundOn ? *checkered : *blank);
+	soundOff.setTexture(!isSoundOn ? *checkered : *blank);
+
+	if ((scroll.getGlobalBounds().contains(mousePos) ||
+		scrollButton.getGlobalBounds().contains(mousePos))
+		&& mouseLeft)
+	{
+		isScrolling = true;
+		isSoundOn = true;
+	}
+
+	if (isScrolling && InputMgr::GetMouseButtonUp(Mouse::Left))
+	{
+		isScrolling = false;
+	}
+
+	if (isScrolling)
+	{
+		FloatRect rect = scroll.getGlobalBounds();
+		float y = scrollButton.getPosition().y;
+
+		scrollButton.setPosition({ mousePos.x, y });
+		if (scrollButton.getPosition().x < rect.left)
+			scrollButton.setPosition(rect.left, y);
+		if (scrollButton.getPosition().x > rect.left + rect.width)
+			scrollButton.setPosition(rect.left + rect.width, y);
+
+		volume = (int)(((scrollButton.getPosition().x - rect.left) / rect.width) * 100);
+	}
+
+	cout << SOUNDMGR->GetVolumeInt() << endl;
+}
+
+void StartMenu::DrawOption(RenderWindow& window)
+{
+	UpdateOption();
+
+	window.draw(optionMain);
+	window.draw(indicatorOn);
+	window.draw(indicatorOff);
+	window.draw(soundOn);
+	window.draw(soundOff);
+
+	window.draw(scroll);
+	window.draw(scrollButton);
 }
 
