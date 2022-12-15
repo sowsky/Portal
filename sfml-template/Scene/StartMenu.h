@@ -23,11 +23,15 @@ public:
 	void LoadFile();
 
 private:
+	vector<Text*> stagelist;
+
 	Sprite back;
 	Sprite stagespace;
 	Sprite play;
 	Sprite option;
 	Sprite exit;
+
+	int y;
 
 	int count = 1;
 
