@@ -19,12 +19,13 @@ void PlayScene::Update(float dt)
 
 	crosshair.setPosition(InputMgr::GetMousePos());
 
-	if (help) {
-		/*	if (InputMgr::GetKeyDown(Keyboard::F1)) {
-				help = !help;
-			}*/
-
-			//return;
+	if (pause) {
+		PuaseUpdate(dt);
+		if (InputMgr::GetKeyDown(Keyboard::Escape)) {
+			pause = !pause;
+		}
+		
+		return;
 	}
 
 	OpenStage(dt);
@@ -208,6 +209,8 @@ void PlayScene::Update(float dt)
 
 void PlayScene::PhysicsUpdate(float dt)
 {
+	if (pause)
+		return;
 	dtstack += dt;
 
 	if (dtstack >= 1 / 60.f) {
@@ -227,8 +230,18 @@ void PlayScene::PhysicsUpdate(float dt)
 
 }
 
+void PlayScene::PuaseUpdate(float dt)
+{
+
+}
+
 void PlayScene::Draw(RenderWindow& window)
 {
+	if (pause)
+	{
+		PauseDraw(window);
+		return;
+	}
 	//light.position.x = player->GetPos().x - 150.f;
 	//light.position.y = height + 150.f - player->GetPos().y;
 	light.position.x = GetMouseWorldPos().x;
@@ -1893,6 +1906,7 @@ void PlayScene::DrawRenderedBuffer(RenderWindow& window)
 
 void PlayScene::Input()
 {
+	
 	LightTestInputForDev();
 
 	if (InputMgr::GetMouseWheelState() == 1)
@@ -2126,10 +2140,14 @@ void PlayScene::Input()
 		if (SCENE_MGR->GetPrevKey() == Scenes::MAPEDITER)
 		{
 			SCENE_MGR->ChangeScene(Scenes::MAPEDITER);
+			return;
 		}
-		else
-			SCENE_MGR->ChangeScene(Scenes::GAMESTART);
-		return;
+		
+			
+	}
+
+	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
+		pause = !pause;
 	}
 
 

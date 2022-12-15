@@ -63,6 +63,7 @@ public:
 
 	virtual void Update(float dt);
 	virtual void PhysicsUpdate(float dt);
+	void PuaseUpdate(float dt);
 
 	virtual void Draw(RenderWindow& window);
 	void PauseDraw(RenderWindow& window);
@@ -209,6 +210,7 @@ private:
 	static bool isDevMod;
 
 	bool help = false;
+	bool pause = false;
 
 	Sprite diffuseSprite;
 	Sprite frontSprite;
