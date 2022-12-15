@@ -245,10 +245,10 @@ void StartMenu::UpdateOption()
 	bool mouseLeft = InputMgr::GetMouseButtonDown(Mouse::Left);
 
 	if (indicatorOn.getGlobalBounds().contains(mousePos) && mouseLeft)
-		isIndicatorOn = true;
+		SCENE_MGR->SetIndicator(true);
 
 	if (indicatorOff.getGlobalBounds().contains(mousePos) && mouseLeft)
-		isIndicatorOn = false;
+		SCENE_MGR->SetIndicator(false);
 
 	if (soundOn.getGlobalBounds().contains(mousePos) && mouseLeft)
 	{
@@ -267,8 +267,8 @@ void StartMenu::UpdateOption()
 		scrollButton.setPosition(rect.left, y);
 	}
 
-	indicatorOn.setTexture(isIndicatorOn ? *checkered : *blank);
-	indicatorOff.setTexture(!isIndicatorOn ? *checkered : *blank);
+	indicatorOn.setTexture(SCENE_MGR->GetIndicator() ? *checkered : *blank);
+	indicatorOff.setTexture(!SCENE_MGR->GetIndicator() ? *checkered : *blank);
 
 	soundOn.setTexture(isSoundOn ? *checkered : *blank);
 	soundOff.setTexture(!isSoundOn ? *checkered : *blank);
