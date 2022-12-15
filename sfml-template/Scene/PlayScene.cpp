@@ -24,7 +24,7 @@ void PlayScene::Update(float dt)
 				help = !help;
 			}*/
 
-		//return;
+			//return;
 	}
 
 	OpenStage(dt);
@@ -719,7 +719,8 @@ PlayScene::PlayScene(string path)
 								templ.clear();
 								wireList.insert({ b, templ });
 							}
-							wireList[b].push_back(dropper.back()->GetSpritePos());}
+							wireList[b].push_back(dropper.back()->GetSpritePos());
+						}
 
 						break;
 					}
@@ -1865,7 +1866,7 @@ void PlayScene::DrawRenderedBuffer(RenderWindow& window)
 {
 	pass_diffuse.display();
 	pass_normals.display();
-	
+
 	lights_shader.setParameter("resolution", sf::Vector2f(width, height));
 	lights_shader.setParameter("sampler_normal", pass_normals.getTexture());
 	lights_shader.setParameter("ambient_intensity", ambient_intensity);
@@ -1878,16 +1879,16 @@ void PlayScene::DrawRenderedBuffer(RenderWindow& window)
 	back->display();
 	std::swap(back, front);
 
-	
+
 	//Sprite pasSprite(pass_diffuse.getTexture());
 	//Sprite frontSprite(front->getTexture());	
 
 	// Draw diffuse color
-	window.draw(sf::Sprite(pass_diffuse.getTexture()));	
+	window.draw(sf::Sprite(pass_diffuse.getTexture()));
 	//window.draw(pasSprite);
 	// Blend lighting over
 	window.draw(Sprite(front->getTexture()), sf::BlendMultiply);
-	
+
 }
 
 void PlayScene::Input()
@@ -2127,8 +2128,8 @@ void PlayScene::Input()
 			SCENE_MGR->ChangeScene(Scenes::MAPEDITER);
 		}
 		else
-			//	SCENE_MGR->ChangeScene(Scenes::GAMESTART);
-			return;
+			SCENE_MGR->ChangeScene(Scenes::GAMESTART);
+		return;
 	}
 
 
@@ -2248,7 +2249,7 @@ void PlayScene::BackAndLightControl()
 
 void PlayScene::DrawNormalAndDiffuse(RenderWindow& window)
 {
-	
+
 	pass_diffuse2.draw(background);
 	normals_shader.setParameter("sampler_normal", *backgroundNormal);
 	pass_normals2.draw(background, &normals_shader);
