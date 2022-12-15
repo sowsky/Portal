@@ -4,6 +4,9 @@
 #include "../Scene/SceneMgr.h"
 #include "../FrameWork/Framework.h"
 #include "../Manager/ResourceMgr.h"
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 StartMenu::StartMenu()
 {
@@ -49,12 +52,14 @@ void StartMenu::Init()
 
 void StartMenu::Release()
 {
-
+	for (auto v : stagelist) {
+		delete v;
+	}
+	stagelist.clear();
 }
 
 void StartMenu::Enter()
 {
-
 	Scene::SetWorldView();
 	SetUiView();
 }
@@ -87,6 +92,7 @@ void StartMenu::Update(float dt)
 		if (InputMgr::GetMouseButtonDown(Mouse::Left)) {
 			playon = true;
 			optionon = false;
+			LoadFile();
 		}
 	}
 	else
@@ -97,6 +103,10 @@ void StartMenu::Update(float dt)
 		if (InputMgr::GetMouseButtonDown(Mouse::Left)) {
 			playon = false;
 			optionon = true;
+			for (auto v : stagelist) {
+				delete v;
+			}
+			stagelist.clear();
 		}
 	}
 	else
@@ -139,10 +149,38 @@ void StartMenu::Draw(RenderWindow& window)
 	}
 	window.setView(uiView);
 	player->Draw(window);*/
+
+	for (auto v : stagelist) {
+		window.draw(*v);
+	}
 }
 
 void StartMenu::LoadFile()
 {
+	string path = "Map";
+	for (const auto& entry : fs::directory_iterator(path)) {
+		string path_string = fs::path(entry).filename().string();
+		Text* temp = new Text();
+		temp->setString(path_string);
 
+		stagelist.push_back(temp);
+		stagelist.back()->setFillColor(Color::Blue);
+		stagelist.back()->setFont(*RESOURCEMGR->GetFont("Fonts/NanumGothic.otf"));
+		Utils::SetOrigin(*stagelist.back(), Origins::MC);
+	}
+
+	if (!stagelist.empty()) {
+		y =stagespace.getPosition().y-200;
+
+		for (int i = 0; i < stagelist.size(); i++) {
+			stagelist[i]->setPosition(stagespace.getPosition().x - 120, y);
+			if (stagelist[i] != stagelist.back()) {
+				++i;
+				stagelist[i]->setPosition(stagespace.getPosition().x + 120, y);
+			}
+
+			y += 60;
+		}
+	}
 }
 
