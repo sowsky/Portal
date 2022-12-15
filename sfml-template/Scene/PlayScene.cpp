@@ -24,7 +24,7 @@ void PlayScene::Update(float dt)
 		if (InputMgr::GetKeyDown(Keyboard::Escape)) {
 			pause = !pause;
 		}
-		
+
 		return;
 	}
 
@@ -1906,258 +1906,259 @@ void PlayScene::DrawRenderedBuffer(RenderWindow& window)
 
 void PlayScene::Input()
 {
-	
-	LightTestInputForDev();
+	if (!pause) {
+		LightTestInputForDev();
 
-	if (InputMgr::GetMouseWheelState() == 1)
-	{
-		if (worldView.getSize().x < 60.f || openingTime > 0.f)
-			return;
-
-		worldView.zoom(0.8f);
-	}
-	if (InputMgr::GetMouseWheelState() == -1)
-	{
-		if (worldView.getSize().x > 2800.f || openingTime > 0.f)
-			return;
-
-		worldView.zoom(1.12f);
-	}
-
-	if (InputMgr::GetMouseButton(Mouse::Middle))
-	{
-		if (openingTime > 0.f)
-			return;
-
-		isMovingViewCenter = true;
-		Vector2f pos = InputMgr::GetMousePosDisplacement();
-		worldView.setCenter(worldView.getCenter() + pos);
-	}
-
-	if (InputMgr::GetMouseButtonUp(Mouse::Middle))
-	{
-		isMovingViewCenter = false;
-	}
-
-	if (InputMgr::GetKeyDown(Keyboard::Num8))
-	{
-		SpriteObj::OnOffWiringState();
-	}
-
-	//blue
-	if (InputMgr::GetMouseButtonDown(Mouse::Left)) {
-		auto it = tunnel.begin();
-		if (IsMadeTunnelFollowBluePortal) {
-			while (it != tunnel.end())
-			{
-				if ((*it)->GetConnected() == 1)
-				{
-					it = tunnel.erase(it);
-					break;
-				}
-				else {
-					++it;
-				}
-			}
-			IsMadeTunnelFollowBluePortal = false;
-		}
-		it = tunnel.begin();
-		if (IsMadeTunnelFollowOrangePortal) {
-			while (it != tunnel.end())
-			{
-				if ((*it)->GetConnected() == 2)
-				{
-					it = tunnel.erase(it);
-					break;
-				}
-				else {
-					++it;
-				}
-			}
-			IsMadeTunnelFollowOrangePortal = false;
-		}
-
-		auto ite = bridge.begin();
-		if (IsMadeBridgeFollowOrangePortal) {
-			while (ite != bridge.end())
-			{
-				if ((*ite)->GetConnected() == 2)
-				{
-					auto ptr = (*ite);
-					ite = bridge.erase(ite);
-					delete ptr;
-					break;
-				}
-				else {
-					++ite;
-				}
-			}
-			IsMadeBridgeFollowOrangePortal = false;
-		}
-		ite = bridge.begin();
-		if (IsMadeBridgeFollowBluePortal) {
-			while (ite != bridge.end())
-			{
-				if ((*ite)->GetConnected() == 1)
-				{
-					auto ptr = (*ite);
-					ite = bridge.erase(ite);
-					delete ptr;
-					break;
-				}
-				else {
-					++ite;
-				}
-			}
-			IsMadeBridgeFollowBluePortal = false;
-		}
-
-		blue->SetSize({ 20,20 });
-		madeblue = false;
-		blue->SetPos(player->GetClaviclePos());
-		blue->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetClaviclePos()));
-
-		////////////////////
-		//fireBlue.play();
-		SOUNDMGR->SoundPlay(SoundChoice::FireBlueSound);
-
-		for (auto a : angledtile)
+		if (InputMgr::GetMouseWheelState() == 1)
 		{
-			a->SetAngleState(AngleState::Noraml);
-		}
-		AngledTile::SetIsBlueOn(false);
-	}
+			if (worldView.getSize().x < 60.f || openingTime > 0.f)
+				return;
 
-	//orange
-	if (InputMgr::GetMouseButtonDown(Mouse::Right)) {
-		auto it = tunnel.begin();
-		if (IsMadeTunnelFollowBluePortal) {
-			while (it != tunnel.end())
-			{
-				if ((*it)->GetConnected() == 1)
-				{
-					it = tunnel.erase(it);
-					break;
-				}
-				else {
-					++it;
-				}
-			}
-			IsMadeTunnelFollowBluePortal = false;
+			worldView.zoom(0.8f);
 		}
-
-		if (IsMadeTunnelFollowOrangePortal) {
-			while (it != tunnel.end())
-			{
-				if ((*it)->GetConnected() == 2)
-				{
-					it = tunnel.erase(it);
-					break;
-				}
-				else {
-					++it;
-				}
-			}
-			IsMadeTunnelFollowOrangePortal = false;
-		}
-		auto ite = bridge.begin();
-		if (IsMadeBridgeFollowOrangePortal) {
-			while (ite != bridge.end())
-			{
-				if ((*ite)->GetConnected() == 2)
-				{
-					auto ptr = (*ite);
-					ite = bridge.erase(ite);
-					delete ptr;
-					break;
-				}
-				else {
-					++ite;
-				}
-			}
-			IsMadeBridgeFollowOrangePortal = false;
-		}
-
-		if (IsMadeBridgeFollowBluePortal) {
-			while (ite != bridge.end())
-			{
-				if ((*ite)->GetConnected() == 2)
-				{
-					auto ptr = (*ite);
-					ite = bridge.erase(ite);
-					delete ptr;
-					break;
-				}
-				else {
-					++ite;
-				}
-			}
-			IsMadeBridgeFollowBluePortal = false;
-		}
-
-		orange->SetSize({ 20,20 });
-		madeorange = false;
-		orange->SetPos(player->GetClaviclePos());
-		orange->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetClaviclePos()));
-		/////////////////////
-		//fireOrange.play();
-		SOUNDMGR->SoundPlay(SoundChoice::FireOrangeSound);
-		for (auto a : angledtile)
+		if (InputMgr::GetMouseWheelState() == -1)
 		{
-			a->SetAngleState(AngleState::Noraml);
+			if (worldView.getSize().x > 2800.f || openingTime > 0.f)
+				return;
+
+			worldView.zoom(1.12f);
 		}
-		AngledTile::SetIsOrangeOn(false);
-	}
 
-	if (grabitem) {
-		Vector2f dir = Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - grabbedcube->GetPos());
-		dir.x *= 50;
-		dir.y *= 50;
-		if (player->IsMouseRight())
-			dir.x = 50;
-		if (!player->IsMouseRight())
-			dir.x = -50;
-		float x = Utils::Lerp(grabbedcube->GetPos().x, dir.x + player->GetPos().x, 0.5f);
-
-		Vector2f real(dir.x + player->GetPos().x, player->GetPos().y - 25);
-		grabbedcube->GetBody()->SetTransform({ real.x / SCALE,real.y / SCALE * -1 }, grabbedcube->GetBody()->GetAngle());
-		//grabbedcube->GetBody()->ApplyForce({ x / SCALE,0 }, grabbedcube->GetBody()->GetWorldCenter(), 1);
-	}
-
-	///////////////////////
-
-	if (InputMgr::GetKeyDown(Keyboard::T))
-	{
-		showWire = !showWire;
-	}
-
-	if (InputMgr::GetKeyDown(Keyboard::V))
-	{
-		isfreeView = !isfreeView;
-	}
-
-	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
-		if (SCENE_MGR->GetPrevKey() == Scenes::MAPEDITER)
+		if (InputMgr::GetMouseButton(Mouse::Middle))
 		{
-			SCENE_MGR->ChangeScene(Scenes::MAPEDITER);
-			return;
+			if (openingTime > 0.f)
+				return;
+
+			isMovingViewCenter = true;
+			Vector2f pos = InputMgr::GetMousePosDisplacement();
+			worldView.setCenter(worldView.getCenter() + pos);
 		}
-		
-			
-	}
 
-	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
-		pause = !pause;
-	}
+		if (InputMgr::GetMouseButtonUp(Mouse::Middle))
+		{
+			isMovingViewCenter = false;
+		}
+
+		if (InputMgr::GetKeyDown(Keyboard::Num8))
+		{
+			SpriteObj::OnOffWiringState();
+		}
+
+		//blue
+		if (InputMgr::GetMouseButtonDown(Mouse::Left)) {
+			auto it = tunnel.begin();
+			if (IsMadeTunnelFollowBluePortal) {
+				while (it != tunnel.end())
+				{
+					if ((*it)->GetConnected() == 1)
+					{
+						it = tunnel.erase(it);
+						break;
+					}
+					else {
+						++it;
+					}
+				}
+				IsMadeTunnelFollowBluePortal = false;
+			}
+			it = tunnel.begin();
+			if (IsMadeTunnelFollowOrangePortal) {
+				while (it != tunnel.end())
+				{
+					if ((*it)->GetConnected() == 2)
+					{
+						it = tunnel.erase(it);
+						break;
+					}
+					else {
+						++it;
+					}
+				}
+				IsMadeTunnelFollowOrangePortal = false;
+			}
+
+			auto ite = bridge.begin();
+			if (IsMadeBridgeFollowOrangePortal) {
+				while (ite != bridge.end())
+				{
+					if ((*ite)->GetConnected() == 2)
+					{
+						auto ptr = (*ite);
+						ite = bridge.erase(ite);
+						delete ptr;
+						break;
+					}
+					else {
+						++ite;
+					}
+				}
+				IsMadeBridgeFollowOrangePortal = false;
+			}
+			ite = bridge.begin();
+			if (IsMadeBridgeFollowBluePortal) {
+				while (ite != bridge.end())
+				{
+					if ((*ite)->GetConnected() == 1)
+					{
+						auto ptr = (*ite);
+						ite = bridge.erase(ite);
+						delete ptr;
+						break;
+					}
+					else {
+						++ite;
+					}
+				}
+				IsMadeBridgeFollowBluePortal = false;
+			}
+
+			blue->SetSize({ 20,20 });
+			madeblue = false;
+			blue->SetPos(player->GetClaviclePos());
+			blue->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetClaviclePos()));
+
+			////////////////////
+			//fireBlue.play();
+			SOUNDMGR->SoundPlay(SoundChoice::FireBlueSound);
+
+			for (auto a : angledtile)
+			{
+				a->SetAngleState(AngleState::Noraml);
+			}
+			AngledTile::SetIsBlueOn(false);
+		}
+
+		//orange
+		if (InputMgr::GetMouseButtonDown(Mouse::Right)) {
+			auto it = tunnel.begin();
+			if (IsMadeTunnelFollowBluePortal) {
+				while (it != tunnel.end())
+				{
+					if ((*it)->GetConnected() == 1)
+					{
+						it = tunnel.erase(it);
+						break;
+					}
+					else {
+						++it;
+					}
+				}
+				IsMadeTunnelFollowBluePortal = false;
+			}
+
+			if (IsMadeTunnelFollowOrangePortal) {
+				while (it != tunnel.end())
+				{
+					if ((*it)->GetConnected() == 2)
+					{
+						it = tunnel.erase(it);
+						break;
+					}
+					else {
+						++it;
+					}
+				}
+				IsMadeTunnelFollowOrangePortal = false;
+			}
+			auto ite = bridge.begin();
+			if (IsMadeBridgeFollowOrangePortal) {
+				while (ite != bridge.end())
+				{
+					if ((*ite)->GetConnected() == 2)
+					{
+						auto ptr = (*ite);
+						ite = bridge.erase(ite);
+						delete ptr;
+						break;
+					}
+					else {
+						++ite;
+					}
+				}
+				IsMadeBridgeFollowOrangePortal = false;
+			}
+
+			if (IsMadeBridgeFollowBluePortal) {
+				while (ite != bridge.end())
+				{
+					if ((*ite)->GetConnected() == 2)
+					{
+						auto ptr = (*ite);
+						ite = bridge.erase(ite);
+						delete ptr;
+						break;
+					}
+					else {
+						++ite;
+					}
+				}
+				IsMadeBridgeFollowBluePortal = false;
+			}
+
+			orange->SetSize({ 20,20 });
+			madeorange = false;
+			orange->SetPos(player->GetClaviclePos());
+			orange->SetDir(Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - player->GetClaviclePos()));
+			/////////////////////
+			//fireOrange.play();
+			SOUNDMGR->SoundPlay(SoundChoice::FireOrangeSound);
+			for (auto a : angledtile)
+			{
+				a->SetAngleState(AngleState::Noraml);
+			}
+			AngledTile::SetIsOrangeOn(false);
+		}
+
+		if (grabitem) {
+			Vector2f dir = Utils::Normalize(ScreenToWorldPos((Vector2i)InputMgr::GetMousePos()) - grabbedcube->GetPos());
+			dir.x *= 50;
+			dir.y *= 50;
+			if (player->IsMouseRight())
+				dir.x = 50;
+			if (!player->IsMouseRight())
+				dir.x = -50;
+			float x = Utils::Lerp(grabbedcube->GetPos().x, dir.x + player->GetPos().x, 0.5f);
+
+			Vector2f real(dir.x + player->GetPos().x, player->GetPos().y - 25);
+			grabbedcube->GetBody()->SetTransform({ real.x / SCALE,real.y / SCALE * -1 }, grabbedcube->GetBody()->GetAngle());
+			//grabbedcube->GetBody()->ApplyForce({ x / SCALE,0 }, grabbedcube->GetBody()->GetWorldCenter(), 1);
+		}
+
+		///////////////////////
+
+		if (InputMgr::GetKeyDown(Keyboard::T))
+		{
+			showWire = !showWire;
+		}
+
+		if (InputMgr::GetKeyDown(Keyboard::V))
+		{
+			isfreeView = !isfreeView;
+		}
+
+		if (InputMgr::GetKeyDown(Keyboard::Escape)) {
+			if (SCENE_MGR->GetPrevKey() == Scenes::MAPEDITER)
+			{
+				SCENE_MGR->ChangeScene(Scenes::MAPEDITER);
+				return;
+			}
 
 
-	if (InputMgr::GetKeyDown(Keyboard::P))
-	{
-		isDevMod = !isDevMod;
-	}
+		}
 
-	if (InputMgr::GetKeyDown(Keyboard::F1)) {
-		help = !help;
+		if (InputMgr::GetKeyDown(Keyboard::Escape)) {
+			pause = !pause;
+		}
+
+
+		if (InputMgr::GetKeyDown(Keyboard::P))
+		{
+			isDevMod = !isDevMod;
+		}
+
+		if (InputMgr::GetKeyDown(Keyboard::F1)) {
+			help = !help;
+		}
 	}
 }
 

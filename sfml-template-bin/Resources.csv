@@ -128,7 +128,6 @@ Graphics/Ui/tile.png,0
 Graphics/Ui/tileb.png,0
 Graphics/Ui/cube.png,0
 Graphics/Ui/goal.png,0
-Graphics/Ui/button.png,0
 Graphics/Ui/tbeam.png,0
 Graphics/Ui/save.png,0
 Graphics/Ui/load.png,0
@@ -138,6 +137,13 @@ Graphics/Ui/uitool2.png,0
 Graphics/Ui/savebg.png,0
 Graphics/Ui/loadbg.png,0
 Graphics/Ui/control.png,0
+Graphics/Ui/stagespace.png,0
+Graphics/Ui/playbutton.png,0
+Graphics/Ui/playbuttonblack.png,0
+Graphics/Ui/option.png,0
+Graphics/Ui/optionblack.png,0
+Graphics/Ui/exit.png,0
+Graphics/Ui/exitblack.png,0
 Graphics/Tile/tile1.png,0
 Graphics/Tile/tile1n.png,0
 Graphics/Tile/tile2.png,0
@@ -157,6 +163,7 @@ Graphics/backgrounds/narrow.png,0
 Graphics/backgrounds/ruin.png,0
 Graphics/backgrounds/ruin2.png,0
 Graphics/backgrounds/tiles.png,0
+Graphics/backgrounds/main.png,0
 Graphics/blue.png,0
 Graphics/orange.png,0
 Graphics/crosshair.png,0
