@@ -66,7 +66,17 @@ public:
 	void PuaseUpdate(float dt);
 
 	virtual void Draw(RenderWindow& window);
+	////////////////////	
+
+	void InitPauseSetting();	
 	void PauseDraw(RenderWindow& window);
+
+	void InitOptionSetting();
+	void UpdateOption();
+	void DrawOption(RenderWindow& window);
+
+	////////////////////
+	
 
 	void MakeWall(bool isEnd);
 	void MakeCube();
@@ -221,5 +231,27 @@ private:
 	Sprite pause_option;
 	Sprite pause_restart;
 	Sprite pause_return;
+
+	String currMapname;
+
+	bool isOptionOpen = false;
+
+	////////////////////////////////
+
+	Vector2f optionPos;
+
+	Sprite optionMain;
+	Sprite scroll;
+	Sprite scrollButton;
+	Sprite indicatorOn;
+	Sprite indicatorOff;
+	Sprite soundOn;
+	Sprite soundOff;
+
+	Texture* blank;
+	Texture* checkered;
+
+	bool isIndicatorOn = true;
+	bool isSoundOn = true;
 };
 

@@ -41,7 +41,7 @@ void Dropper::Update(float dt)
 	this->cube->SetPos({ -1000,1000 });
 	this->cube->GetBody()->SetLinearVelocity({ 0,0 });
 
-	cout << cube->GetPos().x << endl;
+	//cout << cube->GetPos().x << endl;
 	for (auto b : button) {
 		if (!b->GetPressed()) {
 			return;

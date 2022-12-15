@@ -239,9 +239,11 @@ void PlayScene::Draw(RenderWindow& window)
 {
 	if (pause)
 	{
+		window.setMouseCursorVisible(true);
 		PauseDraw(window);
 		return;
 	}
+	window.setMouseCursorVisible(false);
 	//light.position.x = player->GetPos().x - 150.f;
 	//light.position.y = height + 150.f - player->GetPos().y;
 	light.position.x = GetMouseWorldPos().x;
@@ -377,7 +379,137 @@ void PlayScene::Draw(RenderWindow& window)
 
 void PlayScene::PauseDraw(RenderWindow& window)
 {
+	window.setView(uiView);	
 
+	window.draw(pause_back);
+	window.draw(pause_return);
+	window.draw(pause_main);
+	window.draw(pause_restart);
+	window.draw(pause_option);
+	window.draw(pause_exit);
+
+	if (pause_return.getGlobalBounds().contains(InputMgr::GetMousePos()))
+	{
+		SetTex(pause_return, "Graphics/pause/return_on.png");
+		if (InputMgr::GetMouseButtonDown(Mouse::Left))
+		{
+			pause = false;
+		}
+	}		
+	else
+		SetTex(pause_return, "Graphics/pause/return.png");
+
+	if (pause_main.getGlobalBounds().contains(InputMgr::GetMousePos()))
+	{
+		SetTex(pause_main, "Graphics/pause/main_on.png");
+		if (InputMgr::GetMouseButtonDown(Mouse::Left))
+		{
+			SCENE_MGR->ChangeScene(Scenes::GAMESTART);
+		}
+	}
+	else
+		SetTex(pause_main, "Graphics/pause/main.png");
+
+
+	if (pause_restart.getGlobalBounds().contains(InputMgr::GetMousePos()))
+	{
+		SetTex(pause_restart, "Graphics/pause/restart_on.png");	
+		if (InputMgr::GetMouseButtonDown(Mouse::Left))
+		{			
+					
+		}
+	}
+	else
+		SetTex(pause_restart, "Graphics/pause/restart.png");
+
+	if (pause_option.getGlobalBounds().contains(InputMgr::GetMousePos()))
+	{
+		SetTex(pause_option, "Graphics/pause/option_on.png");
+		if (InputMgr::GetMouseButtonDown(Mouse::Left))
+		{
+			isOptionOpen = !isOptionOpen;
+		}
+	}
+	else
+	{
+		if(!isOptionOpen)
+			SetTex(pause_option, "Graphics/pause/option.png");		
+	}
+		
+	
+	if (pause_exit.getGlobalBounds().contains(InputMgr::GetMousePos()))
+	{
+		SetTex(pause_exit, "Graphics/pause/exit_on.png");
+		if (InputMgr::GetMouseButtonDown(Mouse::Left))
+		{
+			window.close();
+			exit(1);
+		}
+	}
+	else
+		SetTex(pause_exit, "Graphics/pause/exit.png");
+	
+	if (isOptionOpen)
+		DrawOption(window);
+}
+
+void PlayScene::InitOptionSetting()
+{
+	optionPos = { 100.f, 82.f };
+
+	optionMain.setTexture(*RESOURCEMGR->GetTexture("Graphics/option/main.png"));
+	scroll.setTexture(*RESOURCEMGR->GetTexture("Graphics/option/scroll.png"));
+	scrollButton.setTexture(*RESOURCEMGR->GetTexture("Graphics/option/button.png"));
+
+	blank = RESOURCEMGR->GetTexture("Graphics/option/blank.png");
+	checkered = RESOURCEMGR->GetTexture("Graphics/option/check.png");
+
+	indicatorOn.setTexture(*checkered);
+	indicatorOff.setTexture(*blank);
+	soundOn.setTexture(*checkered);
+	soundOff.setTexture(*blank);
+
+	optionMain.setScale(0.68f, 0.68f);
+	scroll.setScale(0.68f, 0.68f);
+	scrollButton.setScale(0.68f, 0.68f);
+	indicatorOn.setScale(0.68f, 0.68f);
+	indicatorOff.setScale(0.68f, 0.68f);
+	soundOn.setScale(0.68f, 0.68f);
+	soundOff.setScale(0.68f, 0.68f);
+
+	optionMain.setPosition(optionPos);
+	indicatorOn.setPosition((optionMain.getPosition() + Vector2f{183.f, 140.f}));
+	indicatorOff.setPosition((optionMain.getPosition() + Vector2f{463.f, 140.f}));
+
+	soundOn.setPosition((optionMain.getPosition() + Vector2f{183.f, 374.f}));
+	soundOff.setPosition((optionMain.getPosition() + Vector2f{463.f, 374.f}));
+
+	scroll.setPosition((optionMain.getPosition() + Vector2f{ 49.f, 468.f }));
+	Utils::SetOrigin(scrollButton, Origins::MC);
+	scrollButton.setPosition(scroll.getPosition());
+}
+
+void PlayScene::UpdateOption()
+{
+	Vector2f mousePos = InputMgr::GetMousePos();
+
+
+}
+
+void PlayScene::DrawOption(RenderWindow& window)
+{
+	UpdateOption();
+
+	window.draw(optionMain);
+	window.draw(indicatorOn);
+	window.draw(indicatorOff);
+	window.draw(soundOn);
+	window.draw(soundOff);
+
+	window.draw(scroll);
+	window.draw(scrollButton);
+
+	//cout << InputMgr::GetMousePos().x << ", " << InputMgr::GetMousePos().y << endl;
 }
 
 PlayScene::PlayScene(string path)
@@ -388,7 +520,7 @@ PlayScene::PlayScene(string path)
 	:light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
 		sf::Vector3f(0, 0, 0.07),
 		sf::Vector3f(0.5, 0.5, 0.5)),
-	falloff(1, 1, 1)
+	falloff(1, 1, 1), currMapname(path)
 
 {
 
@@ -825,6 +957,9 @@ PlayScene::PlayScene(string path)
 	Utils::SetSpriteSize(background, { rowNum * GRIDSIZE, colNum * GRIDSIZE });
 
 	worldView.setCenter(player->GetPos());
+
+	InitPauseSetting();
+	InitOptionSetting();
 
 }
 
@@ -2273,6 +2408,38 @@ void PlayScene::DrawNormalAndDiffuse(RenderWindow& window)
 	pass_normals2.draw(background, &normals_shader);
 }
 
+void PlayScene::InitPauseSetting()
+{
+	SetTex(pause_back, "Graphics/pause/background.png");
+	SetTex(pause_return, "Graphics/pause/return.png");
+	SetTex(pause_main, "Graphics/pause/main.png");
+	SetTex(pause_restart, "Graphics/pause/restart.png");
+	SetTex(pause_option, "Graphics/pause/option.png");
+	SetTex(pause_exit, "Graphics/pause/exit.png");
+
+	Utils::SetOrigin(pause_return, Origins::TR);
+	Utils::SetOrigin(pause_main, Origins::TR);
+	Utils::SetOrigin(pause_restart, Origins::TR);
+	Utils::SetOrigin(pause_option, Origins::TR);
+	Utils::SetOrigin(pause_exit, Origins::TR);	
+
+	float ratio = (WINDOW_WIDTH / 2.5f) / 735.f;
+	pause_return.setScale(ratio, ratio);	
+	pause_main.setScale(ratio, ratio);
+	pause_restart.setScale(ratio, ratio);
+	pause_option.setScale(ratio, ratio);
+	pause_exit.setScale(ratio, ratio);
+		
+	float heightFix = pause_return.getGlobalBounds().height;	
+
+	float i = 0;
+	
+	pause_return.setPosition(WINDOW_WIDTH, 20.f + heightFix *i++);
+	pause_main.setPosition(WINDOW_WIDTH, 20.f + heightFix * i++);
+	pause_restart.setPosition(WINDOW_WIDTH, 20.f + heightFix * i++);
+	pause_option.setPosition(WINDOW_WIDTH, 20.f + heightFix * i++);
+	pause_exit.setPosition(WINDOW_WIDTH, 20.f + heightFix * i++);
+}
 
 void PlayScene::MoveToPortal()
 {

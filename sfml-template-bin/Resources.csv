@@ -1,4 +1,9 @@
 id,"type(0: Texture, 1: Font, 2: Sound "
+Graphics/option/button.png,0
+Graphics/option/main.png,0
+Graphics/option/scroll.png,0
+Graphics/option/check.png,0
+Graphics/option/blank.png,0
 Graphics/pause/return_on.png,0
 Graphics/pause/return.png,0
 Graphics/pause/restart_on.png,0
