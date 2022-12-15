@@ -252,7 +252,7 @@ private:
 	Texture* blank;
 	Texture* checkered;
 
-	bool isIndicatorOn = true;
+	//bool isIndicatorOn = true;
 	bool isSoundOn = true;
 	bool isScrolling = false;
 

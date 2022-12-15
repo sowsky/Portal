@@ -106,8 +106,6 @@ protected:
 	bool right;
 	bool isJumping = false;
 
-	bool showIndicator = true;
-
 	float pressdt = 0.0f;
 
 	float addt = 0.0f;

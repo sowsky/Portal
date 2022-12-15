@@ -84,6 +84,8 @@ public:
 	ObjectSize GetObjSize() { return objSize; }
 	void SetObjSize(ObjectSize size) { objSize = size; }
 	Vector2f GetSpritePos() { return sprite.getPosition(); }
+
+	static bool GetisPlaying() { return isPlayingGame; }
 protected:
 	Sprite sprite;
 	Texture* normalMap;

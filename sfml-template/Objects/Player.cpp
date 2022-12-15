@@ -189,7 +189,7 @@ void Player::Update(float dt)
 	//	devMod = !devMod;
 
 	if (InputMgr::GetKeyDown(Keyboard::F))
-		showIndicator = !showIndicator;
+		SCENE_MGR->SetIndicator(!SCENE_MGR->GetIndicator());
 
 
 	jump.setSize({ p_body.getScale().x,10 });
@@ -296,7 +296,7 @@ void Player::Draw(RenderWindow& window)
 			ShowBornForDev(window);
 			window.draw(*hitbox);
 		}
-		if (showIndicator)
+		if (SCENE_MGR->GetIndicator())
 			ShowIndicator(window);
 	}
 
