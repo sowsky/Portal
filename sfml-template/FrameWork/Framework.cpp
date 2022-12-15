@@ -88,10 +88,10 @@ bool Framework::Do()
 		//SOUND_MGR->Update();
 		window.clear(Color::White);
 
-		if (!help) {
-			SCENE_MGR->Update(dt);
-			SCENE_MGR->PhysicsUpdate(dt);
-		}
+
+		SCENE_MGR->Update(dt);
+		SCENE_MGR->PhysicsUpdate(dt);
+
 		SCENE_MGR->Draw(window);
 		window.display();
 
