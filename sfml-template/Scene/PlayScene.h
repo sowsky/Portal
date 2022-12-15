@@ -8,6 +8,7 @@
 #include <box2d/box2d.h>
 #include "../Particle/ParticleSystem.h"
 #include <SFML/Audio.hpp>
+#include "../Manager/SoundMgr.h"
 
 //////////////////////////
 #include <Candle/Candle.hpp>
@@ -253,5 +254,8 @@ private:
 
 	bool isIndicatorOn = true;
 	bool isSoundOn = true;
+	bool isScrolling = false;
+
+	int& volume = SOUNDMGR->GetVolumeInt();
 };
 

@@ -21,7 +21,7 @@ private:
 
 	SoundChoice soundChoice;
 
-	int volume;
+	int volume = 50;
 public:
 	SoundMgr();
 	virtual ~SoundMgr();
@@ -32,6 +32,7 @@ public:
 
 	void Setvolume(int a) { volume = a; }
 	String GetVolume() { return to_string(volume); }
+	int& GetVolumeInt() { return volume; }
 };
 
 #define SOUNDMGR (SoundMgr::GetInstance())

@@ -18,7 +18,7 @@ public:
 	virtual void Draw
 	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
 
-	Vector2f GetPositions() { return sprite.getPosition(); }	
+	Vector2f GetPositions() { return sprite.getPosition(); }
 
 	bool GetGround() { return ground; }
 	void SetGround(bool a) { ground = a; }

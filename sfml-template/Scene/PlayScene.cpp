@@ -486,14 +486,79 @@ void PlayScene::InitOptionSetting()
 
 	scroll.setPosition((optionMain.getPosition() + Vector2f{ 49.f, 468.f }));
 	Utils::SetOrigin(scrollButton, Origins::MC);
+
+	cout << scroll.getGlobalBounds().height << endl;
 	scrollButton.setPosition(scroll.getPosition());
+	scrollButton.move({ 0, 3.06f });
+
+	FloatRect rect = scroll.getGlobalBounds();
+	float y = scrollButton.getPosition().y;
+
+	scrollButton.setPosition(rect.left + (rect.width * volume)/100, y);
 }
 
 void PlayScene::UpdateOption()
 {
 	Vector2f mousePos = InputMgr::GetMousePos();
+	bool mouseLeft = InputMgr::GetMouseButtonDown(Mouse::Left);
 
+	if (indicatorOn.getGlobalBounds().contains(mousePos) && mouseLeft)
+		isIndicatorOn = true;
 
+	if (indicatorOff.getGlobalBounds().contains(mousePos) && mouseLeft)
+		isIndicatorOn = false;
+
+	if (soundOn.getGlobalBounds().contains(mousePos) && mouseLeft)
+	{
+		isSoundOn = true;
+
+	}
+
+	if (soundOff.getGlobalBounds().contains(mousePos) && mouseLeft)
+	{
+		FloatRect rect = scroll.getGlobalBounds();
+		float y = scrollButton.getPosition().y;
+
+		isSoundOn = false;		
+
+		volume = 0;
+		scrollButton.setPosition(rect.left, y);
+	}
+
+	indicatorOn.setTexture(isIndicatorOn ? *checkered : *blank);
+	indicatorOff.setTexture(!isIndicatorOn ? *checkered : *blank);
+
+	soundOn.setTexture(isSoundOn ? *checkered : *blank);
+	soundOff.setTexture(!isSoundOn ? *checkered : *blank);
+
+	if ((scroll.getGlobalBounds().contains(mousePos) ||
+		scrollButton.getGlobalBounds().contains(mousePos))
+		&& mouseLeft)
+	{
+		isScrolling = true;
+		isSoundOn = true;
+	}
+
+	if (isScrolling && InputMgr::GetMouseButtonUp(Mouse::Left))
+	{
+		isScrolling = false;
+	}
+
+	if (isScrolling)
+	{
+		FloatRect rect = scroll.getGlobalBounds();
+		float y = scrollButton.getPosition().y;
+
+		scrollButton.setPosition({ mousePos.x, y });
+		if (scrollButton.getPosition().x < rect.left)
+			scrollButton.setPosition(rect.left, y );
+		if (scrollButton.getPosition().x > rect.left + rect.width)
+			scrollButton.setPosition(rect.left + rect.width, y);
+
+		volume = (int)(((scrollButton.getPosition().x - rect.left) / rect.width) * 100);		
+	}
+
+	cout << SOUNDMGR->GetVolumeInt() << endl;
 }
 
 void PlayScene::DrawOption(RenderWindow& window)
@@ -2271,15 +2336,15 @@ void PlayScene::Input()
 			isfreeView = !isfreeView;
 		}
 
-		if (InputMgr::GetKeyDown(Keyboard::Escape)) {
-			if (SCENE_MGR->GetPrevKey() == Scenes::MAPEDITER)
-			{
-				SCENE_MGR->ChangeScene(Scenes::MAPEDITER);
-				return;
-			}
+		//if (InputMgr::GetKeyDown(Keyboard::Escape)) {
+		//	if (SCENE_MGR->GetPrevKey() == Scenes::MAPEDITER)
+		//	{
+		//		SCENE_MGR->ChangeScene(Scenes::MAPEDITER);
+		//		return;
+		//	}
 
 
-		}
+		//}
 
 		if (InputMgr::GetKeyDown(Keyboard::Escape)) {
 			pause = !pause;
