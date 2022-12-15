@@ -1236,8 +1236,8 @@ void EditScene::FillUiToolBox()
 	uiTool[3][3].first = new AngledTile;
 	uiTool[3][3].first->SetResourceTexture("Graphics/Ui/angle.png");
 
-	uiTool[4][0].first = new Dropper;
-	uiTool[4][0].first->SetResourceTexture("Graphics/Ui/dropper.png");
+	uiTool[3][4].first = new Dropper;
+	uiTool[3][4].first->SetResourceTexture("Graphics/Ui/dropper.png");
 
 
 
