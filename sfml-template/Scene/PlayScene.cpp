@@ -19,12 +19,13 @@ void PlayScene::Update(float dt)
 
 	crosshair.setPosition(InputMgr::GetMousePos());
 
-	if (help) {
-		/*	if (InputMgr::GetKeyDown(Keyboard::F1)) {
-				help = !help;
-			}*/
-
-		//return;
+	if (pause) {
+		PuaseUpdate(dt);
+		if (InputMgr::GetKeyDown(Keyboard::Escape)) {
+			pause = !pause;
+		}
+		
+		return;
 	}
 
 	OpenStage(dt);
@@ -208,6 +209,8 @@ void PlayScene::Update(float dt)
 
 void PlayScene::PhysicsUpdate(float dt)
 {
+	if (pause)
+		return;
 	dtstack += dt;
 
 	if (dtstack >= 1 / 60.f) {
@@ -227,8 +230,18 @@ void PlayScene::PhysicsUpdate(float dt)
 
 }
 
+void PlayScene::PuaseUpdate(float dt)
+{
+
+}
+
 void PlayScene::Draw(RenderWindow& window)
 {
+	if (pause)
+	{
+		PauseDraw(window);
+		return;
+	}
 	//light.position.x = player->GetPos().x - 150.f;
 	//light.position.y = height + 150.f - player->GetPos().y;
 	light.position.x = GetMouseWorldPos().x;
@@ -719,7 +732,8 @@ PlayScene::PlayScene(string path)
 								templ.clear();
 								wireList.insert({ b, templ });
 							}
-							wireList[b].push_back(dropper.back()->GetSpritePos());}
+							wireList[b].push_back(dropper.back()->GetSpritePos());
+						}
 
 						break;
 					}
@@ -1865,7 +1879,7 @@ void PlayScene::DrawRenderedBuffer(RenderWindow& window)
 {
 	pass_diffuse.display();
 	pass_normals.display();
-	
+
 	lights_shader.setParameter("resolution", sf::Vector2f(width, height));
 	lights_shader.setParameter("sampler_normal", pass_normals.getTexture());
 	lights_shader.setParameter("ambient_intensity", ambient_intensity);
@@ -1878,20 +1892,21 @@ void PlayScene::DrawRenderedBuffer(RenderWindow& window)
 	back->display();
 	std::swap(back, front);
 
-	
+
 	//Sprite pasSprite(pass_diffuse.getTexture());
 	//Sprite frontSprite(front->getTexture());	
 
 	// Draw diffuse color
-	window.draw(sf::Sprite(pass_diffuse.getTexture()));	
+	window.draw(sf::Sprite(pass_diffuse.getTexture()));
 	//window.draw(pasSprite);
 	// Blend lighting over
 	window.draw(Sprite(front->getTexture()), sf::BlendMultiply);
-	
+
 }
 
 void PlayScene::Input()
 {
+	
 	LightTestInputForDev();
 
 	if (InputMgr::GetMouseWheelState() == 1)
@@ -2125,10 +2140,14 @@ void PlayScene::Input()
 		if (SCENE_MGR->GetPrevKey() == Scenes::MAPEDITER)
 		{
 			SCENE_MGR->ChangeScene(Scenes::MAPEDITER);
-		}
-		else
-			//	SCENE_MGR->ChangeScene(Scenes::GAMESTART);
 			return;
+		}
+		
+			
+	}
+
+	if (InputMgr::GetKeyDown(Keyboard::Escape)) {
+		pause = !pause;
 	}
 
 
@@ -2248,7 +2267,7 @@ void PlayScene::BackAndLightControl()
 
 void PlayScene::DrawNormalAndDiffuse(RenderWindow& window)
 {
-	
+
 	pass_diffuse2.draw(background);
 	normals_shader.setParameter("sampler_normal", *backgroundNormal);
 	pass_normals2.draw(background, &normals_shader);
