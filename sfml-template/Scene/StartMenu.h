@@ -20,20 +20,18 @@ public:
 	virtual void Exit();
 	virtual void Draw(RenderWindow& window);
 
+	void LoadFile();
+
 private:
-	RectangleShape* editbox;
-	RectangleShape* startbox;
-	RectangleShape* mousePos;
+	Sprite back;
+	Sprite stagespace;
+	Sprite play;
+	Sprite option;
+	Sprite exit;
 
-	SpriteObj title;
+	int count = 1;
 
-	Text start;
-	Text edit;
-
-	Player* player;
-
-	unique_ptr<b2World> world;
-
-
+	bool playon =false;
+	bool optionon = false;
 };
 

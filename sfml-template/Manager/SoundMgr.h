@@ -20,12 +20,18 @@ private:
 	vector<string> soundName;	
 
 	SoundChoice soundChoice;
+
+	int volume;
 public:
 	SoundMgr();
 	virtual ~SoundMgr();
 	
 	void SoundPlay(SoundChoice soundchoice);
 	SoundChoice GetSoundChoice();
+	void SetVolumeUpDown(int a);//input int argument(+/-)
+
+	void Setvolume(int a) { volume = a; }
+	String GetVolume() { return to_string(volume); }
 };
 
 #define SOUNDMGR (SoundMgr::GetInstance())

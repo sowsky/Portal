@@ -17,56 +17,39 @@ StartMenu::~StartMenu()
 
 void StartMenu::Init()
 {
-	SetUiView();
+	Vector2f size;
+	size.x = FRAMEWORK->GetWindowSize().x;
+	size.y = FRAMEWORK->GetWindowSize().y;
 
-	b2Vec2 g(0.0f, -10);
-	world = make_unique<b2World>(g);
+	back.setTexture(*RESOURCEMGR->GetTexture("Graphics/backgrounds/main.png"));
+	Utils::SetSpriteSize(back, { size.x, size.y });
+	Utils::SetOrigin(back, Origins::MC);
+	back.setPosition({ size.x / 2, size.y / 2 });
 
-	start.setFont(*RESOURCEMGR->GetFont("Fonts/NanumGothic.otf"));
-	edit.setFont(*RESOURCEMGR->GetFont("Fonts/NanumGothic.otf"));
+	stagespace.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/stagespace.png"));
+	Utils::SetSpriteSize(stagespace, { size.x * 0.6f, size.y * 0.9f });
+	Utils::SetOrigin(stagespace, Origins::MC);
+	stagespace.setPosition({ size.x / 2 + (size.x * 0.1f), size.y / 2 });
 
-	mousePos = new RectangleShape();
-	Utils::SetOrigin(*mousePos, Origins::MC);
-	mousePos->setSize({ 100, 50 });
-	mousePos->setFillColor(Color::Blue);
-	mousePos->setPosition(InputMgr::GetMousePos());
+	play.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/playbutton.png"));
+	Utils::SetSpriteSize(play, { size.x * 0.25f, size.y * 0.2f });
+	Utils::SetOrigin(play, Origins::ML);
+	play.setPosition({ 10, size.y * 0.15f });
 
+	option.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/option.png"));
+	Utils::SetSpriteSize(option, { size.x * 0.25f, size.y * 0.2f });
+	Utils::SetOrigin(option, Origins::ML);
+	option.setPosition({ 10, play.getPosition().y + 100 });
 
-	startbox = new RectangleShape();
-	Utils::SetOrigin(*startbox, Origins::TL);
-	startbox->setSize({ 100, 50 });
-	startbox->setFillColor(Color(128, 128, 128,100));
-	startbox->setPosition(100, FRAMEWORK->GetWindowSize().y  - 300);
-	start.setPosition(startbox->getPosition());
-	start.setString("START");
-	start.setFont(*RESOURCEMGR->GetFont("Fonts/D-DINCondensed-Bold.otf"));
-	start.setFillColor(Color::White);
-	start.setCharacterSize(40);
-
-	editbox = new RectangleShape();
-	Utils::SetOrigin(*editbox, Origins::TL);
-	editbox->setSize({ 100, 50 });
-	editbox->setFillColor(Color(128,128,128,100));
-	editbox->setPosition(100, startbox->getPosition().y + 100);
-	edit.setPosition(editbox->getPosition());
-	edit.setCharacterSize(40);
-	edit.setString("EDIT");
-	edit.setFont(*RESOURCEMGR->GetFont("Fonts/D-DINCondensed-Bold.otf"));
-	edit.setFillColor(Color::White);
-
-	title.SetResourceTexture("Graphics/title.png");
-	title.SetPos({ title.GetPos().x+100,title.GetPos().y + 140 });
-	player = new Player(world.get(), Vector2f{ FRAMEWORK->GetWindowSize().x-450.f,FRAMEWORK->GetWindowSize().y-280.f}, Vector2f({20, 50}));
-
-	player->GetBody()->SetType(b2_staticBody);
-	
+	exit.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/exit.png"));
+	Utils::SetSpriteSize(exit, { size.x * 0.25f, size.y * 0.2f });
+	Utils::SetOrigin(exit, Origins::ML);
+	exit.setPosition({ 10,  option.getPosition().y + 100 });
 }
 
 void StartMenu::Release()
 {
-	delete editbox;
-	delete startbox;
-	delete player;
+
 }
 
 void StartMenu::Enter()
@@ -74,39 +57,77 @@ void StartMenu::Enter()
 
 	Scene::SetWorldView();
 	SetUiView();
-	uiView.zoom(0.44f);
 }
 
 void StartMenu::Update(float dt)
 {
+	//Utils::SetOrigin(*startbox, Origins::TL);
+	//Utils::SetOrigin(*editbox, Origins::TL);
+	//Utils::SetOrigin(edit, Origins::TL);
+	//Utils::SetOrigin(start, Origins::TL);
 
-	Utils::SetOrigin(*startbox, Origins::TL);
-	Utils::SetOrigin(*editbox, Origins::TL);
-	Utils::SetOrigin(edit, Origins::TL);
-	Utils::SetOrigin(start, Origins::TL);
+	//mousePos->setPosition(InputMgr::GetMousePos());
 
-	mousePos->setPosition(InputMgr::GetMousePos());
+	//if (mousePos->getGlobalBounds().intersects(startbox->getGlobalBounds()) && InputMgr::GetMouseButtonDown(Mouse::Left)) {
+	//	SCENE_MGR->ChangeScene(Scenes::MAPLIST);
+	//}
+	//else if (mousePos->getGlobalBounds().intersects(editbox->getGlobalBounds()) && InputMgr::GetMouseButtonDown(Mouse::Left)) {
+	//	SCENE_MGR->ChangeScene(Scenes::MAPEDITER);
+	//}
 
-	if (mousePos->getGlobalBounds().intersects(startbox->getGlobalBounds()) && InputMgr::GetMouseButtonDown(Mouse::Left)) {
-		SCENE_MGR->ChangeScene(Scenes::MAPLIST);
-	}
-	else if (mousePos->getGlobalBounds().intersects(editbox->getGlobalBounds()) && InputMgr::GetMouseButtonDown(Mouse::Left)) {
+	//player->Update(dt);
+
+	if (InputMgr::GetKeyDown(Keyboard::F1)) {
 		SCENE_MGR->ChangeScene(Scenes::MAPEDITER);
 	}
 
-	player->Update(dt);
+	Vector2f mospos = InputMgr::GetMousePos();
+	if (play.getGlobalBounds().contains(mospos)) {
+		play.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/playbuttonblack.png"));
+		if (InputMgr::GetMouseButtonDown(Mouse::Left)) {
+			playon = true;
+			optionon = false;
+		}
+	}
+	else
+		play.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/playbutton.png"));
+
+	if (option.getGlobalBounds().contains(mospos)) {
+		option.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/optionblack.png"));
+		if (InputMgr::GetMouseButtonDown(Mouse::Left)) {
+			playon = false;
+			optionon = true;
+		}
+	}
+	else
+		option.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/option.png"));
+
+	if (exit.getGlobalBounds().contains(mospos)) {
+		exit.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/exitblack.png"));
+		if (InputMgr::GetMouseButtonDown(Mouse::Left)) {
+			std::exit(1);
+		}
+	}
+	else
+		exit.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/exit.png"));
+
 }
 
 void StartMenu::Exit()
 {
-	SetUiView();
 	FRAMEWORK->GetWindow().setView(worldView);
 }
 
 void StartMenu::Draw(RenderWindow& window)
 {
-	window.setView(worldView);
-	title.Draw(window);
+	window.setView(uiView);
+	window.draw(back);
+	if (playon)
+		window.draw(stagespace);
+	window.draw(play);
+	window.draw(option);
+	window.draw(exit);
+	/*title.Draw(window);
 	if (editbox != nullptr) {
 		window.draw(*editbox);
 		window.draw(edit);
@@ -117,6 +138,11 @@ void StartMenu::Draw(RenderWindow& window)
 		window.draw(start);
 	}
 	window.setView(uiView);
-	player->Draw(window);
+	player->Draw(window);*/
+}
+
+void StartMenu::LoadFile()
+{
+
 }
 
