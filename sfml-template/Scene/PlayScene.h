@@ -73,7 +73,7 @@ public:
 	void MakeButton(int rotaion, int id);
 	void MakePortal();
 	void MakeBlackWall(bool isEnd);
-	void MakeSwitch(int rotaion, int id,float time, bool switchtype);
+	void MakeSwitch(int rotaion, int id, float time, bool switchtype);
 
 	void MakeGoal(vector<int> list);
 
@@ -85,12 +85,12 @@ public:
 	void TunnelCheck();
 	void BridgeCheck();
 	void RedwallCheck();
-	void WaterCheck(float );
+	void WaterCheck(float);
 	void CheckStillObjectalive();
 	void MoveToPortal();
 
 	bool IsHelp() { return help; }
-	
+
 public:
 	void DrawBackGroundView(RenderWindow& window);
 	void DrawRenderedBackGroundBuffer(RenderWindow& window);
@@ -133,11 +133,11 @@ private:
 	Cube* grabbedcube = nullptr;
 	Vector2f currgrid = { GRIDSIZE / 2,GRIDSIZE / 2 };
 	float wallbunchwidth = GRIDSIZE;
-	Vector2f box2dposition={ GRIDSIZE / 2,GRIDSIZE / 2 };
+	Vector2f box2dposition = { GRIDSIZE / 2,GRIDSIZE / 2 };
 
 	View backgroundView;
-	View endingView;	
-	
+	View endingView;
+
 	Blue* blue;
 	Orange* orange;
 	bool madeblue = false;
@@ -150,25 +150,25 @@ private:
 	bool IsMadeBridgeFollowOrangePortal = false;
 	bool IsMadeBridgeFollowBluePortal = false;
 
-	RectangleShape ending;	
+	RectangleShape ending;
 
 	////////////////////////////////////////////////////
 	unique_ptr<b2World> world;
 
 	float dtstack = 0.f;
-	int dark = 0;	
+	int dark = 0;
 	bool isMovingViewCenter;
 
 	//////
 	ParticleSystem particle;
-	
+
 	//const int width=4000;
 	//const int height=4000;
 
 	int width;
 	int height;
 
-	float maxspeed=16;
+	float maxspeed = 16;
 
 	// Front and backbuffer as Pointer for std::swap
 	unique_ptr<RenderTexture> front, back;
@@ -184,20 +184,20 @@ private:
 	Light light;
 
 	//float ambient_intensity = 0.0;
-	float ambient_intensity = 1.25;
+	float ambient_intensity = 0.8f;
 	Vector3f falloff;
 	/////
 	Sprite crosshair;
 
 	//float openingTime = 1.5f;	
-	float openingTime = 0.f;	
+	float openingTime = 0.8f;
 	map<int, list<Vector2f>> wireList;
 	list<PsceneWire*> wires;
 	bool showWire;
 
 	Sprite background;
 	Texture* backgroundNormal;
-	bool testLight = false;	
+	bool testLight = false;
 	bool isfreeView = false;
 
 	float currentcamposx;
@@ -207,6 +207,10 @@ private:
 
 	/////////////////
 	static bool isDevMod;
+
 	bool help = false;
+
+	Sprite diffuseSprite;
+	Sprite frontSprite;
 };
 

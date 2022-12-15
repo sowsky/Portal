@@ -25,6 +25,7 @@ Dropper::Dropper(Vector2f pos, vector<float> buttonlist, Cube* cube)
 	dropper.setPosition(pos);
 	dropper.setSize({ GRIDSIZE,GRIDSIZE });
 
+	sprite.setPosition(dropper.getPosition());
 }
 
 Dropper::~Dropper()

@@ -252,6 +252,7 @@ void MovingPlatform::Update(float dt)
 
 	Utils::SetOrigin(pillar_diffuse, Origins::BC);	
 	//cout << pillar.getPosition().y << endl;
+	ChageTexOnoff(enable);
 }
 
 void MovingPlatform::SetButtonlist(vector<Button*>& button)
@@ -262,6 +263,23 @@ void MovingPlatform::SetButtonlist(vector<Button*>& button)
 				this->button.push_back(b);
 			}
 		}
+	}
+}
+
+void MovingPlatform::ChageTexOnoff(bool press)
+{
+	if (prevState == press)
+		return;
+
+	prevState = press;
+
+	if (press)
+	{
+		SetSpriteTex(frontFace, "Graphics/platform/front_on.png");
+	}
+	else
+	{
+		SetSpriteTex(frontFace, "Graphics/platform/front.png");
 	}
 }
 

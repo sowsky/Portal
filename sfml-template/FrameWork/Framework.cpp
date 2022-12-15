@@ -37,8 +37,11 @@ RenderWindow& Framework::GetWindow()
 bool Framework::Init(int width, int height)
 {
 	windowSize = { width, height };
-
+	
+	//ContextSettings setting;
+	//setting.antialiasingLevel = 16.f;
 	window.create(VideoMode(windowSize.x, windowSize.y), "Game", sf::Style::Close);
+	
 	window.setFramerateLimit(60);
 	//window.setVerticalSyncEnabled(true);
 
@@ -66,7 +69,6 @@ bool Framework::Do()
 			fps = 0;
 		}
 
-		//	window.setMouseCursorGrabbed(1);
 		while (window.pollEvent(ev))
 		{
 			if (ev.type == sf::Event::Closed)
@@ -80,15 +82,13 @@ bool Framework::Do()
 
 			InputMgr::ProcessInput(ev);
 		}
+		
+		//SOUND_MGR->Update();		
+		if (SCENE_MGR->GetCurrKey() == Scenes::PLAY)
+			window.clear(Color(100, 100, 100));
+		else window.clear(Color::White);
 
-		if (InputMgr::GetKeyDown(Keyboard::Escape)) {
-			help = !help;
-		}
-
-		//SOUND_MGR->Update();
-		window.clear(Color::White);
-
-
+		
 		SCENE_MGR->Update(dt);
 		SCENE_MGR->PhysicsUpdate(dt);
 

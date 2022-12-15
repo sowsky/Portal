@@ -87,7 +87,7 @@ private:
 	Sprite background;
 	Sprite shadow;
 
-	array<array<pair<SpriteObj*, Sprite>, 4>, 8> uiTool;
+	array<array<pair<SpriteObj*, Sprite>, 5>, 9> uiTool;
 
 	Sprite uiOutLine;
 	RectangleShape uiBackGround;

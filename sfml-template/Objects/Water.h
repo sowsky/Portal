@@ -15,6 +15,8 @@ public:
 
 	virtual void Update(float dt);
 	virtual void Draw(RenderWindow& window);
+	virtual void Draw
+	(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal);
 	void InitSetting();
 
 	bool GetIsTop() { return isTop; }
@@ -28,6 +30,8 @@ protected:
 
 	Sprite frontFace;
 	VertexArrayObj sideFaces;
+
+	Texture* normal;
 
 	bool isTop;
 };

@@ -37,7 +37,7 @@ protected:
 	RenderStates PortalState;
 	Wave shader;
 
-	const float widthVal = -45.f;
+	const float widthVal = -35.f;
 	const float heightVal = -15.f;
 };
 

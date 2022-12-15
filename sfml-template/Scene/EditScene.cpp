@@ -1164,6 +1164,15 @@ array<bool, 4>& EditScene::SetOnSideTiles(int col, int row)
 			mapTool[col][row - 1].first.front()->GetId() == '2'))
 		sideBool[3] = false;
 
+	if (col == 0)
+		sideBool[2] = false;
+	if (col == colNum - 1)
+		sideBool[0] = false;
+	if (row == 0)
+		sideBool[3] = false;
+	if (row == rowNum - 1)
+		sideBool[1] = false;
+
 	return sideBool;
 }
 
@@ -1211,9 +1220,9 @@ void EditScene::FillUiToolBox()
 
 	uiTool[2][2].first = new Water(true);
 	uiTool[2][2].first->SetResourceTexture("Graphics/Ui/gootop.png");
-
-	uiTool[2][3].first = new Gel;
-	uiTool[2][3].first->SetResourceTexture("Graphics/Ui/gel.png");
+	
+	uiTool[2][3].first = new MovingPlatform;
+	uiTool[2][3].first->SetResourceTexture("Graphics/Ui/uppanel.png");
 
 	uiTool[3][0].first = new Switch;
 	uiTool[3][0].first->SetResourceTexture("Graphics/Ui/switch1.png");
@@ -1224,18 +1233,40 @@ void EditScene::FillUiToolBox()
 	uiTool[3][2].first = new DurationSwitch;
 	uiTool[3][2].first->SetResourceTexture("Graphics/Ui/switch3.png");
 
-	uiTool[4][0].first = new MovingPlatform;
-	uiTool[4][0].first->SetResourceTexture("Graphics/Ui/uppanel.png");
+	uiTool[3][3].first = new AngledTile;
+	uiTool[3][3].first->SetResourceTexture("Graphics/Ui/angle.png");
 
-	uiTool[4][1].first = new AngledTile;
-	uiTool[4][1].first->SetResourceTexture("Graphics/Ui/angle.png");
+	uiTool[4][0].first = new Dropper;
+	uiTool[4][0].first->SetResourceTexture("Graphics/Ui/dropper.png");
 
-	uiTool[4][2].first = new Dropper;
-	uiTool[4][2].first->SetResourceTexture("Graphics/Ui/dropper.png");	
 
-	uiTool[6][0].first = new Sign('1');
-	uiTool[6][1].first = new Sign('2');
-	uiTool[6][2].first = new Sign('3');
+
+	uiTool[4][2].first = new Sign('0');
+	uiTool[4][3].first = new Sign('1');
+	uiTool[4][4].first = new Sign('2');
+
+	uiTool[5][0].first = new Sign('3');
+	uiTool[5][1].first = new Sign('4');
+	uiTool[5][2].first = new Sign('5');
+	uiTool[5][3].first = new Sign('6');
+	uiTool[5][4].first = new Sign('7');
+
+	uiTool[6][0].first = new Sign('8');
+	uiTool[6][1].first = new Sign('9');
+	uiTool[6][2].first = new Sign('a');
+	uiTool[6][3].first = new Sign('b');
+	uiTool[6][4].first = new Sign('c');
+
+	uiTool[7][0].first = new Sign('d');
+	uiTool[7][1].first = new Sign('e');
+	uiTool[7][2].first = new Sign('f');
+	uiTool[7][3].first = new Sign('g');
+	uiTool[7][4].first = new Sign('h');
+
+	uiTool[8][0].first = new Sign('i');
+	uiTool[8][1].first = new Sign('j');
+	uiTool[8][2].first = new Sign('k');
+	uiTool[8][3].first = new Sign('l');	
 }
 
 void EditScene::SetUiToolPos(Vector2f pos)

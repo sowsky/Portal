@@ -33,6 +33,8 @@ public:
 	
 	FloatRect GetplatformGlobalBounds() { return platform.getGlobalBounds(); }
 	FloatRect GetpillarGlobalBounds() { return pillar.getGlobalBounds(); }
+
+	void ChageTexOnoff(bool press);
 protected:
 	int range = 1;
 	bool isTurnedOn;
@@ -80,6 +82,7 @@ protected:
 	RectangleShape pillar_diffuse;
 	Texture* pillar_n;
 
+	bool prevState;
 	const float platFormHeightHalf = 3.9f;
 };
 

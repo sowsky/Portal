@@ -201,6 +201,8 @@ void PlayScene::Update(float dt)
 	//light.position.x = 0;
 	//light.position.y = height;
 
+
+
 	BackAndLightControl();
 }
 
@@ -227,11 +229,19 @@ void PlayScene::PhysicsUpdate(float dt)
 
 void PlayScene::Draw(RenderWindow& window)
 {
+	//light.position.x = player->GetPos().x - 150.f;
+	//light.position.y = height + 150.f - player->GetPos().y;
+	light.position.x = GetMouseWorldPos().x;
+	light.position.y = height - GetMouseWorldPos().y;
+
 	window.setView(worldView);
 
 	DrawNormalAndDiffuse(window);
 	DrawRenderedBackGroundBuffer(window);
 
+	for (auto v : sign) {
+		v->Draw(window);
+	}
 
 	for (auto v : movingplat) {
 		v->DrawPillar(pass_diffuse, normals_shader, pass_normals);
@@ -269,7 +279,10 @@ void PlayScene::Draw(RenderWindow& window)
 	}
 
 	for (auto v : water)
+	{
 		v->Draw(window);
+		v->Draw(pass_diffuse, normals_shader, pass_normals);
+	}
 
 	for (auto v : cube) {
 		v->Draw(window);
@@ -288,10 +301,6 @@ void PlayScene::Draw(RenderWindow& window)
 	if (goal != nullptr) {
 		goal->Draw(window);
 		//goal->Draw(pass_diffuse, normals_shader, pass_normals);
-	}
-
-	for (auto v : sign) {
-		v->Draw(window);
 	}
 
 	for (auto v : angledtile) {
@@ -364,7 +373,7 @@ PlayScene::PlayScene(string path)
 //	sf::Vector3f(0.5, 0.5, 0.5)),
 //falloff(0.5, 0.5, 0.5)
 	:light(sf::Vector3f(255 / 255.0, 214 / 255.0, 170 / 255.0),
-		sf::Vector3f(0, 0, 0.08),
+		sf::Vector3f(0, 0, 0.07),
 		sf::Vector3f(0.5, 0.5, 0.5)),
 	falloff(1, 1, 1)
 
@@ -466,6 +475,8 @@ PlayScene::PlayScene(string path)
 	{
 		loadedArray[p.posY][p.posX].push_back(&p);
 	}
+
+
 
 	for (int i = 0; i < colNum; i++)
 	{
@@ -663,6 +674,16 @@ PlayScene::PlayScene(string path)
 						movingplat.push_back(new MovingPlatform(world.get(), currgrid, temp, tempM->rotation, tempM->dummyFloat2, tempM->dummyVec));
 						currgrid.x += GRIDSIZE;
 						box2dposition.x += GRIDSIZE;
+						for (auto b : tempM->dummyVec)
+						{
+							if (wireList.find(b) == wireList.end())
+							{
+								list<Vector2f> templ;
+								templ.clear();
+								wireList.insert({ b, templ });
+							}
+							wireList[b].push_back(movingplat.back()->GetSpritePos());
+						}
 						break;
 					}
 					case 'a':
@@ -690,6 +711,16 @@ PlayScene::PlayScene(string path)
 
 						currgrid.x += GRIDSIZE;
 						box2dposition.x += GRIDSIZE;
+						for (auto b : tempD->dummyVec)
+						{
+							if (wireList.find(b) == wireList.end())
+							{
+								list<Vector2f> templ;
+								templ.clear();
+								wireList.insert({ b, templ });
+							}
+							wireList[b].push_back(dropper.back()->GetSpritePos());}
+
 						break;
 					}
 					case 'g':
@@ -1834,7 +1865,7 @@ void PlayScene::DrawRenderedBuffer(RenderWindow& window)
 {
 	pass_diffuse.display();
 	pass_normals.display();
-
+	
 	lights_shader.setParameter("resolution", sf::Vector2f(width, height));
 	lights_shader.setParameter("sampler_normal", pass_normals.getTexture());
 	lights_shader.setParameter("ambient_intensity", ambient_intensity);
@@ -1847,10 +1878,16 @@ void PlayScene::DrawRenderedBuffer(RenderWindow& window)
 	back->display();
 	std::swap(back, front);
 
+	
+	//Sprite pasSprite(pass_diffuse.getTexture());
+	//Sprite frontSprite(front->getTexture());	
+
 	// Draw diffuse color
-	window.draw(sf::Sprite(pass_diffuse.getTexture()));
+	window.draw(sf::Sprite(pass_diffuse.getTexture()));	
+	//window.draw(pasSprite);
 	// Blend lighting over
-	window.draw(sf::Sprite(front->getTexture()), sf::BlendMultiply);
+	window.draw(Sprite(front->getTexture()), sf::BlendMultiply);
+	
 }
 
 void PlayScene::Input()
@@ -2154,7 +2191,8 @@ void PlayScene::ClearRenderBuffer()
 	back2->clear();
 	front2->clear();
 	pass_diffuse2.clear(Color::Transparent);
-	pass_normals2.clear(Color::Transparent);
+	//pass_normals2.clear(Color::Transparent);
+	pass_normals2.clear(Color(128, 128, 255));
 
 	back->clear();
 	front->clear();
@@ -2162,7 +2200,8 @@ void PlayScene::ClearRenderBuffer()
 	pass_diffuse.clear(Color::Transparent);
 	// Set normals buffer to neutral color
 	//pass_normals.clear(Color::White);
-	pass_normals.clear(Color::Transparent);
+	//pass_normals.clear(Color::Transparent);
+	pass_normals.clear(Color(128, 128, 255));
 }
 
 void PlayScene::OpenStage(float dt)
@@ -2171,6 +2210,9 @@ void PlayScene::OpenStage(float dt)
 		return;
 	openingTime -= dt;
 	worldView.zoom(0.995f);
+
+	if (openingTime < 0.f)
+		isfreeView = true;
 }
 
 void PlayScene::BackAndLightControl()
@@ -2206,6 +2248,7 @@ void PlayScene::BackAndLightControl()
 
 void PlayScene::DrawNormalAndDiffuse(RenderWindow& window)
 {
+	
 	pass_diffuse2.draw(background);
 	normals_shader.setParameter("sampler_normal", *backgroundNormal);
 	pass_normals2.draw(background, &normals_shader);
@@ -2694,6 +2737,10 @@ void PlayScene::Enter()
 
 	lights_shader.loadFromFile("Shader/light.frag", Shader::Fragment);
 	normals_shader.loadFromFile("Shader/normals.frag", Shader::Fragment);
+
+
+	diffuseSprite.setTexture(pass_diffuse.getTexture());
+	frontSprite.setTexture(front->getTexture());
 }
 
 void PlayScene::Exit()

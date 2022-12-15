@@ -16,9 +16,8 @@ Button::Button()
 	type = ObjectType::Trigger;
 
 	hitbox = new RectangleShape;
-	hitbox->setFillColor(Color::Red);
-	hitbox->setSize(sprite.getPosition());
-	hitbox->setPosition(sprite.getPosition());
+	hitbox->setFillColor(Color::Red);	
+	hitbox->setPosition(sprite.getPosition());	
 
 	objSize = ObjectSize::Normal;
 	attatchedPos = Rotate::Down;
@@ -95,12 +94,13 @@ void Button::Draw(RenderWindow& window)
 	else
 	{		
 		Utils::SetOrigin(*hitbox, Origins::MC);
-		hitbox->setSize({ Utils::GetSpriteSize(sprite).x - 20,Utils::GetSpriteSize(sprite).y });
+		hitbox->setSize({ Utils::GetSpriteSize(sprite).x - 5.f,Utils::GetSpriteSize(sprite).y });
+		hitbox->setRotation(sprite.getRotation());
 		hitbox->setPosition(sprite.getPosition());
 		if (hitbox != nullptr
 			&& !isEditMap) {
-			//	window.draw(*hitbox);
-		}			
+				//window.draw(*hitbox);
+		}
 		sideFaces.Draw(window);
 		window.draw(upSideFaces.GetBackFace());
 		upSideFaces.Draw(window);

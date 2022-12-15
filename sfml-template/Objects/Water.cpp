@@ -1,4 +1,5 @@
 #include "Water.h"
+#include "../Manager/ResourceMgr.h"
 
 Water::Water(bool top)
     :sideFaces(frontFace, sprite), isTop(top)
@@ -28,6 +29,8 @@ Water::Water(Vector2f position)
 
     water.setSize({ GRIDSIZE, GRIDSIZE });
     pos= position;     
+
+    normal = RESOURCEMGR->GetTexture("Graphics/water_n.png");
 }
 
 SpriteObj* Water::NewThis()
@@ -48,11 +51,17 @@ void Water::Draw(RenderWindow& window)
     if (isPlayingGame)
     {
         sideFaces.Draw(window);
-        window.draw(frontFace);        
+        //window.draw(frontFace);        
     }
     else
         window.draw(sprite);
 
+}
+
+void Water::Draw(RenderTexture& diffuse, Shader& nShader, RenderTexture& normal)
+{
+    diffuse.draw(frontFace);
+    NormalPass(normal, frontFace, this->normal, nShader);
 }
 
 void Water::InitSetting()
@@ -67,6 +76,8 @@ void Water::InitSetting()
     
     Utils::SetOrigin(frontFace, Origins::MC);
     Utils::SetSpriteSize(frontFace, frontSize);
+
+    frontFace.setColor(Color(255, 255, 255, 100));
 
     sideFaces.SetDepth(DEPTH);
     if(isTop)
