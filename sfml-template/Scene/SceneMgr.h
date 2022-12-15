@@ -23,6 +23,9 @@ private:
 	Scenes currScene;
 	Scenes prevScene;
 
+	bool showIndicator = true;
+
+
 public:
 	bool Init();
 
@@ -37,6 +40,9 @@ public:
 	void Update(float dt);
 	void PhysicsUpdate(float dt);
 	void Draw(RenderWindow& window);
+
+	void SetIndicator(bool a) { showIndicator = a; };
+	bool GetIndicator() { return showIndicator; }
 };
 
 #define SCENE_MGR (SceneMgr::GetInstance())

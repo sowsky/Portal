@@ -174,7 +174,6 @@ void PlayScene::Update(float dt)
 				if (!grabitem) {
 					cout << "pickup" << endl;
 
-
 					grabitem = true;
 					grabbedcube = c;
 					float cposX = c->GetGlobalBounds().left + (c->GetGlobalBounds().width / 2);
@@ -379,7 +378,7 @@ void PlayScene::Draw(RenderWindow& window)
 
 void PlayScene::PauseDraw(RenderWindow& window)
 {
-	window.setView(uiView);	
+	window.setView(uiView);
 
 	window.draw(pause_back);
 	window.draw(pause_return);
@@ -395,7 +394,7 @@ void PlayScene::PauseDraw(RenderWindow& window)
 		{
 			pause = false;
 		}
-	}		
+	}
 	else
 		SetTex(pause_return, "Graphics/pause/return.png");
 
@@ -414,10 +413,11 @@ void PlayScene::PauseDraw(RenderWindow& window)
 
 	if (pause_restart.getGlobalBounds().contains(InputMgr::GetMousePos()))
 	{
-		SetTex(pause_restart, "Graphics/pause/restart_on.png");	
+		SetTex(pause_restart, "Graphics/pause/restart_on.png");
 		if (InputMgr::GetMouseButtonDown(Mouse::Left))
-		{			
-					
+		{
+			Respawn();
+			pause = false;
 		}
 	}
 	else
@@ -433,11 +433,11 @@ void PlayScene::PauseDraw(RenderWindow& window)
 	}
 	else
 	{
-		if(!isOptionOpen)
-			SetTex(pause_option, "Graphics/pause/option.png");		
+		if (!isOptionOpen)
+			SetTex(pause_option, "Graphics/pause/option.png");
 	}
-		
-	
+
+
 	if (pause_exit.getGlobalBounds().contains(InputMgr::GetMousePos()))
 	{
 		SetTex(pause_exit, "Graphics/pause/exit_on.png");
@@ -449,7 +449,7 @@ void PlayScene::PauseDraw(RenderWindow& window)
 	}
 	else
 		SetTex(pause_exit, "Graphics/pause/exit.png");
-	
+
 	if (isOptionOpen)
 		DrawOption(window);
 }
@@ -479,11 +479,11 @@ void PlayScene::InitOptionSetting()
 	soundOff.setScale(0.68f, 0.68f);
 
 	optionMain.setPosition(optionPos);
-	indicatorOn.setPosition((optionMain.getPosition() + Vector2f{183.f, 140.f}));
-	indicatorOff.setPosition((optionMain.getPosition() + Vector2f{463.f, 140.f}));
+	indicatorOn.setPosition((optionMain.getPosition() + Vector2f{ 183.f, 140.f }));
+	indicatorOff.setPosition((optionMain.getPosition() + Vector2f{ 463.f, 140.f }));
 
-	soundOn.setPosition((optionMain.getPosition() + Vector2f{183.f, 374.f}));
-	soundOff.setPosition((optionMain.getPosition() + Vector2f{463.f, 374.f}));
+	soundOn.setPosition((optionMain.getPosition() + Vector2f{ 183.f, 374.f }));
+	soundOff.setPosition((optionMain.getPosition() + Vector2f{ 463.f, 374.f }));
 
 	scroll.setPosition((optionMain.getPosition() + Vector2f{ 49.f, 468.f }));
 	Utils::SetOrigin(scrollButton, Origins::MC);
@@ -494,7 +494,7 @@ void PlayScene::InitOptionSetting()
 	FloatRect rect = scroll.getGlobalBounds();
 	float y = scrollButton.getPosition().y;
 
-	scrollButton.setPosition(rect.left + (rect.width * volume)/100, y);
+	scrollButton.setPosition(rect.left + (rect.width * volume) / 100, y);
 }
 
 void PlayScene::UpdateOption()
@@ -503,10 +503,10 @@ void PlayScene::UpdateOption()
 	bool mouseLeft = InputMgr::GetMouseButtonDown(Mouse::Left);
 
 	if (indicatorOn.getGlobalBounds().contains(mousePos) && mouseLeft)
-		isIndicatorOn = true;
+		SCENE_MGR->SetIndicator(true);
 
 	if (indicatorOff.getGlobalBounds().contains(mousePos) && mouseLeft)
-		isIndicatorOn = false;
+		SCENE_MGR->SetIndicator(false);
 
 	if (soundOn.getGlobalBounds().contains(mousePos) && mouseLeft)
 	{
@@ -519,14 +519,14 @@ void PlayScene::UpdateOption()
 		FloatRect rect = scroll.getGlobalBounds();
 		float y = scrollButton.getPosition().y;
 
-		isSoundOn = false;		
+		isSoundOn = false;
 
 		volume = 0;
 		scrollButton.setPosition(rect.left, y);
 	}
 
-	indicatorOn.setTexture(isIndicatorOn ? *checkered : *blank);
-	indicatorOff.setTexture(!isIndicatorOn ? *checkered : *blank);
+	indicatorOn.setTexture(SCENE_MGR->GetIndicator() ? *checkered : *blank);
+	indicatorOff.setTexture(!SCENE_MGR->GetIndicator() ? *checkered : *blank);
 
 	soundOn.setTexture(isSoundOn ? *checkered : *blank);
 	soundOff.setTexture(!isSoundOn ? *checkered : *blank);
@@ -551,11 +551,12 @@ void PlayScene::UpdateOption()
 
 		scrollButton.setPosition({ mousePos.x, y });
 		if (scrollButton.getPosition().x < rect.left)
-			scrollButton.setPosition(rect.left, y );
+			scrollButton.setPosition(rect.left, y);
 		if (scrollButton.getPosition().x > rect.left + rect.width)
 			scrollButton.setPosition(rect.left + rect.width, y);
 
-		volume = (int)(((scrollButton.getPosition().x - rect.left) / rect.width) * 100);		
+		if (SpriteObj::GetisPlaying())
+			volume = (int)(((scrollButton.getPosition().x - rect.left) / rect.width) * 100);
 	}
 
 	//cout << SOUNDMGR->GetVolumeInt() << endl;
@@ -2487,20 +2488,20 @@ void PlayScene::InitPauseSetting()
 	Utils::SetOrigin(pause_main, Origins::TR);
 	Utils::SetOrigin(pause_restart, Origins::TR);
 	Utils::SetOrigin(pause_option, Origins::TR);
-	Utils::SetOrigin(pause_exit, Origins::TR);	
+	Utils::SetOrigin(pause_exit, Origins::TR);
 
 	float ratio = (WINDOW_WIDTH / 2.5f) / 735.f;
-	pause_return.setScale(ratio, ratio);	
+	pause_return.setScale(ratio, ratio);
 	pause_main.setScale(ratio, ratio);
 	pause_restart.setScale(ratio, ratio);
 	pause_option.setScale(ratio, ratio);
 	pause_exit.setScale(ratio, ratio);
-		
-	float heightFix = pause_return.getGlobalBounds().height;	
+
+	float heightFix = pause_return.getGlobalBounds().height;
 
 	float i = 0;
-	
-	pause_return.setPosition(WINDOW_WIDTH, 20.f + heightFix *i++);
+
+	pause_return.setPosition(WINDOW_WIDTH, 20.f + heightFix * i++);
 	pause_main.setPosition(WINDOW_WIDTH, 20.f + heightFix * i++);
 	pause_restart.setPosition(WINDOW_WIDTH, 20.f + heightFix * i++);
 	pause_option.setPosition(WINDOW_WIDTH, 20.f + heightFix * i++);
