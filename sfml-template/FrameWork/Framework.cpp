@@ -6,7 +6,7 @@
 Framework::Framework()
 	: timeScale(1.f)
 {
-	
+
 
 }
 
@@ -46,14 +46,14 @@ bool Framework::Init(int width, int height)
 	//  SOUND_MGR->Init();
 	SCENE_MGR->Init();
 	InputMgr::Init();
-	
+
 	return true;
 }
 
 bool Framework::Do()
-{	
+{
 	while (window.isOpen())
-	{			
+	{
 		deltaTime = clock.restart();
 		float dt = GetDT();
 		InputMgr::Update(dt);
@@ -61,12 +61,12 @@ bool Framework::Do()
 		fps += 1;
 		time += dt;
 		if (time >= 0.5) {
-		//	cout << fps*2 << endl;
-			time= 0;
+			//	cout << fps*2 << endl;
+			time = 0;
 			fps = 0;
 		}
 
-	//	window.setMouseCursorGrabbed(1);
+		//	window.setMouseCursorGrabbed(1);
 		while (window.pollEvent(ev))
 		{
 			if (ev.type == sf::Event::Closed)
@@ -80,16 +80,21 @@ bool Framework::Do()
 
 			InputMgr::ProcessInput(ev);
 		}
-		
+
+		if (InputMgr::GetKeyDown(Keyboard::Escape)) {
+			help = !help;
+		}
+
 		//SOUND_MGR->Update();
 		window.clear(Color::White);
-		
 
-		SCENE_MGR->Update(dt);
-		SCENE_MGR->PhysicsUpdate(dt);
+		if (!help) {
+			SCENE_MGR->Update(dt);
+			SCENE_MGR->PhysicsUpdate(dt);
+		}
 		SCENE_MGR->Draw(window);
 		window.display();
-		
-	}	
+
+	}
 	return true;
 }

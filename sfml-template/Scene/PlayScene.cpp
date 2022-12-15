@@ -16,11 +16,22 @@ bool PlayScene::isDevMod = false;
 
 void PlayScene::Update(float dt)
 {
+
 	crosshair.setPosition(InputMgr::GetMousePos());
+
+	if (help) {
+		/*	if (InputMgr::GetKeyDown(Keyboard::F1)) {
+				help = !help;
+			}*/
+
+		//return;
+	}
 
 	OpenStage(dt);
 
 	ClearRenderBuffer();
+
+
 	//////////////////////////////////////////////////////
 	if (goal->GetGlobalBounds().intersects(player->GetGlobalBounds())) {
 		if (goal->IsFinish()) {
@@ -326,7 +337,7 @@ void PlayScene::Draw(RenderWindow& window)
 			if (w->isOn)
 				w->SetColor(Color(ORANGE));
 			else
-				w->SetColor(Color(BLUE));			
+				w->SetColor(Color(BLUE));
 			window.draw(w->wireRect);
 		}
 	}
@@ -334,11 +345,17 @@ void PlayScene::Draw(RenderWindow& window)
 	window.setView(uiView);
 	window.draw(crosshair);
 
-
+	if (help)
+		window.draw(keyhelp);
 
 	window.setView(endingView);
 	if (dark != 0)
 		window.draw(ending);
+}
+
+void PlayScene::PauseDraw(RenderWindow& window)
+{
+
 }
 
 PlayScene::PlayScene(string path)
@@ -357,6 +374,11 @@ PlayScene::PlayScene(string path)
 	world = make_unique<b2World>(g);
 
 	/////////////////////////////////////////////////////////////////////////////
+
+	keyhelp.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/control.png"));
+	Utils::SetSpriteSize(keyhelp, { FRAMEWORK->GetWindowSize().x * 0.8f,FRAMEWORK->GetWindowSize().y * 0.8f });
+	Utils::SetOrigin(keyhelp, Origins::MC);
+	keyhelp.setPosition({ FRAMEWORK->GetWindowSize().x * 0.5f,FRAMEWORK->GetWindowSize().y * 0.5f });
 	blue = new Blue;
 	orange = new Orange;
 
@@ -2068,14 +2090,18 @@ void PlayScene::Input()
 			SCENE_MGR->ChangeScene(Scenes::MAPEDITER);
 		}
 		else
-			SCENE_MGR->ChangeScene(Scenes::GAMESTART);
-		return;
+			//	SCENE_MGR->ChangeScene(Scenes::GAMESTART);
+			return;
 	}
 
 
 	if (InputMgr::GetKeyDown(Keyboard::P))
 	{
 		isDevMod = !isDevMod;
+	}
+
+	if (InputMgr::GetKeyDown(Keyboard::F1)) {
+		help = !help;
 	}
 }
 
@@ -2196,7 +2222,7 @@ void PlayScene::MoveToPortal()
 		float recenty = abs(player->GetRecentSpeed().y);
 		float recentx = abs(player->GetRecentSpeed().x);
 
-	//	cout << abs(player->GetRecentSpeed().y) << endl;
+		//	cout << abs(player->GetRecentSpeed().y) << endl;
 		if ((int)recenty <= 1)
 			recenty = 1;
 
@@ -2210,14 +2236,14 @@ void PlayScene::MoveToPortal()
 
 		}
 		else if (orange->GetPortalDir() == 1) {
-			
+
 
 			player->SetPlayerBodyPos({ orange->GetPos().x + 30,orange->GetPos().y });
 			float force = (abs(player->GetRecentSpeed().y)) + (recentx);
 			if (force > maxspeed / 2)
 				force = maxspeed / 2;
 			player->GetBody()->SetLinearVelocity({ force ,1 });
-			
+
 
 		}
 		else if (orange->GetPortalDir() == 2) {
@@ -2255,9 +2281,9 @@ void PlayScene::MoveToPortal()
 
 		float recenty = abs(player->GetRecentSpeed().y);
 		float recentx = abs(player->GetRecentSpeed().x);
-		
+
 		cout << player->GetRecentSpeed().y - player->GetBody()->GetLinearVelocity().y << endl;
-		if (player->GetRecentSpeed().y-player->GetBody()->GetLinearVelocity().y) {
+		if (player->GetRecentSpeed().y - player->GetBody()->GetLinearVelocity().y) {
 			recenty = 14.f;
 		}
 		if ((int)recenty <= 1)

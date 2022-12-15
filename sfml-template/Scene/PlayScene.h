@@ -65,6 +65,7 @@ public:
 	virtual void PhysicsUpdate(float dt);
 
 	virtual void Draw(RenderWindow& window);
+	void PauseDraw(RenderWindow& window);
 
 	void MakeWall(bool isEnd);
 	void MakeCube();
@@ -87,6 +88,8 @@ public:
 	void WaterCheck(float );
 	void CheckStillObjectalive();
 	void MoveToPortal();
+
+	bool IsHelp() { return help; }
 	
 public:
 	void DrawBackGroundView(RenderWindow& window);
@@ -200,7 +203,10 @@ private:
 	float currentcamposx;
 	float currentcamposy;
 
+	Sprite keyhelp;
+
 	/////////////////
 	static bool isDevMod;
+	bool help = false;
 };
 

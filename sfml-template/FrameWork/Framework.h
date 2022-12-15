@@ -16,6 +16,7 @@ protected:
 	float timeScale;
 	int fps = 0;
 	float time = 0;
+	bool help = false;
 
 public:
 	Framework();
