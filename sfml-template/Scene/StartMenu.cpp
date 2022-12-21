@@ -117,6 +117,16 @@ void StartMenu::Update(float dt)
 			option.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/option.png"));		
 	}
 
+	for (auto s:stagelist) {
+		if (s->getGlobalBounds().contains(InputMgr::GetMousePos())) {
+			if (InputMgr::GetMouseButtonDown(Mouse::Left)) {
+				string temp = s->getString();
+				SCENE_MGR->AddScene("Map\\" + s->getString());
+				SCENE_MGR->ChangeScene(Scenes::PLAY);
+				return;
+			}
+		}
+	}
 
 	if (exit.getGlobalBounds().contains(mospos)) {
 		exit.setTexture(*RESOURCEMGR->GetTexture("Graphics/Ui/exitblack.png"));
