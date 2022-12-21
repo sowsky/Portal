@@ -354,46 +354,16 @@ void Tunnel::SetParticlePos()
 
 void Tunnel::TransParticles(float dt)
 {
+	FloatRect rect = tuns.getGlobalBounds();
 	for (int i = 0; i < particleNum; i++)
-	{
-		float randPos = Utils::RandomRange(-20.f, 20.f);
-	
+	{	
 		particles[i].position = particles[i].position + dt * 130 * particleDir;
 		if (IsBlue && !tuns.getGlobalBounds().contains(particles[i].position))
 		{
-			switch (dir)
-			{
-			case 0:
-				particles[i].position.y = startpos.y + randPos;
-				break;
-			case 1:
-				particles[i].position.x = startpos.x + randPos;
-				break;
-			case 2:
-				particles[i].position.y = startpos.y + randPos;
-				break;
-			case 3:
-				particles[i].position.x = startpos.x + randPos;
-				break;
-			}
-		}
-		if (!IsBlue && !tuns.getGlobalBounds().contains(particles[i].position))
-		{
-			switch (dir)
-			{
-			case 0:
-				particles[i].position.y = endpos.y + randPos;
-				break;
-			case 1:
-				particles[i].position.x = endpos.x + randPos;
-				break;
-			case 2:
-				particles[i].position.y = endpos.y + randPos;
-				break;
-			case 3:
-				particles[i].position.x = endpos.x + randPos;
-				break;
-			}
+			float xpos = Utils::RandomRange(rect.left, rect.left + rect.width);
+			float ypos = Utils::RandomRange(rect.top, rect.top + rect.height);
+
+			particles[i].position = { xpos , ypos };
 		}
 	}
 }
