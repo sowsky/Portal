@@ -19,7 +19,8 @@ Dropper::Dropper()
 Dropper::Dropper(Vector2f pos, vector<float> buttonlist, Cube* cube)
 	:buttonid(buttonlist), cube(cube)
 {
-	dropper.setFillColor(Color::Yellow);
+	Texture* tex = RESOURCEMGR->GetTexture("Graphics/temp/dropper.png");
+	dropper.setTexture(tex);
 	Utils::SetOrigin(dropper, Origins::MC);
 
 	dropper.setPosition(pos);

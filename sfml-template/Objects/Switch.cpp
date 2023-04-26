@@ -56,7 +56,7 @@ Switch::Switch(Vector2f position, int rotation, int id, float time, bool switcht
 
 	}
 
-	hitbox->setFillColor(Color::Yellow);
+	hitbox->setFillColor(Color::Transparent);
 	if (rotation == 0 || rotation == 2)
 		hitbox->setSize({ 10,40 });
 	else
