@@ -181,15 +181,16 @@ void StartMenu::LoadFile()
 	string path = "Map";
 	for (const auto& entry : fs::directory_iterator(path)) {
 		string path_string = fs::path(entry).filename().string();
-		for (int i = 0; i < 5; i++)
-		{
-			path_string.pop_back();
-		}	
-		
-		std::transform(path_string.begin(), path_string.end(), path_string.begin(),
-			[](unsigned char c) { return std::toupper(c); });		
 
-		std::replace(path_string.begin(), path_string.end(), '_', ' ');
+		//for (int i = 0; i < 5; i++)
+		//{
+		//	path_string.pop_back();
+		//}	
+		
+		//std::transform(path_string.begin(), path_string.end(), path_string.begin(),
+		//	[](unsigned char c) { return std::toupper(c); });		
+
+		//std::replace(path_string.begin(), path_string.end(), '_', ' ');
 
 		Text* temp = new Text();
 		temp->setString(path_string);
