@@ -265,6 +265,10 @@ void PlayScene::Draw(RenderWindow& window)
 		v->Draw(window);
 	}
 
+	for (auto v : blackwall) {
+		v->Draw(window);
+	}
+
 	for (auto v : button) {
 		v->Draw(window);
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
@@ -283,7 +287,7 @@ void PlayScene::Draw(RenderWindow& window)
 	}
 
 	for (auto v : blackwall) {
-		v->Draw(window);
+		//v->Draw(window);
 		v->Draw(pass_diffuse, normals_shader, pass_normals);
 	}
 
