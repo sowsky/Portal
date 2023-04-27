@@ -2413,6 +2413,24 @@ void PlayScene::LightTestInputForDev()
 			<< falloff.z << ','
 			<< endl;
 	}
+
+	if (InputMgr::GetKeyDown(Keyboard::F4))
+	{
+		falloff.x = 1;
+		falloff.y = 1;
+		falloff.z = 1;
+		light.position.z = 0.07f;
+		ambient_intensity = 0.8f;		
+	}
+
+	if (InputMgr::GetKeyDown(Keyboard::F5))
+	{
+		falloff.x = 1;
+		falloff.y = 1;
+		falloff.z = 1;
+		light.position.z = 0.01f;
+		ambient_intensity = 0.1f;
+	}
 }
 
 void PlayScene::ClearRenderBuffer()
