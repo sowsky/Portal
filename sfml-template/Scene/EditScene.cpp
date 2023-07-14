@@ -1134,46 +1134,46 @@ void EditScene::DrawMapList(RenderWindow& window)
 
 array<bool, 4>& EditScene::SetOnSideTiles(int col, int row)
 {
-	array<bool, 4> sideBool;
-	for (int i = 0; i < sideBool.size(); i++)
+	array<bool, 4> isVisible;
+	for (int i = 0; i < isVisible.size(); i++)
 	{
-		sideBool[i] = true;
+		isVisible[i] = true;
 	}
 
 	if ((col + 1) < colNum &&
 		!mapTool[col + 1][row].first.empty() &&
 		(mapTool[col + 1][row].first.front()->GetId() == '1' ||
 			mapTool[col + 1][row].first.front()->GetId() == '2'))
-		sideBool[0] = false;
+		isVisible[0] = false;
 
 	if ((row + 1) < rowNum &&
 		!mapTool[col][row + 1].first.empty() &&
 		(mapTool[col][row + 1].first.front()->GetId() == '1' ||
 			mapTool[col][row + 1].first.front()->GetId() == '2'))
-		sideBool[1] = false;
+		isVisible[1] = false;
 
 	if ((col - 1) >= 0 &&
 		!mapTool[col - 1][row].first.empty() &&
 		(mapTool[col - 1][row].first.front()->GetId() == '1' ||
 			mapTool[col - 1][row].first.front()->GetId() == '2'))
-		sideBool[2] = false;
+		isVisible[2] = false;
 
 	if ((row - 1) >= 0 &&
 		!mapTool[col][row - 1].first.empty() &&
 		(mapTool[col][row - 1].first.front()->GetId() == '1' ||
 			mapTool[col][row - 1].first.front()->GetId() == '2'))
-		sideBool[3] = false;
+		isVisible[3] = false;
 
 	if (col == 0)
-		sideBool[2] = false;
+		isVisible[2] = false;
 	if (col == colNum - 1)
-		sideBool[0] = false;
+		isVisible[0] = false;
 	if (row == 0)
-		sideBool[3] = false;
+		isVisible[3] = false;
 	if (row == rowNum - 1)
-		sideBool[1] = false;
+		isVisible[1] = false;
 
-	return sideBool;
+	return isVisible;
 }
 
 void EditScene::PushToLoadedWireInfo(int buttonId, WireableObject* ptr)
@@ -1416,7 +1416,7 @@ void EditScene::Save()
 						tile.id = '1';
 						tile.posX = j;
 						tile.posY = posY;
-						tile.sideBool = SetOnSideTiles(i, j);
+						tile.isVisible = SetOnSideTiles(i, j);
 						saveObjInfo.tiles.push_back(tile);
 						break;
 					}
@@ -1426,7 +1426,7 @@ void EditScene::Save()
 						tile.id = '2';
 						tile.posX = j;
 						tile.posY = posY;
-						tile.sideBool = SetOnSideTiles(i, j);
+						tile.isVisible = SetOnSideTiles(i, j);
 						saveObjInfo.blacktile.push_back(tile);
 						break;
 					}

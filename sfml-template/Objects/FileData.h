@@ -33,14 +33,14 @@ struct Goal_struct : public Object_struct
 
 struct Tile_struct : public Object_struct
 {		
-	array<bool, 4> sideBool;
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Tile_struct, posX, posY, rotation, id, sideBool);
+	array<bool, 4> isVisible;
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Tile_struct, posX, posY, rotation, id, isVisible);
 };
 
 struct Black_Tile_struct : public Object_struct
 {
-	array<bool, 4> sideBool;
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Black_Tile_struct, posX, posY, rotation, id, sideBool);
+	array<bool, 4> isVisible;
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Black_Tile_struct, posX, posY, rotation, id, isVisible);
 };
 
 struct Cube_struct : public Object_struct

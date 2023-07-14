@@ -738,7 +738,7 @@ PlayScene::PlayScene(string path)
 
 						}
 						Tile_struct* t = (Tile_struct*)loadedArray[i][j].front();
-						wall.back()->SetActiveSideTiles(t->sideBool);
+						wall.back()->SetActiveSideTiles(t->isVisible);
 						break;
 					}
 					case '2':
@@ -759,7 +759,7 @@ PlayScene::PlayScene(string path)
 
 						}
 						Black_Tile_struct* t = (Black_Tile_struct*)loadedArray[i][j].front();
-						blackwall.back()->SetActiveSideTiles(t->sideBool);
+						blackwall.back()->SetActiveSideTiles(t->isVisible);
 						break;
 					}
 					case 'p':
